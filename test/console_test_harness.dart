@@ -10,7 +10,6 @@ import 'package:unittest/unittest.dart';
 import 'package:unittest/vm_config.dart';
 import 'async/_async_runner.dart';
 import 'bot/_bot_runner.dart';
-import 'qr/_qr_runner.dart';
 
 part 'hop/sync_tests.dart';
 part 'hop/task_list_tests.dart';
@@ -30,7 +29,6 @@ void testCore(Configuration config) {
 
   runBotTests();
   runAsyncTests();
-  runQrTests();
 
   group('hop', () {
     group('async tasks', AsyncTests.run);
