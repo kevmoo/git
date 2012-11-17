@@ -36,7 +36,9 @@ Starting by porting bits of the [PL javascript library](https://github.com/think
 
 ## html
 
-## qr
+## hop
+
+## hop_tasks
 
 ## retained
 

@@ -1,8 +1,9 @@
 # Changelog - Dart Bag of Tricks
 
-### 0.6.0 - *pre-release* (SDK r15005)
+### 0.6.0 - *pre-release* (SDK r15049)
 
 * __BREAKING__ Merged `hop` back in. Circular dependencies just make no sense.
+* __BREAKING__ Moved `qr` into its [own repository](https://github.com/kevmoo/qr.dart).
 * A bunch of fixes to support more recent Dart release.
 
 ### 0.5.0 -- 6 Nov 2012 (SDK r14554)
