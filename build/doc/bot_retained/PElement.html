@@ -107,6 +107,17 @@ abstract class PElement extends AttachableObject {
    return tx;
  }
 
+ bool removeTransform(AffineTransform tx) {
+   requireArgumentNotNull(tx, 'tx');
+   final index = _transforms.indexOf(tx);
+   if(index &lt; 0) {
+     return false;
+   } else {
+     _transforms.removeAt(index);
+     return true;
+   }
+ }
+
  void drawOverride(CanvasRenderingContext2D ctx);
 
  void invalidateDraw(){
@@ -118,9 +129,15 @@ abstract class PElement extends AttachableObject {
  }
 
  void registerParent(ElementParent parent) {
-   assert(_parent == null);
-   assert(parent != null);
+   require(_parent == null, 'parent already set');
+   requireArgumentNotNull(parent, 'parent');
    _parent = parent;
+ }
+
+ void unregisterParent(ElementParent parent) {
+   requireArgumentNotNull(parent, 'parent');
+   requireArgument(parent == _parent, 'parent');
+   _parent = null;
  }
 
  void disposeInternal(){
@@ -148,10 +165,8 @@ abstract class PElement extends AttachableObject {
        null : new Size(_lastDrawSize.width.toInt(), _lastDrawSize.height.toInt());
 
    if (CanvasUtil.getCanvasSize(this._cacheCanvas) != intLastDrawSize) {
-
-     // DARTBUG: 5172 - width and height don't work on CanvasElement
-     this._cacheCanvas.attributes["width"] = this.width;
-     this._cacheCanvas.attributes["height"] = this.height;
+     this._cacheCanvas.width = this.width.toInt();
+     this._cacheCanvas.height = this.height.toInt();
 
      var cacheCtx = _cacheCanvas.context2d;
 
@@ -480,9 +495,42 @@ void <strong>registerParent</strong>(<a href="../bot_retained/ElementParent.html
 <div class="doc">
 <pre class="source">
 void registerParent(ElementParent parent) {
- assert(_parent == null);
- assert(parent != null);
+ require(_parent == null, 'parent already set');
+ requireArgumentNotNull(parent, 'parent');
  _parent = parent;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="removeTransform">
+<button class="show-code">Code</button>
+bool <strong>removeTransform</strong>(<a href="../bot/AffineTransform.html">AffineTransform</a> tx) <a class="anchor-link" href="#removeTransform"
+              title="Permalink to PElement.removeTransform">#</a></h4>
+<div class="doc">
+<pre class="source">
+bool removeTransform(AffineTransform tx) {
+ requireArgumentNotNull(tx, 'tx');
+ final index = _transforms.indexOf(tx);
+ if(index &lt; 0) {
+   return false;
+ } else {
+   _transforms.removeAt(index);
+   return true;
+ }
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="unregisterParent">
+<button class="show-code">Code</button>
+void <strong>unregisterParent</strong>(<a href="../bot_retained/ElementParent.html">ElementParent</a> parent) <a class="anchor-link" href="#unregisterParent"
+              title="Permalink to PElement.unregisterParent">#</a></h4>
+<div class="doc">
+<pre class="source">
+void unregisterParent(ElementParent parent) {
+ requireArgumentNotNull(parent, 'parent');
+ requireArgument(parent == _parent, 'parent');
+ _parent = null;
 }
 </pre>
 </div>

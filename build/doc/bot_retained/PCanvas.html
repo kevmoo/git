@@ -436,6 +436,12 @@ void <strong>insertAt</strong>(<a href="../bot_retained/PElement.html">PElement<
 <div class="inherited-from">inherited from <a href="../bot_retained/Panel.html">Panel</a> </div><div class="doc">
 <pre class="source">
 void insertAt(PElement element, [int index=null]){
+ requireArgumentNotNull(element, 'element');
+ requireArgument(element.parent == null, 'element',
+     'element already has a parent');
+ requireArgument(!_children.contains(element), 'element',
+     'Cannot add the same element twice');
+
  index = (index == null) ? 0 : index;
  element.registerParent(this);
  _children.insertRange(index, 1, element);
@@ -482,9 +488,54 @@ void <strong>registerParent</strong>(<a href="../bot_retained/ElementParent.html
 <div class="inherited-from">inherited from <a href="../bot_retained/PElement.html">PElement</a> </div><div class="doc">
 <pre class="source">
 void registerParent(ElementParent parent) {
- assert(_parent == null);
- assert(parent != null);
+ require(_parent == null, 'parent already set');
+ requireArgumentNotNull(parent, 'parent');
  _parent = parent;
+}
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="removeElement">
+<button class="show-code">Code</button>
+bool <strong>removeElement</strong>(<a href="../bot_retained/PElement.html">PElement</a> element) <a class="anchor-link" href="#removeElement"
+              title="Permalink to PCanvas.removeElement">#</a></h4>
+<div class="inherited-from">inherited from <a href="../bot_retained/Panel.html">Panel</a> </div><div class="doc">
+<pre class="source">
+bool removeElement(PElement element) {
+ requireArgumentNotNull(element, 'element');
+
+ final index = _children.indexOf(element);
+ if(index &lt; 0) {
+   return false;
+ } else {
+   final item = _children.removeAt(index);
+   item.unregisterParent(this);
+   final containerTx = _containerTransformProperty.get(item);
+   assert(containerTx != null);
+   var txRemoved = item.removeTransform(containerTx);
+   assert(txRemoved);
+   _containerTransformProperty.clear(item);
+   return true;
+ }
+}
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="removeTransform">
+<button class="show-code">Code</button>
+bool <strong>removeTransform</strong>(<a href="../bot/AffineTransform.html">AffineTransform</a> tx) <a class="anchor-link" href="#removeTransform"
+              title="Permalink to PCanvas.removeTransform">#</a></h4>
+<div class="inherited-from">inherited from <a href="../bot_retained/PElement.html">PElement</a> </div><div class="doc">
+<pre class="source">
+bool removeTransform(AffineTransform tx) {
+ requireArgumentNotNull(tx, 'tx');
+ final index = _transforms.indexOf(tx);
+ if(index &lt; 0) {
+   return false;
+ } else {
+   _transforms.removeAt(index);
+   return true;
+ }
 }
 </pre>
 </div>
@@ -512,6 +563,20 @@ void <strong>setTopLeft</strong>(<a href="../bot_retained/PElement.html">PElemen
 void setTopLeft(PElement element, Coordinate value){
  var tx = getChildTransform(element);
  tx.setToTranslation(value.x, value.y);
+}
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="unregisterParent">
+<button class="show-code">Code</button>
+void <strong>unregisterParent</strong>(<a href="../bot_retained/ElementParent.html">ElementParent</a> parent) <a class="anchor-link" href="#unregisterParent"
+              title="Permalink to PCanvas.unregisterParent">#</a></h4>
+<div class="inherited-from">inherited from <a href="../bot_retained/PElement.html">PElement</a> </div><div class="doc">
+<pre class="source">
+void unregisterParent(ElementParent parent) {
+ requireArgumentNotNull(parent, 'parent');
+ requireArgument(parent == _parent, 'parent');
+ _parent = null;
 }
 </pre>
 </div>

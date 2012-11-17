@@ -379,9 +379,42 @@ void <strong>registerParent</strong>(<a href="../bot_retained/ElementParent.html
 <div class="inherited-from">inherited from <a href="../bot_retained/PElement.html">PElement</a> </div><div class="doc">
 <pre class="source">
 void registerParent(ElementParent parent) {
- assert(_parent == null);
- assert(parent != null);
+ require(_parent == null, 'parent already set');
+ requireArgumentNotNull(parent, 'parent');
  _parent = parent;
+}
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="removeTransform">
+<button class="show-code">Code</button>
+bool <strong>removeTransform</strong>(<a href="../bot/AffineTransform.html">AffineTransform</a> tx) <a class="anchor-link" href="#removeTransform"
+              title="Permalink to TextureAnimationElement.removeTransform">#</a></h4>
+<div class="inherited-from">inherited from <a href="../bot_retained/PElement.html">PElement</a> </div><div class="doc">
+<pre class="source">
+bool removeTransform(AffineTransform tx) {
+ requireArgumentNotNull(tx, 'tx');
+ final index = _transforms.indexOf(tx);
+ if(index &lt; 0) {
+   return false;
+ } else {
+   _transforms.removeAt(index);
+   return true;
+ }
+}
+</pre>
+</div>
+</div>
+<div class="method inherited"><h4 id="unregisterParent">
+<button class="show-code">Code</button>
+void <strong>unregisterParent</strong>(<a href="../bot_retained/ElementParent.html">ElementParent</a> parent) <a class="anchor-link" href="#unregisterParent"
+              title="Permalink to TextureAnimationElement.unregisterParent">#</a></h4>
+<div class="inherited-from">inherited from <a href="../bot_retained/PElement.html">PElement</a> </div><div class="doc">
+<pre class="source">
+void unregisterParent(ElementParent parent) {
+ requireArgumentNotNull(parent, 'parent');
+ requireArgument(parent == _parent, 'parent');
+ _parent = null;
 }
 </pre>
 </div>
