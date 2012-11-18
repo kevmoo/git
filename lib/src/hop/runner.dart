@@ -64,7 +64,7 @@ class Runner {
     try {
       future = task.run(context);
     } catch(e) {
-      context.error('Error');
+      context.error('Exception thrown by task');
       context.error(e.toString());
       completer.complete(EXIT_CODE_TASK_EXCEPTION);
       return completer.future;
@@ -93,7 +93,7 @@ class Runner {
         }
       } else {
         // has as exception, need to test this
-        context.error('Error');
+        context.error('Exception thrown by task');
         context.error(f.exception.toString());
         context.error(f.stackTrace.toString());
         completer.complete(EXIT_CODE_TASK_EXCEPTION);
