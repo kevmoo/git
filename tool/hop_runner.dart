@@ -3,7 +3,7 @@ library hop_runner;
 import 'dart:io';
 import 'package:bot/bot.dart';
 import 'package:bot/hop.dart';
-import 'package:bot/tasks.dart';
+import 'package:bot/hop_tasks.dart';
 import '../test/harness_console.dart' as test_console;
 
 part 'dartdoc.dart';
