@@ -26,8 +26,27 @@ Future<bool> _compileDocs(TaskContext ctx) {
               }
             })
             .chain((obj) => _doPush(ctx, outputDir, gitDir, targetBranch))
+            .chain((obj) => _deleteTempDirs([outputDir, gitDir]))
             .transform((obj) => true);
   });
+}
+
+Future _deleteTempDirs(List<String> dirPaths) {
+  final tmpDirPrefix = 'temp_dir';
+  final delDirs = dirPaths
+      .map((p) => new Path(p));
+
+  delDirs.forEach((Path p) {
+    if(!p.segments().last.startsWith(tmpDirPrefix)) {
+      throw 'not a safe temp path!';
+    }
+  });
+
+  final delDirFutures = delDirs
+      .map((Path p) => new Directory.fromPath(p))
+      .map((dir) => dir.delete(recursive: true));
+
+  return Futures.wait(new List.from(delDirFutures));
 }
 
 Future<bool> _dartDoc(TaskContext ctx, String outputDir, List<String> libs) {
