@@ -1,4 +1,4 @@
-part of test_hop;
+part of test_hop_tasks;
 
 // TODO: support windows? Test on Linux?
 // TODO: need to extend TestTaskContext to have logging events
@@ -51,7 +51,7 @@ class ProcessTests {
 
     final onComplete = expectAsync1((Future<bool> f) {
       expect(f.hasValue, isFalse);
-      expect(f.exception is io.ProcessException, isTrue);
+      expect(f.exception is ProcessException, isTrue);
     });
 
     final future = startProcess(ctx, scriptPath);
@@ -65,7 +65,7 @@ class ProcessTests {
     // so...the file should be at...
 
     final filePath = 'test/hop_tasks/process_scripts/$name';
-    final file = new io.File(filePath);
+    final file = new File(filePath);
 
     if(!file.existsSync()) {
       throw

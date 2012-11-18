@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:bot/bot.dart';
 import 'package:bot/hop.dart';
 import 'package:bot/tasks.dart';
-import '../test/console_test_harness.dart' as test_console;
+import '../test/harness_console.dart' as test_console;
 
 part 'dartdoc.dart';
 
@@ -20,7 +20,7 @@ void main() {
   final paths = $(['click', 'drag', 'fract', 'spin'])
       .map((d) => "example/$d/${d}_demo.dart")
       .toList();
-  paths.add('test/browser_test_harness.dart');
+  paths.add('test/harness_browser.dart');
 
   addAsyncTask('dart2js', createDart2JsTask(paths));
 

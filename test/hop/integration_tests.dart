@@ -9,18 +9,18 @@ class IntegrationTests {
   }
 
   static void _testBadHopCommand() {
-    final onComplete = expectAsync1((Future<io.ProcessResult> f) {
+    final onComplete = expectAsync1((Future<ProcessResult> f) {
       expect(f.hasValue, isTrue);
       final pr = f.value;
       expect(pr.exitCode, equals(EXIT_CODE_USAGE));
     });
 
-    final f = io.Process.run(hopPath, ['bad_command_name']);
+    final f = Process.run(hopPath, ['bad_command_name']);
     f.onComplete(onComplete);
   }
 
   static void _testOutputSorted() {
-    final onComplete = expectAsync1((Future<io.ProcessResult> f) {
+    final onComplete = expectAsync1((Future<ProcessResult> f) {
       expect(f.hasValue, isTrue);
       final pr = f.value;
       expect(pr.exitCode, equals(EXIT_CODE_SUCCESS));
@@ -28,7 +28,7 @@ class IntegrationTests {
       expect(lines, orderedEquals(['about', 'dart2js', 'docs', 'test']));
     });
 
-    final f = io.Process.run(hopPath, [Runner.RAW_TASK_LIST_CMD]);
+    final f = Process.run(hopPath, [Runner.RAW_TASK_LIST_CMD]);
     f.onComplete(onComplete);
   }
 }
