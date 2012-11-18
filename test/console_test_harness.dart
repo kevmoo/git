@@ -15,7 +15,7 @@ part 'hop/sync_tests.dart';
 part 'hop/task_list_tests.dart';
 part 'hop/integration_tests.dart';
 part 'hop/async_tests.dart';
-part 'tasks/process_tests.dart';
+part 'hop_tasks/process_tests.dart';
 part 'test_runner.dart';
 
 main() {

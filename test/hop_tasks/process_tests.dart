@@ -64,7 +64,7 @@ class ProcessTests {
     // assume that script was run from the root of the project
     // so...the file should be at...
 
-    final filePath = 'test/tasks/process_scripts/$name';
+    final filePath = 'test/hop_tasks/process_scripts/$name';
     final file = new io.File(filePath);
 
     if(!file.existsSync()) {
