@@ -174,7 +174,7 @@ Future<List<String>> _getLibs() {
       // DARTBUG: http://code.google.com/p/dart/issues/detail?id=5460
       // exclude libs because of issues with dartdoc and sdk libs
       // in this case: unittest and args
-      final forbidden = ['test', 'hop', 'tasks'].map((n) => '$n.dart');
+      final forbidden = ['test', 'hop', 'hop_tasks'].map((n) => '$n.dart');
       if(forbidden.every((f) => !file.endsWith(f))) {
         libs.add(file);
       }
