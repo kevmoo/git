@@ -13,7 +13,6 @@ void main() {
 
   addAsyncTask('test', createUnitTestTask(test_console.testCore));
   addAsyncTask('docs', _compileDocs);
-  addAsyncTask('pages', _ghPages);
 
   //
   // Dart2js
@@ -35,14 +34,6 @@ void _assertKnownPath() {
   // So check for existance of /bin/hop_runner.dart
   final thisFile = new File('tool/hop_runner.dart');
   assert(thisFile.existsSync());
-}
-
-Future<bool> _ghPages(TaskContext ctx) {
-  final sourceDir = 'build/doc';
-  final targetBranch = 'gh-pages';
-  final sourceBranch = 'master';
-
-  return branchForDir(ctx, sourceBranch, sourceDir, targetBranch);
 }
 
 bool _about(TaskContext context) {
