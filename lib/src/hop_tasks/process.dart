@@ -20,7 +20,7 @@ Future<bool> startProcess(TaskContext ctx,
 
   ctx.fine("Starting process:");
   ctx.fine("$command ${Strings.join(args, ' ')}");
-  final processFuture = io.Process.start(command, args);
+  final processFuture = Process.start(command, args);
   return processFuture.chain((process) {
     return _startProcess(process, ctx);
   });

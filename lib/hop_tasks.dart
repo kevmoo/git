@@ -1,6 +1,6 @@
 library hop_tasks;
 
-import 'dart:io' as io;
+import 'dart:io';
 import 'package:bot/bot.dart';
 import 'package:bot/hop.dart';
 import 'package:unittest/unittest.dart' as unittest;

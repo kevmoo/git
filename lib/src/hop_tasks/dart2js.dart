@@ -15,7 +15,7 @@ Future<bool> _dart2js(TaskContext state, String file,
     output = "${file}.js";
   }
 
-  final packageDir = new io.Directory('packages');
+  final packageDir = new Directory('packages');
   assert(packageDir.existsSync());
 
   final args = ["--package-root=${packageDir.path}",
