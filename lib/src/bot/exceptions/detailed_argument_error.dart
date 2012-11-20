@@ -1,9 +1,9 @@
 part of bot;
 
-class DetailedIllegalArgumentException extends ArgumentError {
+class DetailedArgumentError extends ArgumentError {
   final argument;
 
-  const DetailedIllegalArgumentException([String arg = '', String message]) :
+  DetailedArgumentError([String arg = '', String message]) :
     this.argument = arg,
     super(message);
 

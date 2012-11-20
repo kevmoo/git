@@ -1,5 +1,9 @@
 # Changelog - Dart Bag of Tricks
 
+### 0.7.0 - (SDK r15159)
+
+* __BREAKING__ Renamed exception classes to align with Dart naming conventions.
+
 ### 0.6.0 - (SDK r15042)
 
 * __BREAKING__ Merged `hop` back in. Circular dependencies just make no sense.

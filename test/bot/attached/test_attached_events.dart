@@ -28,9 +28,9 @@ class TestAttachedEvents extends AttachableObject {
     removed = _testEvent1.removeHandler(obj, new GlobalId());
     expect(removed, isFalse);
 
-    expect(() => _testEvent1.removeHandler(obj, null), throwsNullArgumentException);
+    expect(() => _testEvent1.removeHandler(obj, null), throwsNullArgumentError);
 
-    expect(() => _testEvent1.removeHandler(null, new GlobalId()), throwsNullArgumentException);
+    expect(() => _testEvent1.removeHandler(null, new GlobalId()), throwsNullArgumentError);
 
     removed = _testEvent1.removeHandler(new TestAttachedEvents(), new GlobalId());
     expect(removed, isFalse);

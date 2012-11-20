@@ -45,11 +45,11 @@ class TestEnumerable {
     final enum = $([0,1,2]);
     expect(enum.first(), equals(0));
 
-    expect(() => $([]).first(), throwsInvalidOperationException);
+    expect(() => $([]).first(), throwsInvalidOperationError);
 
     expect(enum.first((e) => e == 1), equals(1));
 
-    expect(() => enum.first((e) => e == 4), throwsInvalidOperationException);
+    expect(() => enum.first((e) => e == 4), throwsInvalidOperationError);
 
     expect(enum.firstOrDefault((e) => e == 1), equals(1));
     expect(enum.firstOrDefault((e) => e == 4), equals(null));
@@ -58,17 +58,17 @@ class TestEnumerable {
 
   static void _testSingle() {
     expect($([42]).single(), equals(42));
-    expect(() => $([]).single(), throwsInvalidOperationException);
-    expect(() => $([1, 2]).single(), throwsInvalidOperationException);
+    expect(() => $([]).single(), throwsInvalidOperationError);
+    expect(() => $([1, 2]).single(), throwsInvalidOperationError);
 
     expect($([3,4,5]).single((e) => e % 2 == 0), equals(4));
-    expect(() => $([3,4,5]).single((e) => e % 2 == 1), throwsInvalidOperationException);
-    expect(() => $([3,5,7]).single((e) => e % 2 == 0), throwsInvalidOperationException);
+    expect(() => $([3,4,5]).single((e) => e % 2 == 1), throwsInvalidOperationError);
+    expect(() => $([3,5,7]).single((e) => e % 2 == 0), throwsInvalidOperationError);
 
     expect($([3,4,5]).singleOrDefault((e) => e % 2 == 0), equals(4));
     expect($([3,4,5]).singleOrDefault((e) => e == 2), equals(null));
     expect($([3,4,5]).singleOrDefault((e) => e == 2, -42), equals(-42));
-    expect(() => $([3,5,7]).singleOrDefault((e) => e % 2 == 1), throwsInvalidOperationException);
+    expect(() => $([3,5,7]).singleOrDefault((e) => e % 2 == 1), throwsInvalidOperationError);
   }
 
   static void _testJoin() {

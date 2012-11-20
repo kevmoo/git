@@ -141,7 +141,7 @@ abstract class Enumerable<T> implements Iterable<T> {
     }
     final iter = new _WhereIterator<T>(this.iterator(), f);
     if(!iter.hasNext) {
-      throw const InvalidOperationException('The input sequence is empty.');
+      throw const InvalidOperationError('The input sequence is empty.');
     }
     return iter.next();
   }
@@ -163,11 +163,11 @@ abstract class Enumerable<T> implements Iterable<T> {
     }
     final iter = new _WhereIterator<T>(this.iterator(), f);
     if(!iter.hasNext) {
-      throw const InvalidOperationException('The input sequence is empty.');
+      throw const InvalidOperationError('The input sequence is empty.');
     }
     final value = iter.next();
     if(iter.hasNext) {
-      throw const InvalidOperationException('The input sequence contains more than one element.');
+      throw const InvalidOperationError('The input sequence contains more than one element.');
     }
     return value;
   }
@@ -182,7 +182,7 @@ abstract class Enumerable<T> implements Iterable<T> {
     }
     final value = iter.next();
     if(iter.hasNext) {
-      throw const InvalidOperationException('The input sequence contains more than one element.');
+      throw const InvalidOperationError('The input sequence contains more than one element.');
     }
     return value;
   }

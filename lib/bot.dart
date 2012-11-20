@@ -31,9 +31,9 @@ part 'src/bot/events/event_root.dart';
 part 'src/bot/events/event_args.dart';
 part 'src/bot/events/event_handle.dart';
 
-part 'src/bot/exceptions/detailed_illegal_argument_exception.dart';
-part 'src/bot/exceptions/invalid_operation_exception.dart';
-part 'src/bot/exceptions/null_argument_exception.dart';
+part 'src/bot/exceptions/detailed_argument_error.dart';
+part 'src/bot/exceptions/invalid_operation_error.dart';
+part 'src/bot/exceptions/null_argument_error.dart';
 
 part 'src/bot/global_id.dart';
 

@@ -21,7 +21,7 @@ class TestNumberEnumerable {
     var value = n$([1,2,3]).sum();
     expect(value, equals(6));
 
-    expect(() => n$([1,2,3,null]).sum(), throwsNullPointerException);
+    expect(() => n$([1,2,3,null]).sum(), throwsNoSuchMethodError);
   }
 
   static void _testMin() {
@@ -42,6 +42,6 @@ class TestNumberEnumerable {
     var value = n$([1,2,3]).average();
     expect(value, equals(2));
 
-    expect(() => n$([1,2,3,null]).average(), throwsNullPointerException);
+    expect(() => n$([1,2,3,null]).average(), throwsNoSuchMethodError);
   }
 }
