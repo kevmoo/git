@@ -1,6 +1,6 @@
 part of hop_tasks;
 
-Func1<TaskContext, Future<bool>> getCompileDocsFunc(String targetBranch) {
+AsyncTask getCompileDocsFunc(String targetBranch) {
   return (ctx) => compileDocs(ctx, targetBranch);
 }
 

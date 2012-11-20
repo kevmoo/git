@@ -27,7 +27,7 @@ class Tasks {
     _addTask(new _HopTask.sync(name, func));
   }
 
-  void addTaskAsync(String name, Func1<TaskContext, Future<bool>> execFuture) {
+  void addTaskAsync(String name, AsyncTask execFuture) {
     _addTask(new _HopTask.async(name, execFuture));
   }
 

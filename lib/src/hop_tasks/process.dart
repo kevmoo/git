@@ -1,6 +1,6 @@
 part of hop_tasks;
 
-Func1<TaskContext, Future<bool>> createStartProcessTask(String command, List<String> args) {
+AsyncTask createStartProcessTask(String command, List<String> args) {
   return (context) {
     return startProcess(context, command, args);
   };

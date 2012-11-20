@@ -16,6 +16,8 @@ part 'src/hop/task_context.dart';
 
 final _sharedState = new Tasks();
 
+typedef Future<bool> AsyncTask(TaskContext ctx);
+
 // See http://tldp.org/LDP/abs/html/exitcodes.html
 // Accessed 2012-11-07
 
@@ -49,7 +51,7 @@ void addTask(String name, Func1<TaskContext, bool> execFunc) {
   _sharedState.addTask(name, execFunc);
 }
 
-void addAsyncTask(String name, Func1<TaskContext, Future<bool>> execFuture) {
+void addAsyncTask(String name, AsyncTask execFuture) {
   _sharedState.addTaskAsync(name, execFuture);
 }
 

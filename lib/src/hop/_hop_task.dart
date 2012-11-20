@@ -2,7 +2,7 @@ part of hop;
 
 class _HopTask {
   final name;
-  final Func1<TaskContext, Future<bool>> _exec;
+  final AsyncTask _exec;
 
   factory _HopTask.sync(String name, Func1<TaskContext, bool> exec) {
     final futureExec = (TaskContext state) => new Future.immediate(exec(state));
