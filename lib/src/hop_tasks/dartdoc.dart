@@ -1,9 +1,11 @@
-part of hop_runner;
+part of hop_tasks;
 
-Future<bool> _compileDocs(TaskContext ctx) {
-  final targetBranch = 'gh-pages';
+Func1<TaskContext, Future<bool>> getCompileDocsFunc(String targetBranch) {
+  return (ctx) => compileDocs(ctx, targetBranch);
+}
 
-  _assertKnownPath();
+Future<bool> compileDocs(TaskContext ctx, String targetBranch) {
+
   final dir = new Directory('');
   final tempDocsDirFuture = dir.createTemp()
       .transform((Directory dir) => dir.path);
@@ -20,7 +22,7 @@ Future<bool> _compileDocs(TaskContext ctx) {
             .chain((obj) => _dartDoc(ctx, outputDir, libs))
             .chain((bool dartDocSuccess) {
               if(dartDocSuccess) {
-                return _doCommit(ctx, outputDir, gitDir);
+                return _doCommitComplex(ctx, outputDir, gitDir);
               } else {
                 throw 'boo! docs failed...clean up';
               }
@@ -117,7 +119,7 @@ Future _checkoutBare(TaskContext ctx, String gitDir, String workTree,
       });
 }
 
-Future _doCommit(TaskContext ctx, String workTree, String gitDir) {
+Future _doCommitComplex(TaskContext ctx, String workTree, String gitDir) {
   final args = _getGitArgs(gitDir, workTree);
   // TODO: need more info for commit message
   args.addAll(['add', '--all']);

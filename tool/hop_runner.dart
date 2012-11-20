@@ -6,13 +6,11 @@ import 'package:bot/hop.dart';
 import 'package:bot/hop_tasks.dart';
 import '../test/harness_console.dart' as test_console;
 
-part 'dartdoc.dart';
-
 void main() {
   _assertKnownPath();
 
   addAsyncTask('test', createUnitTestTask(test_console.testCore));
-  addAsyncTask('docs', _compileDocs);
+  addAsyncTask('docs', getCompileDocsFunc('gh-pages'));
 
   //
   // Dart2js
