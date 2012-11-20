@@ -86,8 +86,7 @@ Future _doGitClone(TaskContext ctx, String sourceGitPath,
 
 Future _ensureProperBranch(TaskContext ctx, String gitDir, String workTree,
                            String desiredBranch) {
-  final args = _getGitArgs(gitDir, workTree);
-  args.addAll(['rev-parse', '--abbrev-ref', 'HEAD']);
+  final args = _getGitArgs(gitDir, workTree, ['rev-parse', '--abbrev-ref', 'HEAD']);
 
   return Process.run('git', args)
       .transform((ProcessResult pr) {
@@ -107,13 +106,11 @@ Future _ensureProperBranch(TaskContext ctx, String gitDir, String workTree,
 
 Future _checkoutBare(TaskContext ctx, String gitDir, String workTree,
                      String desiredBranch) {
-  final args = _getGitArgs(gitDir, workTree);
-  args.addAll(['checkout', '--orphan', desiredBranch]);
+  final args = _getGitArgs(gitDir, workTree, ['checkout', '--orphan', desiredBranch]);
   return Process.run('git', args)
       .chain((ProcessResult pr) {
         _throwIfProcessFailed(ctx, pr);
-        final args = _getGitArgs(gitDir, workTree);
-        args.addAll(['rm', '-rf', '.']);
+        final args = _getGitArgs(gitDir, workTree, ['rm', '-rf', '.']);
         return Process.run('git', args);
       })
       .transform((ProcessResult pr) {
@@ -122,15 +119,13 @@ Future _checkoutBare(TaskContext ctx, String gitDir, String workTree,
 }
 
 Future _doCommitComplex(TaskContext ctx, String workTree, String gitDir) {
-  final args = _getGitArgs(gitDir, workTree);
-  // TODO: need more info for commit message
-  args.addAll(['add', '--all']);
+  final args = _getGitArgs(gitDir, workTree, ['add', '--all']);
   return Process.run('git', args)
       .chain((ProcessResult pr) {
         _throwIfProcessFailed(ctx, pr);
-        final args = _getGitArgs(gitDir, workTree);
+
         // TODO: need more info for commit message
-        args.addAll(['commit', '-m', 'new goodness', '.']);
+        final args = _getGitArgs(gitDir, workTree, ['commit', '-m', 'new goodness', '.']);
 
         return Process.run('git', args);
       })
@@ -149,8 +144,7 @@ Future _doCommitComplex(TaskContext ctx, String workTree, String gitDir) {
 }
 
 Future _doPush(TaskContext ctx, String workTree, String gitDir, String branchName) {
-  final args = _getGitArgs(gitDir, workTree);
-  args.addAll(['push', 'origin', branchName]);
+  final args = _getGitArgs(gitDir, workTree, ['push', 'origin', branchName]);
   return Process.run('git', args)
       .transform((ProcessResult pr) {
         _throwIfProcessFailed(ctx, pr);
@@ -158,8 +152,12 @@ Future _doPush(TaskContext ctx, String workTree, String gitDir, String branchNam
       });
 }
 
-List<String> _getGitArgs(String gitDir, String workTree) =>
-    ['--git-dir=$gitDir', '--work-tree=$workTree'];
+List<String> _getGitArgs(String gitDir, String workTree,
+    Collection<String> rest) {
+  final args = ['--git-dir=$gitDir', '--work-tree=$workTree'];
+  args.addAll(rest);
+  return args;
+}
 
 Future<bool> _cleanUpTemp(String tempDir, bool dartDocSuccess) {
   final dir = new Directory(tempDir);
