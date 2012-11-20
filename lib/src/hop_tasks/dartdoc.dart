@@ -35,7 +35,7 @@ Future<bool> compileDocs(TaskContext ctx, String targetBranch,
   });
 }
 
-Future _deleteTempDirs(List<String> dirPaths) {
+Future _deleteTempDirs(Collection<String> dirPaths) {
   final tmpDirPrefix = 'temp_dir';
   final delDirs = dirPaths
       .map((p) => new Path(p));
@@ -53,7 +53,7 @@ Future _deleteTempDirs(List<String> dirPaths) {
   return Futures.wait(new List.from(delDirFutures));
 }
 
-Future<bool> _dartDoc(TaskContext ctx, String outputDir, List<String> libs) {
+Future<bool> _dartDoc(TaskContext ctx, String outputDir, Collection<String> libs) {
   final args = ['--omit-generation-time', '--out', outputDir, '--verbose'];
   args.addAll(libs);
   ctx.fine("Generating docs into: $outputDir");
