@@ -1,17 +1,19 @@
 part of hop_tasks;
 
-AsyncTask getCompileDocsFunc(String targetBranch) {
-  return (ctx) => compileDocs(ctx, targetBranch);
+AsyncTask getCompileDocsFunc(String targetBranch,
+                             Func<Future<SequenceCollection<String>>> libGetter) {
+  return (ctx) => compileDocs(ctx, targetBranch, libGetter);
 }
 
-Future<bool> compileDocs(TaskContext ctx, String targetBranch) {
+Future<bool> compileDocs(TaskContext ctx, String targetBranch,
+    Func<Future<SequenceCollection<String>>> libGetter) {
 
   final dir = new Directory('');
   final tempDocsDirFuture = dir.createTemp()
       .transform((Directory dir) => dir.path);
   final tempGitDirFuture = dir.createTemp()
       .chain((Directory dir) => _doGitCheckout(ctx, '.', dir.path, targetBranch));
-  final getLibsFuture = _getLibs();
+  final getLibsFuture = libGetter();
 
   return Futures.wait([tempDocsDirFuture, getLibsFuture, tempGitDirFuture])
       .chain((values) {
@@ -163,39 +165,6 @@ Future<bool> _cleanUpTemp(String tempDir, bool dartDocSuccess) {
   final dir = new Directory(tempDir);
   return dir.delete(recursive: true)
       .transform((d) => dartDocSuccess);
-}
-
-Future<List<String>> _getLibs() {
-  final completer = new Completer<List<String>>();
-
-  final lister = new Directory('lib').list();
-  final libs = new List<String>();
-
-  lister.onFile = (String file) {
-    if(file.endsWith('.dart')) {
-      // DARTBUG: http://code.google.com/p/dart/issues/detail?id=5460
-      // exclude libs because of issues with dartdoc and sdk libs
-      // in this case: unittest and args
-      final forbidden = ['test', 'hop', 'hop_tasks'].map((n) => '$n.dart');
-      if(forbidden.every((f) => !file.endsWith(f))) {
-        libs.add(file);
-      }
-    }
-  };
-
-  lister.onDone = (bool done) {
-    if(done) {
-      completer.complete(libs);
-    } else {
-      completer.completeException('did not finish');
-    }
-  };
-
-  lister.onError = (error) {
-    completer.completeException(error);
-  };
-
-  return completer.future;
 }
 
 // See http://git-scm.com/docs/git-ls-remote

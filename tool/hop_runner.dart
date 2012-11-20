@@ -10,7 +10,7 @@ void main() {
   _assertKnownPath();
 
   addAsyncTask('test', createUnitTestTask(test_console.testCore));
-  addAsyncTask('docs', getCompileDocsFunc('gh-pages'));
+  addAsyncTask('docs', getCompileDocsFunc('gh-pages', _getLibs));
 
   //
   // Dart2js
@@ -37,4 +37,37 @@ void _assertKnownPath() {
 bool _about(TaskContext context) {
   context.fine('Welcome to HOP!');
   return true;
+}
+
+Future<SequenceCollection<String>> _getLibs() {
+  final completer = new Completer<List<String>>();
+
+  final lister = new Directory('lib').list();
+  final libs = new List<String>();
+
+  lister.onFile = (String file) {
+    if(file.endsWith('.dart')) {
+      // DARTBUG: http://code.google.com/p/dart/issues/detail?id=5460
+      // exclude libs because of issues with dartdoc and sdk libs
+      // in this case: unittest and args
+      final forbidden = ['test', 'hop', 'hop_tasks'].map((n) => '$n.dart');
+      if(forbidden.every((f) => !file.endsWith(f))) {
+        libs.add(file);
+      }
+    }
+  };
+
+  lister.onDone = (bool done) {
+    if(done) {
+      completer.complete(libs);
+    } else {
+      completer.completeException('did not finish');
+    }
+  };
+
+  lister.onError = (error) {
+    completer.completeException(error);
+  };
+
+  return completer.future;
 }
