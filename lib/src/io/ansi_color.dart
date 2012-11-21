@@ -5,11 +5,11 @@ part of bot_io;
  */
 class AnsiColor {
   const String _NO_COLOR = '\u001b[0m';
-  static const BLACK = const AnsiColor._internal(0, 'black');
-  static const RED = const AnsiColor._internal(1, 'red');
-  static const GREEN = const AnsiColor._internal(2, 'green');
-  static const YELLOW = const AnsiColor._internal(3, 'yellow');
-  static const BLUE = const AnsiColor._internal(4, 'blue');
+  static const AnsiColor BLACK = const AnsiColor._internal(0, 'black');
+  static const AnsiColor RED = const AnsiColor._internal(1, 'red');
+  static const AnsiColor GREEN = const AnsiColor._internal(2, 'green');
+  static const AnsiColor YELLOW = const AnsiColor._internal(3, 'yellow');
+  static const AnsiColor BLUE = const AnsiColor._internal(4, 'blue');
 
   final int id;
   final String name;
