@@ -52,7 +52,7 @@ class Runner {
   }
 
   Future<int> _runTask(TaskContext context, String taskName) {
-    final task = _state.getTask(taskName);
+    final task = _state._getTask(taskName);
     assert(task != null);
 
     final completer = new Completer<int>();

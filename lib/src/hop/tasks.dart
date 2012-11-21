@@ -19,7 +19,7 @@ class Tasks {
     return _tasks.containsKey(taskName);
   }
 
-  _HopTask getTask(String taskName) {
+  _HopTask _getTask(String taskName) {
     return _tasks[taskName];
   }
 
