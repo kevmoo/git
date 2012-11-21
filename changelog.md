@@ -3,6 +3,7 @@
 ### 0.7.0 - (SDK r15159)
 
 * __BREAKING__ Renamed exception classes to align with Dart naming conventions.
+* __BREAKING__ `io.Color` is now `io.AnsiColor`
 
 ### 0.6.0 - (SDK r15042)
 

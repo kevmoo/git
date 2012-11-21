@@ -3,18 +3,18 @@ part of hop;
 abstract class TaskContext extends DisposableImpl {
 
   void fine(String message) {
-    _printCore(message, Color.BLUE);
+    _printCore(message, AnsiColor.BLUE);
   }
 
   void error(String message) {
-    _printCore(message, Color.RED);
+    _printCore(message, AnsiColor.RED);
   }
 
   void success(String message) {
-    _printCore(message, Color.GREEN);
+    _printCore(message, AnsiColor.GREEN);
   }
 
-  void _printCore(String message, Color color);
+  void _printCore(String message, AnsiColor color);
 }
 
 class _SubTaskContext extends TaskContext {
@@ -23,7 +23,7 @@ class _SubTaskContext extends TaskContext {
 
   _SubTaskContext(this._parent, this._name);
 
-  void _printCore(String message, Color color) {
+  void _printCore(String message, AnsiColor color) {
     _parent.printCore(message, color, _name);
   }
 }
@@ -42,7 +42,7 @@ class RootTaskContext {
   }
 
   @protected
-  void printCore(String message, [Color color = null, String taskName = null]) {
+  void printCore(String message, [AnsiColor color = null, String taskName = null]) {
     if(!_enableColor) {
       color = null;
     }
