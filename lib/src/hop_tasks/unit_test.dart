@@ -1,6 +1,6 @@
 part of hop_tasks;
 
-AsyncTask createUnitTestTask(Action1<unittest.Configuration> unitTestAction) {
+TaskDefinition createUnitTestTask(Action1<unittest.Configuration> unitTestAction) {
   return (TaskContext state) {
     final config = new _HopTestConfiguration(state);
     final future = config.future;

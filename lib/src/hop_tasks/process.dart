@@ -1,6 +1,6 @@
 part of hop_tasks;
 
-AsyncTask createStartProcessTask(String command, List<String> args) {
+TaskDefinition createStartProcessTask(String command, List<String> args) {
   return (context) {
     return startProcess(context, command, args);
   };

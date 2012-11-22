@@ -4,7 +4,7 @@ class Task {
   static final RegExp _validNameRegExp = new RegExp(r'^[a-z][a-z0-9_]*$');
 
   final name;
-  final AsyncTask _exec;
+  final TaskDefinition _exec;
 
   factory Task.sync(String name, Func1<TaskContext, bool> exec) {
     final futureExec = (TaskContext state) => new Future.immediate(exec(state));

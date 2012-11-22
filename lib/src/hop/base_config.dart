@@ -27,7 +27,7 @@ class BaseConfig {
     _addTask(new Task.sync(name, func));
   }
 
-  void addTaskAsync(String name, AsyncTask execFuture) {
+  void addTaskAsync(String name, TaskDefinition execFuture) {
     _addTask(new Task.async(name, execFuture));
   }
 

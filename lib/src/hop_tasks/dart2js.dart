@@ -1,6 +1,6 @@
 part of hop_tasks;
 
-AsyncTask createDart2JsTask(List<String> inputs,
+TaskDefinition createDart2JsTask(List<String> inputs,
     {bool minify: false}) {
   return (context) {
     final futureFuncs = $(inputs).map((p) =>
