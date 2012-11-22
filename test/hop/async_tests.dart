@@ -19,7 +19,7 @@ class AsyncTests {
   static Action0 _testSimpleAsyncTask(String name, Func1<TaskContext,
                                      Future<bool>> taskFuture,
                                      Action1<Future<bool>> completeHandler) {
-    final tasks = new Tasks();
+    final tasks = new BaseConfig();
     tasks.addTaskAsync(name, taskFuture);
     tasks.freeze();
 

@@ -1,11 +1,11 @@
 part of hop;
 
-class Tasks {
+class BaseConfig {
   static const _reservedTasks = const[Runner.RAW_TASK_LIST_CMD];
   final Map<String, _HopTask> _tasks = new Map();
   ReadOnlyCollection<String> _sortedTaskNames;
 
-  Tasks();
+  BaseConfig();
 
   /// Can only be accessed when frozen
   /// Always sorted

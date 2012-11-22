@@ -10,11 +10,11 @@ import 'package:bot/bot.dart';
 import 'package:bot/io.dart';
 
 part 'src/hop/runner.dart';
-part 'src/hop/tasks.dart';
+part 'src/hop/base_config.dart';
 part 'src/hop/_hop_task.dart';
 part 'src/hop/task_context.dart';
 
-final _sharedState = new Tasks();
+final _sharedConfig = new BaseConfig();
 
 typedef Future<bool> AsyncTask(TaskContext ctx);
 
@@ -37,9 +37,9 @@ final EXIT_CODE_TASK_EXCEPTION = 81;
 final EXIT_CODE_TASK_ERROR = 82;
 
 void runHopCore() {
-  _sharedState.freeze();
+  _sharedConfig.freeze();
   final options = new Options();
-  final runner = new Runner(_sharedState, options.arguments);
+  final runner = new Runner(_sharedConfig, options.arguments);
   final future = runner.run();
 
   future.onComplete((Future<int> f) {
@@ -48,9 +48,9 @@ void runHopCore() {
 }
 
 void addTask(String name, Func1<TaskContext, bool> execFunc) {
-  _sharedState.addTask(name, execFunc);
+  _sharedConfig.addTask(name, execFunc);
 }
 
 void addAsyncTask(String name, AsyncTask execFuture) {
-  _sharedState.addTaskAsync(name, execFuture);
+  _sharedConfig.addTaskAsync(name, execFuture);
 }

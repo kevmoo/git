@@ -3,14 +3,14 @@ part of test_hop;
 class TaskListTests {
   static run() {
     test('dupe names are bad', () {
-      final tasks = new Tasks();
+      final tasks = new BaseConfig();
       tasks.addTask('task', (ctx) => true);
 
       expect(() => tasks.addTask('task', (ctx) => true), throwsArgumentError);
     });
 
     test('reject bad task names', () {
-      final tasks = new Tasks();
+      final tasks = new BaseConfig();
       final goodNames = const['a','aa','a_','a1','a_b','a_cool_test1_'];
 
       for(final n in goodNames) {
@@ -27,7 +27,7 @@ class TaskListTests {
     });
 
     test('reject tasks after freeze', () {
-      final tasks = new Tasks();
+      final tasks = new BaseConfig();
 
       expect(tasks.isFrozen, isFalse);
       tasks.freeze();

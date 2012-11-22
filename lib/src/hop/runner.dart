@@ -4,7 +4,7 @@ class Runner {
   static const String RAW_TASK_LIST_CMD = 'print_raw_task_list';
   static final ArgParser _parser = _getParser();
   final ArgResults _args;
-  final Tasks _state;
+  final BaseConfig _state;
 
   Runner(this._state, List<String> arguments) :
     // TODO: better error or output for invalid arguments

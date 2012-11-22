@@ -2,7 +2,7 @@ part of test_hop;
 
 class TestRunner extends Runner {
 
-  TestRunner(Tasks state, List<String> arguments) :
+  TestRunner(BaseConfig state, List<String> arguments) :
     super(state, arguments);
 
 
