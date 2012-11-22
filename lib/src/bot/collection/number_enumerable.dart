@@ -20,6 +20,9 @@ abstract class NumberEnumerable<T extends num> extends Enumerable<T> {
   num sum() {
     num theSum = 0;
     for(final n in this) {
+      if(n == null) {
+        throw const InvalidOperationError('Input contained a null item');
+      }
       theSum += n;
     }
     return theSum;
@@ -29,6 +32,9 @@ abstract class NumberEnumerable<T extends num> extends Enumerable<T> {
     int theCount = 0;
     num theSum = 0;
     for(final n in this) {
+      if(n == null) {
+        throw const InvalidOperationError('Input contained a null item');
+      }
       theSum += n;
       theCount++;
     }
@@ -38,6 +44,9 @@ abstract class NumberEnumerable<T extends num> extends Enumerable<T> {
   num max() {
     num theMax = null;
     for(final n in this) {
+      if(n == null) {
+        throw const InvalidOperationError('Input contained a null item');
+      }
       theMax = theMax == null ? n : math.max(theMax, n);
     }
     return theMax;
@@ -46,6 +55,9 @@ abstract class NumberEnumerable<T extends num> extends Enumerable<T> {
   num min() {
     num theMin = null;
     for(final n in this) {
+      if(n == null) {
+        throw const InvalidOperationError('Input contained a null item');
+      }
       theMin = theMin == null ? n : math.min(theMin, n);
     }
     return theMin;

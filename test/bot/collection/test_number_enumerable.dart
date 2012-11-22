@@ -21,27 +21,27 @@ class TestNumberEnumerable {
     var value = n$([1,2,3]).sum();
     expect(value, equals(6));
 
-    expect(() => n$([1,2,3,null]).sum(), throwsNoSuchMethodError);
+    expect(() => n$([1,2,3,null]).sum(), throwsInvalidOperationError);
   }
 
   static void _testMin() {
     var value = n$([1,2,3]).min();
     expect(value, equals(1));
 
-    expect(() => n$([1,2,3,null]).min(), throwsArgumentError);
+    expect(() => n$([1,2,3,null]).min(), throwsInvalidOperationError);
   }
 
   static void _testMax() {
     var value = n$([1,2,3]).max();
     expect(value, equals(3));
 
-    expect(() => n$([1,2,3,null]).max(), throwsArgumentError);
+    expect(() => n$([1,2,3,null]).max(), throwsInvalidOperationError);
   }
 
   static void _testAverage() {
     var value = n$([1,2,3]).average();
     expect(value, equals(2));
 
-    expect(() => n$([1,2,3,null]).average(), throwsNoSuchMethodError);
+    expect(() => n$([1,2,3,null]).average(), throwsInvalidOperationError);
   }
 }
