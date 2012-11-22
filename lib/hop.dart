@@ -11,7 +11,7 @@ import 'package:bot/io.dart';
 
 part 'src/hop/runner.dart';
 part 'src/hop/base_config.dart';
-part 'src/hop/_hop_task.dart';
+part 'src/hop/task.dart';
 part 'src/hop/task_context.dart';
 
 final _sharedConfig = new BaseConfig();

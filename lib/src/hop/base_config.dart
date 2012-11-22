@@ -2,7 +2,7 @@ part of hop;
 
 class BaseConfig {
   static const _reservedTasks = const[Runner.RAW_TASK_LIST_CMD];
-  final Map<String, _HopTask> _tasks = new Map();
+  final Map<String, Task> _tasks = new Map();
   ReadOnlyCollection<String> _sortedTaskNames;
 
   BaseConfig();
@@ -19,16 +19,16 @@ class BaseConfig {
     return _tasks.containsKey(taskName);
   }
 
-  _HopTask _getTask(String taskName) {
+  Task _getTask(String taskName) {
     return _tasks[taskName];
   }
 
   void addTask(String name, Func1<TaskContext, bool> func) {
-    _addTask(new _HopTask.sync(name, func));
+    _addTask(new Task.sync(name, func));
   }
 
   void addTaskAsync(String name, AsyncTask execFuture) {
-    _addTask(new _HopTask.async(name, execFuture));
+    _addTask(new Task.async(name, execFuture));
   }
 
   void requireFrozen() {
@@ -46,7 +46,7 @@ class BaseConfig {
 
   bool get isFrozen => _sortedTaskNames != null;
 
-  void _addTask(_HopTask task) {
+  void _addTask(Task task) {
     requireArgumentNotNull(task, 'task');
     require(!isFrozen, "Cannot add a task. Frozen.");
     requireArgument(!_reservedTasks.contains(task.name), 'task',
