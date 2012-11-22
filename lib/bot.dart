@@ -3,6 +3,13 @@ library bot;
 import 'dart:collection';
 import 'dart:math' as math;
 
+part 'src/bot/requires.dart';
+part 'src/bot/tuple.dart';
+part 'src/bot/tuple3.dart';
+part 'src/bot/typedefs.dart';
+part 'src/bot/util.dart';
+part 'src/bot/annotations.dart';
+
 part 'src/bot/attached/attachable.dart';
 part 'src/bot/attached/attachable_object.dart';
 part 'src/bot/attached/attached_event.dart';
@@ -45,9 +52,3 @@ part 'src/bot/math/rect.dart';
 part 'src/bot/math/size.dart';
 part 'src/bot/math/tarjan_cycle_detect.dart';
 part 'src/bot/math/vector.dart';
-
-part 'src/bot/requires.dart';
-part 'src/bot/tuple.dart';
-part 'src/bot/tuple3.dart';
-part 'src/bot/typedefs.dart';
-part 'src/bot/util.dart';
