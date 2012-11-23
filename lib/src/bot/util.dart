@@ -1,7 +1,7 @@
 part of bot;
 
 class Util {
-  static int getHashCode(Iterable<Hashable> source) {
+  static int getHashCode(Iterable source) {
     int hash = 0;
     for (final h in source) {
       int next = h == null ? 0 : h.hashCode;
