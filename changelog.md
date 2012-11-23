@@ -4,6 +4,7 @@
 
 * __BREAKING__ Renamed exception classes to align with Dart naming conventions.
 * __BREAKING__ `io.Color` is now `io.AnsiColor`
+* __BREAKING__ Slight changes to `requires` methods, `DetailedArgumentException`
 
 ### 0.6.0 - (SDK r15042)
 

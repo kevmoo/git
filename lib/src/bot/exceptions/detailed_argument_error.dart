@@ -1,17 +1,15 @@
 part of bot;
 
-class DetailedArgumentError extends ArgumentError {
+class DetailedArgumentError implements ArgumentError {
   final argument;
+  final details;
 
-  DetailedArgumentError([String arg = '', String message]) :
-    this.argument = arg,
-    super(message);
-
-  String toString() {
-    if(message == null || message.length == 0) {
-      return "Illegal argument: $argument";
-    } else {
-      return "Illegal argument: $argument -- $message";
-    }
+  DetailedArgumentError(this.argument, this.details) {
+    requireArgumentNotNullOrEmpty(argument, 'argument');
+    requireArgumentNotNullOrEmpty(details, 'details');
   }
+
+  String get message => 'Illegal argument: "$argument" -- $details';
+
+  String toString() => message;
 }
