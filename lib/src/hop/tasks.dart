@@ -47,10 +47,12 @@ class Tasks {
   bool get isFrozen => _sortedTaskNames != null;
 
   void _addTask(_HopTask task) {
-    requireArgumentNotNull(task);
+    requireArgumentNotNull(task, 'task');
     require(!isFrozen, "Cannot add a task. Frozen.");
-    requireArgument(!_reservedTasks.contains(task.name));
-    requireArgument(!_tasks.containsKey(task.name), 'A task with name ${task.name} already exists');
+    requireArgument(!_reservedTasks.contains(task.name), 'task',
+        'The provided task has a reserved name');
+    requireArgument(!_tasks.containsKey(task.name), 'task',
+        'A task with name ${task.name} already exists');
     _tasks[task.name] = task;
   }
 }

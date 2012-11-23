@@ -11,8 +11,19 @@ class TaskListTests {
 
     test('reject bad task names', () {
       final tasks = new Tasks();
-      expect(() => tasks.addTask('', (ctx) => true), throwsArgumentError);
-      expect(() => tasks.addTask(null, (ctx) => true), throwsArgumentError);
+      final goodNames = const['a','aa','a_','a1','a_b','a_cool_test1_'];
+
+      for(final n in goodNames) {
+        tasks.addTask(n, (ctx) => true);
+      }
+
+      final badNames = const['', null, ' start white', '1 start num', '\rtest',
+                             'end_white ', 'contains white', 'contains\$bad',
+                             'test\r\test', 'UpperCase', 'camelCase'];
+
+      for(final n in badNames) {
+        expect(() => tasks.addTask(n, (ctx) => true), throwsArgumentError);
+      }
     });
 
     test('reject tasks after freeze', () {

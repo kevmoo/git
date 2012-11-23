@@ -1,6 +1,8 @@
 part of hop;
 
 class _HopTask {
+  static final RegExp _validNameRegExp = new RegExp(r'^[a-z][a-z0-9_]*$');
+
   final name;
   final AsyncTask _exec;
 
@@ -11,11 +13,9 @@ class _HopTask {
   }
 
   _HopTask.async(this.name, this._exec) {
-    requireArgumentNotNull(name, 'name');
-    requireArgument(name.length > 0, 'name');
-    // TODO: no whitespace
-    // TODO: only alpha-numeric + underscore + hyphen?
-    // TODO: must start with alpha
+    requireArgumentNotNullOrEmpty(name, 'name');
+    requireArgument(_validNameRegExp.hasMatch(name), 'name',
+        '"$name" is not a valid name');
   }
 
   Future<bool> run(TaskContext state) {
