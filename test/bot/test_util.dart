@@ -25,6 +25,8 @@ class TestUtil {
   }
 
   static void _testGetHashCode() {
+    expect(() => Util.getHashCode(null), throwsNullArgumentError);
+
     _hashCodeFun([], 0);
     _hashCodeFun([null], 0);
     _hashCodeFun([null, null], 0);
