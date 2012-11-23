@@ -13,4 +13,10 @@ class Util {
     hash ^= hash >> 11;
     return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
   }
+
+  static List<String> splitLines(String input) {
+    requireArgumentNotNull(input, 'input');
+    final split = '\n';
+    return input.split(split);
+  }
 }

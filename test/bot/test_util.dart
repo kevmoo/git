@@ -5,7 +5,24 @@ class TestUtil {
     group('Util', () {
       // No promises that hashCodes stay the same across impls
       // test('getHashcode', _testGetHashCode);
+      test('split lines', _testSplitLines);
     });
+  }
+
+  static void _testSplitLines() {
+    expect(() => Util.splitLines(null), throwsNullArgumentError);
+
+    final inputMap = const [const Tuple('test', const ['test']),
+                            const Tuple('test\ntest', const ['test','test']),
+                            const Tuple('\n', const ['','']),
+                            const Tuple('  \n  ', const ['  ','  ']),
+                            const Tuple('  \n \n', const ['  ',' ','']),
+                            const Tuple('  \n \n', const ['  ',' ',''])
+                            ];
+
+    for(final i in inputMap) {
+      expect(Util.splitLines(i.item1), equals(i.item2));
+    }
   }
 
   static void _testGetHashCode() {
