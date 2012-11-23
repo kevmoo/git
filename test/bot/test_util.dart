@@ -10,7 +10,7 @@ class TestUtil {
 
   static void _testGetHashCode() {
     // Verifies hashCodes for Dart VM
-    // Broken in Dartium - http://code.google.com/p/dart/issues/detail?id=4455
+    // DARTBUG http://code.google.com/p/dart/issues/detail?id=4467
     expect('foo'.hashCode, equals(848623837));
 
     _hashCodeFun([], 0);
