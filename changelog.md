@@ -1,12 +1,21 @@
 # Changelog - Dart Bag of Tricks
 
-### 0.7.0 - (SDK r15159)
+## 0.7.0 - (SDK r15159)
+
+### Bot
 
 * __BREAKING__ Renamed exception classes to align with Dart naming conventions.
-* __BREAKING__ `io.Color` is now `io.AnsiColor`
 * __BREAKING__ Slight changes to `requires` methods, `DetailedArgumentException`
 
-### 0.6.0 - (SDK r15042)
+### hop
+
+* __BREAKING__ Major rename to core classes.
+
+### io
+
+* __BREAKING__ `io.Color` is now `io.AnsiColor`
+
+## 0.6.0 - (SDK r15042)
 
 * __BREAKING__ Merged `hop` back in. Circular dependencies just make no sense.
 * __BREAKING__ Moved `qr` into its [own repository](https://github.com/kevmoo/qr.dart).
