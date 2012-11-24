@@ -1,22 +1,18 @@
 part of hop;
 
 class Task {
-  static final RegExp _validNameRegExp = new RegExp(r'^[a-z][a-z0-9_]*$');
   static final _nullFutureResultEx = 'null-future-result-silly';
 
-  final name;
   final TaskDefinition _exec;
 
-  factory Task.sync(String name, Func1<TaskContext, bool> exec) {
+  factory Task.sync(Func1<TaskContext, bool> exec) {
     final futureExec = (TaskContext ctx) => new Future.immediate(exec(ctx));
 
-    return new Task.async(name, futureExec);
+    return new Task.async(futureExec);
   }
 
-  Task.async(this.name, this._exec) {
-    requireArgumentNotNullOrEmpty(name, 'name');
-    requireArgument(_validNameRegExp.hasMatch(name), 'name',
-        '"$name" is not a valid name');
+  Task.async(this._exec) {
+    requireArgumentNotNull(_exec, '_exec');
   }
 
   Future<bool> run(TaskContext ctx) {

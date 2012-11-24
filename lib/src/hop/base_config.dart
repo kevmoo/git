@@ -1,6 +1,7 @@
 part of hop;
 
 class BaseConfig {
+  static final RegExp _validNameRegExp = new RegExp(r'^[a-z][a-z0-9_]*$');
   static const _reservedTasks = const[Runner.RAW_TASK_LIST_CMD];
   final Map<String, Task> _tasks = new Map();
   ReadOnlyCollection<String> _sortedTaskNames;
@@ -24,11 +25,25 @@ class BaseConfig {
   }
 
   void addSync(String name, Func1<TaskContext, bool> func) {
-    _addTask(new Task.sync(name, func));
+    addTask(name, new Task.sync(func));
   }
 
   void addAsync(String name, TaskDefinition execFuture) {
-    _addTask(new Task.async(name, execFuture));
+    addTask(name, new Task.async(execFuture));
+  }
+
+  void addTask(String name, Task task) {
+    require(!isFrozen, "Cannot add a task. Frozen.");
+    requireArgumentNotNullOrEmpty(name, 'name');
+    requireArgument(_validNameRegExp.hasMatch(name), 'name',
+        '"$name" is not a valid name');
+    requireArgument(!_reservedTasks.contains(name), 'task',
+        'The provided task has a reserved name');
+    requireArgument(!_tasks.containsKey(name), 'task',
+        'A task with name ${name} already exists');
+
+    requireArgumentNotNull(task, 'task');
+    _tasks[name] = task;
   }
 
   void requireFrozen() {
@@ -45,14 +60,4 @@ class BaseConfig {
   }
 
   bool get isFrozen => _sortedTaskNames != null;
-
-  void _addTask(Task task) {
-    requireArgumentNotNull(task, 'task');
-    require(!isFrozen, "Cannot add a task. Frozen.");
-    requireArgument(!_reservedTasks.contains(task.name), 'task',
-        'The provided task has a reserved name');
-    requireArgument(!_tasks.containsKey(task.name), 'task',
-        'A task with name ${task.name} already exists');
-    _tasks[task.name] = task;
-  }
 }
