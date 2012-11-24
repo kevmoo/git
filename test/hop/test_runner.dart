@@ -17,6 +17,7 @@ class TestTaskContext extends RootTaskContext {
   TestTaskContext() : super();
 
   @protected
+  @override
   void printCore(String msg) {
     // at the moment, just swallowing all print output
   }

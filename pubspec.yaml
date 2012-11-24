@@ -8,3 +8,5 @@ dependencies:
     sdk: unittest
   args:
     sdk: args
+  meta:
+    sdk: meta
