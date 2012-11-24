@@ -14,17 +14,20 @@ Future<bool> compileDocs(TaskContext ctx, String targetBranch,
   final tempGitDirFuture = dir.createTemp()
       .chain((Directory dir) => _doGitCheckout(ctx, '.', dir.path, targetBranch));
   final getLibsFuture = libGetter();
+  final commitMessageFuture = _getCommitMessageFuture(ctx);
 
-  return Futures.wait([tempDocsDirFuture, getLibsFuture, tempGitDirFuture])
+  return Futures.wait([tempDocsDirFuture, getLibsFuture, tempGitDirFuture,
+                       commitMessageFuture])
       .chain((values) {
         final outputDir = values[0];
         final libs = values[1];
         final gitDir = values[2];
+        final commitMessage = values[3];
         return _ensureProperBranch(ctx, gitDir, outputDir, targetBranch)
             .chain((obj) => _dartDoc(ctx, outputDir, libs))
             .chain((bool dartDocSuccess) {
               if(dartDocSuccess) {
-                return _doCommitComplex(ctx, outputDir, gitDir);
+                return _doCommitComplex(ctx, outputDir, gitDir, commitMessage);
               } else {
                 throw 'boo! docs failed...clean up';
               }
@@ -33,6 +36,60 @@ Future<bool> compileDocs(TaskContext ctx, String targetBranch,
             .chain((obj) => _deleteTempDirs([outputDir, gitDir]))
             .transform((obj) => true);
   });
+}
+
+Future<String> _getCommitMessageFuture(TaskContext ctx) {
+  return _verifyCurrentWorkingTreeClean(ctx)
+      .chain((_) => _getCurrentBranchName(ctx))
+      .chain((String refName) => _getCommitMessageFromRefName(ctx, refName));
+}
+
+Future<String> _getCommitMessageFromRefName(TaskContext ctx, String refName) {
+  return Process.run('git', ['show-ref', '--abbrev', refName])
+      .transform((ProcessResult pr) {
+        _throwIfProcessFailed(ctx, pr);
+        var split = new List<String>.from(
+            pr.stdout.split(' ').map((e) => e.trim()));
+        assert(split.length == 2);
+        assert(split[1] == refName);
+
+        final sha = split[0];
+
+        return "Docs generated for $refName at $sha";
+      });
+}
+
+Future _verifyCurrentWorkingTreeClean(TaskContext ctx) {
+  return Process.run('git', ['status', '--porcelain'])
+      .transform((ProcessResult pr) {
+        _throwIfProcessFailed(ctx, pr);
+        if(pr.stdout.length > 0) {
+          throw 'Cannot continue. Working tree is dirty';
+        }
+
+        // not really needed, but nice
+        return null;
+      });
+}
+
+Future<String> _getCurrentBranchName(TaskContext ctx) {
+  return Process.run('git', ['rev-parse', '--verify',
+                                   '--symbolic-full-name', 'HEAD'])
+      .transform((ProcessResult pr) {
+        _throwIfProcessFailed(ctx, pr);
+
+        final refParseRegEx = new RegExp(r'^refs\/heads\/(.+)$', multiLine: true);
+        final match = refParseRegEx.firstMatch(pr.stdout.trim());
+
+        if(match == null) {
+          throw 'Could not determine current branch: ${pr.stdout}';
+        }
+
+        assert(match.groupCount == 1);
+
+        final branchName = match[0];
+        return branchName;
+      });
 }
 
 Future _deleteTempDirs(Collection<String> dirPaths) {
@@ -118,14 +175,18 @@ Future _checkoutBare(TaskContext ctx, String gitDir, String workTree,
       });
 }
 
-Future _doCommitComplex(TaskContext ctx, String workTree, String gitDir) {
+Future _doCommitComplex(TaskContext ctx, String workTree, String gitDir,
+                        String commitMessage) {
+  requireArgumentNotNullOrEmpty(commitMessage, 'commitMessage');
+
   final args = _getGitArgs(gitDir, workTree, ['add', '--all']);
   return Process.run('git', args)
       .chain((ProcessResult pr) {
         _throwIfProcessFailed(ctx, pr);
 
         // TODO: need more info for commit message
-        final args = _getGitArgs(gitDir, workTree, ['commit', '-m', 'new goodness', '.']);
+        final args = _getGitArgs(gitDir, workTree,
+            ['commit', '-m', commitMessage, '.']);
 
         return Process.run('git', args);
       })
