@@ -18,7 +18,7 @@ class AsyncTests {
                                      Action1<Future<bool>> completeHandler) {
     final name = 'task_name';
     final tasks = new BaseConfig();
-    tasks.addTaskAsync(name, taskFuture);
+    tasks.addAsync(name, taskFuture);
     tasks.freeze();
 
     final runner = new TestRunner(tasks, [name]);

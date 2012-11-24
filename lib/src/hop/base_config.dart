@@ -23,11 +23,11 @@ class BaseConfig {
     return _tasks[taskName];
   }
 
-  void addTask(String name, Func1<TaskContext, bool> func) {
+  void addSync(String name, Func1<TaskContext, bool> func) {
     _addTask(new Task.sync(name, func));
   }
 
-  void addTaskAsync(String name, TaskDefinition execFuture) {
+  void addAsync(String name, TaskDefinition execFuture) {
     _addTask(new Task.async(name, execFuture));
   }
 

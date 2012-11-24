@@ -49,7 +49,7 @@ class SyncTests {
 
   static void _testBadParam() {
     final tasks = new BaseConfig();
-    tasks.addTask('good', (ctx) => true);
+    tasks.addSync('good', (ctx) => true);
     tasks.freeze();
 
     final runner = new TestRunner(tasks, ['bad']);
@@ -67,7 +67,7 @@ class SyncTests {
 
   static void _testNoParam() {
     final tasks = new BaseConfig();
-    tasks.addTask('good', (ctx) => true);
+    tasks.addSync('good', (ctx) => true);
     tasks.freeze();
 
     final runner = new TestRunner(tasks, []);
@@ -87,7 +87,7 @@ class SyncTests {
                             Action1<Future<bool>> completeHandler) {
     final name = 'task_name';
     final tasks = new BaseConfig();
-    tasks.addTask(name, task);
+    tasks.addSync(name, task);
     tasks.freeze();
 
     final runner = new TestRunner(tasks, [name]);

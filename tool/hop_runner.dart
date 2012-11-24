@@ -9,7 +9,7 @@ import '../test/harness_console.dart' as test_console;
 void main() {
   _assertKnownPath();
 
-  addTask('hello', (ctx) {
+  addSyncTask('hello', (ctx) {
     ctx.fine('Welcome to HOP!');
     return true;
   });

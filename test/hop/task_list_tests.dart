@@ -4,9 +4,9 @@ class TaskListTests {
   static run() {
     test('dupe names are bad', () {
       final tasks = new BaseConfig();
-      tasks.addTask('task', (ctx) => true);
+      tasks.addSync('task', (ctx) => true);
 
-      expect(() => tasks.addTask('task', (ctx) => true), throwsArgumentError);
+      expect(() => tasks.addSync('task', (ctx) => true), throwsArgumentError);
     });
 
     test('reject bad task names', () {
@@ -14,7 +14,7 @@ class TaskListTests {
       final goodNames = const['a','aa','a_','a1','a_b','a_cool_test1_'];
 
       for(final n in goodNames) {
-        tasks.addTask(n, (ctx) => true);
+        tasks.addSync(n, (ctx) => true);
       }
 
       final badNames = const['', null, ' start white', '1 start num', '\rtest',
@@ -22,7 +22,7 @@ class TaskListTests {
                              'test\r\test', 'UpperCase', 'camelCase'];
 
       for(final n in badNames) {
-        expect(() => tasks.addTask(n, (ctx) => true), throwsArgumentError);
+        expect(() => tasks.addSync(n, (ctx) => true), throwsArgumentError);
       }
     });
 
@@ -37,7 +37,7 @@ class TaskListTests {
       expect(() => tasks.freeze(), throws);
 
       // cannot add task when frozen
-      expect(() => tasks.addTask('task', (ctx) => true), throws);
+      expect(() => tasks.addSync('task', (ctx) => true), throws);
     });
   }
 }
