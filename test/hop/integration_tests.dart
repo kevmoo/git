@@ -25,7 +25,7 @@ class IntegrationTests {
       final pr = f.value;
       expect(pr.exitCode, equals(EXIT_CODE_SUCCESS));
       final lines = pr.stdout.trim().split('\n');
-      expect(lines, orderedEquals(['about', 'dart2js', 'docs', 'test']));
+      expect(lines, orderedEquals(['dart2js', 'docs', 'hello', 'test']));
     });
 
     final f = Process.run(hopPath, [Runner.RAW_TASK_LIST_CMD]);

@@ -9,6 +9,11 @@ import '../test/harness_console.dart' as test_console;
 void main() {
   _assertKnownPath();
 
+  addTask('hello', (ctx) {
+    ctx.fine('Welcome to HOP!');
+    return true;
+  });
+
   addAsyncTask('test', createUnitTestTask(test_console.testCore));
   addAsyncTask('docs', getCompileDocsFunc('gh-pages', _getLibs));
 
@@ -22,7 +27,6 @@ void main() {
 
   addAsyncTask('dart2js', createDart2JsTask(paths));
 
-  addTask('about', _about);
   runHopCore();
 }
 
@@ -32,11 +36,6 @@ void _assertKnownPath() {
   // So check for existance of /bin/hop_runner.dart
   final thisFile = new File('tool/hop_runner.dart');
   assert(thisFile.existsSync());
-}
-
-bool _about(TaskContext context) {
-  context.fine('Welcome to HOP!');
-  return true;
 }
 
 Future<SequenceCollection<String>> _getLibs() {
