@@ -17,7 +17,7 @@ class TestTaskContext extends RootTaskContext {
   TestTaskContext() : super();
 
   @protected
-  void logCore(String msg, [AnsiColor color = null, String taskName = null]) {
+  void printCore(String msg) {
     // at the moment, just swallowing all print output
   }
 }

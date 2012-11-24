@@ -10,6 +10,7 @@ import 'package:bot/io.dart';
 
 part 'src/hop/runner.dart';
 part 'src/hop/base_config.dart';
+part 'src/hop/root_task_context.dart';
 part 'src/hop/task.dart';
 part 'src/hop/task_context.dart';
 part 'src/hop/task_fail_error.dart';
