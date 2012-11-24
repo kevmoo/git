@@ -57,24 +57,7 @@ class Runner {
 
     final completer = new Completer<int>();
 
-    // DARTBUG: http://code.google.com/p/dart/issues/detail?id=6405
-    // Hopefully this issue will be resolved. Having the catch inline here
-    // means we're missing the stack trace and duplicating error handling code.
-    Future<bool> future;
-    try {
-      future = task.run(context);
-    } catch(e) {
-      context.error('Exception thrown by task');
-      context.error(e.toString());
-      completer.complete(EXIT_CODE_TASK_EXCEPTION);
-      return completer.future;
-    }
-
-    if(future == null) {
-      context.error('The provided task returned null instead of a future');
-      completer.complete(EXIT_CODE_TASK_ERROR);
-      return completer.future;
-    }
+    final future = task.run(context);
 
     future.onComplete((f) {
       if(f.hasValue) {
@@ -92,11 +75,20 @@ class Runner {
           }
         }
       } else {
-        // has as exception, need to test this
-        context.error('Exception thrown by task');
-        context.error(f.exception.toString());
-        context.error(f.stackTrace.toString());
-        completer.complete(EXIT_CODE_TASK_EXCEPTION);
+        // special-case on exception type that represents null returned
+        // from the provided future.
+        // Hopefully will not be needed with fix of
+        // DARTBUG: http://code.google.com/p/dart/issues/detail?id=6405
+        if(f.exception == Task._nullFutureResultEx) {
+          context.error('The provided task returned null instead of a future');
+          completer.complete(EXIT_CODE_TASK_ERROR);
+        } else {
+          // has as exception, need to test this
+          context.error('Exception thrown by task');
+          context.error(f.exception.toString());
+          context.error(f.stackTrace.toString());
+          completer.complete(EXIT_CODE_TASK_EXCEPTION);
+        }
       }
       context.dispose();
     });

@@ -2,6 +2,7 @@ part of hop;
 
 class Task {
   static final RegExp _validNameRegExp = new RegExp(r'^[a-z][a-z0-9_]*$');
+  static final _nullFutureResultEx = 'null-future-result-silly';
 
   final name;
   final TaskDefinition _exec;
@@ -20,6 +21,19 @@ class Task {
 
   Future<bool> run(TaskContext state) {
     requireArgumentNotNull(state, 'state');
-    return _exec(state);
+
+    // DARTBUG: http://code.google.com/p/dart/issues/detail?id=6405
+    // Chaning an immediate task here to ensure we capture a call stack on
+    // exception.
+    return (new Future.immediate(state))
+        .chain((s) {
+          final f = _exec(s);
+
+          if(f == null) {
+            throw _nullFutureResultEx;
+          }
+
+          return f;
+        });
   }
 }
