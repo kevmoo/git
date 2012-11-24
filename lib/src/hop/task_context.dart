@@ -14,6 +14,10 @@ abstract class TaskContext extends DisposableImpl {
     _logCore(message, AnsiColor.GREEN);
   }
 
+  void fail(String message) {
+    throw new TaskFailError(message);
+  }
+
   void _logCore(String message, AnsiColor color);
 }
 

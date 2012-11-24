@@ -82,7 +82,12 @@ class Runner {
         if(f.exception == Task._nullFutureResultEx) {
           context.error('The provided task returned null instead of a future');
           completer.complete(EXIT_CODE_TASK_ERROR);
-        } else {
+        } else if(f.exception is TaskFailError) {
+          final TaskFailError e = f.exception;
+          context.error(e.message);
+          completer.complete(EXIT_CODE_TASK_FAIL);
+        }
+        else {
           // has as exception, need to test this
           context.error('Exception thrown by task');
           context.error(f.exception.toString());

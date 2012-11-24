@@ -10,6 +10,13 @@ class SyncTests {
     test('exception is sad', _testExceptionIsSad);
     test('bad task name', _testBadParam);
     test('no task name', _testNoParam);
+    test('ctx.fail', _testCtxFail);
+  }
+
+  static void _testCtxFail() {
+    _testSimpleSyncTask((ctx) => ctx.fail('fail!'), (f) {
+      expect(f.value, EXIT_CODE_TASK_FAIL);
+    });
   }
 
   static void _testTrueIsCool() {
