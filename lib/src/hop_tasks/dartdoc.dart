@@ -71,7 +71,7 @@ Future _verifyCurrentWorkingTreeClean(TaskContext ctx) {
       .transform((ProcessResult pr) {
         _throwIfProcessFailed(ctx, pr);
         if(pr.stdout.length > 0) {
-          throw 'Cannot continue. Working tree is dirty';
+          ctx.fail('Working tree is dirty. Cannot generate docs.');
         }
 
         // not really needed, but nice
