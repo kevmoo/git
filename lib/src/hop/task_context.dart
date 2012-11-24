@@ -10,8 +10,8 @@ abstract class TaskContext extends DisposableImpl {
     _logCore(message, AnsiColor.RED);
   }
 
-  void success(String message) {
-    _logCore(message, AnsiColor.GREEN);
+  void info(String message) {
+    _logCore(message, AnsiColor.BLUE);
   }
 
   void fail(String message) {

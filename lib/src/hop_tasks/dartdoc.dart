@@ -144,7 +144,7 @@ Future _doGitClone(TaskContext ctx, String sourceGitPath,
   return Process.run('git', args)
       .transform((ProcessResult pr) {
         _throwIfProcessFailed(ctx, pr);
-        ctx.success("Created temp git repo at $targetGitPath");
+        ctx.info("Created temp git repo at $targetGitPath");
       });
 }
 
@@ -202,7 +202,7 @@ Future _doCommitComplex(TaskContext ctx, String workTree, String gitDir,
           // could be okay if nothing to commit. should check
           if(pr.stdout.contains("nothing to commit, working directory clean")) {
             // all good
-            ctx.success("Nothing seems to have changed");
+            ctx.info("Nothing seems to have changed");
             return null;
           }
         }

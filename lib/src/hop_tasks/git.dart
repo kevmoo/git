@@ -95,12 +95,12 @@ Future<bool> _doCommitSimple(TaskContext ctx, String verb, List<String> gitArgs,
         require(pr.exitCode == 0, pr.stderr);
 
         final newCommitSha = pr.stdout.trim();
-        ctx.success('Create new commit: $newCommitSha');
+        ctx.info('Create new commit: $newCommitSha');
 
         return Process.run('git', ['update-ref', branchNameRef, newCommitSha])
             .transform((ProcessResult updateRefPr) {
               require(updateRefPr.exitCode == 0);
-              ctx.success("Branch '$targetBranch' $verb");
+              ctx.info("Branch '$targetBranch' $verb");
               return true;
               });
       });
