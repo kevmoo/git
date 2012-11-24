@@ -16,6 +16,7 @@
 ### io
 
 * __BREAKING__ `io.Color` is now `io.AnsiColor`
+* __BREAKING__ Removed `prnt` and `prntLine`. A bit silly, no?
 
 ## 0.6.0 - (SDK r15042)
 
