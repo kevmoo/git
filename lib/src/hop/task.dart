@@ -4,14 +4,15 @@ class Task {
   static final _nullFutureResultEx = 'null-future-result-silly';
 
   final TaskDefinition _exec;
+  final String description;
 
-  factory Task.sync(Func1<TaskContext, bool> exec) {
+  factory Task.sync(Func1<TaskContext, bool> exec, [String description]) {
     final futureExec = (TaskContext ctx) => new Future.immediate(exec(ctx));
 
-    return new Task.async(futureExec);
+    return new Task.async(futureExec, description);
   }
 
-  Task.async(this._exec) {
+  Task.async(this._exec, [this.description]) {
     requireArgumentNotNull(_exec, '_exec');
   }
 
@@ -32,4 +33,7 @@ class Task {
           return f;
         });
   }
+
+  @override
+  String toString() => "Task: $description";
 }
