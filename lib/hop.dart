@@ -2,7 +2,6 @@ library hop;
 
 // TODO: documentation for tasks
 // TODO: formalize print/log model
-// TODO: ponder indent for output
 
 import 'dart:io' as io;
 import 'package:args/args.dart';

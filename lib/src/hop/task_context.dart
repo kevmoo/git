@@ -3,18 +3,18 @@ part of hop;
 abstract class TaskContext extends DisposableImpl {
 
   void fine(String message) {
-    _printCore(message, AnsiColor.BLUE);
+    _logCore(message, AnsiColor.BLUE);
   }
 
   void error(String message) {
-    _printCore(message, AnsiColor.RED);
+    _logCore(message, AnsiColor.RED);
   }
 
   void success(String message) {
-    _printCore(message, AnsiColor.GREEN);
+    _logCore(message, AnsiColor.GREEN);
   }
 
-  void _printCore(String message, AnsiColor color);
+  void _logCore(String message, AnsiColor color);
 }
 
 class _SubTaskContext extends TaskContext {
@@ -23,8 +23,8 @@ class _SubTaskContext extends TaskContext {
 
   _SubTaskContext(this._parent, this._name);
 
-  void _printCore(String message, AnsiColor color) {
-    _parent.printCore(message, color, _name);
+  void _logCore(String message, AnsiColor color) {
+    _parent.logCore(message, color, _name);
   }
 }
 
@@ -37,18 +37,40 @@ class RootTaskContext {
     return new _SubTaskContext(this, name);
   }
 
-  void print(String message) {
-    printCore(message);
+  void log(String message) {
+    logCore(message);
   }
 
   @protected
-  void printCore(String message, [AnsiColor color = null, String taskName = null]) {
+  void logCore(String message, [AnsiColor color = null, String taskName = null]) {
+    requireArgumentNotNull(message, 'message');
+
     if(!_enableColor) {
       color = null;
     }
+
+    var indent = '';
+    var title = '';
     if(taskName != null) {
-      prnt("${taskName}: ", color);
+      title = "${taskName}: ";
+
+      while(indent.length < title.length) {
+        indent =  indent.concat(' ');
+      }
+
+      if(color != null) {
+        title = color.wrap(title);
+      }
     }
-    prntLine(message);
+    final lines = Util.splitLines(message);
+    var first = true;
+    for(final l in lines) {
+      if(first) {
+        first = false;
+        print(title.concat(l));
+      } else {
+        print(indent.concat(l));
+      }
+    }
   }
 }

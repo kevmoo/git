@@ -10,6 +10,8 @@
 ### hop
 
 * __BREAKING__ Major rename to core classes.
+* __BREAKING__ Renamed `TaskContext.print*` members to `log*`. Print confusion is bad.
+* Multi-line output is indented correctly.
 
 ### io
 

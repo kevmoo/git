@@ -31,7 +31,7 @@ class Runner {
           return new Future.immediate(EXIT_CODE_SUCCESS);
         }
         else {
-          ctx.print('No task named "$taskName".');
+          ctx.log('No task named "$taskName".');
           return new Future.immediate(EXIT_CODE_USAGE);
         }
 
@@ -39,8 +39,8 @@ class Runner {
         // all paths have a return, this break shouldn't be needed
         break;
       default:
-        ctx.print('Too many arguments');
-        ctx.print('--options must come before task name');
+        ctx.log('Too many arguments');
+        ctx.log('--options must come before task name');
         return new Future.immediate(EXIT_CODE_USAGE);
     }
   }
@@ -105,17 +105,17 @@ class Runner {
   }
 
   void _printHelp(RootTaskContext ctx) {
-    ctx.print('Welcome to HOP');
-    ctx.print('');
-    ctx.print('Tasks:');
+    ctx.log('Welcome to HOP');
+    ctx.log('');
+    ctx.log('Tasks:');
     _printRawTasks(ctx);
-    ctx.print('');
-    ctx.print(_parser.getUsage());
+    ctx.log('');
+    ctx.log(_parser.getUsage());
   }
 
   void _printRawTasks(RootTaskContext ctx) {
     for(final t in _state.taskNames) {
-      ctx.print(t);
+      ctx.log(t);
     }
   }
 
