@@ -15,25 +15,25 @@ class SyncTests {
 
   static void _testCtxFail() {
     _testSimpleSyncTask((ctx) => ctx.fail('fail!'), (f) {
-      expect(f.value, EXIT_CODE_TASK_FAIL);
+      expect(f.value, RunResult.FAIL);
     });
   }
 
   static void _testTrueIsCool() {
     _testSimpleSyncTask((ctx) => true, (f) {
-      expect(f.value, EXIT_CODE_SUCCESS);
+      expect(f.value, RunResult.SUCCESS);
     });
   }
 
   static void _testFalseIsFail() {
     _testSimpleSyncTask((ctx) => false, (f) {
-      expect(f.value, EXIT_CODE_TASK_FAIL);
+      expect(f.value, RunResult.FAIL);
     });
   }
 
   static void _testNullIsSad() {
     _testSimpleSyncTask((ctx) => null,(Future f) {
-      expect(f.value, EXIT_CODE_TASK_ERROR);
+      expect(f.value, RunResult.ERROR);
     });
   }
 
@@ -42,7 +42,7 @@ class SyncTests {
         throw 'sorry';
       },
       (Future f) {
-        expect(f.value, EXIT_CODE_TASK_EXCEPTION);
+        expect(f.value, RunResult.EXCEPTION);
       }
     );
   }
@@ -58,7 +58,7 @@ class SyncTests {
     expect(future.isComplete, isTrue);
 
     final onComplete = expectAsync1((f) {
-      expect(f.value, EXIT_CODE_USAGE);
+      expect(f.value, RunResult.BAD_USAGE);
       // TODO: test that proper error message is printed
     });
 
@@ -76,7 +76,7 @@ class SyncTests {
     expect(future.isComplete, isTrue);
 
     final onComplete = expectAsync1((f) {
-      expect(f.value, EXIT_CODE_SUCCESS);
+      expect(f.value, RunResult.SUCCESS);
       // TODO: test that task list is printed
     });
 

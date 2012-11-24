@@ -12,7 +12,7 @@ class Runner {
     _state.requireFrozen();
   }
 
-  Future<int> run() {
+  Future<RunResult> run() {
     _state.requireFrozen();
 
     final ctx = getContext();
@@ -20,20 +20,20 @@ class Runner {
     switch(_args.rest.length) {
       case 0:
         _printHelp(ctx);
-        return new Future.immediate(EXIT_CODE_SUCCESS);
+        return new Future.immediate(RunResult.SUCCESS);
       case 1:
         final taskName = _args.rest[0];
         if(_state.hasTask(taskName)) {
           var subCtx = ctx.getSubContext(taskName);
           return _runTask(subCtx, taskName)
-              .transform((int exitCode) => _logExitCode(ctx, exitCode));
+              .transform((RunResult result) => _logExitCode(ctx, result));
         } else if(taskName == RAW_TASK_LIST_CMD) {
           _printRawTasks(ctx);
-          return new Future.immediate(EXIT_CODE_SUCCESS);
+          return new Future.immediate(RunResult.SUCCESS);
         }
         else {
           ctx.log('No task named "$taskName".');
-          return new Future.immediate(EXIT_CODE_USAGE);
+          return new Future.immediate(RunResult.BAD_USAGE);
         }
 
         // DARTBUG: http://code.google.com/p/dart/issues/detail?id=6563
@@ -42,7 +42,7 @@ class Runner {
       default:
         ctx.log('Too many arguments');
         ctx.log('--options must come before task name');
-        return new Future.immediate(EXIT_CODE_USAGE);
+        return new Future.immediate(RunResult.BAD_USAGE);
     }
   }
 
@@ -52,26 +52,26 @@ class Runner {
     return new RootTaskContext(colorEnabled);
   }
 
-  Future<int> _runTask(TaskContext context, String taskName) {
+  Future<RunResult> _runTask(TaskContext context, String taskName) {
     final task = _state._getTask(taskName);
     assert(task != null);
 
-    final completer = new Completer<int>();
+    final completer = new Completer<RunResult>();
 
     final future = task.run(context);
 
     future.onComplete((f) {
       if(f.hasValue) {
         if(f.value == true) {
-          completer.complete(EXIT_CODE_SUCCESS);
+          completer.complete(RunResult.SUCCESS);
         } else {
           context.severe('Failed');
           if(f.value == false) {
-            completer.complete(EXIT_CODE_TASK_FAIL);
+            completer.complete(RunResult.FAIL);
           } else {
             context.severe('${f.value} returned from task');
             context.severe('Return value from task must be true or false');
-            completer.complete(EXIT_CODE_TASK_ERROR);
+            completer.complete(RunResult.ERROR);
           }
         }
       } else {
@@ -81,18 +81,18 @@ class Runner {
         // DARTBUG: http://code.google.com/p/dart/issues/detail?id=6405
         if(f.exception == Task._nullFutureResultEx) {
           context.severe('The provided task returned null instead of a future');
-          completer.complete(EXIT_CODE_TASK_ERROR);
+          completer.complete(RunResult.ERROR);
         } else if(f.exception is TaskFailError) {
           final TaskFailError e = f.exception;
           context.severe(e.message);
-          completer.complete(EXIT_CODE_TASK_FAIL);
+          completer.complete(RunResult.FAIL);
         }
         else {
           // has as exception, need to test this
           context.severe('Exception thrown by task');
           context.severe(f.exception.toString());
           context.severe(f.stackTrace.toString());
-          completer.complete(EXIT_CODE_TASK_EXCEPTION);
+          completer.complete(RunResult.EXCEPTION);
         }
       }
       context.dispose();
@@ -116,13 +116,13 @@ class Runner {
     }
   }
 
-  static int _logExitCode(RootTaskContext ctx, int exitCode) {
-    if(exitCode == 0) {
+  static RunResult _logExitCode(RootTaskContext ctx, RunResult result) {
+    if(result.success) {
       ctx.log('Finished', AnsiColor.GREEN);
     } else {
       ctx.log('Failed', AnsiColor.RED);
     }
-    return exitCode;
+    return result;
   }
 
   static ArgParser _getParser() {

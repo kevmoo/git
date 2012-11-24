@@ -8,7 +8,7 @@ class AsyncTests {
   static void _testNullResult() {
     _testSimpleAsyncTask((ctx) => null,
       (Future f) {
-        expect(f.value, EXIT_CODE_TASK_ERROR);
+        expect(f.value, RunResult.ERROR);
       }
     );
   }

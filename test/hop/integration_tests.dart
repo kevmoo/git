@@ -12,7 +12,7 @@ class IntegrationTests {
     final onComplete = expectAsync1((Future<ProcessResult> f) {
       expect(f.hasValue, isTrue);
       final pr = f.value;
-      expect(pr.exitCode, equals(EXIT_CODE_USAGE));
+      expect(pr.exitCode, equals(RunResult.BAD_USAGE.exitCode));
     });
 
     final f = Process.run(hopPath, ['bad_command_name']);
@@ -23,7 +23,7 @@ class IntegrationTests {
     final onComplete = expectAsync1((Future<ProcessResult> f) {
       expect(f.hasValue, isTrue);
       final pr = f.value;
-      expect(pr.exitCode, equals(EXIT_CODE_SUCCESS));
+      expect(pr.exitCode, equals(RunResult.SUCCESS.exitCode));
       final lines = pr.stdout.trim().split('\n');
       expect(lines, orderedEquals(['dart2js', 'docs', 'hello', 'test']));
     });
