@@ -11,6 +11,8 @@ class AnsiColor {
   static const AnsiColor YELLOW = const AnsiColor._internal(3, 'yellow');
   static const AnsiColor BLUE = const AnsiColor._internal(4, 'blue');
   static const AnsiColor MAGENTA = const AnsiColor._internal(5, 'magenta');
+  static const AnsiColor CYAN = const AnsiColor._internal(6, 'cyan');
+  static const AnsiColor GRAY = const AnsiColor._internal(7, 'gray');
 
   final int id;
   final String name;
