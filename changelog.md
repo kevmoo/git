@@ -1,8 +1,8 @@
 # Changelog - Dart Bag of Tricks
 
-## 0.7.0 - (SDK r15214)
+## 0.7.0 - *pre-release* - (SDK r15214)
 
-### Bot
+### bot
 
 * __BREAKING__ Renamed exception classes to align with Dart naming conventions.
 * __BREAKING__ Slight changes to `requires` methods, `DetailedArgumentException`
@@ -30,7 +30,7 @@
 
 ## 0.4.0 -- 25 October 2012  (SDK r13851)
 
-### Bot
+### bot
 
 * __BREAKING__ Changes to align with new Sequence types
 
@@ -44,20 +44,20 @@
 
 ## 0.2.0 -- 21 October 2012 (SDK r13679, M1)
 
-### Retained - *Breaking Changes*
+### bot
+* `DetailedIllegalArgumentException` ctor is now `const`
+* Removed private `_SimpleSet`. Not used.
+
+### hop - *New*
+* An attempt to create a process management system similiar to [Rake](http://rake.rubyforge.org/) in the Ruby world or [Cake](http://coffeescript.org/#cake) in the CoffeeScript world.
+* Moved `test`, `dart2js`, and `docs` to this new system.
+* Naming: A play off frog. Which is a play off dart. As in "dart frog" and "frog hop". Yeah a stretch, but it's short.
+
+### retained - *Breaking Changes*
 * `PElement.draw` renamed to `_stageDraw`
 * `PElement.updated` event removed
 * Renamed `ElementParentImpl` to `ParentElement`
 * Moved logic for handling children from `PElement` to `ParentElement`
-
-### Bot
-* `DetailedIllegalArgumentException` ctor is now `const`
-* Removed private `_SimpleSet`. Not used.
-
-### Hop - *New*
-* An attempt to create a process management system similiar to [Rake](http://rake.rubyforge.org/) in the Ruby world or [Cake](http://coffeescript.org/#cake) in the CoffeeScript world.
-* Moved `test`, `dart2js`, and `docs` to this new system.
-* Naming: A play off frog. Which is a play off dart. As in "dart frog" and "frog hop". Yeah a stretch, but it's short.
 
 ## 0.1.0 - 16 October 2012 (SDK r13679)
 
