@@ -6,19 +6,17 @@ class AsyncTests {
   }
 
   static void _testNullResult() {
-    _testSimpleAsyncTask('null', (ctx) {
-        // no-op - basically null
-      },
+    _testSimpleAsyncTask((ctx) => null,
       (Future f) {
         expect(f.value, EXIT_CODE_TASK_ERROR);
-        // TODO: take a look at output complaining about null future
       }
     );
   }
 
-  static Action0 _testSimpleAsyncTask(String name, Func1<TaskContext,
+  static Action0 _testSimpleAsyncTask(Func1<TaskContext,
                                      Future<bool>> taskFuture,
                                      Action1<Future<bool>> completeHandler) {
+    final name = 'task_name';
     final tasks = new BaseConfig();
     tasks.addTaskAsync(name, taskFuture);
     tasks.freeze();

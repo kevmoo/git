@@ -13,25 +13,25 @@ class SyncTests {
   }
 
   static void _testTrueIsCool() {
-    _testSimpleSyncTask('good', (ctx) => true, (f) {
+    _testSimpleSyncTask((ctx) => true, (f) {
       expect(f.value, EXIT_CODE_SUCCESS);
     });
   }
 
   static void _testFalseIsFail() {
-    _testSimpleSyncTask('fail', (ctx) => false, (f) {
+    _testSimpleSyncTask((ctx) => false, (f) {
       expect(f.value, EXIT_CODE_TASK_FAIL);
     });
   }
 
   static void _testNullIsSad() {
-    _testSimpleSyncTask('null', (ctx) => null,(Future f) {
+    _testSimpleSyncTask((ctx) => null,(Future f) {
       expect(f.value, EXIT_CODE_TASK_ERROR);
     });
   }
 
   static void _testExceptionIsSad() {
-    _testSimpleSyncTask('exception', (ctx) {
+    _testSimpleSyncTask((ctx) {
         throw 'sorry';
       },
       (Future f) {
@@ -76,8 +76,9 @@ class SyncTests {
     future.onComplete(onComplete);
   }
 
-  static Action0 _testSimpleSyncTask(String name, Func1<TaskContext, bool> task,
+  static Action0 _testSimpleSyncTask(Func1<TaskContext, bool> task,
                             Action1<Future<bool>> completeHandler) {
+    final name = 'task_name';
     final tasks = new BaseConfig();
     tasks.addTask(name, task);
     tasks.freeze();
