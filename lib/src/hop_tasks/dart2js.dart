@@ -9,7 +9,7 @@ TaskDefinition createDart2JsTask(List<String> inputs,
   };
 }
 
-Future<bool> _dart2js(TaskContext state, String file,
+Future<bool> _dart2js(TaskContext ctx, String file,
     {String output: null, bool minify: false}) {
   if(output == null) {
     output = "${file}.js";
@@ -28,7 +28,7 @@ Future<bool> _dart2js(TaskContext state, String file,
     args.add('--minify');
   }
 
-  return startProcess(state, 'dart2js', args);
+  return startProcess(ctx, 'dart2js', args);
 }
 
 Future<bool> _chainTasks(List<Func<Future<bool>>> futures, [int index=0]) {

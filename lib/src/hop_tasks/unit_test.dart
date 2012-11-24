@@ -1,8 +1,8 @@
 part of hop_tasks;
 
 TaskDefinition createUnitTestTask(Action1<unittest.Configuration> unitTestAction) {
-  return (TaskContext state) {
-    final config = new _HopTestConfiguration(state);
+  return (TaskContext ctx) {
+    final config = new _HopTestConfiguration(ctx);
     final future = config.future;
     unitTestAction(config);
     unittest.runTests();

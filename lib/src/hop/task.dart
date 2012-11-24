@@ -8,7 +8,7 @@ class Task {
   final TaskDefinition _exec;
 
   factory Task.sync(String name, Func1<TaskContext, bool> exec) {
-    final futureExec = (TaskContext state) => new Future.immediate(exec(state));
+    final futureExec = (TaskContext ctx) => new Future.immediate(exec(ctx));
 
     return new Task.async(name, futureExec);
   }
@@ -19,13 +19,13 @@ class Task {
         '"$name" is not a valid name');
   }
 
-  Future<bool> run(TaskContext state) {
-    requireArgumentNotNull(state, 'state');
+  Future<bool> run(TaskContext ctx) {
+    requireArgumentNotNull(ctx, 'ctx');
 
     // DARTBUG: http://code.google.com/p/dart/issues/detail?id=6405
     // Chaning an immediate task here to ensure we capture a call stack on
     // exception.
-    return (new Future.immediate(state))
+    return (new Future.immediate(ctx))
         .chain((s) {
           final f = _exec(s);
 
