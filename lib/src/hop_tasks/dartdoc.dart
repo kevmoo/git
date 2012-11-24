@@ -23,19 +23,26 @@ Future<bool> compileDocs(TaskContext ctx, String targetBranch,
         final libs = values[1];
         final gitDir = values[2];
         final commitMessage = values[3];
-        return _ensureProperBranch(ctx, gitDir, outputDir, targetBranch)
-            .chain((obj) => _dartDoc(ctx, outputDir, libs))
-            .chain((bool dartDocSuccess) {
-              if(dartDocSuccess) {
-                return _doCommitComplex(ctx, outputDir, gitDir, commitMessage);
-              } else {
-                throw 'boo! docs failed...clean up';
-              }
-            })
-            .chain((obj) => _doPush(ctx, outputDir, gitDir, targetBranch))
-            .chain((obj) => _deleteTempDirs([outputDir, gitDir]))
-            .transform((obj) => true);
-  });
+        return _compileDocs(ctx, gitDir, outputDir, targetBranch, commitMessage,
+            libs);
+      });
+}
+
+Future<bool> _compileDocs(TaskContext ctx, String gitDir, String outputDir,
+    String targetBranch, String commitMessage, List<String> libs) {
+
+  return _ensureProperBranch(ctx, gitDir, outputDir, targetBranch)
+      .chain((_) => _dartDoc(ctx, outputDir, libs))
+      .chain((bool dartDocSuccess) {
+        if(dartDocSuccess) {
+          return _doCommitComplex(ctx, outputDir, gitDir, commitMessage);
+        } else {
+          throw 'boo! docs failed...clean up';
+        }
+      })
+      .chain((_) => _doPush(ctx, outputDir, gitDir, targetBranch))
+      .chain((_) => _deleteTempDirs([outputDir, gitDir]))
+      .transform((_) => true);
 }
 
 Future<String> _getCommitMessageFuture(TaskContext ctx) {
