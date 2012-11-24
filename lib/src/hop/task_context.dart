@@ -3,20 +3,21 @@ part of hop;
 abstract class TaskContext extends DisposableImpl {
 
   void fine(String message) {
-    _logCore(message, AnsiColor.BLUE);
+    _logCore(message, Level.FINE);
   }
 
-  void error(String message) {
-    _logCore(message, AnsiColor.RED);
+  void severe(String message) {
+    _logCore(message, Level.SEVERE);
   }
 
   void info(String message) {
-    _logCore(message, AnsiColor.BLUE);
+    _logCore(message, Level.INFO);
   }
 
   void fail(String message) {
     throw new TaskFailError(message);
   }
 
-  void _logCore(String message, AnsiColor color);
+  @protected
+  void _logCore(String message, Level logLevel);
 }

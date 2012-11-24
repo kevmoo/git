@@ -65,12 +65,12 @@ class Runner {
         if(f.value == true) {
           completer.complete(EXIT_CODE_SUCCESS);
         } else {
-          context.error('Failed');
+          context.severe('Failed');
           if(f.value == false) {
             completer.complete(EXIT_CODE_TASK_FAIL);
           } else {
-            context.error('${f.value} returned from task');
-            context.error('Return value from task must be true or false');
+            context.severe('${f.value} returned from task');
+            context.severe('Return value from task must be true or false');
             completer.complete(EXIT_CODE_TASK_ERROR);
           }
         }
@@ -80,18 +80,18 @@ class Runner {
         // Hopefully will not be needed with fix of
         // DARTBUG: http://code.google.com/p/dart/issues/detail?id=6405
         if(f.exception == Task._nullFutureResultEx) {
-          context.error('The provided task returned null instead of a future');
+          context.severe('The provided task returned null instead of a future');
           completer.complete(EXIT_CODE_TASK_ERROR);
         } else if(f.exception is TaskFailError) {
           final TaskFailError e = f.exception;
-          context.error(e.message);
+          context.severe(e.message);
           completer.complete(EXIT_CODE_TASK_FAIL);
         }
         else {
           // has as exception, need to test this
-          context.error('Exception thrown by task');
-          context.error(f.exception.toString());
-          context.error(f.stackTrace.toString());
+          context.severe('Exception thrown by task');
+          context.severe(f.exception.toString());
+          context.severe(f.stackTrace.toString());
           completer.complete(EXIT_CODE_TASK_EXCEPTION);
         }
       }

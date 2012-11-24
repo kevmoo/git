@@ -38,7 +38,7 @@ class _HopTestConfiguration extends unittest.Configuration {
       _context.fine(testCase.description);
     }
     else {
-      _context.error(
+      _context.severe(
 '''[${testCase.result}] ${testCase.description}
 ${testCase.message}
 ${testCase.stackTrace}''');
@@ -52,7 +52,7 @@ ${testCase.stackTrace}''');
     if(success) {
       _context.fine(message);
     } else {
-      _context.error(message);
+      _context.severe(message);
     }
     _completer.complete(success);
   }

@@ -40,7 +40,7 @@ Future<bool> _startProcess(process, state) {
     final data = process.stderr.read();
     assert(data != null);
     final str = new String.fromCharCodes(data).trim();
-    state.error(str);
+    state.severe(str);
   };
 
   process.onExit = (int exitCode){

@@ -254,10 +254,10 @@ Future<bool> _gitRemoteHasHead(String remote, String head) {
 void _throwIfProcessFailed(TaskContext ctx, ProcessResult pr) {
   assert(pr != null);
   if(pr.exitCode != 0) {
-    ctx.error('Process returned a non-zero exit code');
+    ctx.severe('Process returned a non-zero exit code');
     ctx.fine(pr.stdout.trim());
-    ctx.error(pr.stderr.trim());
-    ctx.error('Exit code: ${pr.exitCode}');
+    ctx.severe(pr.stderr.trim());
+    ctx.severe('Exit code: ${pr.exitCode}');
     throw 'Task failed';
   }
 }

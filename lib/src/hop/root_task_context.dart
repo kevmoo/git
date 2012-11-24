@@ -21,26 +21,23 @@ class RootTaskContext {
     printCore(message);
   }
 
-  void _logCore(String message, [AnsiColor color = null, String taskName = null]) {
+  void _logCore(_SubTaskContext subTask, String message, Level logLevel) {
     requireArgumentNotNull(message, 'message');
 
-    if(!_enableColor) {
-      color = null;
-    }
+    final color = _getColor(logLevel);
 
     var indent = '';
     var title = '';
-    if(taskName != null) {
-      title = "${taskName}: ";
+    title = "${subTask._name}: ";
 
-      while(indent.length < title.length) {
-        indent =  indent.concat(' ');
-      }
-
-      if(color != null) {
-        title = color.wrap(title);
-      }
+    while(indent.length < title.length) {
+      indent =  indent.concat(' ');
     }
+
+    if(color != null) {
+      title = color.wrap(title);
+    }
+
     final lines = Util.splitLines(message);
     var first = true;
     for(final l in lines) {
@@ -57,6 +54,23 @@ class RootTaskContext {
   void printCore(String message) {
     print(message);
   }
+
+  AnsiColor _getColor(Level logLevel) {
+    if(_enableColor) {
+      return getLogColor(logLevel);
+    } else {
+      return null;
+    }
+  }
+
+  static AnsiColor getLogColor(Level logLevel) {
+    requireArgumentNotNull(logLevel, 'logLevel');
+    if(logLevel.value > Level.INFO.value) {
+      return AnsiColor.RED;
+    } else {
+      return AnsiColor.BLUE;
+    }
+  }
 }
 
 class _SubTaskContext extends TaskContext {
@@ -65,7 +79,8 @@ class _SubTaskContext extends TaskContext {
 
   _SubTaskContext(this._parent, this._name);
 
-  void _logCore(String message, AnsiColor color) {
-    _parent._logCore(message, color, _name);
+  @override
+  void _logCore(String message, Level logLevel) {
+    _parent._logCore(this, message, logLevel);
   }
 }
