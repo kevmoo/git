@@ -25,7 +25,8 @@ class Runner {
         final taskName = _args.rest[0];
         if(_state.hasTask(taskName)) {
           var subCtx = ctx.getSubContext(taskName);
-          return _runTask(subCtx, taskName);
+          return _runTask(subCtx, taskName)
+              .transform((int exitCode) => _logExitCode(ctx, exitCode));
         } else if(taskName == RAW_TASK_LIST_CMD) {
           _printRawTasks(ctx);
           return new Future.immediate(EXIT_CODE_SUCCESS);
@@ -62,7 +63,6 @@ class Runner {
     future.onComplete((f) {
       if(f.hasValue) {
         if(f.value == true) {
-          context.success('Finished');
           completer.complete(EXIT_CODE_SUCCESS);
         } else {
           context.error('Failed');
@@ -114,6 +114,15 @@ class Runner {
     for(final t in _state.taskNames) {
       ctx.log(t);
     }
+  }
+
+  static int _logExitCode(RootTaskContext ctx, int exitCode) {
+    if(exitCode == 0) {
+      ctx.log('Finished', AnsiColor.GREEN);
+    } else {
+      ctx.log('Failed', AnsiColor.RED);
+    }
+    return exitCode;
   }
 
   static ArgParser _getParser() {
