@@ -102,9 +102,9 @@ class Runner {
   }
 
   void _printHelp(RootTaskContext ctx) {
-    ctx.log('Welcome to HOP');
+    ctx.log('Welcome to HOP', AnsiColor.BLUE);
     ctx.log('');
-    ctx.log('Tasks:');
+    ctx.log('Tasks:', AnsiColor.BLUE);
     _printTaskTable(ctx);
     ctx.log('');
     ctx.log(_parser.getUsage());
