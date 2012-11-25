@@ -14,8 +14,8 @@ void main() {
     return true;
   });
 
-  addAsyncTask('test', createUnitTestTask(test_console.testCore));
-  addAsyncTask('docs', getCompileDocsFunc('gh-pages', _getLibs));
+  addTask('test', createUnitTestTask(test_console.testCore));
+  addTask('docs', getCompileDocsFunc('gh-pages', _getLibs));
 
   //
   // Dart2js
@@ -25,7 +25,7 @@ void main() {
       .toList();
   paths.add('test/harness_browser.dart');
 
-  addAsyncTask('dart2js', createDart2JsTask(paths));
+  addTask('dart2js', createDart2JsTask(paths));
 
   runHopCore();
 }

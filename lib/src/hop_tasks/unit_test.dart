@@ -1,13 +1,13 @@
 part of hop_tasks;
 
-TaskDefinition createUnitTestTask(Action1<unittest.Configuration> unitTestAction) {
-  return (TaskContext ctx) {
+Task createUnitTestTask(Action1<unittest.Configuration> unitTestAction) {
+  return new Task.async((TaskContext ctx) {
     final config = new _HopTestConfiguration(ctx);
     final future = config.future;
     unitTestAction(config);
     unittest.runTests();
     return future;
-  };
+  }, 'Run unit tests in the console');
 }
 
 class _HopTestConfiguration extends unittest.Configuration {

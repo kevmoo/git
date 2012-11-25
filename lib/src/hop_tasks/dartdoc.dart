@@ -1,8 +1,9 @@
 part of hop_tasks;
 
-TaskDefinition getCompileDocsFunc(String targetBranch,
+Task getCompileDocsFunc(String targetBranch,
                              Func<Future<SequenceCollection<String>>> libGetter) {
-  return (ctx) => compileDocs(ctx, targetBranch, libGetter);
+  return new Task.async((ctx) => compileDocs(ctx, targetBranch, libGetter),
+      'Generate documentation for the provided libraries.');
 }
 
 Future<bool> compileDocs(TaskContext ctx, String targetBranch,

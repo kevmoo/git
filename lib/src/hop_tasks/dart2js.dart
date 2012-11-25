@@ -1,12 +1,12 @@
 part of hop_tasks;
 
-TaskDefinition createDart2JsTask(List<String> inputs,
+Task createDart2JsTask(List<String> inputs,
     {bool minify: false}) {
-  return (context) {
+  return new Task.async((context) {
     final futureFuncs = $(inputs).map((p) =>
         () => _dart2js(context, p, minify: minify)).toList();
     return _chainTasks(futureFuncs);
-  };
+  }, 'Run Dart-to-Javascript compiler');
 }
 
 Future<bool> _dart2js(TaskContext ctx, String file,
