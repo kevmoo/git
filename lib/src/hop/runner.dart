@@ -105,7 +105,7 @@ class Runner {
     ctx.log('Welcome to HOP');
     ctx.log('');
     ctx.log('Tasks:');
-    _printRawTasks(ctx);
+    _printTaskTable(ctx);
     ctx.log('');
     ctx.log(_parser.getUsage());
   }
@@ -113,6 +113,20 @@ class Runner {
   void _printRawTasks(RootTaskContext ctx) {
     for(final t in _state.taskNames) {
       ctx.log(t);
+    }
+  }
+
+  void _printTaskTable(RootTaskContext ctx) {
+    final columns = [
+                     new ColumnDefinition('name', (name) => name),
+                     new ColumnDefinition('description', (name) {
+                       final task = _state._getTask(name);
+                       return task.description;
+                     })
+                     ];
+    final rows = Console.getTable(_state.taskNames, columns);
+    for(final r in rows) {
+      ctx.log(r);
     }
   }
 

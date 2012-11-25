@@ -1,7 +1,5 @@
 library hop;
 
-// TODO: documentation for tasks
-
 import 'dart:io' as io;
 import 'package:args/args.dart';
 import 'package:bot/bot.dart';
