@@ -17,13 +17,13 @@
 * __BREAKING__ `io.Color` is now `io.AnsiColor`
 * __BREAKING__ Removed `prnt` and `prntLine`. A bit silly, no?
 
-## 0.6.0 - (SDK r15042)
+## 0.6.0 - 19 Nov 2012 (SDK r15042)
 
 * __BREAKING__ Merged `hop` back in. Circular dependencies just make no sense.
 * __BREAKING__ Moved `qr` into its [own repository](https://github.com/kevmoo/qr.dart).
 * A bunch of fixes to support more recent Dart release.
 
-### 0.5.0 -- 6 Nov 2012 (SDK r14554)
+## 0.5.0 -- 6 Nov 2012 (SDK r14554)
 
 * __BREAKING__ Changes to align with Dart r14554.
 
