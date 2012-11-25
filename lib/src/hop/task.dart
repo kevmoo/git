@@ -12,7 +12,8 @@ class Task {
     return new Task.async(futureExec, description);
   }
 
-  Task.async(this._exec, [this.description]) {
+  Task.async(this._exec, [String desc = '']) :
+    this.description = (desc == null) ? '' : desc {
     requireArgumentNotNull(_exec, '_exec');
   }
 
