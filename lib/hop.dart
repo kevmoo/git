@@ -32,6 +32,10 @@ void runHopCore() {
   });
 }
 
+void addTask(String name, Task task) {
+  _sharedConfig.addTask(name, task);
+}
+
 void addSyncTask(String name, Func1<TaskContext, bool> execFunc) {
   _sharedConfig.addSync(name, execFunc);
 }
