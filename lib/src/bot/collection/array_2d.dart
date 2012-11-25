@@ -25,6 +25,7 @@ class Array2d<T> extends ListBase<T> {
     requireArgument(height > 0, 'height');
     final s = new List<T>();
     s.insertRange(0, width * height, initialValue);
+    assert(s.length == width * height);
     return new Array2d.wrap(width, s);
   }
 
@@ -55,6 +56,11 @@ class Array2d<T> extends ListBase<T> {
   void operator []=(int index, T value) {
     _source[index] = value;
   }
+
+  // TODO: test
+  //  - especially equality across instances, rows, etc
+  ListBase<ListBase<T>> get rows =>
+      new _Array2dRows(this);
 
   T get(int x, int y) {
     final i = _getIndex(x, y);
@@ -95,5 +101,35 @@ class Array2d<T> extends ListBase<T> {
     assert(x >= 0 && x < width);
     assert(y >= 0 && y < height);
     return x + y * width;
+  }
+}
+
+class _Array2dRows<T> extends ListBase<ListBase<T>> {
+  final Array2d<T> source;
+
+  _Array2dRows(this.source);
+
+  int get length => source.height;
+
+  ListBase<T> operator [](int index) => new _Array2dRow<T>(this.source, index);
+
+  bool operator ==(other) {
+    return other is _Array2dRows && other.source == this.source;
+  }
+}
+
+class _Array2dRow<T> extends ListBase<T> {
+  final Array2d<T> source;
+  final int row;
+
+  _Array2dRow(this.source, this.row);
+
+  int get length => source.width;
+
+  T operator [](int index) => source.get(index, row);
+
+  bool operator ==(other) {
+    return other is _Array2dRow && other.source == this.source &&
+        other.row == this.row;
   }
 }
