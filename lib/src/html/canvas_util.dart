@@ -1,4 +1,4 @@
-part of bot_retained;
+part of bot_html;
 
 class CanvasUtil {
   /**

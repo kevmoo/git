@@ -5,7 +5,6 @@ import 'dart:math' as math;
 import 'bot.dart';
 import 'html.dart';
 
-part 'src/retained/canvas_util.dart';
 part 'src/retained/click_manager.dart';
 part 'src/retained/element_mouse_event_args.dart';
 part 'src/retained/element_parent.dart';

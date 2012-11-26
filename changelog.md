@@ -17,6 +17,10 @@
 * __BREAKING__ `io.Color` is now `io.AnsiColor`
 * __BREAKING__ Removed `prnt` and `prntLine`. A bit silly, no?
 
+### retained
+
+* __BREAKING__ Moved `CanvasUtil` to `bot_html` lib
+
 ## 0.6.0 - 19 Nov 2012 (SDK r15042)
 
 * __BREAKING__ Merged `hop` back in. Circular dependencies just make no sense.
