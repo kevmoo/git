@@ -17,6 +17,10 @@
 * __BREAKING__ `io.Color` is now `io.AnsiColor`
 * __BREAKING__ Removed `prnt` and `prntLine`. A bit silly, no?
 
+### html
+
+* `CanvasUtil` learned `setTransform`
+
 ### retained
 
 * __BREAKING__ Moved `CanvasUtil` to `bot_html` lib

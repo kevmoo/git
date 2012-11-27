@@ -10,6 +10,14 @@ class CanvasUtil {
     return new Size(canvasElement.width, canvasElement.height);
   }
 
+  static void setTransform(CanvasRenderingContext2D ctx, AffineTransform tx){
+    requireArgumentNotNull(ctx, 'ctx');
+    requireArgumentNotNull(tx, 'tx');
+
+    ctx.setTransform(tx.scaleX, tx.shearY, tx.shearX,
+      tx.scaleY, tx.translateX, tx.translateY);
+  }
+
   static void transform(CanvasRenderingContext2D ctx, AffineTransform tx){
     requireArgumentNotNull(ctx, 'ctx');
     requireArgumentNotNull(tx, 'tx');
