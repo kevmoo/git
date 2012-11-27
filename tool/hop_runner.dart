@@ -46,7 +46,7 @@ Future<SequenceCollection<String>> _getLibs() {
 
   lister.onFile = (String file) {
     if(file.endsWith('.dart')) {
-      // DARTBUG: http://code.google.com/p/dart/issues/detail?id=5460
+      // DARTBUG: https://code.google.com/p/dart/issues/detail?id=5515
       // exclude libs because of issues with dartdoc and sdk libs
       // in this case: unittest and args
       final forbidden = ['test', 'hop', 'hop_tasks'].map((n) => '$n.dart');
