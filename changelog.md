@@ -1,6 +1,6 @@
 # Changelog - Dart Bag of Tricks
 
-## 0.7.0 - *pre-release* - (SDK r15369)
+## 0.7.0 - 27 Nov 2012 (SDK r15355)
 
 ### bot
 
