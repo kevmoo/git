@@ -21,7 +21,7 @@ abstract class ParentElement
     invalidateDraw();
   }
 
-  PElement getVisualChild(index);
+  PElement getVisualChild(int index);
 
   int get visualChildCount;
 
