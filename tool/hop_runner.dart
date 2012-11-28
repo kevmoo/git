@@ -20,7 +20,7 @@ void main() {
   //
   // Dart2js
   //
-  final paths = $(['click', 'drag', 'fract', 'spin'])
+  final paths = $(['click', 'drag', 'fract', 'spin', 'nav'])
       .map((d) => "example/$d/${d}_demo.dart")
       .toList();
   paths.add('test/harness_browser.dart');

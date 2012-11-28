@@ -11,6 +11,7 @@ part 'src/retained/element_mouse_event_args.dart';
 part 'src/retained/element_parent.dart';
 part 'src/retained/img_element.dart';
 part 'src/retained/mouse.dart';
+part 'src/retained/nav_layer.dart';
 part 'src/retained/panel.dart';
 part 'src/retained/parent_element.dart';
 part 'src/retained/pcanvas.dart';
