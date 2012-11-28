@@ -57,8 +57,10 @@ abstract class PElement extends AttachableObject {
     return tx;
   }
 
+  @protected
   void update(){ }
 
+  @protected
   void drawCore(CanvasRenderingContext2D ctx){
     if(cacheEnabled) {
       _drawCached(ctx);
@@ -85,6 +87,7 @@ abstract class PElement extends AttachableObject {
     }
   }
 
+  @protected
   void drawOverride(CanvasRenderingContext2D ctx);
 
   void invalidateDraw(){
@@ -107,6 +110,7 @@ abstract class PElement extends AttachableObject {
     _parent = null;
   }
 
+  @protected
   void disposeInternal(){
     super.disposeInternal();
     _invalidatedEventHandle.dispose();
