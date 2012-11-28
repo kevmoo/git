@@ -99,4 +99,10 @@ void _testAddRemoveFromPanel() {
 
 class _TestParentElement extends ParentElement {
   _TestParentElement() : super(10, 10);
+
+  int get visualChildCount => 0;
+
+  PElement getVisualChild(int index) {
+    throw 'foo';
+  }
 }
