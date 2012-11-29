@@ -21,5 +21,6 @@ part 'src/retained/shape.dart';
 part 'src/retained/shape_type.dart';
 part 'src/retained/sprite_element.dart';
 part 'src/retained/stage.dart';
+part 'src/retained/sub_canvas_element.dart';
 part 'src/retained/text_element.dart';
 part 'src/retained/_retained_enum.dart';
