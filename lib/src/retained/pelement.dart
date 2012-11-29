@@ -6,7 +6,7 @@ abstract class PElement extends AttachableObject {
   final EventHandle<EventArgs> _invalidatedEventHandle = new EventHandle<EventArgs>();
   CanvasElement _cacheCanvas;
 
-  num _width, _height, _alpha;
+  num _width, _height, _alpha = 1;
   Size _lastDrawSize;
   bool clip = false;
   ElementParent _parent;
@@ -35,6 +35,15 @@ abstract class PElement extends AttachableObject {
     assert(value.isValid);
     _width = value.width;
     _height = value.height;
+    invalidateDraw();
+  }
+
+  num get alpha => _alpha;
+
+  void set alpha(num value) {
+    requireArgument(isValidNumber(value), 'value');
+    requireArgument(value >= 0 && value <= 1, 'value');
+    _alpha = value;
     invalidateDraw();
   }
 
@@ -175,7 +184,11 @@ abstract class PElement extends AttachableObject {
   }
 
   void _drawInternal(CanvasRenderingContext2D ctx){
-    if (_alpha != null) {
+    if (_alpha != 1) {
+      assert(_alpha != null);
+      assert(_alpha >= 0);
+      assert(_alpha <= 1);
+      assert(ctx.globalAlpha == 1);
       ctx.globalAlpha = _alpha;
     }
 
