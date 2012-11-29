@@ -129,6 +129,19 @@ class AffineTransform implements Cloneable<AffineTransform> {
         (_m10 * _m02 - _m00 * _m12) / det);
   }
 
+  AffineTransform lerpTx(AffineTransform other, num x) {
+    requireArgumentNotNull(other, 'other');
+
+    final m00 = lerp(scaleX, other.scaleX, x);
+    final m10 = lerp(shearY, other.shearY, x);
+    final m01 = lerp(shearX, other.shearX, x);
+    final m11 = lerp(scaleY, other.scaleY, x);
+    final m02 = lerp(translateX, other.translateX, x);
+    final m12 = lerp(translateY, other.translateY, x);
+
+    return new AffineTransform(m00, m10, m01, m11, m02, m12);
+  }
+
   AffineTransform clone(){
     return new AffineTransform(_m00, _m10, _m01, _m11, _m02, _m12);
   }
