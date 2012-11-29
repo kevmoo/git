@@ -192,9 +192,13 @@ abstract class PElement extends AttachableObject {
       ctx.globalAlpha = _alpha;
     }
 
+    // possible for invalidateParent to be called during draw
+    // which signals that another frame is wanted for animating content
+    // so we're setting _lastDrawSize here
+    _lastDrawSize = this.size;
+
     // call the abstract draw method
     drawOverride(ctx);
-    _lastDrawSize = this.size;
   }
 
   bool _isClipped(AffineTransform tx, CanvasRenderingContext2D ctx){
