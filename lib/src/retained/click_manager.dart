@@ -2,6 +2,8 @@ part of bot_retained;
 
 // TODO: rename MouseManager or similiar -> doing more than click now
 // TODO: implement dispose. Unregister events from Canvas, etc
+// TODO: Remove public ctor. Use ClickManager.enable(stage) or similiar
+//       Nothing interesting exists on the instance of CM
 
 class ClickManager {
   static final Property<ClickManager> _clickManagerProperty =
