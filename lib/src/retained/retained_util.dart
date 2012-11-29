@@ -1,6 +1,51 @@
 part of bot_retained;
 
 class RetainedUtil {
+
+  static Vector getOffsetVector(Size parentSize, Size childSize,
+                         HorizontalAlignment horizontalAlignment,
+                         VerticalAlignment verticalAlignment,
+                         Vector offset) {
+    requireArgumentNotNull(parentSize, 'parentSize');
+    requireArgumentNotNull(childSize, 'childSize');
+    requireArgumentNotNull(horizontalAlignment, 'horizontalAlignment');
+    requireArgumentNotNull(verticalAlignment, 'verticalAlignment');
+    requireArgumentNotNull(offset, 'offset');
+
+    num x = offset.x, y = offset.y;
+
+
+    switch (horizontalAlignment) {
+      case HorizontalAlignment.LEFT:
+        //no-op
+        break;
+      case HorizontalAlignment.CENTER:
+        x += (parentSize.width - childSize.width) / 2;
+        break;
+      case HorizontalAlignment.RIGHT:
+        x += parentSize.width - childSize.width;
+        break;
+      default:
+        throw new ArgumentError('horizontalAlignment value not expected $horizontalAlignment');
+    }
+
+    switch (verticalAlignment) {
+      case VerticalAlignment.TOP:
+        //no-op
+        break;
+      case VerticalAlignment.MIDDLE:
+        y += (parentSize.height - childSize.height) / 2;
+        break;
+      case VerticalAlignment.BOTTOM:
+        y += parentSize.height - childSize.height;
+        break;
+      default:
+        throw new ArgumentError('verticalAlignment value not expected $verticalAlignment');
+    }
+
+    return new Vector(x, y);
+  }
+
   static List<PElement> hitTest(Stage stage, Coordinate point){
     return _hitTest(stage.rootElement, point);
   }
