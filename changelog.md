@@ -1,5 +1,27 @@
 # Changelog - Dart Bag of Tricks
 
+## 0.8.0 - *unreleased* - (SDK r15355)
+
+### bot
+
+* __NEW__ Added `lerp` to top-level math functions.
+* `AffineTransform` 
+    * __NEW__ learned a new constructor - `fromTranslate`
+    * __NEW__ learned `lerpTx` function
+
+### bot_retained
+
+* `PElement`
+    * __NEW__ learned `alpha` -- or at least uses it now
+    * __BREAKING__ a tiny change to how dirty state is tracked to allow elements to effectively request animation in `drawOverride`.
+* __NEW__ `NavLayer` -- copied from the Javascript library. Pretty fun.
+* __NEW__ `HorizontalAlignment` and `VerticalAlignment`
+* __NEW__ `RetainedUtil` learned `getOffsetVector`
+* __BREAKING__ `Shape` had its constructor shaken up to support `cacheEnabled`
+* __NEW__ `SubCanvasElement` -- similiar to `ImgElement`, but for drawing contents of a canvas.
+* __NEW__ `TextElement` An element to display text. Lot's of work to do, but a good start.
+* Added nifty `_RetainedEnum` as a relatively safe, private subclass for other enum types. 
+
 ## 0.7.0 - 27 Nov 2012 (SDK r15355)
 
 ### bot
