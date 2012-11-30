@@ -1,8 +1,11 @@
 part of test_bot;
 
+// TODO: test constructors
+// TODO: test lerp
+
 class TestAffineTransform {
   static void run(){
-    group('AffineTransform', (){
+    group('AffineTransform', () {
 
       test('identity', () {
         var tx = new AffineTransform(1, 2, 3, 4, 5, 6);
