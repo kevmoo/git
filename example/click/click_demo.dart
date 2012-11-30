@@ -20,7 +20,7 @@ class ClickDemo{
     PCanvas pCanvas = new PCanvas(200, 200);
     pCanvas.background = 'yellow';
 
-    var blue = new Shape(100, 100, _blueColor);
+    var blue = new Shape(100, 100, fillStyle: _blueColor);
     ClickManager.setClickable(blue, true);
     final clickHandler = (args) {
       blue.fillStyle = (blue.fillStyle == _blueColor) ? 'lightblue' : _blueColor;
@@ -30,11 +30,11 @@ class ClickDemo{
 
     pCanvas.addElement(blue);
 
-    var green = new Shape(70, 70, 'green');
+    var green = new Shape(70, 70, fillStyle: 'green');
     pCanvas.addElement(green);
     pCanvas.setTopLeft(green, const Coordinate(110, 15));
 
-    var red = new Shape(40, 40, 'red', ShapeType.ellipse);
+    var red = new Shape(40, 40, fillStyle: 'red', shapeType: ShapeType.ellipse);
     pCanvas.addElement(red);
     pCanvas.setCenter(red, const Coordinate(50, 150));
 

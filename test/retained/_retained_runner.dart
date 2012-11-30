@@ -55,7 +55,7 @@ void _testRemoveTransform() {
 void _testDoudbleClickManager() {
   final canvas = new CanvasElement();
 
-  final element = new Shape(100, 100, 'blue');
+  final element = new Shape(100, 100, fillStyle: 'blue');
 
   final stage = new Stage(canvas, element);
 

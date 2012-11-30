@@ -19,9 +19,9 @@ class SpinDemo{
   factory SpinDemo(CanvasElement canvas){
 
     final pCanvas = new PCanvas(200, 200);
-    final blue = new Shape(100, 100, 'blue');
-    final green = new Shape(70, 70, 'green');
-    final red = new Shape(40, 40, 'red', ShapeType.ellipse);
+    final blue = new Shape(100, 100, fillStyle: 'blue');
+    final green = new Shape(70, 70, fillStyle: 'green');
+    final red = new Shape(40, 40, fillStyle: 'red', shapeType: ShapeType.ellipse);
 
     pCanvas.addElement(blue);
 
