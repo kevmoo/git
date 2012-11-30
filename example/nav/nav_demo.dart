@@ -77,33 +77,33 @@ class NavDemo {
   static PElement _getDemoElement(int count) {
     final canvas = new PCanvas(300, 300, true);
 
-    final back = new Shape(300, 300, fillStyle: '#333');
+    final back = new Shape(300, 300, fillStyle: '#333', cacheEnabled: false);
     back.alpha = 0.5;
     canvas.addElement(back);
 
-    final text = new TextElement("Click here - $count", 100, 100);
+    final text = new TextElement("Click here - $count", 100, 100, false);
     canvas.addElement(text);
     canvas.setTopLeft(text, new Coordinate(100, 100));
 
     Shape corner;
 
     // top left
-    corner = new Shape(100, 100, fillStyle: 'red');
+    corner = new Shape(100, 100, fillStyle: 'red', cacheEnabled: false);
     canvas.addElement(corner);
     canvas.setTopLeft(corner, new Coordinate(0,0));
 
     // top right
-    corner = new Shape(100, 100, fillStyle: 'green');
+    corner = new Shape(100, 100, fillStyle: 'green', cacheEnabled: false);
     canvas.addElement(corner);
     canvas.setTopLeft(corner, new Coordinate(200,0));
 
     // bottom left
-    corner = new Shape(100, 100, fillStyle: 'blue');
+    corner = new Shape(100, 100, fillStyle: 'blue', cacheEnabled: false);
     canvas.addElement(corner);
     canvas.setTopLeft(corner, new Coordinate(0,200));
 
     // bottom right
-    corner = new Shape(100, 100, fillStyle: 'yellow');
+    corner = new Shape(100, 100, fillStyle: 'yellow', cacheEnabled: false);
     canvas.addElement(corner);
     canvas.setTopLeft(corner, new Coordinate(200,200));
 
