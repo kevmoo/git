@@ -1,5 +1,8 @@
 part of bot_retained;
 
+// TODO: 'alpha' does not compose well. If a parent is 50% and the child is
+//       50% the render should be at %25, right? :-/
+
 abstract class PElement extends AttachableObject {
   final List<AffineTransform> _transforms = new List<AffineTransform>();
   final bool cacheEnabled;
@@ -184,13 +187,10 @@ abstract class PElement extends AttachableObject {
   }
 
   void _drawInternal(CanvasRenderingContext2D ctx){
-    if (_alpha != 1) {
-      assert(_alpha != null);
-      assert(_alpha >= 0);
-      assert(_alpha <= 1);
-      assert(ctx.globalAlpha == 1);
-      ctx.globalAlpha = _alpha;
-    }
+    assert(_alpha != null);
+    assert(_alpha >= 0);
+    assert(_alpha <= 1);
+    ctx.globalAlpha = _alpha;
 
     // possible for invalidateParent to be called during draw
     // which signals that another frame is wanted for animating content
