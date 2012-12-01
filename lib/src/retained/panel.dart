@@ -53,6 +53,7 @@ class Panel extends ParentElement {
 
   int get visualChildCount => _children.length;
 
+  @protected
   AffineTransform getChildTransform(child) {
     assert(hasVisualChild(child));
     var tx = _containerTransformProperty.get(child);
