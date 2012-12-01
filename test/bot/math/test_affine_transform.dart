@@ -1,11 +1,26 @@
 part of test_bot;
 
-// TODO: test constructors
 // TODO: test lerp
 
 class TestAffineTransform {
   static void run(){
     group('AffineTransform', () {
+
+      test('constructors', () {
+        final scaleTx = new AffineTransform.fromScale(1, 2);
+        expect(scaleTx, new AffineTransform(1, 0, 0, 2, 0, 0));
+
+        final translateTx = new AffineTransform.fromTranslat(1, 2);
+        expect(translateTx, new AffineTransform(1, 0, 0, 1, 1, 2));
+
+        final rotateTx = new AffineTransform.fromRotate(1, 2, 3);
+        expect(rotateTx.scaleX, closeTo(0.540302, 0.001));
+        expect(rotateTx.shearY, closeTo(0.841470, 0.001));
+        expect(rotateTx.shearX, closeTo(-0.841470, 0.001));
+        expect(rotateTx.scaleY, closeTo(0.540302, 0.001));
+        expect(rotateTx.translateX, closeTo(3.443808, 0.001));
+        expect(rotateTx.translateY, closeTo(-0.303848, 0.001));
+      });
 
       test('set from transform', () {
         final tx1 = new AffineTransform(1,2,3,4,5,6);
