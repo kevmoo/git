@@ -7,6 +7,17 @@ class TestAffineTransform {
   static void run(){
     group('AffineTransform', () {
 
+      test('set from transform', () {
+        final tx1 = new AffineTransform(1,2,3,4,5,6);
+        final tx2 = new AffineTransform(6,5,4,3,2,1);
+
+        expect(tx1, isNot(tx2));
+
+        tx1.setFromTransfrom(tx2);
+
+        expect(tx1, tx2);
+      });
+
       test('identity', () {
         var tx = new AffineTransform(1, 2, 3, 4, 5, 6);
         expect(tx.isIdentity, isFalse);
