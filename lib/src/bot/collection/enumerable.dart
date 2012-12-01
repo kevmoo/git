@@ -316,7 +316,6 @@ class _DistinctIterator<T> implements Iterator<T> {
   final Iterator<T> _source;
   final Func2<T, T, bool> _comparer;
 
-  // TODO: nice to have a universal hashability so we can use a hash here
   final List<T> _found;
   bool _next;
   T _current;
