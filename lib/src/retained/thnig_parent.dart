@@ -1,7 +1,7 @@
 part of bot_retained;
 
-abstract class ElementParent {
-  void childInvalidated(PElement child);
+abstract class ThingParent {
+  void childInvalidated(Thing child);
   AffineTransform getTransformToRoot();
   EventRoot<EventArgs> get invalidated;
 }

@@ -13,13 +13,13 @@ void main() {
 class NavDemo {
   final CanvasElement _canvas;
   final Stage _stage;
-  final NavLayer _nav;
+  final NavThing _nav;
   bool _frameRequested = false;
   int _count = 0;
 
   factory NavDemo(CanvasElement canvas) {
 
-    final nav = new NavLayer(300, 300);
+    final nav = new NavThing(300, 300);
 
     final stage = new Stage(canvas, nav);
 
@@ -54,7 +54,7 @@ class NavDemo {
     }
   }
 
-  void _itemClick(PElement element) {
+  void _itemClick(Thing element) {
     AffineTransform tx;
     if(element.width == 300) {
       tx = new AffineTransform.fromTranslat(100, 100)
@@ -74,37 +74,37 @@ class NavDemo {
     _stage.draw();
   }
 
-  static PElement _getDemoElement(int count) {
-    final canvas = new PCanvas(300, 300, true);
+  static Thing _getDemoElement(int count) {
+    final canvas = new CanvasThing(300, 300, true);
 
-    final back = new Shape(300, 300, fillStyle: '#333', cacheEnabled: false);
+    final back = new ShapeThing(300, 300, fillStyle: '#333', cacheEnabled: false);
     back.alpha = 0.5;
-    canvas.addElement(back);
+    canvas.add(back);
 
-    final text = new TextElement("Click here - $count", 100, 100, false);
-    canvas.addElement(text);
+    final text = new TextThing("Click here - $count", 100, 100, false);
+    canvas.add(text);
     canvas.setTopLeft(text, new Coordinate(100, 100));
 
-    Shape corner;
+    ShapeThing corner;
 
     // top left
-    corner = new Shape(100, 100, fillStyle: 'red', cacheEnabled: false);
-    canvas.addElement(corner);
+    corner = new ShapeThing(100, 100, fillStyle: 'red', cacheEnabled: false);
+    canvas.add(corner);
     canvas.setTopLeft(corner, new Coordinate(0,0));
 
     // top right
-    corner = new Shape(100, 100, fillStyle: 'green', cacheEnabled: false);
-    canvas.addElement(corner);
+    corner = new ShapeThing(100, 100, fillStyle: 'green', cacheEnabled: false);
+    canvas.add(corner);
     canvas.setTopLeft(corner, new Coordinate(200,0));
 
     // bottom left
-    corner = new Shape(100, 100, fillStyle: 'blue', cacheEnabled: false);
-    canvas.addElement(corner);
+    corner = new ShapeThing(100, 100, fillStyle: 'blue', cacheEnabled: false);
+    canvas.add(corner);
     canvas.setTopLeft(corner, new Coordinate(0,200));
 
     // bottom right
-    corner = new Shape(100, 100, fillStyle: 'yellow', cacheEnabled: false);
-    canvas.addElement(corner);
+    corner = new ShapeThing(100, 100, fillStyle: 'yellow', cacheEnabled: false);
+    canvas.add(corner);
     canvas.setTopLeft(corner, new Coordinate(200,200));
 
     return canvas;

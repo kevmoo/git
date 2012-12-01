@@ -46,19 +46,19 @@ class RetainedUtil {
     return new Vector(x, y);
   }
 
-  static List<PElement> hitTest(Stage stage, Coordinate point){
-    return _hitTest(stage.rootElement, point);
+  static List<Thing> hitTest(Stage stage, Coordinate point){
+    return _hitTest(stage.rootThing, point);
   }
 
-  static List<PElement> _hitTest(PElement element, Coordinate point){
-    point = transformPointGlobalToLocal(element, point);
+  static List<Thing> _hitTest(Thing thing, Coordinate point){
+    point = transformPointGlobalToLocal(thing, point);
 
-    final bounds = new Box(0, 0, element.width, element.height);
+    final bounds = new Box(0, 0, thing.width, thing.height);
 
-    var hits = new List<PElement>();
+    var hits = new List<Thing>();
     if (bounds.contains(point)) {
-      if(element is ParentElement) {
-        final ParentElement p = element;
+      if(thing is ParentThing) {
+        final ParentThing p = thing;
 
         var length = p.visualChildCount;
         for (var i = 0; i < length; i++) {
@@ -69,28 +69,28 @@ class RetainedUtil {
           }
         }
       }
-      hits.add(element);
+      hits.add(thing);
     }
     return hits;
   }
 
-  static Coordinate transformPointLocalToGlobal(PElement element,
+  static Coordinate transformPointLocalToGlobal(Thing thing,
                                                      Coordinate point) {
-    var tx = element.getTransformToRoot();
+    var tx = thing.getTransformToRoot();
     return tx.transformCoordinate(point);
   }
 
-  static Coordinate transformPointGlobalToLocal(PElement element,
+  static Coordinate transformPointGlobalToLocal(Thing thing,
                                                      Coordinate point) {
-    var tx = element.getTransform();
+    var tx = thing.getTransform();
     return tx.createInverse().transformCoordinate(point);
   }
 
-  static List<Coordinate> getCorners(PElement element) {
-    final rect = new Box(0,0,element.width, element.height);
+  static List<Coordinate> getCorners(Thing thing) {
+    final rect = new Box(0,0,thing.width, thing.height);
     final points = rect.getCorners();
     return $(points).map((p) {
-      return transformPointLocalToGlobal(element, p);
+      return transformPointLocalToGlobal(thing, p);
     }).toList();
   }
 }

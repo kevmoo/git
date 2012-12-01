@@ -1,17 +1,17 @@
 part of bot_retained;
 
-class ImgElement extends PElement {
+class ImageThing extends Thing {
   final ImageElement _image;
 
   bool _waitingOnLoad = false;
 
-  factory ImgElement.fromUrl(String src, num w, num h) {
+  factory ImageThing.fromUrl(String src, num w, num h) {
     final img = new ImageElement(src: src);
 
-    return new ImgElement(w, h, img);
+    return new ImageThing(w, h, img);
   }
 
-  ImgElement(num width, num height, this._image, [bool cacheEnabled = false]) :
+  ImageThing(num width, num height, this._image, [bool cacheEnabled = false]) :
     super(width, height, cacheEnabled);
 
   void drawOverride(CanvasRenderingContext2D ctx) {

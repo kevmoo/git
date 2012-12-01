@@ -9,55 +9,55 @@ void runRetainedTests() {
   group('bot_retained', () {
     test('test double click manager', _testDoudbleClickManager);
     test('test add/remove from Panel', _testAddRemoveFromPanel);
-    test('PElement remove transform', _testRemoveTransform);
-    test('PElement parent', _testPElementParent);
+    test('Thing remove transform', _testRemoveTransform);
+    test('Thing parent', _testThingParent);
   });
 }
 
-void _testPElementParent() {
-  final child = new Shape(10, 10);
+void _testThingParent() {
+  final child = new ShapeThing(10, 10);
   expect(child.parent, isNull);
   expect(() => child.registerParent(null), throwsArgumentError);
   expect(() => child.unregisterParent(null), throwsArgumentError);
 
-  final parentElement = new _TestParentElement();
+  final parentThing = new _TestParentThing();
 
   // registerParent works
-  child.registerParent(parentElement);
+  child.registerParent(parentThing);
 
   expect(child.parent, isNotNull);
 
   // register same parent 2nd time doesn't work
-  expect(() => child.registerParent(parentElement), throws);
+  expect(() => child.registerParent(parentThing), throws);
 
   // unregister works
-  child.unregisterParent(parentElement);
+  child.unregisterParent(parentThing);
 
   // unregister 2nd time doesn't work
-  expect(() => child.unregisterParent(parentElement), throwsArgumentError);
+  expect(() => child.unregisterParent(parentThing), throwsArgumentError);
 
   expect(child.parent, isNull);
 }
 
 void _testRemoveTransform() {
   // null param throws
-  final element = new Shape(10, 10);
-  expect(() => element.removeTransform(null), throwsArgumentError);
+  final thing = new ShapeThing(10, 10);
+  expect(() => thing.removeTransform(null), throwsArgumentError);
 
-  final tx = element.addTransform();
+  final tx = thing.addTransform();
   // valid param returns true
-  expect(element.removeTransform(tx), isTrue);
+  expect(thing.removeTransform(tx), isTrue);
 
   // calling remove a second time returns false
-  expect(element.removeTransform(tx), isFalse);
+  expect(thing.removeTransform(tx), isFalse);
 }
 
 void _testDoudbleClickManager() {
   final canvas = new CanvasElement();
 
-  final element = new Shape(100, 100, fillStyle: 'blue');
+  final thing = new ShapeThing(100, 100, fillStyle: 'blue');
 
-  final stage = new Stage(canvas, element);
+  final stage = new Stage(canvas, thing);
 
   final cm = new ClickManager(stage);
   final cm2 = new ClickManager(stage);
@@ -66,43 +66,43 @@ void _testDoudbleClickManager() {
 }
 
 void _testAddRemoveFromPanel() {
-  final panel = new PCanvas(100, 100);
-  expect(() => panel.addElement(null), throwsArgumentError);
+  final panel = new CanvasThing(100, 100);
+  expect(() => panel.add(null), throwsArgumentError);
 
   expect(panel.visualChildCount, 0);
 
-  final shape = new Shape(10, 10);
+  final shape = new ShapeThing(10, 10);
 
   expect(shape.parent, isNull);
 
-  panel.addElement(shape);
+  panel.add(shape);
 
   expect(panel.visualChildCount, 1);
   expect(shape.parent, isNotNull);
 
-  // cannot add the same element twice
-  expect(() => panel.addElement(shape), throwsArgumentError);
+  // cannot add the same thing twice
+  expect(() => panel.add(shape), throwsArgumentError);
 
   // cannot remove 'null'
-  expect(() => panel.removeElement(null), throwsArgumentError);
+  expect(() => panel.remove(null), throwsArgumentError);
 
-  expect(panel.removeElement(shape), isTrue);
+  expect(panel.remove(shape), isTrue);
   expect(panel.visualChildCount, 0);
   expect(shape.parent, isNull);
 
-  // cannot add an element that already has a parent
-  final panel2 = new PCanvas(10, 10);
-  panel2.addElement(shape);
+  // cannot add a thing that already has a parent
+  final panel2 = new CanvasThing(10, 10);
+  panel2.add(shape);
 
-  expect(() => panel.addElement(shape), throwsArgumentError);
+  expect(() => panel.add(shape), throwsArgumentError);
 }
 
-class _TestParentElement extends ParentElement {
-  _TestParentElement() : super(10, 10);
+class _TestParentThing extends ParentThing {
+  _TestParentThing() : super(10, 10);
 
   int get visualChildCount => 0;
 
-  PElement getVisualChild(int index) {
+  Thing getVisualChild(int index) {
     throw 'foo';
   }
 }

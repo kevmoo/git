@@ -3,7 +3,7 @@ part of bot_retained;
 // TODO: 'alpha' does not compose well. If a parent is 50% and the child is
 //       50% the render should be at %25, right? :-/
 
-abstract class PElement extends AttachableObject {
+abstract class Thing extends AttachableObject {
   final List<AffineTransform> _transforms = new List<AffineTransform>();
   final bool cacheEnabled;
   final EventHandle<EventArgs> _invalidatedEventHandle = new EventHandle<EventArgs>();
@@ -12,9 +12,9 @@ abstract class PElement extends AttachableObject {
   num _width, _height, _alpha = 1;
   Size _lastDrawSize;
   bool clip = false;
-  ElementParent _parent;
+  ThingParent _parent;
 
-  PElement(this._width, this._height, [this.cacheEnabled = false]);
+  Thing(this._width, this._height, [this.cacheEnabled = false]);
 
   num get width => _width;
 
@@ -50,7 +50,7 @@ abstract class PElement extends AttachableObject {
     invalidateDraw();
   }
 
-  ElementParent get parent => _parent;
+  ThingParent get parent => _parent;
 
   EventRoot<EventArgs> get invalidated => _invalidatedEventHandle;
 
@@ -110,13 +110,13 @@ abstract class PElement extends AttachableObject {
     }
   }
 
-  void registerParent(ElementParent parent) {
+  void registerParent(ThingParent parent) {
     require(_parent == null, 'parent already set');
     requireArgumentNotNull(parent, 'parent');
     _parent = parent;
   }
 
-  void unregisterParent(ElementParent parent) {
+  void unregisterParent(ThingParent parent) {
     requireArgumentNotNull(parent, 'parent');
     requireArgument(parent == _parent, 'parent');
     _parent = null;

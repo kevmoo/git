@@ -5,15 +5,15 @@ class Mouse {
       new Property<bool>("IsMouseOver", false);
   static final Property<bool> isMouseDirectlyOverProperty =
       new Property<bool>("IsMouseDirectlyOver", false);
-  static final Property<List<PElement>> _stageMouseCacheProperty =
-      new Property<List<PElement>>("_stageMouseCacheProperty");
+  static final Property<List<Thing>> _stageMouseCacheProperty =
+      new Property<List<Thing>>("_stageMouseCacheProperty");
 
-  static bool isMouseOver(PElement element) => isMouseOverProperty.get(element);
+  static bool isMouseOver(Thing thing) => isMouseOverProperty.get(thing);
 
-  static bool isMouseDirectlyOver(PElement element) =>
-      isMouseDirectlyOverProperty.get(element);
+  static bool isMouseDirectlyOver(Thing thing) =>
+      isMouseDirectlyOverProperty.get(thing);
 
-  static List<PElement> markMouseOver(Stage stage,
+  static List<Thing> markMouseOver(Stage stage,
       [Coordinate coordinate = null]) {
     requireArgumentNotNull(stage, 'stage');
     requireArgument(coordinate == null || coordinate.isValid, 'coordinate');

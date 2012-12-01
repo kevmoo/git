@@ -6,7 +6,7 @@ import 'bot.dart';
 import 'html.dart';
 import 'retained.dart';
 
-part 'src/texture/texture_animation_element.dart';
+part 'src/texture/texture_animation_thing.dart';
 part 'src/texture/texture_animation_request.dart';
 part 'src/texture/texture_data.dart';
 part 'src/texture/texture_input.dart';

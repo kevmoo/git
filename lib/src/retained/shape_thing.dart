@@ -1,10 +1,10 @@
 part of bot_retained;
 
-class Shape extends PElement {
+class ShapeThing extends Thing {
   dynamic _fillStyle;
   final ShapeType shapeType;
 
-  Shape(num w, num h, {dynamic fillStyle: 'blue', this.shapeType: ShapeType.rect, bool cacheEnabled: true})
+  ShapeThing(num w, num h, {dynamic fillStyle: 'blue', this.shapeType: ShapeType.rect, bool cacheEnabled: true})
     : _fillStyle = fillStyle, super(w, h, cacheEnabled);
 
   dynamic get fillStyle => _fillStyle;

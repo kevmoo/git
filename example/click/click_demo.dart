@@ -17,10 +17,10 @@ class ClickDemo{
 
   factory ClickDemo(CanvasElement canvas){
 
-    PCanvas pCanvas = new PCanvas(200, 200);
+    CanvasThing pCanvas = new CanvasThing(200, 200);
     pCanvas.background = 'yellow';
 
-    var blue = new Shape(100, 100, fillStyle: _blueColor);
+    var blue = new ShapeThing(100, 100, fillStyle: _blueColor);
     ClickManager.setClickable(blue, true);
     final clickHandler = (args) {
       blue.fillStyle = (blue.fillStyle == _blueColor) ? 'lightblue' : _blueColor;
@@ -28,14 +28,14 @@ class ClickDemo{
 
     ClickManager.addHandler(blue, clickHandler);
 
-    pCanvas.addElement(blue);
+    pCanvas.add(blue);
 
-    var green = new Shape(70, 70, fillStyle: 'green');
-    pCanvas.addElement(green);
+    var green = new ShapeThing(70, 70, fillStyle: 'green');
+    pCanvas.add(green);
     pCanvas.setTopLeft(green, const Coordinate(110, 15));
 
-    var red = new Shape(40, 40, fillStyle: 'red', shapeType: ShapeType.ellipse);
-    pCanvas.addElement(red);
+    var red = new ShapeThing(40, 40, fillStyle: 'red', shapeType: ShapeType.ellipse);
+    pCanvas.add(red);
     pCanvas.setCenter(red, const Coordinate(50, 150));
 
     ClickManager.setClickable(red, true);
@@ -46,8 +46,8 @@ class ClickDemo{
       (canvas.width - pCanvas.width) / 2,
       (canvas.height - pCanvas.height) / 2);
 
-    var rootPanel = new PCanvas(500, 500);
-    rootPanel.addElement(pCanvas);
+    var rootPanel = new CanvasThing(500, 500);
+    rootPanel.add(pCanvas);
 
     var stage = new Stage(canvas, rootPanel);
 

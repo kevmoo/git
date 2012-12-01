@@ -25,13 +25,13 @@ class DraggerDemo{
   factory DraggerDemo(CanvasElement canvas){
 
     final image =
-        new SpriteElement.horizontalFromUrl('disasteroids2_master.png',
+        new SpriteThing.horizontalFromUrl('disasteroids2_master.png',
             28, 28, 16, 29, new Coordinate(35,354));
 
     var tx = image.addTransform();
 
-    var rootPanel = new PCanvas(500, 500);
-    rootPanel.addElement(image);
+    var rootPanel = new CanvasThing(500, 500);
+    rootPanel.add(image);
 
     var stage = new Stage(canvas, rootPanel);
     var dragger = new Dragger(canvas);
@@ -110,7 +110,7 @@ class DraggerDemo{
   void _setMouse(Coordinate value) {
     _mouseLocation = value;
     final hits = Mouse.markMouseOver(_stage, _mouseLocation);
-    if(hits != null && hits.length > 0 && hits[0] is ImgElement) {
+    if(hits != null && hits.length > 0 && hits[0] is ImageThing) {
       _canvas.style.cursor = 'pointer';
       _overShape = true;
     } else {

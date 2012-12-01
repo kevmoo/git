@@ -11,15 +11,16 @@
 
 ### bot_retained
 
-* `PElement`
+* __BREAKING__ Massive rename. Element is way to overloaded, hence names like 'PElement'. Going with 'Thing'. Not ideal, but not overloaded.
+* `Thing`
     * __NEW__ learned `alpha` -- or at least uses it now
-    * __BREAKING__ a tiny change to how dirty state is tracked to allow elements to effectively request animation in `drawOverride`.
+    * __BREAKING__ a tiny change to how dirty state is tracked to allow thingss to effectively request animation in `drawOverride`.
 * __NEW__ `NavLayer` -- copied from the Javascript library. Pretty fun.
 * __NEW__ `HorizontalAlignment` and `VerticalAlignment`
 * __NEW__ `RetainedUtil` learned `getOffsetVector`
-* __BREAKING__ `Shape` had its constructor shaken up to support `cacheEnabled`
-* __NEW__ `SubCanvasElement` -- similiar to `ImgElement`, but for drawing contents of a canvas.
-* __NEW__ `TextElement` An element to display text. Lot's of work to do, but a good start.
+* __BREAKING__ `ShapeThing` had its constructor shaken up to support `cacheEnabled`
+* __NEW__ `SubCanvasThing` -- similiar to `ImageThing`, but for drawing contents of a canvas.
+* __NEW__ `TextThing` An element to display text. Lot's of work to do, but a good start.
 * Added nifty `_RetainedEnum` as a relatively safe, private subclass for other enum types. 
 
 ## 0.7.0 - 27 Nov 2012 (SDK r15355)

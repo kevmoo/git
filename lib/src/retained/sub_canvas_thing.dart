@@ -1,9 +1,9 @@
 part of bot_retained;
 
-class SubCanvasElement extends PElement {
+class SubCanvasThing extends Thing {
   final CanvasElement _canvas;
 
-  SubCanvasElement(num width, num height, this._canvas) :
+  SubCanvasThing(num width, num height, this._canvas) :
     super(width, height);
 
   void drawOverride(CanvasRenderingContext2D ctx) {

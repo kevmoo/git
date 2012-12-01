@@ -1,16 +1,16 @@
 part of bot_retained;
 
-abstract class ParentElement
-  extends PElement
-  implements ElementParent {
+abstract class ParentThing
+  extends Thing
+  implements ThingParent {
 
-  ParentElement(num w, num h, [bool enableCache = false]) :
+  ParentThing(num w, num h, [bool enableCache = false]) :
     super(w, h, enableCache);
 
-  bool hasVisualChild(PElement element){
+  bool hasVisualChild(Thing thing){
     var length = visualChildCount;
     for(var i=0;i<length;i++){
-      if(identical(element, getVisualChild(i))){
+      if(identical(thing, getVisualChild(i))){
         return true;
       }
     }
@@ -21,11 +21,11 @@ abstract class ParentElement
     invalidateDraw();
   }
 
-  PElement getVisualChild(int index);
+  Thing getVisualChild(int index);
 
   int get visualChildCount;
 
-  void childInvalidated(PElement child){
+  void childInvalidated(Thing child){
     assert(hasVisualChild(child));
     invalidateDraw();
   }
@@ -39,7 +39,7 @@ abstract class ParentElement
     _forEach((e) => e.drawCore(ctx));
   }
 
-  void _forEach(Action1<PElement> f) {
+  void _forEach(Action1<Thing> f) {
     final length = visualChildCount;
     for(int i = 0; i < length; i++) {
       f(getVisualChild(i));

@@ -1,20 +1,20 @@
 part of bot_retained;
 
-class SpriteElement extends ImgElement {
+class SpriteThing extends ImageThing {
   final Coordinate startCoordinate;
   final Vector nextDelta;
   final int count;
 
   int _frame = 0;
 
-  factory SpriteElement.horizontalFromUrl(String src, num w, num h,
+  factory SpriteThing.horizontalFromUrl(String src, num w, num h,
       int count, num xDelta, [Coordinate start = const Coordinate()]) {
     final img = new ImageElement(src: src);
 
-    return new SpriteElement(img, w, h, start, new Vector(xDelta, 0), count);
+    return new SpriteThing(img, w, h, start, new Vector(xDelta, 0), count);
   }
 
-  SpriteElement(ImageElement image, num width, num height,
+  SpriteThing(ImageElement image, num width, num height,
                 this.startCoordinate, this.nextDelta, this.count) :
     super(width, height, image);
 

@@ -7,13 +7,13 @@ part of bot_retained;
 // TODO: text shadow
 // TODO: font styles
 
-class TextElement extends PElement {
+class TextThing extends Thing {
   final String _value;
 
   dynamic fillStyle = 'white';
   dynamic textFillStyle = 'black';
 
-  TextElement(this._value, num width, num height, [bool cacheEnabled = true])
+  TextThing(this._value, num width, num height, [bool cacheEnabled = true])
       : super(width, height, cacheEnabled);
 
   void drawOverride(CanvasRenderingContext2D ctx) {

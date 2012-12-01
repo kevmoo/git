@@ -1,23 +1,21 @@
 part of bot_retained;
 
 class Stage extends AttachableObject
-  implements ElementParent {
+  implements ThingParent {
   final EventHandle<EventArgs> _invalidatedEventHandle =
       new EventHandle<EventArgs>();
 
   final CanvasElement _canvas;
-  final PElement _element;
+  final Thing rootThing;
   CanvasRenderingContext2D _ctx;
 
-  Stage(this._canvas, this._element) {
-    _element.registerParent(this);
+  Stage(this._canvas, this.rootThing) {
+    rootThing.registerParent(this);
   }
 
   Size get size => new Size(_canvas.width, _canvas.height);
 
   EventRoot<EventArgs> get invalidated => _invalidatedEventHandle;
-
-  PElement get rootElement => _element;
 
   CanvasRenderingContext2D get ctx {
     validateNotDisposed();
@@ -35,12 +33,12 @@ class Stage extends AttachableObject
       this._ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
     }
 
-    return this._element._stageDraw(this._ctx);
+    return this.rootThing._stageDraw(this._ctx);
   }
 
-  void childInvalidated(PElement child){
+  void childInvalidated(Thing child){
     validateNotDisposed();
-    assert(child == _element);
+    assert(child == rootThing);
     _invalidatedEventHandle.fireEvent(EventArgs.empty);
   }
 

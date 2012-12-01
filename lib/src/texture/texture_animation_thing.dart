@@ -1,10 +1,10 @@
 part of bot_texture;
 
-class TextureAnimationElement extends PElement {
+class TextureAnimationThing extends Thing {
   final TextureData _textureData;
   final List<TextureAnimationRequest> _requests = new List<TextureAnimationRequest>();
 
-  TextureAnimationElement(num width, num height, this._textureData) :
+  TextureAnimationThing(num width, num height, this._textureData) :
     super(width, height);
 
   void add(TextureAnimationRequest request) {

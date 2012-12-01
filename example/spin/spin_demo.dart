@@ -18,17 +18,17 @@ class SpinDemo{
 
   factory SpinDemo(CanvasElement canvas){
 
-    final pCanvas = new PCanvas(200, 200);
-    final blue = new Shape(100, 100, fillStyle: 'blue');
-    final green = new Shape(70, 70, fillStyle: 'green');
-    final red = new Shape(40, 40, fillStyle: 'red', shapeType: ShapeType.ellipse);
+    final pCanvas = new CanvasThing(200, 200);
+    final blue = new ShapeThing(100, 100, fillStyle: 'blue');
+    final green = new ShapeThing(70, 70, fillStyle: 'green');
+    final red = new ShapeThing(40, 40, fillStyle: 'red', shapeType: ShapeType.ellipse);
 
-    pCanvas.addElement(blue);
+    pCanvas.add(blue);
 
-    pCanvas.addElement(green);
+    pCanvas.add(green);
     pCanvas.setTopLeft(green, new Coordinate(15, 15));
 
-    pCanvas.addElement(red);
+    pCanvas.add(red);
     pCanvas.setCenter(red, new Coordinate(50, 50));
 
 
@@ -38,8 +38,8 @@ class SpinDemo{
 
     final tx = pCanvas.addTransform();
 
-    final rootPanel = new PCanvas(500, 500);
-    rootPanel.addElement(pCanvas);
+    final rootPanel = new CanvasThing(500, 500);
+    rootPanel.add(pCanvas);
 
     final stage = new Stage(canvas, rootPanel);
 

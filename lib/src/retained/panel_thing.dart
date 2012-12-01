@@ -1,40 +1,40 @@
 part of bot_retained;
 
-class Panel extends ParentElement {
+class PanelThing extends ParentThing {
   static final Property<AffineTransform> _containerTransformProperty =
       new Property<AffineTransform>("panelTransform");
 
-  final List<PElement> _children;
+  final List<Thing> _children;
   String background;
 
-  Panel(num w, num h, [bool enableCache = false]) :
-    _children = new List<PElement>(),
+  PanelThing(num w, num h, [bool enableCache = false]) :
+    _children = new List<Thing>(),
     super(w, h, enableCache);
 
-  void addElement(PElement element){
-    insertAt(element, _children.length);
+  void add(Thing thing){
+    insertAt(thing, _children.length);
   }
 
-  void insertAt(PElement element, [int index=null]){
-    requireArgumentNotNull(element, 'element');
-    requireArgument(element.parent == null, 'element',
-        'element already has a parent');
-    requireArgument(!_children.contains(element), 'element',
-        'Cannot add the same element twice');
+  void insertAt(Thing thing, [int index=null]){
+    requireArgumentNotNull(thing, 'thing');
+    requireArgument(thing.parent == null, 'thing',
+        'already has a parent');
+    requireArgument(!_children.contains(thing), 'thing',
+        'Cannot add twice');
 
     index = (index == null) ? 0 : index;
-    element.registerParent(this);
-    _children.insertRange(index, 1, element);
+    thing.registerParent(this);
+    _children.insertRange(index, 1, thing);
 
-    assert(!_containerTransformProperty.isSet(element));
-    _containerTransformProperty.set(element, element.addTransform());
+    assert(!_containerTransformProperty.isSet(thing));
+    _containerTransformProperty.set(thing, thing.addTransform());
     onChildrenChanged();
   }
 
-  bool removeElement(PElement element) {
-    requireArgumentNotNull(element, 'element');
+  bool remove(Thing thing) {
+    requireArgumentNotNull(thing, 'thing');
 
-    final index = _children.indexOf(element);
+    final index = _children.indexOf(thing);
     if(index < 0) {
       return false;
     } else {
@@ -49,7 +49,7 @@ class Panel extends ParentElement {
     }
   }
 
-  PElement getVisualChild(index) => _children[index];
+  Thing getVisualChild(index) => _children[index];
 
   int get visualChildCount => _children.length;
 
