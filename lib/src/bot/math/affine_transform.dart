@@ -15,11 +15,11 @@ class AffineTransform implements Cloneable<AffineTransform> {
   }
 
   factory AffineTransform.fromScale(sx, sy) {
-    return new AffineTransform().setToScale(sx, sy);
+    return new AffineTransform(sx, 0, 0, sy, 0, 0);
   }
 
   factory AffineTransform.fromTranslat(num x, num y) {
-    return new AffineTransform().setToTranslation(x, y);
+    return new AffineTransform(1, 0, 0, 1, x, y);
   }
 
   num get scaleX => _m00;
