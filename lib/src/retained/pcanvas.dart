@@ -16,14 +16,12 @@ class PCanvas extends Panel{
     return tx.transformCoordinate();
   }
 
-  // TODO: should be static
   void setCenter(PElement element, Coordinate value){
     var sizeOffset = new Vector(element.width/2, element.height/2);
     var delta = Coordinate.difference(value, sizeOffset);
     setTopLeft(element, delta);
   }
 
-  // TODO: should be static
   Coordinate getCenter(PElement element){
     var sizeOffset = new Vector(element.width/2, element.height/2);
     return sizeOffset + getTopLeft(element);
