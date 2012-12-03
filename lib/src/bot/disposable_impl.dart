@@ -4,17 +4,17 @@ class DisposableImpl implements Disposable {
   bool _disposed = false;
 
   void dispose(){
-    if (!_disposed) {
-      // Set disposed_ to true first, in case during the chain of disposal this
-      // gets disposed recursively.
-      this._disposed = true;
-      this.disposeInternal();
-    }
+    validateNotDisposed();
+    // Set disposed_ to true first, in case during the chain of disposal this
+    // gets disposed recursively.
+    this._disposed = true;
+    this.disposeInternal();
   }
 
-  // TODO: throw an object disposed exception?
   void validateNotDisposed() {
-    assert(!_disposed);
+    if(_disposed) {
+      throw const DisposedError();
+    }
   }
 
   bool get isDisposed => _disposed;
