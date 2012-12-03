@@ -19,10 +19,10 @@ class DisposableImpl implements Disposable {
 
   bool get isDisposed => _disposed;
 
+  @protected
   /**
    * Do not call this method directly. Call [dispose] instead.
    * Subclasses should override this method to implement [Disposable] behavior.
    */
-  void disposeInternal() {
-  }
+  void disposeInternal() { }
 }
