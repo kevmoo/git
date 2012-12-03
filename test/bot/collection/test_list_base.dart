@@ -39,7 +39,12 @@ class TestListBase extends ListBase<int> {
       test('reduce', _testReduce);
       test('simple', _testSimple);
       test('some and all', _testSomeAll);
+      test('last', _testLast);
     });
+  }
+
+  static void _testLast() {
+    expect(instance.last(), 1);
   }
 
   static void _testReduce() {
