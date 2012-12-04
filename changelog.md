@@ -1,6 +1,6 @@
 # Changelog - Dart Bag of Tricks
 
-## 0.8.0 - *unreleased* - (SDK r15355)
+## 0.8.0 - *unreleased* - (SDK r15595)
 
 ### bot
 
