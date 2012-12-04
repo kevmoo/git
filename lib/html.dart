@@ -2,6 +2,7 @@ library bot_html;
 
 import 'dart:html';
 import 'dart:math' as math;
+import 'dart:web_audio';
 import 'bot.dart';
 
 part 'src/html/_resource_entry.dart';
