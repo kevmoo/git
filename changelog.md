@@ -2,6 +2,8 @@
 
 ## 0.8.0 - *unreleased* - (SDK r15699)
 
+__BREAKING__ Moved dependencies on SDK libraries to versions on pub.dartlang.org.
+
 ### bot
 
 * __NEW__ Added `lerp` to top-level math functions.
