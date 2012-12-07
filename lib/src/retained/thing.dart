@@ -47,7 +47,9 @@ abstract class Thing extends AttachableObject {
     requireArgument(isValidNumber(value), 'value');
     requireArgument(value >= 0 && value <= 1, 'value');
     _alpha = value;
-    invalidateDraw();
+    if(parent != null) {
+      _invalidateParent();
+    }
   }
 
   ThingParent get parent => _parent;
@@ -104,7 +106,7 @@ abstract class Thing extends AttachableObject {
 
   void invalidateDraw(){
     validateNotDisposed();
-    if(_lastDrawSize != null){
+    if(_lastDrawSize != null) {
       _lastDrawSize = null;
       _invalidateParent();
     }
@@ -160,6 +162,7 @@ abstract class Thing extends AttachableObject {
     var tx = this.getTransform();
     CanvasUtil.transform(ctx, tx);
 
+    _setAlpha(ctx);
     ctx.drawImage(this._cacheCanvas, 0, 0);
     ctx.restore();
   }
@@ -182,16 +185,13 @@ abstract class Thing extends AttachableObject {
       ctx.clip();
     }
 
+    _setAlpha(ctx);
+
     _drawInternal(ctx);
     ctx.restore();
   }
 
-  void _drawInternal(CanvasRenderingContext2D ctx){
-    assert(_alpha != null);
-    assert(_alpha >= 0);
-    assert(_alpha <= 1);
-    ctx.globalAlpha = _alpha;
-
+  void _drawInternal(CanvasRenderingContext2D ctx) {
     // possible for invalidateParent to be called during draw
     // which signals that another frame is wanted for animating content
     // so we're setting _lastDrawSize here
@@ -212,5 +212,12 @@ abstract class Thing extends AttachableObject {
     assert(this._parent != null);
     _invalidatedEventHandle.fireEvent(EventArgs.empty);
     _parent.childInvalidated(this);
+  }
+
+  void _setAlpha(CanvasRenderingContext2D ctx) {
+    assert(_alpha != null);
+    assert(_alpha >= 0);
+    assert(_alpha <= 1);
+    ctx.globalAlpha = _alpha;
   }
 }
