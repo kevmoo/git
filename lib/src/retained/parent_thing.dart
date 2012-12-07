@@ -4,8 +4,8 @@ abstract class ParentThing
   extends Thing
   implements ThingParent {
 
-  ParentThing(num w, num h, [bool enableCache = false]) :
-    super(w, h, enableCache);
+  ParentThing(num w, num h) :
+    super(w, h);
 
   bool hasVisualChild(Thing thing){
     var length = visualChildCount;

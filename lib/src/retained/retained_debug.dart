@@ -49,8 +49,6 @@ class RetainedDebug {
       ctx.strokeStyle = 'red';
     } else if (Mouse.isMouseOver(thing)) {
       ctx.strokeStyle = 'pink';
-    } else if (thing.cacheEnabled) {
-      ctx.strokeStyle = 'yellow';
     } else {
       ctx.strokeStyle = 'orange';
     }

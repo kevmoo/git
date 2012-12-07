@@ -11,8 +11,8 @@ class ImageThing extends Thing {
     return new ImageThing(w, h, img);
   }
 
-  ImageThing(num width, num height, this._image, [bool cacheEnabled = false]) :
-    super(width, height, cacheEnabled);
+  ImageThing(num width, num height, this._image) :
+    super(width, height);
 
   void drawOverride(CanvasRenderingContext2D ctx) {
     if(_image.complete) {

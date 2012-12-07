@@ -75,35 +75,35 @@ class NavDemo {
   }
 
   static Thing _getDemoElement(int count) {
-    final canvas = new CanvasThing(300, 300, true);
+    final canvas = new CanvasThing(300, 300);
 
-    final back = new ShapeThing(300, 300, fillStyle: '#333', cacheEnabled: false);
+    final back = new ShapeThing(300, 300, fillStyle: '#333');
     back.alpha = 0.5;
     canvas.add(back);
 
-    final text = new TextThing("Click here - $count", 100, 100, false);
+    final text = new TextThing("Click here - $count", 100, 100);
     canvas.add(text);
     canvas.setTopLeft(text, new Coordinate(100, 100));
 
     ShapeThing corner;
 
     // top left
-    corner = new ShapeThing(100, 100, fillStyle: 'red', cacheEnabled: false);
+    corner = new ShapeThing(100, 100, fillStyle: 'red');
     canvas.add(corner);
     canvas.setTopLeft(corner, new Coordinate(0,0));
 
     // top right
-    corner = new ShapeThing(100, 100, fillStyle: 'green', cacheEnabled: false);
+    corner = new ShapeThing(100, 100, fillStyle: 'green');
     canvas.add(corner);
     canvas.setTopLeft(corner, new Coordinate(200,0));
 
     // bottom left
-    corner = new ShapeThing(100, 100, fillStyle: 'blue', cacheEnabled: false);
+    corner = new ShapeThing(100, 100, fillStyle: 'blue');
     canvas.add(corner);
     canvas.setTopLeft(corner, new Coordinate(0,200));
 
     // bottom right
-    corner = new ShapeThing(100, 100, fillStyle: 'yellow', cacheEnabled: false);
+    corner = new ShapeThing(100, 100, fillStyle: 'yellow');
     canvas.add(corner);
     canvas.setTopLeft(corner, new Coordinate(200,200));
 

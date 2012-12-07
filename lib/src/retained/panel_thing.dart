@@ -7,9 +7,9 @@ class PanelThing extends ParentThing {
   final List<Thing> _children;
   String background;
 
-  PanelThing(num w, num h, [bool enableCache = false]) :
+  PanelThing(num w, num h) :
     _children = new List<Thing>(),
-    super(w, h, enableCache);
+    super(w, h);
 
   void add(Thing thing){
     insertAt(thing, _children.length);

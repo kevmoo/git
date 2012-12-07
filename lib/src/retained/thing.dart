@@ -5,16 +5,16 @@ part of bot_retained;
 
 abstract class Thing extends AttachableObject {
   final List<AffineTransform> _transforms = new List<AffineTransform>();
-  final bool cacheEnabled;
   final EventHandle<EventArgs> _invalidatedEventHandle = new EventHandle<EventArgs>();
   CanvasElement _cacheCanvas;
 
   num _width, _height, _alpha = 1;
+  bool _cacheEnabled = false;
   Size _lastDrawSize;
   bool clip = false;
   ThingParent _parent;
 
-  Thing(this._width, this._height, [this.cacheEnabled = false]);
+  Thing(this._width, this._height);
 
   num get width => _width;
 
@@ -54,6 +54,18 @@ abstract class Thing extends AttachableObject {
 
   ThingParent get parent => _parent;
 
+  bool get cacheEnabled => _cacheEnabled;
+
+  void set cacheEnabled(bool value) {
+    requireArgumentNotNull(value, 'value');
+    if(value != _cacheEnabled) {
+      _cacheEnabled = value;
+      if(!_cacheEnabled) {
+        _cacheCanvas = null;
+      }
+    }
+  }
+
   EventRoot<EventArgs> get invalidated => _invalidatedEventHandle;
 
   AffineTransform getTransform() {
@@ -76,7 +88,7 @@ abstract class Thing extends AttachableObject {
 
   @protected
   void drawCore(CanvasRenderingContext2D ctx){
-    if(cacheEnabled) {
+    if(_cacheEnabled) {
       _drawCached(ctx);
     } else {
       _drawNormal(ctx);

@@ -4,8 +4,8 @@ class ShapeThing extends Thing {
   dynamic _fillStyle;
   final ShapeType shapeType;
 
-  ShapeThing(num w, num h, {dynamic fillStyle: 'blue', this.shapeType: ShapeType.rect, bool cacheEnabled: true})
-    : _fillStyle = fillStyle, super(w, h, cacheEnabled);
+  ShapeThing(num w, num h, {dynamic fillStyle: 'blue', this.shapeType: ShapeType.rect})
+    : _fillStyle = fillStyle, super(w, h);
 
   dynamic get fillStyle => _fillStyle;
 

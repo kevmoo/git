@@ -2,8 +2,8 @@ part of bot_retained;
 
 class CanvasThing extends PanelThing {
 
-  CanvasThing(int w, int h, [bool enableCache = false]) :
-    super(w, h, enableCache);
+  CanvasThing(int w, int h) :
+    super(w, h);
 
   void setTopLeft(Thing thing, Coordinate value){
     var tx = getChildTransform(thing);

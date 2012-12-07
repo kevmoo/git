@@ -11,8 +11,8 @@ class NavThing extends ParentThing {
   _NavLayerTxPanel _txPanel;
   Vector _childOffset;
 
-  NavThing(num width, num height, [bool cacheEnabled = false]) :
-    super(width, height, cacheEnabled);
+  NavThing(num width, num height) :
+    super(width, height);
 
   int get visualChildCount {
     if(_txPanel != null) {
