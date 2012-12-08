@@ -153,13 +153,13 @@ abstract class Thing extends AttachableObject {
       this._cacheCanvas.width = this.width.toInt();
       this._cacheCanvas.height = this.height.toInt();
 
-      var cacheCtx = _cacheCanvas.context2d;
+      final cacheCtx = _cacheCanvas.context2d;
 
       _drawInternal(cacheCtx);
     }
 
     ctx.save();
-    var tx = this.getTransform();
+    final tx = this.getTransform();
     CanvasUtil.transform(ctx, tx);
 
     _setAlpha(ctx);
