@@ -2,6 +2,7 @@ part of bot_retained;
 
 // TODO: 'alpha' does not compose well. If a parent is 50% and the child is
 //       50% the render should be at %25, right? :-/
+// TODO: support clipping - https://github.com/kevmoo/bot.dart/issues/15
 
 abstract class Thing extends AttachableObject {
   final List<AffineTransform> _transforms = new List<AffineTransform>();
@@ -11,7 +12,6 @@ abstract class Thing extends AttachableObject {
   num _width, _height, _alpha = 1;
   bool _cacheEnabled = false;
   Size _lastDrawSize;
-  bool clip = false;
   ThingParent _parent;
 
   Thing(this._width, this._height);
@@ -181,21 +181,11 @@ abstract class Thing extends AttachableObject {
 
   void _drawNormal(CanvasRenderingContext2D ctx){
     var tx = this.getTransform();
-    if (this._isClipped(tx, ctx)) {
-      return;
-    }
 
     ctx.save();
 
     // Translate to the starting position
     CanvasUtil.transform(ctx, tx);
-
-    // clip to the bounds of the object
-    if (this.clip) {
-      ctx.beginPath();
-      ctx.rect(0, 0, width, height);
-      ctx.clip();
-    }
 
     _setAlpha(ctx);
 
@@ -211,13 +201,6 @@ abstract class Thing extends AttachableObject {
 
     // call the abstract draw method
     drawOverride(ctx);
-  }
-
-  bool _isClipped(AffineTransform tx, CanvasRenderingContext2D ctx){
-    if(clip){
-      // a lot more impl to do here...
-    }
-    return false;
   }
 
   void _invalidateParent(){
