@@ -25,6 +25,7 @@ __BREAKING__ Moved dependencies on SDK libraries to versions on pub.dartlang.org
 * __BREAKING__ `ShapeThing` had its constructor shaken up to support `cacheEnabled`
 * __NEW__ `SubCanvasThing` -- similiar to `ImageThing`, but for drawing contents of a canvas.
 * __NEW__ `TextThing` An element to display text. Lot's of work to do, but a good start.
+* __NEW__ `StageWrapper` - handles requesting frames and drawing them when the stage updates.
 * Added nifty `_RetainedEnum` as a relatively safe, private subclass for other enum types. 
 
 ## 0.7.0 - 27 Nov 2012 (SDK r15355)

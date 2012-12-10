@@ -8,12 +8,8 @@ main(){
   demo.requestFrame();
 }
 
-class ClickDemo{
+class ClickDemo extends StageWrapper<CanvasThing> {
   static const _blueColor = 'blue';
-
-  final CanvasElement _canvas;
-  final Stage _stage;
-  final ClickManager _clickMan;
 
   factory ClickDemo(CanvasElement canvas){
 
@@ -49,21 +45,11 @@ class ClickDemo{
     var rootPanel = new CanvasThing(500, 500);
     rootPanel.add(pCanvas);
 
-    var stage = new Stage(canvas, rootPanel);
-
-    final cm = new ClickManager(stage);
-
-    return new ClickDemo._internal(canvas, stage, cm);
+    return new ClickDemo._internal(canvas, rootPanel);
   }
 
-  ClickDemo._internal(this._canvas, this._stage, this._clickMan);
-
-  void requestFrame(){
-    window.requestAnimationFrame(_onFrame);
-  }
-
-  void _onFrame(double highResTime){
-    _stage.draw();
-    requestFrame();
+  ClickDemo._internal(CanvasElement canvas, CanvasThing thing) :
+    super(canvas, thing) {
+    new ClickManager(stage);
   }
 }

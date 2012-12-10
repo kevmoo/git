@@ -10,45 +10,32 @@ void main() {
   demo.requestFrame();
 }
 
-class NavDemo {
-  final CanvasElement _canvas;
-  final Stage _stage;
-  final NavThing _nav;
-  bool _frameRequested = false;
+class NavDemo extends StageWrapper<NavThing> {
   int _count = 0;
 
   factory NavDemo(CanvasElement canvas) {
 
     final nav = new NavThing(300, 300);
 
-    final stage = new Stage(canvas, nav);
-
-    return new NavDemo._internal(canvas, stage, nav);
+    return new NavDemo._internal(canvas, nav);
   }
 
-  NavDemo._internal(this._canvas, this._stage, this._nav) {
-    _stage.invalidated.add((_) => requestFrame());
+  NavDemo._internal(CanvasElement canvas, NavThing nav) :
+    super(canvas, nav) {
     _forward(new AffineTransform());
-    _canvas.on.mouseDown.add(_canvas_mouseDown);
-  }
-
-  void requestFrame() {
-    if(!_frameRequested) {
-      _frameRequested = true;
-      window.requestAnimationFrame(_onFrame);
-    }
+    canvas.on.mouseDown.add(_canvas_mouseDown);
   }
 
   void _forward(AffineTransform tx) {
-    if(_nav.canForward) {
+    if(rootThing.canForward) {
       final element = _getDemoElement(++_count);
-      _nav.forward(element, tx);
+      rootThing.forward(element, tx);
     }
   }
 
   void _canvas_mouseDown(MouseEvent e) {
     final point = getMouseEventCoordinate(e);
-    final hits = RetainedUtil.hitTest(_stage, point);
+    final hits = RetainedUtil.hitTest(stage, point);
     if(hits.length > 0) {
       _itemClick(hits.first);
     }
@@ -66,12 +53,6 @@ class NavDemo {
         .scale(1/3, 1/3);
     }
     _forward(tx);
-  }
-
-  void _onFrame(double highResTime) {
-    assert(_frameRequested);
-    _frameRequested = false;
-    _stage.draw();
   }
 
   static Thing _getDemoElement(int count) {

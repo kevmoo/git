@@ -10,13 +10,11 @@ main(){
   demo.requestFrame();
 }
 
-class SpinDemo{
-  final CanvasElement _canvas;
-  final Stage _stage;
+class SpinDemo extends StageWrapper<CanvasThing> {
   final AffineTransform _tx;
   Coordinate _mouseLocation;
 
-  factory SpinDemo(CanvasElement canvas){
+  factory SpinDemo(CanvasElement canvas) {
 
     final pCanvas = new CanvasThing(200, 200);
     final blue = new ShapeThing(100, 100, fillStyle: 'blue');
@@ -41,25 +39,20 @@ class SpinDemo{
     final rootPanel = new CanvasThing(500, 500);
     rootPanel.add(pCanvas);
 
-    final stage = new Stage(canvas, rootPanel);
-
-    return new SpinDemo._internal(canvas, stage, tx);
+    return new SpinDemo._internal(canvas, rootPanel, tx);
   }
 
-  SpinDemo._internal(this._canvas, this._stage, this._tx){
-    _canvas.on.mouseMove.add(_canvas_mouseMove);
-    _canvas.on.mouseOut.add(_canvas_mouseOut);
+  SpinDemo._internal(CanvasElement canvas, CanvasThing thing, this._tx) :
+    super(canvas, thing) {
+    canvas.on.mouseMove.add(_canvas_mouseMove);
+    canvas.on.mouseOut.add(_canvas_mouseOut);
   }
 
-  void requestFrame(){
-    window.requestAnimationFrame(_onFrame);
-  }
-
-  void _onFrame(double highResTime){
+  void drawFrame(double highResTime){
     _tx.rotate(math.PI * 0.01, 100, 100);
-    _stage.draw();
+    super.drawFrame(highResTime);
     if(_mouseLocation != null){
-      RetainedDebug.borderHitTest(_stage, _mouseLocation);
+      RetainedDebug.borderHitTest(stage, _mouseLocation);
     }
     requestFrame();
   }
