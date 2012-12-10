@@ -13,16 +13,16 @@ __BREAKING__ Moved dependencies on SDK libraries to versions on pub.dartlang.org
 
 ### bot_retained
 
-* __BREAKING__ `Thing` - eliminated 'cacheEnabled' ctor argument.
-* __BREAKING__ `Thing` Removed `clip` property. It wasn't doing anything. 
 * __BREAKING__ Massive rename. Element is way to overloaded, hence names like 'PElement'. Going with 'Thing'. Not ideal, but not overloaded.
 * `Thing`
     * __NEW__ learned `alpha` -- or at least uses it now
     * __BREAKING__ a tiny change to how dirty state is tracked to allow thingss to effectively request animation in `drawOverride`.
+	* __BREAKING__ Eliminated 'cacheEnabled' ctor argument.
+	* __BREAKING__ Removed `clip` property. It wasn't doing anything. 
+* __BREAKING__ `ShapeThing` had its constructor shaken up to support `cacheEnabled`
 * __NEW__ `NavLayer` -- copied from the Javascript library. Pretty fun.
 * __NEW__ `HorizontalAlignment` and `VerticalAlignment`
 * __NEW__ `RetainedUtil` learned `getOffsetVector`
-* __BREAKING__ `ShapeThing` had its constructor shaken up to support `cacheEnabled`
 * __NEW__ `SubCanvasThing` -- similiar to `ImageThing`, but for drawing contents of a canvas.
 * __NEW__ `TextThing` An element to display text. Lot's of work to do, but a good start.
 * __NEW__ `StageWrapper` - handles requesting frames and drawing them when the stage updates.
