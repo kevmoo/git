@@ -88,12 +88,25 @@ abstract class Thing extends AttachableObject {
 
   @protected
   void drawCore(CanvasRenderingContext2D ctx){
+    ctx.save();
+    final tx = this.getTransform();
+    CanvasUtil.transform(ctx, tx);
+    assert(_alpha != null);
+    assert(_alpha >= 0);
+    assert(_alpha <= 1);
+    ctx.globalAlpha = _alpha;
+
     if(_cacheEnabled) {
       _drawCached(ctx);
     } else {
       _drawNormal(ctx);
     }
+
+    ctx.restore();
   }
+
+  @protected
+  void drawOverride(CanvasRenderingContext2D ctx);
 
   AffineTransform addTransform(){
     validateNotDisposed();
@@ -112,9 +125,6 @@ abstract class Thing extends AttachableObject {
       return true;
     }
   }
-
-  @protected
-  void drawOverride(CanvasRenderingContext2D ctx);
 
   void invalidateDraw(){
     validateNotDisposed();
@@ -170,27 +180,11 @@ abstract class Thing extends AttachableObject {
       _drawInternal(cacheCtx);
     }
 
-    ctx.save();
-    final tx = this.getTransform();
-    CanvasUtil.transform(ctx, tx);
-
-    _setAlpha(ctx);
     ctx.drawImage(this._cacheCanvas, 0, 0);
-    ctx.restore();
   }
 
   void _drawNormal(CanvasRenderingContext2D ctx){
-    var tx = this.getTransform();
-
-    ctx.save();
-
-    // Translate to the starting position
-    CanvasUtil.transform(ctx, tx);
-
-    _setAlpha(ctx);
-
     _drawInternal(ctx);
-    ctx.restore();
   }
 
   void _drawInternal(CanvasRenderingContext2D ctx) {
@@ -207,12 +201,5 @@ abstract class Thing extends AttachableObject {
     assert(this._parent != null);
     _invalidatedEventHandle.fireEvent(EventArgs.empty);
     _parent.childInvalidated(this);
-  }
-
-  void _setAlpha(CanvasRenderingContext2D ctx) {
-    assert(_alpha != null);
-    assert(_alpha >= 0);
-    assert(_alpha <= 1);
-    ctx.globalAlpha = _alpha;
   }
 }
