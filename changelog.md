@@ -13,6 +13,8 @@ __BREAKING__ Moved dependencies on SDK libraries to versions on pub.dartlang.org
 
 ### bot_retained
 
+* __BREAKING__ `Thing` - eliminated 'cacheEnabled' ctor argument.
+* __BREAKING__ `Thing` Removed `clip` property. It wasn't doing anything. 
 * __BREAKING__ Massive rename. Element is way to overloaded, hence names like 'PElement'. Going with 'Thing'. Not ideal, but not overloaded.
 * `Thing`
     * __NEW__ learned `alpha` -- or at least uses it now
