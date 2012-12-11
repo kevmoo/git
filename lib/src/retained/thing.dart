@@ -175,17 +175,13 @@ abstract class Thing extends AttachableObject {
 
       final cacheCtx = _cacheCanvas.context2d;
 
-      _drawInternal(cacheCtx);
+      _drawNormal(cacheCtx);
     }
 
     ctx.drawImage(this._cacheCanvas, 0, 0);
   }
 
-  void _drawNormal(CanvasRenderingContext2D ctx){
-    _drawInternal(ctx);
-  }
-
-  void _drawInternal(CanvasRenderingContext2D ctx) {
+  void _drawNormal(CanvasRenderingContext2D ctx) {
     // possible for invalidateParent to be called during draw
     // which signals that another frame is wanted for animating content
     // so we're setting _lastDrawSize here
