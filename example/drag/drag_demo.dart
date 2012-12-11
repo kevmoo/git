@@ -64,7 +64,8 @@ class DraggerDemo{
 
   void _onDrag(Vector delta) {
     _tx.translate(delta.x, delta.y);
-    _demoMapper.input = _tx.translateVector;
+    final arrayValue = [_tx.translateX, _tx.translateY];
+    _demoMapper.input = arrayValue;
     requestFrame();
   }
 
@@ -121,19 +122,22 @@ class DraggerDemo{
   }
 }
 
-class _DemoValue extends SendPortValue<Coordinate, int> {
+class _DemoValue extends SendPortValue<List<int>, int> {
   _DemoValue() : super(spawnFunction(_demoIsolate));
 }
 
 void _demoIsolate() {
-  new SendValuePort<Coordinate, int>((input) {
+  new SendValuePort<List<int>, int>((input) {
     final start = new Date.now();
     Duration delta;
     do {
       delta = (new Date.now().difference(start));
     } while(delta.inSeconds < 1);
 
-    final int output = input.x * input.y;
+    assert(input.length == 2);
+    final coord = new Coordinate(input[0], input[1]);
+
+    final int output = coord.x * coord.y;
     return output;
   });
 }
