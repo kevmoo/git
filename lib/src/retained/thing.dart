@@ -181,8 +181,13 @@ abstract class Thing extends AttachableObject {
   void _drawNormal(CanvasRenderingContext2D ctx) {
     // possible for invalidateParent to be called during draw
     // which signals that another frame is wanted for animating content
-    // so we're setting _lastDrawSize here
-    _lastDrawTime = window.performance.now();
+    // so we're setting _lastDrawTime here
+
+    // DARTBUG: http://code.google.com/p/dart/issues/detail?id=7322
+    // performance.now is not correctly polyfilled for Chrome 23
+    //_lastDrawTime = window.performance.now();
+
+    _lastDrawTime = new Date.now().millisecondsSinceEpoch;
 
     // call the abstract draw method
     drawOverride(ctx);

@@ -34,7 +34,11 @@ class SpriteThing extends ImageThing {
   void _doDraw(CanvasRenderingContext2D ctx) {
     final int msPerFrame = 1000 ~/ count;
 
-    final int currentMS = window.performance.now().toInt();
+    // DARTBUG: http://code.google.com/p/dart/issues/detail?id=7322
+    // performance.now is not correctly polyfilled for Chrome 23
+    // final new currentMS = window.performance.now().toInt();
+
+    final int currentMS = new Date.now().millisecondsSinceEpoch;
 
     final int theFrame = (currentMS ~/ msPerFrame) % count;
 
