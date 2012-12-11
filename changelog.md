@@ -19,7 +19,7 @@ __BREAKING__ Moved dependencies on SDK libraries to versions on pub.dartlang.org
     * __BREAKING__ a tiny change to how dirty state is tracked to allow thingss to effectively request animation in `drawOverride`.
 	* __BREAKING__ Eliminated 'cacheEnabled' ctor argument.
 	* __BREAKING__ Removed `clip` property. It wasn't doing anything. 
-* __BREAKING__ `ShapeThing` had its constructor shaken up to support `cacheEnabled`
+* __BREAKING__ `ShapeThing` constructor now uses named arguments.
 * __NEW__ `NavLayer` -- copied from the Javascript library. Pretty fun.
 * __NEW__ `HorizontalAlignment` and `VerticalAlignment`
 * __NEW__ `RetainedUtil` learned `getOffsetVector`
