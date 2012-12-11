@@ -1,7 +1,5 @@
 part of bot_retained;
 
-// TODO: 'alpha' does not compose well. If a parent is 50% and the child is
-//       50% the render should be at %25, right? :-/
 // TODO: support clipping - https://github.com/kevmoo/bot.dart/issues/15
 
 abstract class Thing extends AttachableObject {
@@ -94,7 +92,7 @@ abstract class Thing extends AttachableObject {
     assert(_alpha != null);
     assert(_alpha >= 0);
     assert(_alpha <= 1);
-    ctx.globalAlpha = _alpha;
+    ctx.globalAlpha = ctx.globalAlpha * _alpha;
 
     if(_cacheEnabled) {
       _drawCached(ctx);
