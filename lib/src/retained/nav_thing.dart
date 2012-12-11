@@ -161,7 +161,7 @@ class _NavLayerTxPanel extends PanelThing {
 
       // a private hack to look at super field
       // ensure we are invalidated here...
-      assert(_lastDrawSize == null);
+      assert(_lastDrawTime == null);
       _i++;
     } else {
       assert(isDone);

@@ -9,7 +9,7 @@ abstract class Thing extends AttachableObject {
 
   num _width, _height, _alpha = 1;
   bool _cacheEnabled = false;
-  Size _lastDrawSize;
+  num _lastDrawTime;
   ThingParent _parent;
 
   Thing(this._width, this._height);
@@ -126,8 +126,8 @@ abstract class Thing extends AttachableObject {
 
   void invalidateDraw(){
     validateNotDisposed();
-    if(_lastDrawSize != null) {
-      _lastDrawSize = null;
+    if(_lastDrawTime != null) {
+      _lastDrawTime = null;
       _invalidateParent();
     }
   }
@@ -156,20 +156,17 @@ abstract class Thing extends AttachableObject {
 
   bool _stageDraw(CanvasRenderingContext2D ctx){
     update();
-    var dirty = (_lastDrawSize == null);
+    var dirty = (_lastDrawTime == null);
     drawCore(ctx);
     return dirty;
   }
 
   void _drawCached(CanvasRenderingContext2D ctx) {
-    if (this._cacheCanvas == null) {
-      this._cacheCanvas = new CanvasElement();
-    }
+    if (_lastDrawTime == null) {
+      if (this._cacheCanvas == null) {
+        this._cacheCanvas = new CanvasElement();
+      }
 
-    final intLastDrawSize = (_lastDrawSize == null) ?
-        null : new Size(_lastDrawSize.width.toInt(), _lastDrawSize.height.toInt());
-
-    if (CanvasUtil.getCanvasSize(this._cacheCanvas) != intLastDrawSize) {
       this._cacheCanvas.width = this.width.toInt();
       this._cacheCanvas.height = this.height.toInt();
 
@@ -185,7 +182,7 @@ abstract class Thing extends AttachableObject {
     // possible for invalidateParent to be called during draw
     // which signals that another frame is wanted for animating content
     // so we're setting _lastDrawSize here
-    _lastDrawSize = this.size;
+    _lastDrawTime = window.performance.now();
 
     // call the abstract draw method
     drawOverride(ctx);
