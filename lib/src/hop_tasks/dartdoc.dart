@@ -1,5 +1,7 @@
 part of hop_tasks;
 
+// TODO: add post-build options to pretty-up the docs
+
 Task getCompileDocsFunc(String targetBranch,
                              Func<Future<SequenceCollection<String>>> libGetter) {
   return new Task.async((ctx) => compileDocs(ctx, targetBranch, libGetter),
