@@ -1,6 +1,6 @@
 # Changelog - Dart Bag of Tricks
 
-## 0.8.0-beta - 11 Dec 2012 (SDK r15948)
+## 0.8.0 - 11 Dec 2012 (SDK r15948)
 
 __BREAKING__ Moved dependencies on SDK libraries to versions on pub.dartlang.org.
 
