@@ -46,7 +46,7 @@ Future<SequenceCollection<String>> _getLibs() {
 
   lister.onFile = (String file) {
     if(file.endsWith('.dart')) {
-      // DARTBUG: unfiled
+      // DARTBUG: http://code.google.com/p/dart/issues/detail?id=7389
       // still an issue with hop_tasks. Need to file.
       final forbidden = ['hop_tasks'].map((n) => '$n.dart');
       if(forbidden.every((f) => !file.endsWith(f))) {
