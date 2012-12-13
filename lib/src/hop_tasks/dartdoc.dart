@@ -2,14 +2,14 @@ part of hop_tasks;
 
 // TODO: add post-build options to pretty-up the docs
 
-Task getCompileDocsFunc(String targetBranch,
-                             Func<Future<SequenceCollection<String>>> libGetter) {
-  return new Task.async((ctx) => compileDocs(ctx, targetBranch, libGetter),
+Task getCompileDocsFunc(String targetBranch, String packageDir,
+                        Func<Future<SequenceCollection<String>>> libGetter) {
+  return new Task.async((ctx) => compileDocs(ctx, targetBranch, libGetter, packageDir),
       'Generate documentation for the provided libraries.');
 }
 
 Future<bool> compileDocs(TaskContext ctx, String targetBranch,
-    Func<Future<SequenceCollection<String>>> libGetter) {
+    Func<Future<SequenceCollection<String>>> libGetter, String packageDir) {
 
   final dir = new Directory('');
   final tempDocsDirFuture = dir.createTemp()
@@ -27,15 +27,15 @@ Future<bool> compileDocs(TaskContext ctx, String targetBranch,
         final gitDir = values[2];
         final commitMessage = values[3];
         return _compileDocs(ctx, gitDir, outputDir, targetBranch, commitMessage,
-            libs);
+            libs, packageDir);
       });
 }
 
 Future<bool> _compileDocs(TaskContext ctx, String gitDir, String outputDir,
-    String targetBranch, String commitMessage, List<String> libs) {
+    String targetBranch, String commitMessage, List<String> libs, String packageDir) {
 
   return _ensureProperBranch(ctx, gitDir, outputDir, targetBranch)
-      .chain((_) => _dartDoc(ctx, outputDir, libs))
+      .chain((_) => _dartDoc(ctx, outputDir, libs, packageDir))
       .chain((bool dartDocSuccess) {
         if(dartDocSuccess) {
           return _doCommitComplex(ctx, outputDir, gitDir, commitMessage);
@@ -120,8 +120,10 @@ Future _deleteTempDirs(Collection<String> dirPaths) {
   return Futures.wait(new List.from(delDirFutures));
 }
 
-Future<bool> _dartDoc(TaskContext ctx, String outputDir, Collection<String> libs) {
-  final args = ['--omit-generation-time', '--out', outputDir, '--verbose'];
+Future<bool> _dartDoc(TaskContext ctx, String outputDir, Collection<String> libs,
+    String packageDir) {
+  final args = ['--pkg', packageDir, '--omit-generation-time', '--out', outputDir, '--verbose'];
+
   args.addAll(libs);
   ctx.fine("Generating docs into: $outputDir");
   return startProcess(ctx, "dartdoc", args);
