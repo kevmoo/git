@@ -1,5 +1,12 @@
 # Changelog - Dart Bag of Tricks
 
+## 0.9.0-dev *unreleased* (SDK r16081)
+
+### hop_tasks
+
+* __BREAKING__ `dartdoc` now requires `packageDir` param. With recent SDK updates, 
+one can now generate docs for libraries that use external packages.
+
 ## 0.8.0 - 11 Dec 2012 (SDK r15948)
 
 __BREAKING__ Moved dependencies on SDK libraries to versions on pub.dartlang.org.
