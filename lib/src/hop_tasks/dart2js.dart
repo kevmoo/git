@@ -1,18 +1,30 @@
 part of hop_tasks;
 
 Task createDart2JsTask(List<String> inputs,
-    {bool minify: false, bool allowUnsafeEval: true}) {
+    {
+  String output: null,
+  bool minify: false,
+  bool allowUnsafeEval: true,
+  String packageRoot: null}) {
   return new Task.async((context) {
     final futureFuncs = $(inputs)
         .map((p) => () => _dart2js(context, p,
-            minify: minify, allowUnsafeEval: allowUnsafeEval))
+            output: output,
+            minify: minify,
+            allowUnsafeEval: allowUnsafeEval,
+            packageRoot: packageRoot))
         .toList();
     return _chainTasks(futureFuncs);
   }, 'Run Dart-to-Javascript compiler');
 }
 
 Future<bool> _dart2js(TaskContext ctx, String file,
-    {String output: null, bool minify: false, bool allowUnsafeEval: true}) {
+    {
+  String output: null,
+  bool minify: false,
+  bool allowUnsafeEval: true,
+  String packageRoot: null
+  }) {
   if(output == null) {
     output = "${file}.js";
   }
@@ -32,6 +44,10 @@ Future<bool> _dart2js(TaskContext ctx, String file,
 
   if(!allowUnsafeEval) {
     args.add('--disallow-unsafe-eval');
+  }
+
+  if(packageRoot != null) {
+    args.add('--package-root=$packageRoot');
   }
 
   return startProcess(ctx, 'dart2js', args);
