@@ -1,5 +1,11 @@
 # Changelog - Dart Bag of Tricks
 
+## 0.9.0-beta2 17 Dec 2012 (SDK r16164)
+
+### hop_tasks
+
+* dart2js: added optional packageRoot, output args
+
 ## 0.9.0-beta 15 Dec 2012 (SDK r16164)
 
 ### hop_tasks
