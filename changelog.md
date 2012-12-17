@@ -1,5 +1,7 @@
 # Changelog - Dart Bag of Tricks
 
+## 0.9.0-beta-dev 17 Dec 2012 (SDK 0.2.9.6 r16207)
+
 ## 0.9.0-beta2 17 Dec 2012 (SDK r16164)
 
 ### hop_tasks
