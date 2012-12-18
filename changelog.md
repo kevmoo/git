@@ -1,20 +1,12 @@
 # Changelog - Dart Bag of Tricks
 
-## 0.9.0-beta-dev 17 Dec 2012 (SDK 0.2.9.6 r16207)
-
-## 0.9.0-beta2 17 Dec 2012 (SDK r16164)
-
-### hop_tasks
-
-* dart2js: added optional packageRoot, output args
-
-## 0.9.0-beta 15 Dec 2012 (SDK r16164)
+## 0.9.0-rc 18 Dec 2012 (SDK M2 0.2.9.7 r16251)
 
 ### hop_tasks
 
 * __BREAKING__ `dartdoc` now requires `packageDir` param. With recent SDK updates, 
 one can now generate docs for libraries that use external packages.
-* `dart2js` now has a param to control `allowUnsafeEval`
+* dart2js: added optional packageRoot, output, allowUnsafeEval args
 
 ## 0.8.0 - 11 Dec 2012 (SDK r15948)
 
