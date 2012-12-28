@@ -6,6 +6,8 @@ part of bot_retained;
 //       Nothing interesting exists on the instance of CM
 
 class ClickManager {
+  static const String _autoCursor = 'auto';
+
   static final Property<ClickManager> _clickManagerProperty =
       new Property<ClickManager>("_clickManager");
 
@@ -27,6 +29,9 @@ class ClickManager {
   static final AttachedEvent _mouseOutEvent =
       new AttachedEvent('mouseOut');
 
+  static final Property<String> _cursorProperty =
+      new Property<String>("_cursor");
+
   final Stage _stage;
 
   Thing _mouseDownThing;
@@ -45,6 +50,20 @@ class ClickManager {
     _stage._canvas.on.mouseOut.add(_mouseOut);
     _stage._canvas.on.mouseUp.add(_mouseUp);
     _stage._canvas.on.mouseDown.add(_mouseDown);
+  }
+
+  static void setCursor(Thing thing, String value) {
+    assert(thing != null);
+    if(value == null) {
+      _cursorProperty.clear(thing);
+    } else {
+      _cursorProperty.set(thing, value);
+    }
+  }
+
+  static String getCursor(Thing thing) {
+    assert(thing != null);
+    return _cursorProperty.get(thing);
   }
 
   static void setClickable(Thing thing, bool value) {
@@ -109,15 +128,25 @@ class ClickManager {
 
   void _mouseMove(MouseEvent e) {
     final items = _updateMouseLocation(getMouseEventCoordinate(e));
+
+    String cursor = null;
     if(items.length > 0) {
       final args = new ThingMouseEventArgs(items[0], e);
-      items.forEach((e) => _mouseMoveEvent.fireEvent(e, args));
+
+      for(final e in items) {
+        _mouseMoveEvent.fireEvent(e, args);
+        if(cursor == null) {
+          cursor = getCursor(e);
+        }
+      }
     }
+    _updateCursor(cursor);
   }
 
   void _mouseOut(MouseEvent e) {
     _updateMouseLocation(null);
     _mouseOutEvent.fireEvent(_stage, EventArgs.empty);
+    _updateCursor(null);
   }
 
   void _mouseUp(MouseEvent e) {
@@ -154,6 +183,14 @@ class ClickManager {
     if(_mouseDownThing != null) {
       _doMouseDown(_mouseDownThing, e);
     }
+  }
+
+  void _updateCursor(String cursor) {
+    if(cursor == null) {
+      cursor = _autoCursor;
+    }
+    final canvas = _stage._canvas;
+    canvas.style.cursor = cursor;
   }
 
   List<Thing> _updateMouseLocation(Coordinate value) {
