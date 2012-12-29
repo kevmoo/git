@@ -45,10 +45,10 @@ part 'src/bot/exceptions/null_argument_error.dart';
 part 'src/bot/global_id.dart';
 
 part 'src/bot/math/affine_transform.dart';
+part 'src/bot/math/box.dart';
 part 'src/bot/math/bungee_num.dart';
 part 'src/bot/math/coordinate.dart';
 part 'src/bot/math/math_functions.dart';
-part 'src/bot/math/rect.dart';
 part 'src/bot/math/size.dart';
 part 'src/bot/math/tarjan_cycle_detect.dart';
 part 'src/bot/math/vector.dart';
