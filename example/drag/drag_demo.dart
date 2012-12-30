@@ -28,12 +28,15 @@ class DraggerDemo{
         new SpriteThing.horizontalFromUrl('disasteroids2_master.png',
             28, 28, 16, 29, new Coordinate(35,354));
 
+    ClickManager.setCursor(image, 'pointer');
+
     var tx = image.addTransform();
 
     var rootPanel = new CanvasThing(500, 500);
     rootPanel.add(image);
 
     var stage = new Stage(canvas, rootPanel);
+    final cm = new ClickManager(stage);
     var dragger = new Dragger(canvas);
 
     return new DraggerDemo._internal(canvas, stage, tx, dragger);
@@ -112,10 +115,8 @@ class DraggerDemo{
     _mouseLocation = value;
     final hits = Mouse.markMouseOver(_stage, _mouseLocation);
     if(hits != null && hits.length > 0 && hits[0] is ImageThing) {
-      _canvas.style.cursor = 'pointer';
       _overShape = true;
     } else {
-      _canvas.style.cursor = 'auto';
       _overShape = false;
     }
     requestFrame();
