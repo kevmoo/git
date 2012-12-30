@@ -17,6 +17,9 @@ class ClickManager {
   static final Property<bool> _isDraggableProperty =
       new Property<bool>("isDraggable", false);
 
+  static final Property<String> _cursorProperty =
+      new Property<String>("_cursor");
+
   static final AttachedEvent<ThingMouseEventArgs> _clickEvent =
       new AttachedEvent<ThingMouseEventArgs>('clickEvent');
 
@@ -32,11 +35,8 @@ class ClickManager {
   static final AttachedEvent _mouseOutEvent =
       new AttachedEvent('mouseOut');
 
-  static final AttachedEvent _dragEvent =
-      new AttachedEvent('drag');
-
-  static final Property<String> _cursorProperty =
-      new Property<String>("_cursor");
+  static final AttachedEvent<Vector> _dragEvent =
+      new AttachedEvent<Vector>('drag');
 
   final Stage _stage;
 
@@ -106,60 +106,6 @@ class ClickManager {
     } else {
       prop.clear(thing);
     }
-  }
-
-  static GlobalId addHandler(Thing thing,
-                             Action1<ThingMouseEventArgs> handler) {
-    return _clickEvent.addHandler(thing, handler);
-  }
-
-  static bool removeHandler(Thing obj, GlobalId handlerId) {
-    return _clickEvent.removeHandler(obj, handlerId);
-  }
-
-  static GlobalId addMouseMoveHandler(Thing thing,
-                                      Action1<ThingMouseEventArgs> handler) {
-    return _mouseMoveEvent.addHandler(thing, handler);
-  }
-
-  static bool removeMouseMoveHandler(Thing thing, GlobalId handlerId) {
-    return _mouseMoveEvent.removeHandler(thing, handlerId);
-  }
-
-  static GlobalId addMouseUpHandler(Thing thing,
-                                      Action1<ThingMouseEventArgs> handler) {
-    return _mouseUpEvent.addHandler(thing, handler);
-  }
-
-  static bool removeMouseUpHandler(Thing thing, GlobalId handlerId) {
-    return _mouseUpEvent.removeHandler(thing, handlerId);
-  }
-
-  static GlobalId addMouseDownHandler(Thing thing,
-                                      Action1<ThingMouseEventArgs> handler) {
-    return _mouseDownEvent.addHandler(thing, handler);
-  }
-
-  static bool removeMouseDownHandler(Thing thing, GlobalId handlerId) {
-    return _mouseDownEvent.removeHandler(thing, handlerId);
-  }
-
-  static GlobalId addMouseOutHandler(Stage stage,
-                                     Action1<ThingMouseEventArgs> handler) {
-    return _mouseOutEvent.addHandler(stage, handler);
-  }
-
-  static bool removeMouseOutHandler(Stage stage, GlobalId handlerId) {
-    return _mouseOutEvent.removeHandler(stage, handlerId);
-  }
-
-  static GlobalId addDragHandler(Thing thing,
-                                     Action1<Vector> handler) {
-    return _dragEvent.addHandler(thing, handler);
-  }
-
-  static bool removeDragHandler(Thing thing, GlobalId handlerId) {
-    return _dragEvent.removeHandler(thing, handlerId);
   }
 
   bool get _isDragging => _dragCoordinate != null;
@@ -293,5 +239,63 @@ class ClickManager {
       _dragCoordinate = null;
       _draggingThing = null;
     }
+  }
+
+  //
+  // Static event logic
+  //
+
+  static GlobalId addHandler(Thing thing,
+                             Action1<ThingMouseEventArgs> handler) {
+    return _clickEvent.addHandler(thing, handler);
+  }
+
+  static bool removeHandler(Thing obj, GlobalId handlerId) {
+    return _clickEvent.removeHandler(obj, handlerId);
+  }
+
+  static GlobalId addMouseMoveHandler(Thing thing,
+                                      Action1<ThingMouseEventArgs> handler) {
+    return _mouseMoveEvent.addHandler(thing, handler);
+  }
+
+  static bool removeMouseMoveHandler(Thing thing, GlobalId handlerId) {
+    return _mouseMoveEvent.removeHandler(thing, handlerId);
+  }
+
+  static GlobalId addMouseUpHandler(Thing thing,
+                                      Action1<ThingMouseEventArgs> handler) {
+    return _mouseUpEvent.addHandler(thing, handler);
+  }
+
+  static bool removeMouseUpHandler(Thing thing, GlobalId handlerId) {
+    return _mouseUpEvent.removeHandler(thing, handlerId);
+  }
+
+  static GlobalId addMouseDownHandler(Thing thing,
+                                      Action1<ThingMouseEventArgs> handler) {
+    return _mouseDownEvent.addHandler(thing, handler);
+  }
+
+  static bool removeMouseDownHandler(Thing thing, GlobalId handlerId) {
+    return _mouseDownEvent.removeHandler(thing, handlerId);
+  }
+
+  static GlobalId addMouseOutHandler(Stage stage,
+                                     Action1<ThingMouseEventArgs> handler) {
+    return _mouseOutEvent.addHandler(stage, handler);
+  }
+
+  static bool removeMouseOutHandler(Stage stage, GlobalId handlerId) {
+    return _mouseOutEvent.removeHandler(stage, handlerId);
+  }
+
+  static GlobalId addDragHandler(Thing thing,
+                                     Action1<Vector> handler) {
+    return _dragEvent.addHandler(thing, handler);
+  }
+
+  static bool removeDragHandler(Thing thing, GlobalId handlerId) {
+    return _dragEvent.removeHandler(thing, handlerId);
   }
 }
