@@ -160,9 +160,7 @@ class ClickManager {
     //       Mouse capture anyone?
 
     final hits = _updateMouseLocation(getMouseEventCoordinate(e));
-    final thing = $(hits).firstOrDefault((e) {
-      return _isClickableProperty.get(e);
-    });
+    final thing = $(hits).firstOrDefault((e) => getClickable(e));
 
     if(thing != null) {
       _doMouseUp(thing, e);
@@ -178,9 +176,7 @@ class ClickManager {
   void _mouseDown(MouseEvent e) {
     final coord = getMouseEventCoordinate(e);
     final hits = _updateMouseLocation(coord);
-    _mouseDownThing = $(hits).firstOrDefault((e) {
-      return _isClickableProperty.get(e);
-    });
+    _mouseDownThing = $(hits).firstOrDefault((e) => getClickable(e));
     if(_mouseDownThing != null) {
       _doMouseDown(_mouseDownThing, e);
     }
