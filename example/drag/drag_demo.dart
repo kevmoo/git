@@ -15,12 +15,11 @@ class DraggerDemo{
   final CanvasElement _canvas;
   final Stage _stage;
   final AffineTransform _tx;
-  final Dragger _dragger;
   final _DemoValue _demoMapper;
 
   Coordinate _mouseLocation;
   bool _frameRequested = false;
-  bool _overShape = false;
+  final Thing _thing;
 
   factory DraggerDemo(CanvasElement canvas){
 
@@ -36,22 +35,21 @@ class DraggerDemo{
     rootPanel.add(image);
 
     var stage = new Stage(canvas, rootPanel);
-    final cm = new ClickManager(stage);
-    var dragger = new Dragger(canvas);
 
-    return new DraggerDemo._internal(canvas, stage, tx, dragger);
+    return new DraggerDemo._internal(canvas, stage, tx, image);
   }
 
-  DraggerDemo._internal(this._canvas, this._stage, this._tx, this._dragger) :
+  DraggerDemo._internal(this._canvas, this._stage, this._tx, this._thing) :
     _demoMapper = new _DemoValue() {
-    _canvas.on.mouseMove.add(_canvas_mouseMove);
-    _canvas.on.mouseOut.add(_canvas_mouseOut);
-    _dragger.dragDelta.add(_onDrag);
-    _dragger.dragStart.add(_onDragStart);
 
     _demoMapper.outputChanged.add((e) => requestFrame());
 
     _stage.invalidated.add(_onStageInvalidated);
+
+    final cm = new ClickManager(_stage);
+
+    ClickManager.setDraggable(_thing, true);
+    ClickManager.addDragHandler(_thing, _onDrag);
   }
 
   void requestFrame(){
@@ -70,12 +68,6 @@ class DraggerDemo{
     final arrayValue = [_tx.translateX, _tx.translateY];
     _demoMapper.input = arrayValue;
     requestFrame();
-  }
-
-  void _onDragStart(CancelableEventArgs e) {
-    if(!_overShape) {
-      e.cancel();
-    }
   }
 
   void _onFrame(double highResTime){
@@ -100,25 +92,6 @@ class DraggerDemo{
     ctx.fillText(outputText, 10, bottom - 20);
     ctx.restore();
     _frameRequested = false;
-    requestFrame();
-  }
-
-  void _canvas_mouseMove(MouseEvent e){
-    _setMouse(getMouseEventCoordinate(e));
-  }
-
-  void _canvas_mouseOut(MouseEvent e){
-    _setMouse(null);
-  }
-
-  void _setMouse(Coordinate value) {
-    _mouseLocation = value;
-    final hits = Mouse.markMouseOver(_stage, _mouseLocation);
-    if(hits != null && hits.length > 0 && hits[0] is ImageThing) {
-      _overShape = true;
-    } else {
-      _overShape = false;
-    }
     requestFrame();
   }
 }
