@@ -14,6 +14,9 @@ class ClickManager {
   static final Property<bool> _isClickableProperty =
       new Property<bool>("isClickable", false);
 
+  static final Property<bool> _isDraggableProperty =
+      new Property<bool>("isDraggable", false);
+
   static final AttachedEvent<ThingMouseEventArgs> _clickEvent =
       new AttachedEvent<ThingMouseEventArgs>('clickEvent');
 
@@ -29,12 +32,16 @@ class ClickManager {
   static final AttachedEvent _mouseOutEvent =
       new AttachedEvent('mouseOut');
 
+  static final AttachedEvent _dragEvent =
+      new AttachedEvent('drag');
+
   static final Property<String> _cursorProperty =
       new Property<String>("_cursor");
 
   final Stage _stage;
 
-  Thing _mouseDownThing;
+  Thing _mouseDownThing, _draggingThing;
+  Coordinate _dragCoordinate;
 
   factory ClickManager(Stage stage) {
     requireArgumentNotNull(stage, 'stage');
@@ -51,6 +58,10 @@ class ClickManager {
     _stage._canvas.on.mouseOut.add(_mouseOut);
     _stage._canvas.on.mouseUp.add(_mouseUp);
     _stage._canvas.on.mouseDown.add(_mouseDown);
+
+    window.on.mouseMove.add(_windowMouseMove);
+    window.on.mouseUp.add(_windowMouseUp);
+    window.on.blur.add(_windowBlur);
   }
 
   static void setCursor(Thing thing, String value) {
@@ -68,18 +79,33 @@ class ClickManager {
   }
 
   static void setClickable(Thing thing, bool value) {
-    assert(thing != null);
-    assert(value != null);
-    if(value) {
-      _isClickableProperty.set(thing, true);
-    } else {
-      _isClickableProperty.clear(thing);
-    }
+    _setBoolProp(thing, _isClickableProperty, value);
   }
 
   static bool getClickable(Thing thing) {
     assert(thing != null);
     return _isClickableProperty.get(thing);
+  }
+
+  static void setDraggable (Thing thing, bool value) {
+    _setBoolProp(thing, _isDraggableProperty, value);
+  }
+
+  static bool getDraggable(Thing thing) {
+    assert(thing != null);
+    return _isDraggableProperty.get(thing);
+  }
+
+  static void _setBoolProp(Thing thing, Property<bool> prop, bool value) {
+    assert(thing != null);
+    assert(prop != null);
+    assert(value != null);
+    assert(prop.defaultValue == false);
+    if(value) {
+      prop.set(thing, true);
+    } else {
+      prop.clear(thing);
+    }
   }
 
   static GlobalId addHandler(Thing thing,
@@ -126,6 +152,17 @@ class ClickManager {
   static bool removeMouseOutHandler(Stage stage, GlobalId handlerId) {
     return _mouseOutEvent.removeHandler(stage, handlerId);
   }
+
+  static GlobalId addDragHandler(Thing thing,
+                                     Action1<Vector> handler) {
+    return _dragEvent.addHandler(thing, handler);
+  }
+
+  static bool removeDragHandler(Thing thing, GlobalId handlerId) {
+    return _dragEvent.removeHandler(thing, handlerId);
+  }
+
+  bool get _isDragging => _dragCoordinate != null;
 
   void _mouseMove(MouseEvent e) {
     final items = _updateMouseLocation(getMouseEventCoordinate(e));
@@ -174,11 +211,22 @@ class ClickManager {
   }
 
   void _mouseDown(MouseEvent e) {
+    assert(_mouseDownThing == null);
+    assert(_draggingThing == null);
+
     final coord = getMouseEventCoordinate(e);
     final hits = _updateMouseLocation(coord);
-    _mouseDownThing = $(hits).firstOrDefault((e) => getClickable(e));
-    if(_mouseDownThing != null) {
-      _doMouseDown(_mouseDownThing, e);
+
+    for(final t in hits) {
+      if(getDraggable(t)) {
+        _draggingThing = t;
+        _doDrag(_draggingThing, e);
+        break;
+      } else if(getClickable(t)) {
+        _mouseDownThing = t;
+        _doMouseDown(_mouseDownThing, e);
+        break;
+      }
     }
   }
 
@@ -210,5 +258,40 @@ class ClickManager {
     assert(thing != null);
     final args = new ThingMouseEventArgs(thing, e);
     _clickEvent.fireEvent(thing, args);
+  }
+
+  void _doDrag(Thing thing, MouseEvent e) {
+    assert(!_isDragging);
+    // todo: implement cancel
+    e.preventDefault();
+    _dragCoordinate = new Coordinate(e.clientX, e.clientY);
+  }
+
+  void _windowMouseMove(MouseEvent e) {
+    if(_isDragging) {
+      final newLoc = new Coordinate(e.clientX, e.clientY);
+
+      final delta = newLoc - _dragCoordinate;
+
+      _dragEvent.fireEvent(_draggingThing, delta);
+
+      _dragCoordinate = newLoc;
+    }
+  }
+
+  void _windowMouseUp(MouseEvent e) {
+    _endDrag();
+  }
+
+  void _windowBlur(Event e) {
+    _endDrag();
+  }
+
+  void _endDrag() {
+    assert(_isDragging == (_draggingThing != null));
+    if(_isDragging) {
+      _dragCoordinate = null;
+      _draggingThing = null;
+    }
   }
 }
