@@ -14,6 +14,13 @@ class Vector extends Coordinate {
   Vector get normal => this.scale(1 / this.length);
 
   /**
+   * Returns the angle between the positive x-axis and the [Vector].
+   * Angle zero points in the +X direction, 90 degrees points in the +Y
+   * direction (down) and from there we grow clockwise.
+   **/
+  num get angle => math.atan2(y, x);
+
+  /**
    * Adds a [Coordinate] and returns the result as new [Vector].
    **/
   Vector operator +(Coordinate other) => new Vector(x + other.x, y + other.y);
@@ -40,8 +47,10 @@ class Vector extends Coordinate {
 
   /**
    * Computes the angle between this and another [Vector].
+   * Angle zero points in the +X direction, 90 degrees points in the +Y
+   * direction (down) and from there we grow clockwise.
    **/
-  num getAngle (Vector other) => math.acos(dot(other));
+  num getAngle (Vector other) => other.angle - angle;
 
   Vector rotate(num angle) {
     var cos = math.cos(angle);

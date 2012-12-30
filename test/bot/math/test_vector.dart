@@ -49,6 +49,17 @@ class TestVector {
         expect(n.normal.length, closeTo(1, 0.001));
       });
 
+      test('getAngle', () {
+        final j = const Vector(10, 0);
+        expect(j.angle, closeTo(0, 0.001));
+
+        final k = const Vector(10, 10);
+        expect(k.angle, closeTo(math.PI / 4, 0.001));
+
+        final angle = j.getAngle(k);
+        expect(angle, closeTo(math.PI / 4, 0.001));
+      });
+
       test('rotate', (){
         var a = const Vector(1, -1);
         a = a.rotate(math.PI / 2);
