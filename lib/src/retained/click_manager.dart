@@ -45,6 +45,7 @@ class ClickManager {
   }
 
   ClickManager._internal(this._stage) {
+    // The value is set in the above factory
     assert(!_clickManagerProperty.isSet(this._stage));
     _stage._canvas.on.mouseMove.add(_mouseMove);
     _stage._canvas.on.mouseOut.add(_mouseOut);
