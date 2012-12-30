@@ -27,7 +27,7 @@ class DraggerDemo{
         new SpriteThing.horizontalFromUrl('disasteroids2_master.png',
             28, 28, 16, 29, new Coordinate(35,354));
 
-    ClickManager.setCursor(image, 'pointer');
+    MouseManager.setCursor(image, 'pointer');
 
     var tx = image.addTransform();
 
@@ -46,10 +46,10 @@ class DraggerDemo{
 
     _stage.invalidated.add(_onStageInvalidated);
 
-    final cm = new ClickManager(_stage);
+    final cm = new MouseManager(_stage);
 
-    ClickManager.setDraggable(_thing, true);
-    ClickManager.addDragHandler(_thing, _onDrag);
+    MouseManager.setDraggable(_thing, true);
+    MouseManager.addDragHandler(_thing, _onDrag);
   }
 
   void requestFrame(){

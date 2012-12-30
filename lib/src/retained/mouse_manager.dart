@@ -1,15 +1,14 @@
 part of bot_retained;
 
-// TODO: rename MouseManager or similiar -> doing more than click now
 // TODO: implement dispose. Unregister events from Canvas, etc
 // TODO: Remove public ctor. Use ClickManager.enable(stage) or similiar
 //       Nothing interesting exists on the instance of CM
 
-class ClickManager {
+class MouseManager {
   static const String _autoCursor = 'auto';
 
-  static final Property<ClickManager> _clickManagerProperty =
-      new Property<ClickManager>("_clickManager");
+  static final Property<MouseManager> _clickManagerProperty =
+      new Property<MouseManager>("_clickManager");
 
   static final Property<bool> _isClickableProperty =
       new Property<bool>("isClickable", false);
@@ -43,15 +42,15 @@ class ClickManager {
   Thing _mouseDownThing, _draggingThing;
   Coordinate _dragCoordinate;
 
-  factory ClickManager(Stage stage) {
+  factory MouseManager(Stage stage) {
     requireArgumentNotNull(stage, 'stage');
 
     return _clickManagerProperty.get(stage, (s) {
-      return new ClickManager._internal(s);
+      return new MouseManager._internal(s);
     });
   }
 
-  ClickManager._internal(this._stage) {
+  MouseManager._internal(this._stage) {
     // The value is set in the above factory
     assert(!_clickManagerProperty.isSet(this._stage));
     _stage._canvas.on.mouseMove.add(_mouseMove);

@@ -17,12 +17,12 @@ class ClickDemo extends StageWrapper<CanvasThing> {
     pCanvas.background = 'yellow';
 
     var blue = new ShapeThing(100, 100, fillStyle: _blueColor);
-    ClickManager.setClickable(blue, true);
+    MouseManager.setClickable(blue, true);
     final clickHandler = (args) {
       blue.fillStyle = (blue.fillStyle == _blueColor) ? 'lightblue' : _blueColor;
     };
 
-    ClickManager.addHandler(blue, clickHandler);
+    MouseManager.addHandler(blue, clickHandler);
 
     pCanvas.add(blue);
 
@@ -34,9 +34,9 @@ class ClickDemo extends StageWrapper<CanvasThing> {
     pCanvas.add(red);
     pCanvas.setCenter(red, const Coordinate(50, 150));
 
-    ClickManager.setClickable(red, true);
-    ClickManager.addMouseUpHandler(red, (args) => print(['up', args]));
-    ClickManager.addMouseDownHandler(red, (args) => print(['down', args]));
+    MouseManager.setClickable(red, true);
+    MouseManager.addMouseUpHandler(red, (args) => print(['up', args]));
+    MouseManager.addMouseDownHandler(red, (args) => print(['down', args]));
 
     pCanvas.addTransform().translate(
       (canvas.width - pCanvas.width) / 2,
@@ -50,6 +50,6 @@ class ClickDemo extends StageWrapper<CanvasThing> {
 
   ClickDemo._internal(CanvasElement canvas, CanvasThing thing) :
     super(canvas, thing) {
-    new ClickManager(stage);
+    new MouseManager(stage);
   }
 }

@@ -6,7 +6,7 @@ import 'bot.dart';
 import 'html.dart';
 
 part 'src/retained/alignment.dart';
-part 'src/retained/click_manager.dart';
+part 'src/retained/mouse_manager.dart';
 part 'src/retained/thing_mouse_event_args.dart';
 part 'src/retained/thnig_parent.dart';
 part 'src/retained/image_thing.dart';

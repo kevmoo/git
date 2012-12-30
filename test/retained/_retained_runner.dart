@@ -59,8 +59,8 @@ void _testDoudbleClickManager() {
 
   final stage = new Stage(canvas, thing);
 
-  final cm = new ClickManager(stage);
-  final cm2 = new ClickManager(stage);
+  final cm = new MouseManager(stage);
+  final cm2 = new MouseManager(stage);
 
   expect(cm2, same(cm));
 }
