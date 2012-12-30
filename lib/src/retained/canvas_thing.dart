@@ -8,6 +8,7 @@ class CanvasThing extends PanelThing {
   void setTopLeft(Thing thing, Coordinate value){
     var tx = getChildTransform(thing);
     tx.setToTranslation(value.x, value.y);
+    thing.invalidateDraw();
   }
 
   Coordinate getTopLeft(Thing thing){
