@@ -2,14 +2,12 @@ part of bot_retained;
 
 class ThingMouseEventArgs extends EventArgs {
   final Thing thing;
-  final bool shiftKey;
+  final MouseEvent sourceEvent;
 
-  factory ThingMouseEventArgs(Thing thing, MouseEvent mouseEvent) {
+  ThingMouseEventArgs(this.thing, this.sourceEvent) {
     assert(thing != null);
-    assert(mouseEvent != null);
-
-    return new ThingMouseEventArgs._internal(thing, mouseEvent.shiftKey);
+    assert(sourceEvent != null);
   }
 
-  ThingMouseEventArgs._internal(this.thing, this.shiftKey);
+  bool get shiftKey => sourceEvent.shiftKey;
 }
