@@ -1,14 +1,14 @@
 part of bot;
 
 class AffineTransform implements Cloneable<AffineTransform> {
-  num _m00, _m10, _m01, _m11, _m02, _m12;
+  num _scX, _shY, _shX, _scY, _tX, _tY;
 
   AffineTransform([num scaleX = 1, num shearY = 0,
       num shearX = 0, num scaleY = 1,
       num translateX = 0, num translateY = 0]) :
-        _m00 = scaleX, _m11 = scaleY,
-        _m02 = translateX, _m12 = translateY,
-        _m01 = shearX, _m10 = shearY;
+        _scX = scaleX, _scY = scaleY,
+        _tX = translateX, _tY = translateY,
+        _shX = shearX, _shY = shearY;
 
   factory AffineTransform.fromRotate(num theta, num x, num y) {
     return new AffineTransform().setToRotation(theta, x, y);
@@ -22,48 +22,48 @@ class AffineTransform implements Cloneable<AffineTransform> {
     return new AffineTransform(1, 0, 0, 1, x, y);
   }
 
-  num get scaleX => _m00;
+  num get scaleX => _scX;
 
-  num get scaleY => _m11;
+  num get scaleY => _scY;
 
-  num get translateX => _m02;
+  num get translateX => _tX;
 
-  num get translateY => _m12;
+  num get translateY => _tY;
 
   Vector get translateVector => new Vector(translateX, translateY);
 
-  num get shearX => _m01;
+  num get shearX => _shX;
 
-  num get shearY => _m10;
+  num get shearY => _shY;
 
-  num get determinant => _m00 * _m11 - _m01 * _m10;
+  num get determinant => _scX * _scY - _shX * _shY;
 
   bool get isIdentity {
-    return _m00 == 1 && _m10 == 0 &&
-        _m01 == 0 && _m11 == 1 &&
-        _m02 == 0 && _m12 == 0;
+    return _scX == 1 && _shY == 0 &&
+        _shX == 0 && _scY == 1 &&
+        _tX == 0 && _tY == 0;
   }
 
   AffineTransform scale(num sx, num sy) {
-    _m00 *= sx;
-    _m10 *= sx;
-    _m01 *= sy;
-    _m11 *= sy;
+    _scX *= sx;
+    _shY *= sx;
+    _shX *= sy;
+    _scY *= sy;
     return this;
   }
 
   AffineTransform concatenate(tx) {
-    var m0 = this._m00;
-    var m1 = this._m01;
-    this._m00 = tx._m00 * m0 + tx._m10 * m1;
-    this._m01 = tx._m01 * m0 + tx._m11 * m1;
-    this._m02 += tx._m02 * m0 + tx._m12 * m1;
+    var m0 = this._scX;
+    var m1 = this._shX;
+    this._scX = tx._scX * m0 + tx._shY * m1;
+    this._shX = tx._shX * m0 + tx._scY * m1;
+    this._tX += tx._tX * m0 + tx._tY * m1;
 
-    m0 = this._m10;
-    m1 = this._m11;
-    this._m10 = tx._m00 * m0 + tx._m10 * m1;
-    this._m11 = tx._m01 * m0 + tx._m11 * m1;
-    this._m12 += tx._m02 * m0 + tx._m12 * m1;
+    m0 = this._shY;
+    m1 = this._scY;
+    this._shY = tx._scX * m0 + tx._shY * m1;
+    this._scY = tx._shX * m0 + tx._scY * m1;
+    this._tY += tx._tX * m0 + tx._tY * m1;
     return this;
   }
 
@@ -72,8 +72,8 @@ class AffineTransform implements Cloneable<AffineTransform> {
   }
 
   AffineTransform translate(num dx, num dy) {
-    _m02 += dx * _m00 + dy * _m01;
-    _m12 += dx * _m10 + dy * _m11;
+    _tX += dx * _scX + dy * _shX;
+    _tY += dx * _shY + dy * _scY;
     return this;
   }
 
@@ -94,25 +94,25 @@ class AffineTransform implements Cloneable<AffineTransform> {
 
   AffineTransform setFromTransfrom(AffineTransform tx) {
     requireArgumentNotNull(tx, 'tx');
-    return setTransform(tx._m00, tx._m10,
-      tx._m01, tx._m11,
-      tx._m02, tx._m12);
+    return setTransform(tx._scX, tx._shY,
+      tx._shX, tx._scY,
+      tx._tX, tx._tY);
   }
 
   AffineTransform setTransform (num m00, num m10, num m01,
     num m11, num m02, num m12) {
-    this._m00 = m00;
-    this._m10 = m10;
-    this._m01 = m01;
-    this._m11 = m11;
-    this._m02 = m02;
-    this._m12 = m12;
+    this._scX = m00;
+    this._shY = m10;
+    this._shX = m01;
+    this._scY = m11;
+    this._tX = m02;
+    this._tY = m12;
     return this;
   }
 
   Coordinate transformCoordinate([Coordinate point = const Coordinate()]){
-    num x = point.x * _m00 + point.y * _m01 + _m02;
-    num y = point.x * _m10 + point.y * _m11 + _m12;
+    num x = point.x * _scX + point.y * _shX + _tX;
+    num y = point.x * _shY + point.y * _scY + _tY;
 
     return new Coordinate(x, y);
   }
@@ -120,12 +120,12 @@ class AffineTransform implements Cloneable<AffineTransform> {
   AffineTransform createInverse() {
     num det = determinant;
     return new AffineTransform(
-        _m11 / det,
-        -_m10 / det,
-        -_m01 / det,
-        _m00 / det,
-        (_m01 * _m12 - _m11 * _m02) / det,
-        (_m10 * _m02 - _m00 * _m12) / det);
+        _scY / det,
+        -_shY / det,
+        -_shX / det,
+        _scX / det,
+        (_shX * _tY - _scY * _tX) / det,
+        (_shY * _tX - _scX * _tY) / det);
   }
 
   AffineTransform lerpTx(AffineTransform other, num x) {
@@ -142,13 +142,13 @@ class AffineTransform implements Cloneable<AffineTransform> {
   }
 
   AffineTransform clone(){
-    return new AffineTransform(_m00, _m10, _m01, _m11, _m02, _m12);
+    return new AffineTransform(_scX, _shY, _shX, _scY, _tX, _tY);
   }
 
   bool operator ==(AffineTransform other) {
     return other != null &&
-        _m00 == other._m00 && _m01 == other._m01 && _m02 == other._m02 &&
-        _m10 == other._m10 && _m11 == other._m11 && _m12 == other._m12;
+        _scX == other._scX && _shX == other._shX && _tX == other._tX &&
+        _shY == other._shY && _scY == other._scY && _tY == other._tY;
   }
 
   String toString() {
