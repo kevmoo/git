@@ -34,8 +34,11 @@ class MouseManager {
   static final AttachedEvent _mouseOutEvent =
       new AttachedEvent('mouseOut');
 
+  static final AttachedEvent<ThingDragStartingEventArgs> _dragStartingEvent =
+      new AttachedEvent<ThingDragStartingEventArgs>("_dragStartingEvent");
+
   static final AttachedEvent<Vector> _dragEvent =
-      new AttachedEvent<Vector>('drag');
+      new AttachedEvent<Vector>('_dragStarting');
 
   final Stage _stage;
 
@@ -169,7 +172,7 @@ class MouseManager {
     for(final t in hits) {
       if(getDraggable(t)) {
         _draggingThing = t;
-        _doDrag(_draggingThing, e);
+        _startDrag(_draggingThing, e);
         break;
       } else if(getClickable(t)) {
         _mouseDownThing = t;
@@ -209,11 +212,14 @@ class MouseManager {
     _clickEvent.fireEvent(thing, args);
   }
 
-  void _doDrag(Thing thing, MouseEvent e) {
+  void _startDrag(Thing thing, MouseEvent e) {
     assert(!_isDragging);
-    // todo: implement cancel
-    e.preventDefault();
-    _dragCoordinate = new Coordinate(e.clientX, e.clientY);
+    final args = new ThingDragStartingEventArgs(thing, e);
+    _dragStartingEvent.fireEvent(thing, args);
+    if(!args.isCanceled) {
+      e.preventDefault();
+      _dragCoordinate = new Coordinate(e.clientX, e.clientY);
+    }
   }
 
   void _windowMouseMove(MouseEvent e) {
@@ -293,6 +299,15 @@ class MouseManager {
     return _mouseOutEvent.removeHandler(stage, handlerId);
   }
 
+  static GlobalId addDragStartingHandler(Thing thing,
+                                     Action1<ThingDragStartingEventArgs> handler) {
+    return _dragStartingEvent.addHandler(thing, handler);
+  }
+
+  static bool removeDragStartingHandler(Thing thing, GlobalId handlerId) {
+    return _dragStartingEvent.removeHandler(thing, handlerId);
+  }
+
   static GlobalId addDragHandler(Thing thing,
                                      Action1<Vector> handler) {
     return _dragEvent.addHandler(thing, handler);
@@ -300,5 +315,19 @@ class MouseManager {
 
   static bool removeDragHandler(Thing thing, GlobalId handlerId) {
     return _dragEvent.removeHandler(thing, handlerId);
+  }
+}
+
+class ThingDragStartingEventArgs extends ThingMouseEventArgs implements CancelableEventArgs {
+  bool _canceled = false;
+
+  ThingDragStartingEventArgs(Thing thing, MouseEvent source) :
+    super(thing, source);
+
+  bool get isCanceled => _canceled;
+
+  void cancel() {
+    assert(!isCanceled);
+    _canceled = true;
   }
 }
