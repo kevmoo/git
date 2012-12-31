@@ -113,6 +113,10 @@ class MouseManager {
     final items = _updateMouseLocation(getMouseEventCoordinate(e));
 
     String cursor = null;
+    if(_draggingThing != null) {
+      cursor = getCursor(_draggingThing);
+    }
+
     if(items.length > 0) {
       final args = new ThingMouseEventArgs(items[0], e);
 
