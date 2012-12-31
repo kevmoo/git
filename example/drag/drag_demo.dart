@@ -63,7 +63,8 @@ class DraggerDemo{
     requestFrame();
   }
 
-  void _onDrag(Vector delta) {
+  void _onDrag(ThingDragEventArgs args) {
+    final delta = args.delta;
     _tx.translate(delta.x, delta.y);
     final arrayValue = [_tx.translateX, _tx.translateY];
     _demoMapper.input = arrayValue;

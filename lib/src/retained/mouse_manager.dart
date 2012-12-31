@@ -37,8 +37,8 @@ class MouseManager {
   static final AttachedEvent<ThingDragStartingEventArgs> _dragStartingEvent =
       new AttachedEvent<ThingDragStartingEventArgs>("_dragStartingEvent");
 
-  static final AttachedEvent<Vector> _dragEvent =
-      new AttachedEvent<Vector>('_dragStarting');
+  static final AttachedEvent<ThingDragEventArgs> _dragEvent =
+      new AttachedEvent<ThingDragEventArgs>('_dragStarting');
 
   final Stage _stage;
 
@@ -227,8 +227,9 @@ class MouseManager {
       final newLoc = new Coordinate(e.clientX, e.clientY);
 
       final delta = newLoc - _dragCoordinate;
+      final args = new ThingDragEventArgs(_draggingThing, e, delta);
 
-      _dragEvent.fireEvent(_draggingThing, delta);
+      _dragEvent.fireEvent(_draggingThing, args);
 
       _dragCoordinate = newLoc;
     }
@@ -309,7 +310,7 @@ class MouseManager {
   }
 
   static GlobalId addDragHandler(Thing thing,
-                                     Action1<Vector> handler) {
+                                     Action1<ThingDragEventArgs> handler) {
     return _dragEvent.addHandler(thing, handler);
   }
 
@@ -330,4 +331,10 @@ class ThingDragStartingEventArgs extends ThingMouseEventArgs implements Cancelab
     assert(!isCanceled);
     _canceled = true;
   }
+}
+
+class ThingDragEventArgs extends ThingMouseEventArgs {
+  final Vector delta;
+  ThingDragEventArgs(Thing thing, MouseEvent source, this.delta) :
+    super(thing, source);
 }
