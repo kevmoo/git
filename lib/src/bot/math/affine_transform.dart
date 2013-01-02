@@ -38,6 +38,33 @@ class AffineTransform implements Cloneable<AffineTransform> {
 
   num get determinant => _scX * _scY - _shX * _shY;
 
+  AffineTransform updateValues({num translateX: null, num translateY: null,
+    num scaleX: null, num scaleY: null, num shearX: null, num shearY: null}) {
+    if(translateX != null) {
+      _tX = translateX;
+    }
+
+    if(translateY != null) {
+      _tY = translateY;
+    }
+
+    if(scaleX != null) {
+      _scX = scaleX;
+    }
+
+    if(scaleY != null) {
+      _scY = scaleY;
+    }
+
+    if(shearX != null) {
+      _shX = shearX;
+    }
+
+    if(shearY != null) {
+      _shY = shearY;
+    }
+  }
+
   bool get isIdentity {
     return _scX == 1 && _shY == 0 &&
         _shX == 0 && _scY == 1 &&
