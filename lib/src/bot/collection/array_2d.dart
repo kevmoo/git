@@ -21,12 +21,20 @@ class Array2d<T> extends ListBase<T> {
   factory Array2d(int width, int height, [T initialValue]) {
     requireArgumentNotNull(width, 'width');
     requireArgumentNotNull(height, 'height');
-    requireArgument(width > 0, 'width');
-    requireArgument(height > 0, 'height');
+    requireArgument(width >= 0, 'width');
+    requireArgument(height >= 0, 'height');
     final s = new List<T>();
     s.insertRange(0, width * height, initialValue);
     assert(s.length == width * height);
+    if(width == 0) {
+      return new Array2d._skinny(height);
+    }
     return new Array2d.wrap(width, s);
+  }
+
+  Array2d._skinny(this.height) : width = 0, _source = [] {
+    assert(isValidNumber(height));
+    assert(height >= 0);
   }
 
   Array2d.wrap(int width, List<T> source):
@@ -38,7 +46,7 @@ class Array2d<T> extends ListBase<T> {
     requireArgumentNotNull(source, 'source');
     requireArgument(width >= 0, 'width', 'width must be non-zero');
 
-    if(width == 0) {
+    if(width * height == 0) {
       requireArgument(_source.length == 0, 'width',
         'width must be greater than zero if the source is non-empty');
     } else {

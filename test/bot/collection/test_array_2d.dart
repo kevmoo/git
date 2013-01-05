@@ -7,8 +7,7 @@ class TestArray2d {
       test('readonlyFrom ctor params', _testReadonlyFromCtorParams);
       test('set/get', _testSetGet);
       test('getAdjacent', _testGetAdjacent);
-      // TODO
-      // test default ctor
+      test('default ctor', _testDefaultCtor);
     });
   }
 
@@ -63,6 +62,20 @@ class TestArray2d {
     expect(a.get(0,1), equals(2));
   }
 
+  static void _testDefaultCtor() {
+    var skinnyArray = new Array2d<int>(3, 0);
+    expect(skinnyArray.width, 3);
+    expect(skinnyArray.height, 0);
+    expect(skinnyArray.length, 0);
+
+    skinnyArray = new Array2d<int>(0, 3);
+    expect(skinnyArray.width, 0);
+    expect(skinnyArray.height, 3);
+    expect(skinnyArray.length, 0);
+
+    // TODO: test default value logic...something non-zero
+  }
+
   static void _testReadonlyFromCtorParams() {
     expect(() => new Array2d<int>.readonlyFrom(null, [0,1,2,3]),
         throwsNullArgumentError);
@@ -72,11 +85,16 @@ class TestArray2d {
         throwsArgumentError);
     expect(() => new Array2d<int>.readonlyFrom(3, [0,1,2,3]),
         throwsArgumentError);
-    expect(() => new Array2d<int>.readonlyFrom(3, []),
-        throwsArgumentError);
 
-    // 0 is fine with an empty source
-    new Array2d<int>.readonlyFrom(0, []);
+    var skinnyArray = new Array2d<int>.readonlyFrom(3, []);
+    expect(skinnyArray.width, 3);
+    expect(skinnyArray.height, 0);
+    expect(skinnyArray.length, 0);
+
+    skinnyArray = new Array2d<int>.readonlyFrom(0, []);
+    expect(skinnyArray.width, 0);
+    expect(skinnyArray.height, 0);
+    expect(skinnyArray.length, 0);
   }
 
   static void _testCollectionEquals() {
