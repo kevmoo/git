@@ -10,6 +10,7 @@ class SyncTests {
     test('exception is sad', _testExceptionIsSad);
     test('bad task name', _testBadParam);
     test('no task name', _testNoParam);
+    test('no tasks defined', _testNoTasks);
     test('ctx.fail', _testCtxFail);
   }
 
@@ -68,6 +69,23 @@ class SyncTests {
   static void _testNoParam() {
     final tasks = new BaseConfig();
     tasks.addSync('good', (ctx) => true);
+    tasks.freeze();
+
+    final runner = new TestRunner(tasks, []);
+    final future = runner.run();
+    expect(future, isNotNull);
+    expect(future.isComplete, isTrue);
+
+    final onComplete = expectAsync1((f) {
+      expect(f.value, RunResult.SUCCESS);
+      // TODO: test that task list is printed
+    });
+
+    future.onComplete(onComplete);
+  }
+
+  static void _testNoTasks() {
+    final tasks = new BaseConfig();
     tasks.freeze();
 
     final runner = new TestRunner(tasks, []);
