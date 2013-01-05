@@ -54,9 +54,11 @@ Future<bool> _dart2js(TaskContext ctx, String file,
 }
 
 Future<bool> _chainTasks(List<Func<Future<bool>>> futures, [int index=0]) {
-  assert(futures.length > 0);
   assert(index >= 0);
   assert(index <= futures.length);
+  if(futures.length == 0) {
+    throw new TaskFailError("No source files provided.");
+  }
   if(index == futures.length) {
     return new Future.immediate(true);
   }
