@@ -13,48 +13,55 @@ class ProcessTests {
 
   static void _testProcessSuccess() {
     final scriptPath = _getTestScriptPath('bash_exit_0');
+    final task = createProcessTask(scriptPath);
 
-    final rootCtx = new TestTaskContext();
-    final ctx = rootCtx.getSubContext('process');
-
-    final onComplete = expectAsync1((Future<bool> f) {
+    final onComplete = expectAsync1((Future<RunResult> f) {
       expect(f.hasValue, isTrue);
-      expect(f.value, isTrue);
+      final result = f.value;
+      expect(result.success, isTrue);
     });
 
-    final future = startProcess(ctx, scriptPath);
-
-    future.onComplete(onComplete);
+    _testSimpleAsyncTask(task, onComplete);
   }
 
   static void _testProcessFail() {
     final scriptPath = _getTestScriptPath('bash_exit_1');
-    final rootCtx = new TestTaskContext();
-    final ctx = rootCtx.getSubContext('process');
+    final task = createProcessTask(scriptPath);
 
-    final onComplete = expectAsync1((Future<bool> f) {
+    final onComplete = expectAsync1((Future<RunResult> f) {
       expect(f.hasValue, isTrue);
-      expect(f.value, isFalse);
+      expect(f.value, RunResult.FAIL);
     });
 
-    final future = startProcess(ctx, scriptPath);
-
-    future.onComplete(onComplete);
+    _testSimpleAsyncTask(task, onComplete);
   }
 
   static void _testProcessMissing() {
     // NOTE: making the relatively safe assumption that this is not
     // a valid command on the test system. Could find out w/ 'which'..but...eh
     final scriptPath = 'does_not_exist_right';
-    final rootCtx = new TestTaskContext();
-    final ctx = rootCtx.getSubContext('process');
+    final task = createProcessTask(scriptPath);
 
-    final onComplete = expectAsync1((Future<bool> f) {
-      expect(f.hasValue, isFalse);
-      expect(f.exception is ProcessException, isTrue);
+    final onComplete = expectAsync1((Future<RunResult> f) {
+      expect(f.hasValue, isTrue);
+      expect(f.value, RunResult.EXCEPTION);
     });
 
-    final future = startProcess(ctx, scriptPath);
+    _testSimpleAsyncTask(task, onComplete);
+  }
+
+  static Action0 _testSimpleAsyncTask(Task task,
+                                     Action1<Future<RunResult>> completeHandler) {
+    final name = 'task_name';
+    final tasks = new BaseConfig();
+    tasks.addTask(name, task);
+    tasks.freeze();
+
+    final runner = new TestRunner(tasks, [name]);
+    final future = runner.run();
+    expect(future, isNotNull);
+
+    final onComplete = expectAsync1(completeHandler);
 
     future.onComplete(onComplete);
   }

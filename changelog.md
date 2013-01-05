@@ -11,6 +11,13 @@
 
 * __FIX__ having zero tasks does not cause a exceptions
 
+### hop_tasks
+
+* __BREAKING__ Renamed `createStartProcessTask` to `createProcessTask`
+    * Changed the return type to `Task`
+    * Made `args` argument optional
+    * Added optional `description` argument
+
 ### retained
 
 * `MouseManager`
