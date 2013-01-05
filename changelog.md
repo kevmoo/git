@@ -1,17 +1,22 @@
 # Changelog - Dart Bag of Tricks
 
-## 0.10.0 *pre-release* (SDK M2 0.9.9.9 r16323)
+## 0.10.0 *pre-release* (SDK M2 0.2.9.9 r16323)
 
 ### bot
 
 * __BREAKING__ `Vector.getAngle` reports a valid value
+* `Array2d` can now be zero width, and non-zero height
+
+### hop
+
+* __FIX__ having zero tasks does not cause a exceptions
 
 ### retained
 
 * `MouseManager`
     * __BREAKING__ Renamed from `ClickManager`
     * Learned how to set cursor for individual `Thing` instances
-    * Learned draw events for `Thing` instances
+    * Learned drag events for `Thing` instances
 * `CanvasThing` now correctly invalidates child draw when transform changes
 
 ## 0.9.0 - 18 Dec 2012 (SDK M2 0.2.9.7 r16251)
