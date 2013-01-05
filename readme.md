@@ -16,16 +16,13 @@ Starting by porting bits of the [PL javascript library](https://github.com/think
        in WPF/Silverlight.
  * __collection__
      * `Array2d`
-     * `CollectionUtil`
-     * `Grouping`
-     * `IndexIterator`
-     * `ListBase`
-     * `NumberEnumerable`
+     * `Grouping` of collections
      * `ReadOnlyCollection`
  * __color__
      * `RgbColor`, `HslColor` with associated conversions back and forth
      * `RgbColor` supports to/from hex
  * __events__
+ 	 * Easily raise and subscribe to events with custom, type-safe event objects.
  * __math__
      * Mostly classes related to 2D geometry and graphicsgeometry-related classes
      * `Coordinate`, `Box`, `Size`, `Vector`, `AffineTransfrom`
@@ -34,15 +31,21 @@ Starting by porting bits of the [PL javascript library](https://github.com/think
   * `FutureValue`: an abstract model for async conversions via `Future<T>`
   * `SendPortValue`: an implementation of `FutureValue` using isolates.
 
-## html
-
 ## hop
+  * An object-oriented framework creating and reusing scripts in Dart.
+  * Easy to create command-line scripts.
+  * Define functionality in libraries. Add and update them with `pub`.
+  * Nice touches for free: bash command completion, help, helpful exit codes
 
 ## hop_tasks
+  * A collection of tasks and task helpers.
+  * Unit tests
+  * dart2js
+  * dartdoc
+  * git
 
 ## retained
-
-## test
+  * A library for creating interactive content using HTML5 Canvas.
 
 # Projects using BOT
 
