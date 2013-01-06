@@ -8,10 +8,12 @@ const _failMessage = 'failing, per request';
 const _successValue = 42;
 
 void register() {
-  test('expectFutureComplete', _testExpectFutureComplete);
-  test('expectFutureComplete with complete', _testExpectFutureCompleteWithComplete);
-  test('expectFutureException', _testExpectFutureException);
-  test('expectFutureException with complete', _testExpectFutureExceptionWithComplete);
+  group('bot_test', () {
+    test('expectFutureComplete', _testExpectFutureComplete);
+    test('expectFutureComplete with complete', _testExpectFutureCompleteWithComplete);
+    test('expectFutureException', _testExpectFutureException);
+    test('expectFutureException with complete', _testExpectFutureExceptionWithComplete);
+  });
 }
 
 void _testExpectFutureComplete() {

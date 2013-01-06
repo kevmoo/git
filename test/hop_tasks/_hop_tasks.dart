@@ -11,5 +11,7 @@ import '../hop/_hop.dart';
 part 'process_tests.dart';
 
 void registerHopTasksTests() {
-  ProcessTests.run();
+  group('hop_tasks', () {
+    ProcessTests.run();
+  });
 }
