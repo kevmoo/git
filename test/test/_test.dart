@@ -11,11 +11,13 @@ void register() {
   test('expectFutureComplete', _testExpectFutureComplete);
   test('expectFutureComplete with complete', _testExpectFutureCompleteWithComplete);
   test('expectFutureException', _testExpectFutureException);
-  test('expectFutureException', _testExpectFutureExceptionWithComplete);
+  test('expectFutureException with complete', _testExpectFutureExceptionWithComplete);
 }
 
 void _testExpectFutureComplete() {
   expectFutureComplete(_getFuture(false));
+
+  // TODO: test the negative case as well -- not sure how to do this safely
 }
 
 void _testExpectFutureCompleteWithComplete() {
@@ -23,10 +25,14 @@ void _testExpectFutureCompleteWithComplete() {
     expect(value, _successValue);
   });
   expectFutureComplete(_getFuture(false), onComplete);
+
+  // TODO: test the negative case as well -- not sure how to do this safely
 }
 
 void _testExpectFutureException() {
   expectFutureFail(_getFuture(true));
+
+  // TODO: test the negative case as well -- not sure how to do this safely
 }
 
 void _testExpectFutureExceptionWithComplete() {
@@ -34,6 +40,8 @@ void _testExpectFutureExceptionWithComplete() {
     expect(value, _failMessage);
   });
   expectFutureFail(_getFuture(true), onFail);
+
+  // TODO: test the negative case as well -- not sure how to do this safely
 }
 
 Future _getFuture(bool shouldFail) {
