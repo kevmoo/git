@@ -14,6 +14,6 @@ void testCore(Configuration config) {
   configure(config);
   groupSep = ' - ';
 
-  shared.registerTests();
-  console.registerTests();
+  shared.register();
+  console.register();
 }

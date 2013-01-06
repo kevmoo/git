@@ -1,7 +1,7 @@
 library test_browser;
 
-import 'retained/_retained_runner.dart';
+import 'retained/_retained_runner.dart' as retained;
 
-void registerTests() {
-  runRetainedTests();
+void register() {
+  retained.register();
 }

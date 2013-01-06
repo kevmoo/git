@@ -9,6 +9,6 @@ main() {
   groupSep = ' - ';
   useHtmlEnhancedConfiguration();
 
-  shared.registerTests();
-  browser.registerTests();
+  shared.register();
+  browser.register();
 }

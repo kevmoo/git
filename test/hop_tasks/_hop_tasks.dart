@@ -10,7 +10,7 @@ import '../hop/_hop.dart';
 
 part 'process_tests.dart';
 
-void registerHopTasksTests() {
+void register() {
   group('hop_tasks', () {
     ProcessTests.run();
   });

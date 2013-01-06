@@ -1,9 +1,9 @@
 library test_shared;
 
-import 'async/_async_runner.dart';
-import 'bot/_bot_runner.dart';
+import 'async/_async_runner.dart' as async;
+import 'bot/_bot_runner.dart' as bot;
 
-void registerTests() {
-  runBotTests();
-  runAsyncTests();
+void register() {
+  bot.register();
+  async.register();
 }

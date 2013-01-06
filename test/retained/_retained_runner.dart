@@ -5,7 +5,7 @@ import 'package:bot/bot.dart';
 import 'package:bot/retained.dart';
 import 'package:unittest/unittest.dart';
 
-void runRetainedTests() {
+void register() {
   group('bot_retained', () {
     test('test double click manager', _testDoudbleClickManager);
     test('test add/remove from Panel', _testAddRemoveFromPanel);

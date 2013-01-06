@@ -13,7 +13,7 @@ part 'integration_tests.dart';
 part 'async_tests.dart';
 part 'test_runner.dart';
 
-void registerHopTests() {
+void register() {
   group('hop', () {
     group('async tasks', AsyncTests.run);
     group('sync tasks', SyncTests.run);
