@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:bot/bot.dart';
 import 'package:bot/hop.dart';
 import 'package:bot/hop_tasks.dart';
+import 'package:bot/test.dart';
 import 'package:unittest/unittest.dart';
 import '../hop/_hop.dart';
 

@@ -15,25 +15,18 @@ class ProcessTests {
     final scriptPath = _getTestScriptPath('bash_exit_0');
     final task = createProcessTask(scriptPath);
 
-    final onComplete = expectAsync1((Future<RunResult> f) {
-      expect(f.hasValue, isTrue);
-      final result = f.value;
+    _testSimpleAsyncTask(task, (RunResult result) {
       expect(result.success, isTrue);
     });
-
-    _testSimpleAsyncTask(task, onComplete);
   }
 
   static void _testProcessFail() {
     final scriptPath = _getTestScriptPath('bash_exit_1');
     final task = createProcessTask(scriptPath);
 
-    final onComplete = expectAsync1((Future<RunResult> f) {
-      expect(f.hasValue, isTrue);
-      expect(f.value, RunResult.FAIL);
+    _testSimpleAsyncTask(task, (RunResult rr) {
+      expect(rr, RunResult.FAIL);
     });
-
-    _testSimpleAsyncTask(task, onComplete);
   }
 
   static void _testProcessMissing() {
@@ -42,16 +35,12 @@ class ProcessTests {
     final scriptPath = 'does_not_exist_right';
     final task = createProcessTask(scriptPath);
 
-    final onComplete = expectAsync1((Future<RunResult> f) {
-      expect(f.hasValue, isTrue);
-      expect(f.value, RunResult.EXCEPTION);
+    _testSimpleAsyncTask(task, (RunResult rr) {
+      expect(rr, RunResult.EXCEPTION);
     });
-
-    _testSimpleAsyncTask(task, onComplete);
   }
 
-  static Action0 _testSimpleAsyncTask(Task task,
-                                     Action1<Future<RunResult>> completeHandler) {
+  static Action0 _testSimpleAsyncTask(Task task, Action1<RunResult> completeHandler) {
     final name = 'task_name';
     final tasks = new BaseConfig();
     tasks.addTask(name, task);
@@ -61,9 +50,7 @@ class ProcessTests {
     final future = runner.run();
     expect(future, isNotNull);
 
-    final onComplete = expectAsync1(completeHandler);
-
-    future.onComplete(onComplete);
+    expectFutureComplete(future, completeHandler);
   }
 
   static String _getTestScriptPath(String name) {
