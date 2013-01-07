@@ -43,7 +43,7 @@ class TempDir extends DisposableImpl {
 }
 
 abstract class DirectoryPopulater {
-  Future populate(Directory dir);
+  Future<Directory> populate(Directory dir);
 }
 
 class MapDirectoryPopulater extends DirectoryPopulater {
@@ -51,7 +51,7 @@ class MapDirectoryPopulater extends DirectoryPopulater {
 
   MapDirectoryPopulater(this._contents);
 
-  Future populate(Directory dir) {
+  Future<Directory> populate(Directory dir) {
     assert(dir != null);
     return IoHelpers.isEmpty(dir)
         .chain((bool isEmpty) {
@@ -89,7 +89,7 @@ class MapDirectoryPopulater extends DirectoryPopulater {
     return file.writeAsString(content);
   }
 
-  static Future _createDirAndPopulate(Directory parent, String name, Map<String, dynamic> content) {
+  static Future<Directory> _createDirAndPopulate(Directory parent, String name, Map<String, dynamic> content) {
     final subDirPath = new Path(parent.path).append(name);
     final subDir = new Directory.fromPath(subDirPath);
     assert(!subDir.existsSync());
