@@ -20,7 +20,7 @@ void expectFutureComplete(Future future, [Action1 onComplete]) {
   final testWait = expectAsync1((Future f) {
     assert(f.isComplete);
 
-    expect(f.hasValue, true, reason: 'Expected future to complete');
+    expect(f.hasValue, true, reason: 'Expected future to complete. Instead: ${f.exception}');
 
     if(onComplete != null) {
       onComplete(f.value);
