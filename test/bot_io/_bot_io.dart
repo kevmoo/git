@@ -11,20 +11,23 @@ void register() {
 }
 
 void _testTempDirPopulate() {
-  assert(_tempDir == null);
-  _tempDir = new TempDir();
-
   final map = {'file1.txt': 'content',
                'file2.txt': 'content2',
                'empty dir': {
-                 },
+               },
                'dir1': {
                  'dir1_file1.txt': 'and content some more'
                }
-               };
+  };
 
-  final populater = new MapDirectoryPopulater(map);
-  final future = _tempDir.populate(populater);
+  final future = TempDir.create().chain((TempDir td) {
+    assert(_tempDir == null);
+    _tempDir = td;
+
+
+    final populater = new MapDirectoryPopulater(map);
+    return _tempDir.populate(populater);
+  });
 
   expectFutureComplete(future, (value) => _testTempDirPopulate2(value, map));
 }

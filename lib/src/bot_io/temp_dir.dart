@@ -3,13 +3,16 @@ part of bot_io;
 class TempDir extends DisposableImpl {
   final Directory dir;
 
-  factory TempDir() {
-
+  static Future<TempDir> create() {
     final startDir = new Directory('');
-    return new TempDir._internal(startDir.createTempSync());
+    return startDir.createTemp()
+        .transform((newDir) => new TempDir._internal(newDir));
   }
 
-  TempDir._internal(this.dir);
+  TempDir._internal(this.dir) {
+    assert(this.dir != null);
+    assert(this.dir.existsSync());
+  }
 
   String get path => dir.path;
 
