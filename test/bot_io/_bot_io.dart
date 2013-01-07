@@ -1,11 +1,11 @@
-library test_bot_io_test;
+library test_bot_io;
 
 import 'package:unittest/unittest.dart';
-import 'package:bot/bot_io_test.dart';
+import 'package:bot/bot_io.dart';
 import 'package:bot/bot_test.dart';
 
 void register() {
-  group('bot_io_test', () {
+  group('bot_io', () {
     test('temp dir populate', _testTempDirPopulate);
   });
 }

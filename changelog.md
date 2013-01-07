@@ -10,6 +10,11 @@
 * __BREAKING__ `Vector.getAngle` reports a valid value
 * `Array2d` can now be zero width, and non-zero height
 
+### bot_io
+
+* __NEW!__ `TempDir`
+* __NEW!__ `IoHelper`
+
 ### bot_retained
 
 * `MouseManager`
