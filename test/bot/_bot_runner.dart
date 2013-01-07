@@ -2,7 +2,7 @@ library test_bot;
 
 import 'dart:math' as math;
 import 'package:bot/bot.dart';
-import 'package:bot/test.dart';
+import 'package:bot/bot_test.dart';
 import 'package:unittest/unittest.dart';
 
 part 'test_cloneable.dart';

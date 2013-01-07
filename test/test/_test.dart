@@ -2,7 +2,7 @@ library test_bot_test;
 
 import 'dart:isolate';
 import 'package:unittest/unittest.dart';
-import 'package:bot/test.dart';
+import 'package:bot/bot_test.dart';
 
 const _failMessage = 'failing, per request';
 const _successValue = 42;

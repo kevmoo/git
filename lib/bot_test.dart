@@ -3,5 +3,5 @@ library bot_test;
 import 'package:unittest/unittest.dart';
 import 'bot.dart';
 
-part 'src/test/event_watcher.dart';
-part 'src/test/top_level.dart';
+part 'src/bot_test/event_watcher.dart';
+part 'src/bot_test/top_level.dart';

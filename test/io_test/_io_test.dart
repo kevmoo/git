@@ -1,8 +1,8 @@
 library test_bot_io_test;
 
 import 'package:unittest/unittest.dart';
-import 'package:bot/test.dart';
-import 'package:bot/io_test.dart';
+import 'package:bot/bot_io_test.dart';
+import 'package:bot/bot_test.dart';
 
 void register() {
   group('bot_io_test', () {

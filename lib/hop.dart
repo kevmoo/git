@@ -3,7 +3,7 @@ library hop;
 import 'dart:io' as io;
 import 'package:args/args.dart';
 import 'package:bot/bot.dart';
-import 'package:bot/io.dart';
+import 'package:bot/bot_io.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 
