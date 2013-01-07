@@ -79,6 +79,8 @@ void _testTempDirPopulate4(bool expectTrue, Map fileMap) {
   expect(expectTrue, isTrue);
 
   _tempDir.dispose();
+  expect(_tempDir.dir.existsSync(), isFalse, reason: 'Temp dir should be deleted');
+  _tempDir = null;
 }
 
 TempDir _tempDir;
