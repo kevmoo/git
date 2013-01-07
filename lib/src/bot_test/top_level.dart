@@ -26,7 +26,9 @@ void expectFutureFail(Future future, [Action1 onException]) {
   final testWait = expectAsync1((Future f) {
     assert(f.isComplete);
 
-    expect(f.hasValue, isFalse, reason: 'Expected future to throw an exception');
+    if(f.hasValue) {
+      fail('Expected future to throw an exception');
+    }
     if(onException != null) {
       onException(f.exception);
     }
@@ -40,7 +42,9 @@ void expectFutureComplete(Future future, [Action1 onComplete]) {
   final testWait = expectAsync1((Future f) {
     assert(f.isComplete);
 
-    expect(f.hasValue, true, reason: 'Expected future to complete. Instead: ${f.exception}');
+    if(!f.hasValue) {
+      registerException(f.exception, f.stackTrace);
+    }
 
     if(onComplete != null) {
       onComplete(f.value);
