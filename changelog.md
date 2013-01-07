@@ -2,10 +2,21 @@
 
 ## 0.10.0 *pre-release* (SDK M2 0.2.9.9 r16323)
 
+* __BREAKING__ Import file names have been updated to include the `bot_` prefix.
+    * `import 'package:bot/bot_retained.dart';` instead of `import 'package:bot/retained.dart';`
+
 ### bot
 
 * __BREAKING__ `Vector.getAngle` reports a valid value
 * `Array2d` can now be zero width, and non-zero height
+
+### bot_retained
+
+* `MouseManager`
+    * __BREAKING__ Renamed from `ClickManager`
+    * Learned how to set cursor for individual `Thing` instances
+    * Learned drag events for `Thing` instances
+* `CanvasThing` now correctly invalidates child draw when transform changes
 
 ### hop
 
@@ -17,14 +28,6 @@
     * Changed the return type to `Task`
     * Made `args` argument optional
     * Added optional `description` argument
-
-### retained
-
-* `MouseManager`
-    * __BREAKING__ Renamed from `ClickManager`
-    * Learned how to set cursor for individual `Thing` instances
-    * Learned drag events for `Thing` instances
-* `CanvasThing` now correctly invalidates child draw when transform changes
 
 ## 0.9.0 - 18 Dec 2012 (SDK M2 0.2.9.7 r16251)
 
