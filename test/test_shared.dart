@@ -1,11 +1,11 @@
 library test_shared;
 
-import 'async/_async_runner.dart' as async;
-import 'bot/_bot_runner.dart' as bot;
-import 'test/_test.dart' as test;
+import 'bot/_bot.dart' as bot;
+import 'bot_async/_bot_async.dart' as bot_async;
+import 'bot_test/_bot_test.dart' as bot_test;
 
 void register() {
-  async.register();
   bot.register();
-  test.register();
+  bot_async.register();
+  bot_test.register();
 }

@@ -1,7 +1,7 @@
 library test_browser;
 
-import 'retained/_retained_runner.dart' as retained;
+import 'bot_retained/_bot_retained.dart' as bot_retained;
 
 void register() {
-  retained.register();
+  bot_retained.register();
 }
