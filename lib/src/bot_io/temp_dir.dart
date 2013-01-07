@@ -1,7 +1,7 @@
 part of bot_io;
 
 class TempDir extends DisposableImpl {
-  final Directory _dir;
+  final Directory dir;
 
   factory TempDir() {
 
@@ -9,28 +9,28 @@ class TempDir extends DisposableImpl {
     return new TempDir._internal(startDir.createTempSync());
   }
 
-  TempDir._internal(this._dir);
+  TempDir._internal(this.dir);
 
-  String get path => _dir.path;
+  String get path => dir.path;
 
   Future populate(DirectoryPopulater populater) {
-    return populater.populate(_dir);
+    return populater.populate(dir);
   }
 
   Future<bool> verifyContents(Map<String, dynamic> content) {
-    return IoHelpers.verifyContents(_dir, content);
+    return IoHelpers.verifyContents(dir, content);
   }
 
   Future<bool> isEmpty() {
-    return IoHelpers.isEmpty(_dir);
+    return IoHelpers.isEmpty(dir);
   }
 
   String toString() => "TempDir: $path";
 
   @protected
   void disposeInternal() {
-    assert(_dir.existsSync());
-    _dir.deleteSync(recursive: true);
-    assert(!_dir.existsSync());
+    assert(dir.existsSync());
+    dir.deleteSync(recursive: true);
+    assert(!dir.existsSync());
   }
 }
