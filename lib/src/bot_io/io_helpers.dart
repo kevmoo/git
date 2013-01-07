@@ -1,6 +1,8 @@
 part of bot_io;
 
 class IoHelpers {
+  static final Object _dirPlaceHolder = new Object();
+
   static Future<bool> verifyContents(Directory dir, Map<String, dynamic> content) {
     assert(dir != null);
     assert(content != null);
@@ -28,7 +30,7 @@ class IoHelpers {
     lister.onDir = (String dirPath) {
       final name = new Path(dirPath).filename;
       assert(!map.containsKey(name));
-      map[name] = {};
+      map[name] = _dirPlaceHolder;
     };
 
     lister.onDone = (bool completed) {
@@ -100,8 +102,7 @@ class IoHelpers {
       final subDirPath = new Path(parentDir.path).append(name);
       final subDir = new Directory.fromPath(subDirPath);
 
-      final Map<String, dynamic> foundMap = foundContent;
-      assert(foundMap.isEmpty);
+      assert(foundContent == _dirPlaceHolder);
 
       return _verifyContents(subDir, expectedContent);
     } else {
