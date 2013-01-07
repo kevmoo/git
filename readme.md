@@ -9,10 +9,10 @@ Starting by porting bits of the [PL javascript library](https://github.com/think
 # Projects using BOT
 
 * [chrome.dart](https://github.com/dart-gde/chrome.dart) - Dart interop with chrome.* APIs for Chrome Packaged Apps
-* [Pop, Pop, Win!](https://github.com/dart-lang/pop-pop-win) - Minesweeper with balloons in Dart
-* [qr.dart](https://github.com/kevmoo/qr.dart) - Generate QR codes in Dart
+* [Pop, Pop, Win!](https://github.com/dart-lang/pop-pop-win) - Minesweeper with balloons
+* [qr.dart](https://github.com/kevmoo/qr.dart) - Generate QR codes
 * [vote.dart](https://github.com/kevmoo/vote.dart) - Simulate, run, and calculate elections with different election methods
-* [Dart Widgets](https://github.com/kevmoo/widget.dart) - Reusable Web Components for Dart applications
+* [Dart Widgets](https://github.com/kevmoo/widget.dart) - Reusable Web Components
 
 # Try It Now
 
