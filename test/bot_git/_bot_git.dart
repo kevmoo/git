@@ -53,7 +53,7 @@ void _testGit() {
       gitDir = items.item2;
 
       // remove me
-      print('git dir at ${gitDir.path}');
+      //logMessage('git dir at ${gitDir.path}');
 
       // verify the new _gitDir has no branches
       return gitDir.getBranches();
@@ -71,7 +71,7 @@ void _testGit() {
       expect(td, isNotNull);
       tempContent = td;
 
-      print('temp dir for content: $td');
+      //logMessage('temp dir for content: $td');
       final populater = new MapDirectoryPopulater(_initialContentMap);
       return tempContent.populate(populater);
     }).chain((TempDir dir) {
@@ -92,6 +92,9 @@ void _testGit() {
       // TODO: test adding the same file twice
       // TODO: test for failure when adding a file that doesn't exist
       // TODO: test for failure w/ a dir?
+
+      tempGitDir.dispose();
+      tempContent.dispose();
 
     });
 
