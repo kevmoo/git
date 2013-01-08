@@ -16,8 +16,12 @@ class TempDir extends DisposableImpl {
 
   String get path => dir.path;
 
-  Future populate(DirectoryPopulater populater) {
-    return populater.populate(dir);
+  Future<TempDir> populate(DirectoryPopulater populater) {
+    return populater.populate(dir)
+        .transform((Directory outputDir) {
+          assert(dir == outputDir);
+          return this;
+        });
   }
 
   Future<bool> verifyContents(Map<String, dynamic> content) {

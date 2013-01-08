@@ -37,6 +37,8 @@ class MapDirectoryPopulater extends DirectoryPopulater {
       } else {
         throw 'value for $key was $v - expected Map or String';
       }
+    }).transform((obj) {
+      return dir;
     });
   }
 
