@@ -232,12 +232,6 @@ List<String> _getGitArgs(String gitDir, String workTree,
   return args;
 }
 
-Future<bool> _cleanUpTemp(String tempDir, bool dartDocSuccess) {
-  final dir = new Directory(tempDir);
-  return dir.delete(recursive: true)
-      .transform((d) => dartDocSuccess);
-}
-
 // See http://git-scm.com/docs/git-ls-remote
 Future<bool> _gitRemoteHasHead(String remote, String head) {
   requireArgumentNotNull(remote, 'remote');
