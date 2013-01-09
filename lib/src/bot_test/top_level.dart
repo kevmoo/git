@@ -10,15 +10,8 @@ final Matcher throwsInvalidOperationError =
 final Matcher throwsNullArgumentError =
   const Throws(const _NullArgumentError());
 
-class _InvalidOperationError extends TypeMatcher {
-  const _InvalidOperationError() : super("InvalidOperationException");
-  bool matches(item, MatchState matchState) => item is InvalidOperationError;
-}
-
-class _NullArgumentError extends TypeMatcher {
-  const _NullArgumentError() : super("NullArgumentException");
-  bool matches(item, MatchState matchState) => item is NullArgumentError;
-}
+final Matcher throwsAssertionError =
+  const Throws(const _AssertionErrorMatcher());
 
 void expectFutureFail(Future future, [Action1 onException]) {
   assert(future != null);
@@ -51,4 +44,19 @@ void expectFutureComplete(Future future, [Action1 onComplete]) {
     }
   });
   future.onComplete(testWait);
+}
+
+class _AssertionErrorMatcher extends TypeMatcher {
+  const _AssertionErrorMatcher() : super("AssertMatcher");
+  bool matches(item, MatchState matchState) => item is AssertionError;
+}
+
+class _InvalidOperationError extends TypeMatcher {
+  const _InvalidOperationError() : super("InvalidOperationException");
+  bool matches(item, MatchState matchState) => item is InvalidOperationError;
+}
+
+class _NullArgumentError extends TypeMatcher {
+  const _NullArgumentError() : super("NullArgumentException");
+  bool matches(item, MatchState matchState) => item is NullArgumentError;
 }
