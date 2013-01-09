@@ -1,30 +1,26 @@
 part of hop_tasks;
 
-Task createDart2JsTask(List<String> inputs,
-    {
-  String output: null,
-  bool minify: false,
-  bool allowUnsafeEval: true,
-  String packageRoot: null}) {
+Task createDart2JsTask(List<String> inputs, {String output: null,
+  String packageRoot: null, bool minify: false, bool allowUnsafeEval: true,
+  bool liveTypeAnalysis: false, rejectDeprecatedFeatures: false}) {
   return new Task.async((context) {
     final futureFuncs = $(inputs)
         .map((p) => () => _dart2js(context, p,
             output: output,
             minify: minify,
             allowUnsafeEval: allowUnsafeEval,
-            packageRoot: packageRoot))
+            packageRoot: packageRoot,
+            liveTypeAnalysis: liveTypeAnalysis,
+            rejectDeprecatedFeatures: rejectDeprecatedFeatures))
         .toList();
     return _chainTasks(futureFuncs);
   }, 'Run Dart-to-Javascript compiler');
 }
 
-Future<bool> _dart2js(TaskContext ctx, String file,
-    {
-  String output: null,
-  bool minify: false,
-  bool allowUnsafeEval: true,
-  String packageRoot: null
-  }) {
+Future<bool> _dart2js(TaskContext ctx, String file, {String output: null,
+  String packageRoot: null, bool minify: false, bool allowUnsafeEval: true,
+  bool liveTypeAnalysis: false, rejectDeprecatedFeatures: false}) {
+
   if(output == null) {
     output = "${file}.js";
   }
@@ -37,6 +33,14 @@ Future<bool> _dart2js(TaskContext ctx, String file,
                 '-v',
                 "--out=$output",
                 file];
+
+  if(liveTypeAnalysis) {
+    args.add('--enable-native-live-type-analysis');
+  }
+
+  if(rejectDeprecatedFeatures) {
+    args.add('--reject-deprecated-language-features');
+  }
 
   if(minify) {
     args.add('--minify');
