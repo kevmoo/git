@@ -1,6 +1,6 @@
 # Changelog - Dart Bag of Tricks
 
-## 0.10.0 *pre-release* (SDK M2 0.2.9.9 r16323)
+## 0.10.0 - 09 Jan 2013 (SDK 0.2.10.1 r16761)
 
 * __BREAKING__ Import file names have been updated to include the `bot_` prefix.
     * `import 'package:bot/bot_retained.dart';` instead of `import 'package:bot/retained.dart';`
@@ -9,6 +9,10 @@
 
 * __BREAKING__ `Vector.getAngle` reports a valid value
 * `Array2d` can now be zero width, and non-zero height
+
+### bot_html
+
+* __NEW!__ `getTimeoutFuture` helper. Wraps `window.setTimeout` with nice `Future` semantics.
 
 ### bot_io
 
@@ -23,6 +27,11 @@
     * Learned drag events for `Thing` instances
 * `CanvasThing` now correctly invalidates child draw when transform changes
 
+### bot_test
+
+* __NEW!__ test methods: `expectFutureComplete` and `expectFutureFail`
+* __NEW!__ `throwsAssertionError` matcher
+
 ### hop
 
 * __FIX__ having zero tasks does not cause a exceptions
@@ -33,6 +42,7 @@
     * Changed the return type to `Task`
     * Made `args` argument optional
     * Added optional `description` argument
+* `createDart2JsTask` added named params `liveTypeAnalysis` and `rejectDeprecatedFeatures`
 
 ## 0.9.0 - 18 Dec 2012 (SDK M2 0.2.9.7 r16251)
 

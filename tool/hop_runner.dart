@@ -20,12 +20,13 @@ void main() {
   //
   // Dart2js
   //
-  final paths = $(['click', 'drag', 'fract', 'spin', 'nav'])
+  final paths = $(['click', 'drag', 'fract', 'frames', 'nav', 'spin'])
       .map((d) => "example/$d/${d}_demo.dart")
       .toList();
   paths.add('test/harness_browser.dart');
 
-  addTask('dart2js', createDart2JsTask(paths));
+  addTask('dart2js', createDart2JsTask(paths,
+      liveTypeAnalysis: true, rejectDeprecatedFeatures: true));
 
   runHopCore();
 }

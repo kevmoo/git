@@ -637,6 +637,21 @@ $$._HashMapImpl = {"":"Object;_keys,_values,_loadLimit,_numberOfEntries,_numberO
     throw $.ioore(index);
   return t1[index];
 },
+ putIfAbsent$2: function(key, ifAbsent) {
+  var index, t1, value;
+  index = this._probeForLookup$1(key);
+  if ($.geB(index, 0)) {
+    t1 = this._values;
+    if (index !== (index | 0))
+      throw $.iae(index);
+    if (index < 0 || index >= t1.length)
+      throw $.ioore(index);
+    return t1[index];
+  }
+  value = ifAbsent.call$0();
+  this.operator$indexSet$2(key, value);
+  return value;
+},
  remove$1: function(key) {
   var index, t1, value;
   index = this._probeForLookup$1(key);
@@ -727,6 +742,14 @@ $$._LinkedHashMapImpl = {"":"Object;_list,_map",
     return;
   entry.remove$0();
   return entry.get$element().get$value();
+},
+ putIfAbsent$2: function(key, ifAbsent) {
+  var value = this.operator$index$1(key);
+  if (this.operator$index$1(key) == null && this._map.containsKey$1(key) !== true) {
+    value = ifAbsent.call$0();
+    this.operator$indexSet$2(key, value);
+  }
+  return value;
 },
  forEach$1: function(f) {
   this._list.forEach$1(new $._LinkedHashMapImpl_forEach_anon(f));
@@ -825,9 +848,6 @@ $$.DoubleLinkedQueue = {"":"Object;_sentinel",
 },
  removeLast$0: function() {
   return this._sentinel._previous.remove$0();
-},
- get$first: function() {
-  return this._sentinel._next.get$element();
 },
  lastEntry$0: function() {
   return this._sentinel.previousEntry$0();
@@ -966,8 +986,8 @@ $$.ObjectInterceptor = {"":"Object;",
  endsWith$1: function(receiver, a0) {
   return receiver.endsWith$1(a0);
 },
- contains$2: function(receiver, a0, a1) {
-  return receiver.contains$2(a0, a1);
+ indexOf$2: function(receiver, a0, a1) {
+  return receiver.indexOf$2(a0, a1);
 },
  insertRange$3: function(receiver, a0, a1, a2) {
   return receiver.insertRange$3(a0, a1, a2);
@@ -978,11 +998,11 @@ $$.ObjectInterceptor = {"":"Object;",
  operator$index$1: function(receiver, a0) {
   return receiver.operator$index$1(a0);
 },
- indexOf$2: function(receiver, a0, a1) {
-  return receiver.indexOf$2(a0, a1);
+ contains$2: function(receiver, a0, a1) {
+  return receiver.contains$2(a0, a1);
 },
- get$hashCode: function(receiver) {
-  return receiver.get$hashCode();
+ abs$0: function(receiver) {
+  return receiver.abs$0();
 },
  truncate$0: function(receiver) {
   return receiver.truncate$0();
@@ -996,11 +1016,8 @@ $$.ObjectInterceptor = {"":"Object;",
  forEach$1: function(receiver, a0) {
   return receiver.forEach$1(a0);
 },
- get$first: function(receiver) {
-  return receiver.get$first();
-},
- removeAt$1: function(receiver, a0) {
-  return receiver.removeAt$1(a0);
+ get$isInfinite: function(receiver) {
+  return receiver.get$isInfinite();
 },
  toInt$0: function(receiver) {
   return receiver.toInt$0();
@@ -1008,35 +1025,35 @@ $$.ObjectInterceptor = {"":"Object;",
  get$isEmpty: function(receiver) {
   return receiver.get$isEmpty();
 },
- allMatches$1: function(receiver, a0) {
-  return receiver.allMatches$1(a0);
+ contains$1: function(receiver, a0) {
+  return receiver.contains$1(a0);
 },
  removeLast$0: function(receiver) {
   return receiver.removeLast$0();
 },
- addLast$1: function(receiver, a0) {
-  return receiver.addLast$1(a0);
+ map$1: function(receiver, a0) {
+  return receiver.map$1(a0);
 },
  get$isNaN: function(receiver) {
   return receiver.get$isNaN();
 },
- contains$1: function(receiver, a0) {
-  return receiver.contains$1(a0);
+ indexOf$1: function(receiver, a0) {
+  return receiver.indexOf$1(a0);
 },
  ceil$0: function(receiver) {
   return receiver.ceil$0();
 },
- map$1: function(receiver, a0) {
-  return receiver.map$1(a0);
+ addLast$1: function(receiver, a0) {
+  return receiver.addLast$1(a0);
 },
- abs$0: function(receiver) {
-  return receiver.abs$0();
+ get$hashCode: function(receiver) {
+  return receiver.get$hashCode();
 },
- get$isInfinite: function(receiver) {
-  return receiver.get$isInfinite();
+ allMatches$1: function(receiver, a0) {
+  return receiver.allMatches$1(a0);
 },
- indexOf$1: function(receiver, a0) {
-  return receiver.indexOf$1(a0);
+ removeAt$1: function(receiver, a0) {
+  return receiver.removeAt$1(a0);
 }
 };
 
@@ -1099,11 +1116,6 @@ $$.JSArray = {"":"Object;",
 },
  insertRange$3: function(receiver, start, length$, initialValue) {
   return $.listInsertRange(receiver, start, length$, initialValue);
-},
- get$first: function(receiver) {
-  if (0 >= receiver.length)
-    throw $.ioore(0);
-  return receiver[0];
 },
  indexOf$2: function(receiver, element, start) {
   if (!(typeof start === 'number' && Math.floor(start) === start))
@@ -1290,54 +1302,99 @@ $$.JSString = {"":"Object;",
  is$String: true
 };
 
-$$.NavDemo = {"":"StageWrapper;_count,canvas,stage,rootThing,_invalidatedEventId,_frameRequested,_disposed",
- _forward$1: function(tx) {
-  var t1, t2;
-  t1 = this.rootThing;
-  if (t1.get$canForward() === true) {
-    t2 = this._count + 1;
-    this._count = t2;
-    t1.forward$2($.NavDemo__getDemoElement(t2), tx);
-  }
-},
- _canvas_mouseDown$1: function(e) {
-  var point, hits, t1;
-  point = $.getMouseEventCoordinate(e);
-  hits = $.RetainedUtil_hitTest(this.stage, point);
-  t1 = $.getInterceptor$JSStringJSArray(hits);
-  if ($.gtB(t1.get$length(hits), 0))
-    this._itemClick$1(t1.get$first(hits));
-},
- get$_canvas_mouseDown: function() {
-  return new $.BoundClosure(this, '_canvas_mouseDown$1');
-},
- _itemClick$1: function(element) {
-  var tx, lastTx;
-  if ($.eqB(element.get$width(), 300))
-    tx = $.AffineTransform_AffineTransform$fromTranslat(100, 100).scale$2(0.3333333333333333, 0.3333333333333333).createInverse$0();
-  else {
-    lastTx = element.getTransform$0();
-    tx = $.AffineTransform_AffineTransform$fromTranslat(lastTx.get$translateX(), lastTx.get$translateY()).scale$2(0.3333333333333333, 0.3333333333333333);
-  }
-  this._forward$1(tx);
-},
- NavDemo$_internal$2: function(canvas, nav) {
-  var t1;
-  this._forward$1($.AffineTransform$(1, 0, 0, 1, 0, 0));
-  t1 = canvas.get$on().get$mouseDown();
-  $.getInterceptor$JSArray(t1).add$1(t1, this.get$_canvas_mouseDown());
+$$.FrameDemo = {"":"StageWrapper;_txThing,canvas,stage,rootThing,_invalidatedEventId,_frameRequested,_disposed",
+ FrameDemo$_internal$2: function(canvas, canvasThing) {
+  this.rootThing.add$1(this._txThing);
+  $.MouseManager_MouseManager(this.stage);
 }
 };
 
-$$.BodyElementEvents = {"":"ElementEvents;_ptr"
+$$.TxThing = {"":"ParentThing;_sourceSize,_canvasThing,_shape,_positionShape,_rotateScaleShape,_tx,_rotateScaleCoordinate,_transforms,_invalidatedEventHandle,_cacheCanvas,_width,_height,_alpha,_cacheEnabled,_lastDrawTime,_parent,_propertyValues,_eventHandlers,_disposed",
+ get$visualChildCount: function() {
+  return 1;
+},
+ getVisualChild$1: function(index) {
+  return this._canvasThing;
+},
+ get$_positionCoordinate: function() {
+  return this._tx.transformCoordinate$0();
+},
+ _dragPosition$1: function(e) {
+  var newValue = $.add(this.get$_positionCoordinate(), e.get$delta());
+  this._tx.updateValues$2$translateX$translateY(newValue.get$x(), newValue.get$y());
+  this._updateRotateScale$0();
+},
+ get$_dragPosition: function() {
+  return new $.BoundClosure(this, '_dragPosition$1');
+},
+ _updateRotateScale$0: function() {
+  this._rotateScaleCoordinate = this._tx.transformCoordinate$1($.Coordinate$(0, this._sourceSize.get$height()));
+  this._updatePoints$0();
+},
+ _dragRotateScale$1: function(e) {
+  var pc, pointDeltaVector, newScale, angle, t1;
+  this._rotateScaleCoordinate = $.add(this._rotateScaleCoordinate, e.get$delta());
+  pc = this.get$_positionCoordinate();
+  pointDeltaVector = $.sub(this._rotateScaleCoordinate, pc);
+  newScale = $.div($.getInterceptor$JSStringJSArray(pointDeltaVector).get$length(pointDeltaVector), this._sourceSize.get$height());
+  angle = $.CONSTANT9.getAngle$1(pointDeltaVector);
+  t1 = this._tx;
+  t1.setToTranslation$2(pc.get$x(), pc.get$y());
+  t1.rotate$3(angle, 0, 0);
+  t1.scale$2(newScale, newScale);
+  this._updatePoints$0();
+},
+ get$_dragRotateScale: function() {
+  return new $.BoundClosure(this, '_dragRotateScale$1');
+},
+ _updatePoints$0: function() {
+  var t1 = this._canvasThing;
+  t1.setCenter$2(this._positionShape, this.get$_positionCoordinate());
+  t1.setCenter$2(this._rotateScaleShape, this._rotateScaleCoordinate);
+},
+ TxThing$_internal$5: function(width, height, _sourceSize, _shape, _tx) {
+  var t1, t2;
+  t1 = this._canvasThing;
+  t1.registerParent$1(this);
+  t1.add$1(this._shape);
+  t2 = this._positionShape;
+  t1.add$1(t2);
+  $.MouseManager_setCursor(t2, "pointer");
+  $.MouseManager_setDraggable(t2, true);
+  $.MouseManager_addDragHandler(t2, this.get$_dragPosition());
+  t2 = this._rotateScaleShape;
+  t1.add$1(t2);
+  $.MouseManager_setCursor(t2, "pointer");
+  $.MouseManager_setDraggable(t2, true);
+  $.MouseManager_addDragHandler(t2, this.get$_dragRotateScale());
+  this._updateRotateScale$0();
+}
+};
+
+$$.BodyElementEvents = {"":"ElementEvents;_ptr",
+ get$blur: function() {
+  return this.operator$index$1("blur");
+}
 };
 
 $$.DocumentEvents = {"":"ElementEvents;_ptr"
 };
 
 $$.ElementEvents = {"":"Events;_ptr",
+ get$blur: function() {
+  return this.operator$index$1("blur");
+},
  get$mouseDown: function() {
   return this.operator$index$1("mousedown");
+},
+ get$mouseMove: function() {
+  return this.operator$index$1("mousemove");
+},
+ get$mouseOut: function() {
+  return this.operator$index$1("mouseout");
+},
+ get$mouseUp: function() {
+  return this.operator$index$1("mouseup");
 }
 };
 
@@ -1364,7 +1421,10 @@ $$.EventListenerList = {"":"Object;_ptr,_type",
 }
 };
 
-$$.FrameSetElementEvents = {"":"ElementEvents;_ptr"
+$$.FrameSetElementEvents = {"":"ElementEvents;_ptr",
+ get$blur: function() {
+  return this.operator$index$1("blur");
+}
 };
 
 $$.InputElementEvents = {"":"ElementEvents;_ptr"
@@ -1374,8 +1434,20 @@ $$.MediaElementEvents = {"":"ElementEvents;_ptr"
 };
 
 $$.WindowEvents = {"":"Events;_ptr",
+ get$blur: function() {
+  return this.operator$index$1("blur");
+},
  get$mouseDown: function() {
   return this.operator$index$1("mousedown");
+},
+ get$mouseMove: function() {
+  return this.operator$index$1("mousemove");
+},
+ get$mouseOut: function() {
+  return this.operator$index$1("mouseout");
+},
+ get$mouseUp: function() {
+  return this.operator$index$1("mouseup");
 }
 };
 
@@ -1450,13 +1522,27 @@ $$.Attachable = {"":"Object;name>"
 };
 
 $$.AttachableObject = {"":"DisposableImpl;",
+ _addHandler$2: function(property, watcher) {
+  var handle;
+  this.validateNotDisposed$0();
+  handle = this._eventHandlers.putIfAbsent$2(property, new $.AttachableObject__addHandler_anon());
+  return $.getInterceptor$JSArray(handle).add$1(handle, watcher);
+},
+ _fireEvent$2: function(attachable, args) {
+  var t1, handle;
+  this.validateNotDisposed$0();
+  t1 = this._eventHandlers;
+  handle = $.getInterceptor$JSStringJSArray(t1).operator$index$1(t1, attachable);
+  if (!(handle == null))
+    handle.fireEvent$1(args);
+},
  _set$2: function(key, value) {
   this.validateNotDisposed$0();
   $.indexSet(this._propertyValues, key, value);
   this._fireChange$1(key);
 },
  get$_set: function() {
-  return new $.BoundClosure0(this, '_set$2');
+  return new $.BoundClosure1(this, '_set$2');
 },
  _isSet$1: function(key) {
   this.validateNotDisposed$0();
@@ -1480,7 +1566,7 @@ $$.AttachableObject = {"":"DisposableImpl;",
     this._set$2(key, value);
     return value;
   } else
-    return $.CONSTANT11;
+    return $.CONSTANT8;
 },
  _fireChange$1: function(key) {
   var t1, handle;
@@ -1492,10 +1578,19 @@ $$.AttachableObject = {"":"DisposableImpl;",
 }
 };
 
+$$.AttachedEvent = {"":"Attachable;name",
+ addHandler$2: function(obj, handler) {
+  return obj._addHandler$2(this, handler);
+},
+ fireEvent$2: function(obj, args) {
+  return obj._fireEvent$2(this, args);
+}
+};
+
 $$.Property = {"":"Attachable;defaultValue,name",
  get$2: function(obj, ifAbsent) {
   var coreValue = this.getCore$2(obj, ifAbsent);
-  if (!(coreValue === $.CONSTANT11))
+  if (!(coreValue === $.CONSTANT8))
     return coreValue;
   else
     return this.defaultValue;
@@ -1511,6 +1606,9 @@ $$.Property = {"":"Attachable;defaultValue,name",
 },
  clear$1: function(obj) {
   return obj._remove$1(this);
+},
+ addHandler$2: function(obj, handler) {
+  return obj._addHandler$2(this, handler);
 },
  toString$0: function() {
   return "Property '" + $.S(this.name) + "'";
@@ -1557,17 +1655,17 @@ $$.Enumerable = {"":"Object;",
   $.requireArgumentNotNull(f, "f");
   return $._FuncEnumerable$(this, new $.Enumerable_map_anon(f));
 },
- first$1: function(f) {
+ firstOrDefault$2: function(f, defaultValue) {
   var iter;
   if (f == null)
-    f = new $.Enumerable_first_anon();
+    f = new $.Enumerable_firstOrDefault_anon();
   iter = $._WhereIterator$(this.iterator$0(), f);
   if (iter.get$hasNext() !== true)
-    throw $.$$throw($.CONSTANT9);
+    return defaultValue;
   return iter.next$0();
 },
- get$first: function() {
-  return new $.BoundClosure1(this, 'first$1');
+ firstOrDefault$1: function(f) {
+  return this.firstOrDefault$2(f, null);
 },
  forEach$1: function(f) {
   var t1;
@@ -1579,12 +1677,14 @@ $$.Enumerable = {"":"Object;",
 },
  toString$0: function() {
   return "[" + $.S(this.join$0()) + "]";
-}
+},
+ is$Enumerable: true
 };
 
 $$._SimpleEnumerable = {"":"Enumerable;_source",
  iterator$0: function() {
-  return $.CONSTANT1.iterator$0(this._source);
+  var t1 = this._source;
+  return $.getInterceptor$JSArray(t1).iterator$0(t1);
 }
 };
 
@@ -1640,7 +1740,7 @@ $$.DisposedError = {"":"Object;message>"
 $$.DisposableImpl = {"":"Object;",
  validateNotDisposed$0: function() {
   if (this._disposed)
-    throw $.$$throw($.CONSTANT8);
+    throw $.$$throw($.CONSTANT6);
 }
 };
 
@@ -1731,6 +1831,23 @@ $$.AffineTransform = {"":"Object;_scX>,_shY>,_shX>,_scY>,_tX>,_tY>",
  get$determinant: function() {
   return $.sub($.mul(this._scX, this._scY), $.mul(this._shX, this._shY));
 },
+ updateValues$6$scaleX$scaleY$shearX$shearY$translateX$translateY: function(scaleX, scaleY, shearX, shearY, translateX, translateY) {
+  if (!(translateX == null))
+    this._tX = translateX;
+  if (!(translateY == null))
+    this._tY = translateY;
+  if (!(scaleX == null))
+    this._scX = scaleX;
+  if (!(scaleY == null))
+    this._scY = scaleY;
+  if (!(shearX == null))
+    this._shX = shearX;
+  if (!(shearY == null))
+    this._shY = shearY;
+},
+ updateValues$2$translateX$translateY: function(translateX, translateY) {
+  return this.updateValues$6$scaleX$scaleY$shearX$shearY$translateX$translateY(null, null, null, null, translateX, translateY);
+},
  scale$2: function(sx, sy) {
   this._scX = $.mul(this._scX, sx);
   this._shY = $.mul(this._shY, sx);
@@ -1755,12 +1872,17 @@ $$.AffineTransform = {"":"Object;_scX>,_shY>,_shX>,_scY>,_tX>,_tY>",
  get$concatenate: function() {
   return new $.BoundClosure(this, 'concatenate$1');
 },
+ rotate$3: function(theta, x, y) {
+  return this.concatenate$1($.AffineTransform_AffineTransform$fromRotate(theta, x, y));
+},
+ setToRotation$3: function(theta, x, y) {
+  var cos, sin;
+  cos = $.cos(theta);
+  sin = $.sin(theta);
+  return this.setTransform$6(cos, sin, -sin, cos, x - x * cos + y * sin, y - x * sin - y * cos);
+},
  setToTranslation$2: function(dx, dy) {
   return this.setTransform$6(1, 0, 0, 1, dx, dy);
-},
- setFromTransfrom$1: function(tx) {
-  $.requireArgumentNotNull(tx, "tx");
-  return this.setTransform$6(tx.get$_scX(), tx.get$_shY(), tx.get$_shX(), tx.get$_scY(), tx.get$_tX(), tx.get$_tY());
 },
  setTransform$6: function(m00, m10, m01, m11, m02, m12) {
   this._scX = m00;
@@ -1774,16 +1896,12 @@ $$.AffineTransform = {"":"Object;_scX>,_shY>,_shX>,_scY>,_tX>,_tY>",
  transformCoordinate$1: function(point) {
   return $.Coordinate$($.add($.add($.mul(point.get$x(), this._scX), $.mul(point.get$y(), this._shX)), this._tX), $.add($.add($.mul(point.get$x(), this._shY), $.mul(point.get$y(), this._scY)), this._tY));
 },
+ transformCoordinate$0: function() {
+  return this.transformCoordinate$1($.CONSTANT12);
+},
  createInverse$0: function() {
   var det = this.get$determinant();
   return $.AffineTransform$($.div(this._scY, det), $.div($.neg(this._shY), det), $.div($.neg(this._shX), det), $.div(this._scX, det), $.div($.sub($.mul(this._shX, this._tY), $.mul(this._scY, this._tX)), det), $.div($.sub($.mul(this._shY, this._tX), $.mul(this._scX, this._tY)), det));
-},
- lerpTx$2: function(other, x) {
-  $.requireArgumentNotNull(other, "other");
-  return $.AffineTransform$($.lerp(this.get$scaleX(), other.get$scaleX(), x), $.lerp(this.get$shearY(), other.get$shearY(), x), $.lerp(this.get$shearX(), other.get$shearX(), x), $.lerp(this.get$scaleY(), other.get$scaleY(), x), $.lerp(this.get$translateX(), other.get$translateX(), x), $.lerp(this.get$translateY(), other.get$translateY(), x));
-},
- clone$0: function() {
-  return $.AffineTransform$(this._scX, this._shY, this._shX, this._scY, this._tX, this._tY);
 },
  operator$eq$1: function(other) {
   return !(other == null) && $.eqB(this._scX, other.get$_scX()) && $.eqB(this._shX, other.get$_shX()) && $.eqB(this._tX, other.get$_tX()) && $.eqB(this._shY, other.get$_shY()) && $.eqB(this._scY, other.get$_scY()) && $.eqB(this._tY, other.get$_tY());
@@ -1801,29 +1919,21 @@ $$.Box = {"":"Object;left>,top>,width>,height>",
  get$size: function() {
   return $.Size$(this.width, this.height);
 },
+ get$isValid: function() {
+  return this.get$topLeft().get$isValid() === true && this.get$size().get$isValid() === true;
+},
  contains$1: function(point) {
-  var t1, t2, t3;
+  var t1, t2;
   t1 = point.get$x();
   t2 = this.left;
-  if ($.geB(t1, t2)) {
-    t1 = point.get$x();
-    t3 = this.width;
-    if (typeof t3 !== 'number')
-      throw $.iae(t3);
-    if ($.leB(t1, t2 + t3)) {
+  if ($.geB(t1, t2))
+    if ($.leB(point.get$x(), $.add(t2, this.width))) {
       t1 = point.get$y();
       t2 = this.top;
-      if ($.geB(t1, t2)) {
-        t1 = point.get$y();
-        t3 = this.height;
-        if (typeof t3 !== 'number')
-          throw $.iae(t3);
-        t1 = $.leB(t1, t2 + t3);
-      } else
-        t1 = false;
+      t1 = $.geB(t1, t2) && $.leB(point.get$y(), $.add(t2, this.height));
     } else
       t1 = false;
-  } else
+  else
     t1 = false;
   return t1;
 },
@@ -1839,6 +1949,9 @@ $$.Box = {"":"Object;left>,top>,width>,height>",
 };
 
 $$.Coordinate = {"":"Object;x>,y>",
+ get$isValid: function() {
+  return $.isValidNumber(this.x) && $.isValidNumber(this.y);
+},
  operator$sub$1: function(other) {
   return $.Vector$($.sub(this.x, other.get$x()), $.sub(this.y, other.get$y()));
 },
@@ -1864,7 +1977,17 @@ $$.Size = {"":"Object;width>,height>",
   return $.eq(this.get$area(), 0);
 },
  get$isEmpty: function() {
-  return new $.BoundClosure2(this, 'isEmpty$0');
+  return new $.BoundClosure0(this, 'isEmpty$0');
+},
+ get$isValid: function() {
+  var t1, t2;
+  t1 = this.width;
+  if ($.isValidNumber(t1)) {
+    t2 = this.height;
+    t1 = $.isValidNumber(t2) && $.geB(t1, 0) && $.geB(t2, 0);
+  } else
+    t1 = false;
+  return t1;
 },
  scale$1: function(magnitude) {
   return $.Size$($.mul(this.width, magnitude), $.mul(this.height, magnitude));
@@ -1885,6 +2008,9 @@ $$.Vector = {"":"Coordinate;x,y",
   t2 = this.y;
   return $.sqrt($.add(t1, $.mul(t2, t2)));
 },
+ get$angle: function() {
+  return $.atan2(this.y, this.x);
+},
  operator$add$1: function(other) {
   return $.Vector$($.add(this.x, other.get$x()), $.add(this.y, other.get$y()));
 },
@@ -1893,135 +2019,167 @@ $$.Vector = {"":"Coordinate;x,y",
 },
  scale$1: function(magnitude) {
   return $.Vector$($.mul(this.x, magnitude), $.mul(this.y, magnitude));
+},
+ getAngle$1: function(other) {
+  return $.sub(other.get$angle(), this.get$angle());
 }
 };
 
-$$.HorizontalAlignment = {"":"_RetainedEnum;name"
-};
-
-$$.VerticalAlignment = {"":"_RetainedEnum;name"
-};
-
-$$.NavThing = {"":"ParentThing;verticalAlignment,horizontalAlignment,_child,_txPanel,_childOffset,_transforms,_invalidatedEventHandle,_cacheCanvas,_width,_height,_alpha,_cacheEnabled,_lastDrawTime,_parent,_propertyValues,_eventHandlers,_disposed",
- get$visualChildCount: function() {
-  if (!(this._txPanel == null))
-    return 1;
-  else if (!(this._child == null))
-    return 1;
-  else
-    return 0;
+$$.MouseManager = {"":"Object;_stage,_mouseDownThing,_draggingThing,_dragCoordinate",
+ get$_isDragging: function() {
+  return !(this._dragCoordinate == null);
 },
- getVisualChild$1: function(index) {
-  var t1;
-  if (typeof index !== 'number')
-    return this.getVisualChild$1$bailout(1, index);
-  if (index === 0) {
-    t1 = this._txPanel;
-    if (!(t1 == null))
-      return t1;
-    else {
-      t1 = this._child;
-      if (!(t1 == null))
-        return t1;
+ _mouseMove$1: function(e) {
+  var t1, items, cursor, args, t2;
+  t1 = $.getMouseEventCoordinate(e);
+  items = $.Mouse_markMouseOver(this._stage, t1);
+  t1 = this._draggingThing;
+  cursor = !(t1 == null) ? $.get$MouseManager__cursorProperty().get$1(t1) : null;
+  t1 = $.getInterceptor$JSStringJSArray(items);
+  if ($.gtB(t1.get$length(items), 0)) {
+    args = $.ThingMouseEventArgs$(t1.operator$index$1(items, 0), e);
+    for (t1 = t1.iterator$0(items); t1.get$hasNext() === true;) {
+      t2 = t1.next$0();
+      $.get$MouseManager__mouseMoveEvent().fireEvent$2(t2, args);
+      if (cursor == null)
+        cursor = $.get$MouseManager__cursorProperty().get$1(t2);
     }
   }
-  throw $.$$throw($.ArgumentError$(null));
+  this._updateCursor$1(cursor);
 },
- getVisualChild$1$bailout: function(state0, index) {
-  var t1;
-  if ($.eqB(index, 0)) {
-    t1 = this._txPanel;
-    if (!(t1 == null))
-      return t1;
-    else {
-      t1 = this._child;
-      if (!(t1 == null))
-        return t1;
+ get$_mouseMove: function() {
+  return new $.BoundClosure(this, '_mouseMove$1');
+},
+ _mouseOut$1: function(e) {
+  var t1 = this._stage;
+  $.Mouse_markMouseOver(t1, null);
+  $.get$MouseManager__mouseOutEvent().fireEvent$2(t1, $.CONSTANT5);
+  this._updateCursor$1(null);
+},
+ get$_mouseOut: function() {
+  return new $.BoundClosure(this, '_mouseOut$1');
+},
+ _mouseUp$1: function(e) {
+  var t1, thing;
+  t1 = $.getMouseEventCoordinate(e);
+  thing = $.$$($.Mouse_markMouseOver(this._stage, t1)).firstOrDefault$1(new $.MouseManager__mouseUp_anon());
+  if (!(thing == null)) {
+    this._doMouseUp$2(thing, e);
+    if ($.eqB(thing, this._mouseDownThing))
+      this._doClick$2(thing, e);
+    this._mouseDownThing = null;
+  }
+},
+ get$_mouseUp: function() {
+  return new $.BoundClosure(this, '_mouseUp$1');
+},
+ _mouseDown$1: function(e) {
+  var coord, hits, t1, t2;
+  coord = $.getMouseEventCoordinate(e);
+  hits = $.Mouse_markMouseOver(this._stage, coord);
+  for (t1 = $.getInterceptor$JSArray(hits).iterator$0(hits); t1.get$hasNext() === true;) {
+    t2 = t1.next$0();
+    if ($.get$MouseManager__isDraggableProperty().get$1(t2) === true) {
+      this._draggingThing = t2;
+      this._startDrag$2(this._draggingThing, e);
+      break;
+    } else if ($.get$MouseManager__isClickableProperty().get$1(t2) === true) {
+      this._mouseDownThing = t2;
+      this._doMouseDown$2(this._mouseDownThing, e);
+      break;
     }
   }
-  throw $.$$throw($.ArgumentError$(null));
 },
- get$canForward: function() {
-  return this._txPanel == null;
+ get$_mouseDown: function() {
+  return new $.BoundClosure(this, '_mouseDown$1');
 },
- forward$3: function(thing, tx, frameCount) {
-  var t1, existingTx, t2, t3, tempCanvas;
-  $.requireArgumentNotNull(thing, "thing");
-  $.requireArgumentNotNull(tx, "tx");
-  $.requireArgumentNotNull(frameCount, "frameCount");
-  $.require(this.get$canForward(), "Forward cannot be called");
-  t1 = this._child;
-  if (!(t1 == null)) {
-    t1.unregisterParent$1(this);
-    existingTx = $.get$NavThing__navLayerTransformProp().get$1(this._child);
-    this._child.removeTransform$1(existingTx);
-    this._child = null;
-    t2 = t1.get$width();
-    t2 = $.getInterceptor$JSNumber(t2).toInt$0(t2);
-    t3 = t1.get$height();
-    tempCanvas = $.CanvasElement_CanvasElement($.getInterceptor$JSNumber(t3).toInt$0(t3), t2);
-    t1.drawOverride$1(tempCanvas.get$context2d());
-    this._txPanel = $._NavLayerTxPanel__NavLayerTxPanel(this.get$width(), this.get$height(), tempCanvas, thing, tx, existingTx, frameCount, this.horizontalAlignment, this.verticalAlignment, this._childOffset);
-    this._txPanel.registerParent$1(this);
+ _updateCursor$1: function(cursor) {
+  if (cursor == null)
+    cursor = "auto";
+  this._stage.get$_canvas().get$style().set$cursor(cursor);
+},
+ _doMouseDown$2: function(thing, e) {
+  var args = $.ThingMouseEventArgs$(thing, e);
+  $.get$MouseManager__mouseDownEvent().fireEvent$2(thing, args);
+},
+ _doMouseUp$2: function(thing, e) {
+  var args = $.ThingMouseEventArgs$(thing, e);
+  $.get$MouseManager__mouseUpEvent().fireEvent$2(thing, args);
+},
+ _doClick$2: function(thing, e) {
+  var args = $.ThingMouseEventArgs$(thing, e);
+  $.get$MouseManager__clickEvent().fireEvent$2(thing, args);
+},
+ _startDrag$2: function(thing, e) {
+  var args = $.ThingDragStartingEventArgs$(thing, e);
+  $.get$MouseManager__dragStartingEvent().fireEvent$2(thing, args);
+  if (args.get$isCanceled() !== true) {
+    e.preventDefault$0();
+    this._dragCoordinate = $.Coordinate$(e.get$clientX(), e.get$clientY());
   }
-  this._child = thing;
-  if (this._txPanel == null)
-    this._claimChild$0();
-  this.invalidateDraw$0();
 },
- forward$2: function(thing, tx) {
-  return this.forward$3(thing, tx, 30);
+ _windowMouseMove$1: function(e) {
+  var newLoc, delta, args;
+  if (this.get$_isDragging() === true) {
+    newLoc = $.Coordinate$(e.get$clientX(), e.get$clientY());
+    delta = newLoc.operator$sub$1(this._dragCoordinate);
+    args = $.ThingDragEventArgs$(this._draggingThing, e, delta);
+    $.get$MouseManager__dragEvent().fireEvent$2(this._draggingThing, args);
+    this._dragCoordinate = newLoc;
+  }
 },
- update$0: function() {
-  $.ParentThing.prototype.update$0.call(this);
-  var t1 = this._txPanel;
-  if (!(t1 == null))
-    if (t1.get$isDone() === true) {
-      this._txPanel.unregisterParent$1(this);
-      this._txPanel.remove$1(this._child);
-      this._txPanel = null;
-      this._claimChild$0();
-    }
+ get$_windowMouseMove: function() {
+  return new $.BoundClosure(this, '_windowMouseMove$1');
 },
- _claimChild$0: function() {
-  var tx = this._child.addTransform$0();
-  $.get$NavThing__navLayerTransformProp().set$2(this._child, tx);
-  this._child.registerParent$1(this);
+ _windowMouseUp$1: function(e) {
+  this._endDrag$0();
+},
+ get$_windowMouseUp: function() {
+  return new $.BoundClosure(this, '_windowMouseUp$1');
+},
+ _windowBlur$1: function(e) {
+  this._endDrag$0();
+},
+ get$_windowBlur: function() {
+  return new $.BoundClosure(this, '_windowBlur$1');
+},
+ _endDrag$0: function() {
+  if (this.get$_isDragging() === true) {
+    this._dragCoordinate = null;
+    this._draggingThing = null;
+  }
+},
+ MouseManager$_internal$1: function(_stage) {
+  var t1, t2;
+  t1 = this._stage;
+  t2 = t1.get$_canvas().get$on().get$mouseMove();
+  $.getInterceptor$JSArray(t2).add$1(t2, this.get$_mouseMove());
+  t2 = t1.get$_canvas().get$on().get$mouseOut();
+  $.getInterceptor$JSArray(t2).add$1(t2, this.get$_mouseOut());
+  t2 = t1.get$_canvas().get$on().get$mouseUp();
+  $.getInterceptor$JSArray(t2).add$1(t2, this.get$_mouseUp());
+  t2 = t1.get$_canvas().get$on().get$mouseDown();
+  $.getInterceptor$JSArray(t2).add$1(t2, this.get$_mouseDown());
+  t2 = $.window().get$on().get$mouseMove();
+  $.getInterceptor$JSArray(t2).add$1(t2, this.get$_windowMouseMove());
+  t2 = $.window().get$on().get$mouseUp();
+  $.getInterceptor$JSArray(t2).add$1(t2, this.get$_windowMouseUp());
+  t2 = $.window().get$on().get$blur();
+  $.getInterceptor$JSArray(t2).add$1(t2, this.get$_windowBlur());
 }
 };
 
-$$._NavLayerTxPanel = {"":"PanelThing;_frames,_lastImage,_newChild,_startTx,_goalTx,_myTx,_i,_children,background,_transforms,_invalidatedEventHandle,_cacheCanvas,_width,_height,_alpha,_cacheEnabled,_lastDrawTime,_parent,_propertyValues,_eventHandlers,_disposed",
- get$isDone: function() {
-  return $.ge(this._i, this._frames);
-},
- update$0: function() {
-  var t1, t2, ratio, newTx;
-  t1 = this._i;
-  t2 = this._frames;
-  if ($.ltB(t1, t2)) {
-    t1 = this._i;
-    t2 = $.sub(t2, 1);
-    if (typeof t2 !== 'number')
-      throw $.iae(t2);
-    ratio = t1 / t2;
-    newTx = this._startTx.lerpTx$2(this._goalTx, ratio);
-    this._myTx.setFromTransfrom$1(newTx);
-    t2 = 1 - ratio;
-    this._lastImage.set$alpha(t2);
-    this._newChild.set$alpha(ratio);
-    this._i = this._i + 1;
-  }
-},
- drawOverride$1: function(ctx) {
-  $.PanelThing.prototype.drawOverride$1.call(this, ctx);
-  if (this.get$isDone() !== true)
-    this.invalidateDraw$0();
-},
- _NavLayerTxPanel$_internal$7: function(width, height, _frames, _lastImage, _newChild, _startTx, _goalTx) {
-  this.add$1(this._lastImage);
-  this.add$1(this._newChild);
-  this._myTx = this.addTransform$0();
-  this._myTx.setFromTransfrom$1(this._startTx);
+$$.ThingDragStartingEventArgs = {"":"ThingMouseEventArgs;_canceled,thing,sourceEvent",
+ get$isCanceled: function() {
+  return this._canceled;
+}
+};
+
+$$.ThingDragEventArgs = {"":"ThingMouseEventArgs;delta>,thing,sourceEvent"
+};
+
+$$.ThingMouseEventArgs = {"":"EventArgs;thing,sourceEvent",
+ ThingMouseEventArgs$2: function(thing, sourceEvent) {
 }
 };
 
@@ -2113,8 +2271,11 @@ $$.ParentThing = {"":"Thing;",
 
 $$.CanvasThing = {"":"PanelThing;_children,background,_transforms,_invalidatedEventHandle,_cacheCanvas,_width,_height,_alpha,_cacheEnabled,_lastDrawTime,_parent,_propertyValues,_eventHandlers,_disposed",
  setTopLeft$2: function(thing, value) {
-  this.getChildTransform$1(thing).setToTranslation$2(value.x, value.y);
+  this.getChildTransform$1(thing).setToTranslation$2(value.get$x(), value.get$y());
   thing.invalidateDraw$0();
+},
+ setCenter$2: function(thing, value) {
+  this.setTopLeft$2(thing, $.Coordinate_difference(value, $.Vector$($.div(thing.get$width(), 2), $.div(thing.get$height(), 2))));
 }
 };
 
@@ -2135,13 +2296,6 @@ $$.Thing = {"":"AttachableObject;",
 },
  get$size: function() {
   return $.Size$(this._width, this._height);
-},
- set$alpha: function(value) {
-  $.requireArgument($.isValidNumber(value), "value", null);
-  $.requireArgument($.geB(value, 0) && $.leB(value, 1), "value", null);
-  this._alpha = value;
-  if (!(this.get$parent() == null))
-    this._invalidateParent$0();
 },
  get$parent: function() {
   return this._parent;
@@ -2225,7 +2379,7 @@ $$.Thing = {"":"AttachableObject;",
   this.drawOverride$1(ctx);
 },
  _invalidateParent$0: function() {
-  this._invalidatedEventHandle.fireEvent$1($.CONSTANT7);
+  this._invalidatedEventHandle.fireEvent$1($.CONSTANT5);
   this._parent.childInvalidated$1(this);
 }
 };
@@ -2238,10 +2392,10 @@ $$.ShapeThing = {"":"Thing;_fillStyle,shapeType,_transforms,_invalidatedEventHan
  drawOverride$1: function(ctx) {
   ctx.set$fillStyle(this._fillStyle);
   switch (this.shapeType) {
-    case $.CONSTANT10:
+    case $.CONSTANT7:
       ctx.fillRect$4(0, 0, this.get$size().get$width(), this.get$size().get$height());
       break;
-    case $.CONSTANT12:
+    case $.CONSTANT10:
       $.CanvasUtil_ellipse(ctx, 0, 0, this.get$width(), this.get$height());
       ctx.fill$0();
       break;
@@ -2257,11 +2411,7 @@ $$.ShapeThing = {"":"Thing;_fillStyle,shapeType,_transforms,_invalidatedEventHan
 $$.ShapeType = {"":"_RetainedEnum;name"
 };
 
-$$.Stage = {"":"AttachableObject;_invalidatedEventHandle,_canvas,rootThing,_ctx,_propertyValues,_eventHandlers,_disposed",
- get$size: function() {
-  var t1 = this._canvas;
-  return $.Size$(t1.get$width(), t1.get$height());
-},
+$$.Stage = {"":"AttachableObject;_invalidatedEventHandle,_canvas>,rootThing>,_ctx,_propertyValues,_eventHandlers,_disposed",
  get$invalidated: function() {
   return this._invalidatedEventHandle;
 },
@@ -2279,14 +2429,14 @@ $$.Stage = {"":"AttachableObject;_invalidatedEventHandle,_canvas,rootThing,_ctx,
 },
  childInvalidated$1: function(child) {
   this.validateNotDisposed$0();
-  this._invalidatedEventHandle.fireEvent$1($.CONSTANT7);
+  this._invalidatedEventHandle.fireEvent$1($.CONSTANT5);
 },
  Stage$2: function(_canvas, rootThing) {
   this.rootThing.registerParent$1(this);
 }
 };
 
-$$.StageWrapper = {"":"DisposableImpl;",
+$$.StageWrapper = {"":"DisposableImpl;rootThing>",
  requestFrame$0: function() {
   if (!this._frameRequested) {
     this._frameRequested = true;
@@ -2303,25 +2453,6 @@ $$.StageWrapper = {"":"DisposableImpl;",
  StageWrapper$2: function(canvas, rootThing) {
   var t1 = this.stage.get$invalidated();
   this._invalidatedEventId = $.getInterceptor$JSArray(t1).add$1(t1, new $.anon(this));
-}
-};
-
-$$.SubCanvasThing = {"":"Thing;_canvas,_transforms,_invalidatedEventHandle,_cacheCanvas,_width,_height,_alpha,_cacheEnabled,_lastDrawTime,_parent,_propertyValues,_eventHandlers,_disposed",
- drawOverride$1: function(ctx) {
-  ctx.drawImage$5(this._canvas, 0, 0, this.get$width(), this.get$height());
-}
-};
-
-$$.TextThing = {"":"Thing;_value,fillStyle<,textFillStyle,_transforms,_invalidatedEventHandle,_cacheCanvas,_width,_height,_alpha,_cacheEnabled,_lastDrawTime,_parent,_propertyValues,_eventHandlers,_disposed",
- drawOverride$1: function(ctx) {
-  var t1 = this.fillStyle;
-  if (!(t1 == null)) {
-    ctx.set$fillStyle(t1);
-    ctx.fillRect$4(0, 0, this.get$width(), this.get$height());
-  }
-  ctx.set$fillStyle(this.textFillStyle);
-  ctx.set$textBaseline("top");
-  ctx.fillText$3(this._value, 0, 0);
 }
 };
 
@@ -2376,6 +2507,30 @@ $$.NoSuchMethodError_toString_anon = {"":"Closure;box_0",
   t2 = t1.sb_0;
   $.getInterceptor$JSArray(t2).add$1(t2, $.Error_safeToString(value));
   t1.i_1 = $.add(t1.i_1, 1);
+}
+};
+
+$$.AffineTransform_toString_anon = {"":"Closure;",
+ call$1: function(n) {
+  return $.getInterceptor(n).toString$0(n);
+}
+};
+
+$$.Enumerable_map_anon = {"":"Closure;f_0",
+ call$1: function(s) {
+  return $._SelectIterator$(s, this.f_0);
+}
+};
+
+$$.Enumerable_isEmpty_anon = {"":"Closure;",
+ call$1: function(e) {
+  return true;
+}
+};
+
+$$.EventHandle_fireEvent_anon = {"":"Closure;args_0",
+ call$2: function(id, handler) {
+  handler.call$1(this.args_0);
 }
 };
 
@@ -2442,37 +2597,44 @@ $$.ParentThing_drawOverride_anon = {"":"Closure;ctx_0",
 }
 };
 
-$$.EventHandle_fireEvent_anon = {"":"Closure;args_0",
- call$2: function(id, handler) {
-  handler.call$1(this.args_0);
-}
-};
-
-$$.AffineTransform_toString_anon = {"":"Closure;",
- call$1: function(n) {
-  return $.getInterceptor(n).toString$0(n);
-}
-};
-
-$$.Enumerable_map_anon = {"":"Closure;f_0",
- call$1: function(s) {
-  return $._SelectIterator$(s, this.f_0);
-}
-};
-
-$$.Enumerable_isEmpty_anon = {"":"Closure;",
- call$1: function(e) {
-  return true;
-}
-};
-
 $$.ParentThing_update_anon = {"":"Closure;",
  call$1: function(e) {
   return e.update$0();
 }
 };
 
-$$.Enumerable_first_anon = {"":"Closure;",
+$$.AttachableObject__addHandler_anon = {"":"Closure;",
+ call$0: function() {
+  return $.EventHandle$();
+}
+};
+
+$$.MouseManager_MouseManager_anon = {"":"Closure;",
+ call$1: function(s) {
+  return $.MouseManager$_internal(s);
+}
+};
+
+$$.Mouse_markMouseOver_anon = {"":"Closure;",
+ call$1: function(e) {
+  $.get$Mouse_isMouseOverProperty().clear$1(e);
+  $.get$Mouse_isMouseDirectlyOverProperty().clear$1(e);
+}
+};
+
+$$.Mouse_markMouseOver_anon0 = {"":"Closure;",
+ call$1: function(e) {
+  $.get$Mouse_isMouseOverProperty().set$2(e, true);
+}
+};
+
+$$.MouseManager__mouseUp_anon = {"":"Closure;",
+ call$1: function(e) {
+  return $.get$MouseManager__isClickableProperty().get$1(e);
+}
+};
+
+$$.Enumerable_firstOrDefault_anon = {"":"Closure;",
  call$1: function(e) {
   return true;
 }
@@ -2482,58 +2644,42 @@ $$.BoundClosure = {"":"Closure;self,target", call$1: function(p0) {
   return this.self[this.target](p0);
 }
 };
-$$.BoundClosure0 = {"":"Closure;self,target", call$2: function(p0, p1) {
-  return this.self[this.target](p0, p1);
-}
-};
-$$.BoundClosure1 = {"":"Closure;self,target", call$1: function(p0) {
-  return this.self[this.target](p0);
-},
- call$0: function() {
-  return this.call$1(null);
-}
-};
-$$.BoundClosure2 = {"":"Closure;self,target", call$0: function() {
+$$.BoundClosure0 = {"":"Closure;self,target", call$0: function() {
   return this.self[this.target]();
 }
 };
+$$.BoundClosure1 = {"":"Closure;self,target", call$2: function(p0, p1) {
+  return this.self[this.target](p0, p1);
+}
+};
 $.main = function() {
-  $.NavDemo_NavDemo($.document().query$1("#content")).requestFrame$0();
+  $.FrameDemo_FrameDemo($.document().query$1("#content")).requestFrame$0();
 };
 
-$.NavDemo_NavDemo = function(canvas) {
-  return $.NavDemo$_internal(canvas, $.NavThing$(300, 300));
+$.FrameDemo_FrameDemo = function(canvas) {
+  return $.FrameDemo$_internal(canvas, $.CanvasThing$(canvas.get$width(), canvas.get$height()));
 };
 
-$.NavDemo$_internal = function(canvas, nav) {
-  var t1 = new $.NavDemo(0, canvas, $.Stage$(canvas, nav), nav, null, false, false);
-  t1.StageWrapper$2(canvas, nav);
-  t1.NavDemo$_internal$2(canvas, nav);
+$.FrameDemo$_internal = function(canvas, canvasThing) {
+  var t1 = new $.FrameDemo($.TxThing_TxThing(canvas.get$width(), canvas.get$height()), canvas, $.Stage$(canvas, canvasThing), canvasThing, null, false, false);
+  t1.StageWrapper$2(canvas, canvasThing);
+  t1.FrameDemo$_internal$2(canvas, canvasThing);
   return t1;
 };
 
-$.NavDemo__getDemoElement = function(count) {
-  var canvas, back$, text, corner;
-  canvas = $.CanvasThing$(300, 300);
-  back$ = $.ShapeThing$(300, 300, "#333", $.CONSTANT10);
-  back$.set$alpha(0.5);
-  canvas.add$1(back$);
-  text = $.TextThing$("Click here - " + $.S(count), 100, 100);
-  canvas.add$1(text);
-  canvas.setTopLeft$2(text, $.Coordinate$(100, 100));
-  corner = $.ShapeThing$(100, 100, "red", $.CONSTANT10);
-  canvas.add$1(corner);
-  canvas.setTopLeft$2(corner, $.Coordinate$(0, 0));
-  corner = $.ShapeThing$(100, 100, "green", $.CONSTANT10);
-  canvas.add$1(corner);
-  canvas.setTopLeft$2(corner, $.Coordinate$(200, 0));
-  corner = $.ShapeThing$(100, 100, "blue", $.CONSTANT10);
-  canvas.add$1(corner);
-  canvas.setTopLeft$2(corner, $.Coordinate$(0, 200));
-  corner = $.ShapeThing$(100, 100, "yellow", $.CONSTANT10);
-  canvas.add$1(corner);
-  canvas.setTopLeft$2(corner, $.Coordinate$(200, 200));
-  return canvas;
+$.TxThing_TxThing = function(width, height) {
+  var box, shape, tx;
+  box = $.Box$($.div(width, 3), $.div(height, 3), $.div(width, 3), $.div(height, 3));
+  shape = $.ShapeThing$(box.width, box.height, "blue", $.CONSTANT7);
+  tx = shape.addTransform$0();
+  tx.setToTranslation$2(box.left, box.top);
+  return $.TxThing$_internal(width, height, box.get$size(), shape, tx);
+};
+
+$.TxThing$_internal = function(width, height, _sourceSize, _shape, _tx) {
+  var t1 = new $.TxThing(_sourceSize, $.CanvasThing$(width, height), _shape, $.ShapeThing$(20, 20, "gray", $.CONSTANT7), $.ShapeThing$(20, 20, "red", $.CONSTANT7), _tx, null, $.List_List(null), $.EventHandle$(), null, width, height, 1, false, null, null, $.HashMap_HashMap(), $.HashMap_HashMap(), false);
+  t1.TxThing$_internal$5(width, height, _sourceSize, _shape, _tx);
+  return t1;
 };
 
 $.Strings__toJsStringArray = function(strings) {
@@ -3257,7 +3403,7 @@ $.dynamicBind = function(obj, name$, methods, arguments$) {
       method = $.dynamicBindLookup(hasOwnPropertyFunction, secondTag, methods);
   }
   if (method == null)
-    method = $.lookupDynamicClass(hasOwnPropertyFunction, methods, $.getTypeNameOf($.CONSTANT17));
+    method = $.lookupDynamicClass(hasOwnPropertyFunction, methods, $.getTypeNameOf($.CONSTANT11));
   proto = Object.getPrototypeOf(obj);
   if (method == null)
     method = function () {if (Object.getPrototypeOf(this) === proto) {throw new TypeError(name$ + " is not a function");} else {return Object.prototype[name$].apply(this, arguments);}};
@@ -3291,7 +3437,7 @@ $.dynamicFunction = function(name$) {
   if (!(f == null) && !!f.methods)
     return f.methods;
   methods = {};
-  dartMethod = Object.getPrototypeOf($.CONSTANT17)[name$];
+  dartMethod = Object.getPrototypeOf($.CONSTANT11)[name$];
   if (!(dartMethod == null))
     methods["Object"] = dartMethod;
   bind = function() {return $.dynamicBind.call$4(this, name$, methods, Array.prototype.slice.call(arguments));};
@@ -3832,6 +3978,10 @@ $.DocumentEvents$ = function(_ptr) {
   return new $.DocumentEvents(_ptr);
 };
 
+$.Element_Element$tag = function(tag) {
+  return document.createElement(tag);
+};
+
 $.ElementEvents$ = function(_ptr) {
   return new $.ElementEvents(_ptr);
 };
@@ -3948,8 +4098,24 @@ $.Lists_indexOf$bailout = function(state0, a, element, startIndex, endIndex) {
   return -1;
 };
 
+$.atan2 = function(a, b) {
+  return Math.atan2($.checkNum(a), $.checkNum(b));
+};
+
+$.sin = function(x) {
+  return Math.sin($.checkNum(x));
+};
+
+$.cos = function(x) {
+  return Math.cos($.checkNum(x));
+};
+
 $.sqrt = function(x) {
   return Math.sqrt($.checkNum(x));
+};
+
+$.AttachedEvent$ = function(name$) {
+  return new $.AttachedEvent(name$);
 };
 
 $.Property$ = function(name$, defaultValue) {
@@ -3957,7 +4123,10 @@ $.Property$ = function(name$, defaultValue) {
 };
 
 $.$$ = function(source) {
-  return $.Enumerable_Enumerable$fromIterable(source);
+  if (typeof source === 'object' && source !== null && !!source.is$Enumerable)
+    return source;
+  else
+    return $.Enumerable_Enumerable$fromIterable(source);
 };
 
 $.Enumerable_Enumerable$fromIterable = function(source) {
@@ -4015,8 +4184,8 @@ $.AffineTransform$ = function(scaleX, shearY, shearX, scaleY, translateX, transl
   return new $.AffineTransform(scaleX, shearY, shearX, scaleY, translateX, translateY);
 };
 
-$.AffineTransform_AffineTransform$fromTranslat = function(x, y) {
-  return $.AffineTransform$(1, 0, 0, 1, x, y);
+$.AffineTransform_AffineTransform$fromRotate = function(theta, x, y) {
+  return $.AffineTransform$(1, 0, 0, 1, 0, 0).setToRotation$3(theta, x, y);
 };
 
 $.Box$ = function(left, top$, width, height) {
@@ -4027,6 +4196,10 @@ $.Coordinate$ = function(x, y) {
   return new $.Coordinate(x, y);
 };
 
+$.Coordinate_difference = function(a, b) {
+  return $.Vector$($.sub(a.get$x(), b.x), $.sub(a.get$y(), b.y));
+};
+
 $.isValidNumber = function(value) {
   var t1;
   if (!(value == null)) {
@@ -4035,29 +4208,6 @@ $.isValidNumber = function(value) {
   } else
     t1 = false;
   return t1;
-};
-
-$.lerp = function(a, b, x) {
-  var t1;
-  if (!(a == null)) {
-    t1 = $.getInterceptor$JSNumber(a);
-    t1 = t1.get$isInfinite(a) !== true && t1.get$isNaN(a) !== true;
-  } else
-    t1 = false;
-  $.requireArgument(t1, "a", null);
-  if (!(b == null)) {
-    t1 = $.getInterceptor$JSNumber(b);
-    t1 = t1.get$isInfinite(b) !== true && t1.get$isNaN(b) !== true;
-  } else
-    t1 = false;
-  $.requireArgument(t1, "b", null);
-  if (!(x == null)) {
-    t1 = $.getInterceptor$JSNumber(x);
-    t1 = t1.get$isInfinite(x) !== true && t1.get$isNaN(x) !== true;
-  } else
-    t1 = false;
-  $.requireArgument(t1, "x", null);
-  return $.add(a, $.mul(x, $.sub(b, a)));
 };
 
 $.Size$ = function(width, height) {
@@ -4158,65 +4308,68 @@ $.CanvasThing$ = function(w, h) {
   return new $.CanvasThing($.List_List(null), null, $.List_List(null), $.EventHandle$(), null, w, h, 1, false, null, null, $.HashMap_HashMap(), $.HashMap_HashMap(), false);
 };
 
-$.NavThing$ = function(width, height) {
-  return new $.NavThing($.CONSTANT5, $.CONSTANT6, null, null, null, $.List_List(null), $.EventHandle$(), null, width, height, 1, false, null, null, $.HashMap_HashMap(), $.HashMap_HashMap(), false);
+$.Mouse_markMouseOver = function(stage, coordinate) {
+  var t1, items, hits;
+  $.requireArgumentNotNull(stage, "stage");
+  t1 = !(coordinate == null);
+  $.requireArgument(coordinate == null || coordinate.get$isValid() === true, "coordinate", null);
+  items = $.get$Mouse__stageMouseCacheProperty().get$1(stage);
+  if (!(items == null)) {
+    $.getInterceptor$JSArray(items).forEach$1(items, new $.Mouse_markMouseOver_anon());
+    $.get$Mouse__stageMouseCacheProperty().clear$1(stage);
+  }
+  if (t1) {
+    hits = $.RetainedUtil__hitTest(stage.get$rootThing(), coordinate);
+    $.get$Mouse__stageMouseCacheProperty().set$2(stage, hits);
+    t1 = $.getInterceptor$JSArray(hits);
+    t1.forEach$1(hits, new $.Mouse_markMouseOver_anon0());
+    if ($.gtB(t1.get$length(hits), 0))
+      $.get$Mouse_isMouseDirectlyOverProperty().set$2(t1.operator$index$1(hits, 0), true);
+    return hits;
+  }
+  return;
 };
 
-$._NavLayerTxPanel__NavLayerTxPanel = function(width, height, lastCanvas, newChild, startTx, ghostTx, frameCount, horizontalAlignment, verticalAlignment, childOffset) {
-  var lastImage, newChildOffset, goalTx;
-  if (childOffset == null)
-    childOffset = $.Vector$(0, 0);
-  lastImage = $.SubCanvasThing$(lastCanvas.get$width(), lastCanvas.get$height(), lastCanvas);
-  lastImage.addTransform$0().setFromTransfrom$1(startTx.createInverse$0());
-  newChildOffset = $.RetainedUtil_getOffsetVector($.Size$(width, height), newChild.get$size(), horizontalAlignment, verticalAlignment, childOffset);
-  goalTx = $.AffineTransform_AffineTransform$fromTranslat(newChildOffset.x, newChildOffset.y);
-  return $._NavLayerTxPanel$_internal(width, height, frameCount, lastImage, newChild, ghostTx.clone$0().concatenate$1(startTx), goalTx);
+$.MouseManager_MouseManager = function(stage) {
+  $.requireArgumentNotNull(stage, "stage");
+  return $.get$MouseManager__clickManagerProperty().get$2(stage, new $.MouseManager_MouseManager_anon());
 };
 
-$._NavLayerTxPanel$_internal = function(width, height, _frames, _lastImage, _newChild, _startTx, _goalTx) {
-  var t1 = new $._NavLayerTxPanel(_frames, _lastImage, _newChild, _startTx, _goalTx, null, 0, $.List_List(null), null, $.List_List(null), $.EventHandle$(), null, width, height, 1, false, null, null, $.HashMap_HashMap(), $.HashMap_HashMap(), false);
-  t1._NavLayerTxPanel$_internal$7(width, height, _frames, _lastImage, _newChild, _startTx, _goalTx);
+$.MouseManager$_internal = function(_stage) {
+  var t1 = new $.MouseManager(_stage, null, null, null);
+  t1.MouseManager$_internal$1(_stage);
   return t1;
 };
 
-$.RetainedUtil_getOffsetVector = function(parentSize, childSize, horizontalAlignment, verticalAlignment, offset) {
-  var x, y;
-  $.requireArgumentNotNull(parentSize, "parentSize");
-  $.requireArgumentNotNull(childSize, "childSize");
-  $.requireArgumentNotNull(horizontalAlignment, "horizontalAlignment");
-  $.requireArgumentNotNull(verticalAlignment, "verticalAlignment");
-  $.requireArgumentNotNull(offset, "offset");
-  x = offset.get$x();
-  y = offset.get$y();
-  switch (horizontalAlignment) {
-    case $.CONSTANT13:
-      break;
-    case $.CONSTANT6:
-      x = $.add(x, $.div($.sub(parentSize.width, childSize.get$width()), 2));
-      break;
-    case $.CONSTANT14:
-      x = $.add(x, $.sub(parentSize.width, childSize.get$width()));
-      break;
-    default:
-      throw $.$$throw($.ArgumentError$("horizontalAlignment value not expected " + $.S(horizontalAlignment)));
-  }
-  switch (verticalAlignment) {
-    case $.CONSTANT15:
-      break;
-    case $.CONSTANT5:
-      y = $.add(y, $.div($.sub(parentSize.height, childSize.get$height()), 2));
-      break;
-    case $.CONSTANT16:
-      y = $.add(y, $.sub(parentSize.height, childSize.get$height()));
-      break;
-    default:
-      throw $.$$throw($.ArgumentError$("verticalAlignment value not expected " + $.S(verticalAlignment)));
-  }
-  return $.Vector$(x, y);
+$.MouseManager_setCursor = function(thing, value) {
+  $.get$MouseManager__cursorProperty().set$2(thing, value);
 };
 
-$.RetainedUtil_hitTest = function(stage, point) {
-  return $.RetainedUtil__hitTest(stage.rootThing, point);
+$.MouseManager_setDraggable = function(thing, value) {
+  $.MouseManager__setBoolProp(thing, $.get$MouseManager__isDraggableProperty(), value);
+};
+
+$.MouseManager__setBoolProp = function(thing, prop, value) {
+  if (value)
+    prop.set$2(thing, true);
+  else
+    prop.clear$1(thing);
+};
+
+$.MouseManager_addDragHandler = function(thing, handler) {
+  return $.get$MouseManager__dragEvent().addHandler$2(thing, handler);
+};
+
+$.ThingDragStartingEventArgs$ = function(thing, source) {
+  var t1 = new $.ThingDragStartingEventArgs(false, thing, source);
+  t1.ThingMouseEventArgs$2(thing, source);
+  return t1;
+};
+
+$.ThingDragEventArgs$ = function(thing, source, delta) {
+  var t1 = new $.ThingDragEventArgs(delta, thing, source);
+  t1.ThingMouseEventArgs$2(thing, source);
+  return t1;
 };
 
 $.RetainedUtil__hitTest = function(thing, point) {
@@ -4232,7 +4385,7 @@ $.RetainedUtil__hitTest = function(thing, point) {
       for (t1 = length$ - 1, i = 0; i < length$; ++i) {
         hits = $.RetainedUtil__hitTest(thing.getVisualChild$1(t1 - i), point);
         if (typeof hits !== 'object' || hits === null || hits.constructor !== Array || !!hits.fixed$length)
-          return $.RetainedUtil__hitTest$bailout(2, thing, i, hits, point, length$);
+          return $.RetainedUtil__hitTest$bailout(2, thing, hits, point, i, length$);
         t2 = hits.length;
         if (t2 > 0)
           break;
@@ -4254,15 +4407,15 @@ $.RetainedUtil__hitTest$bailout = function(state0, env0, env1, env2, env3, env4,
       break;
     case 2:
       length$ = env4;
-      point = env3;
-      hits = env2;
-      i = env1;
+      i = env3;
+      point = env2;
+      hits = env1;
       thing = env0;
       break;
     case 3:
       t1 = env5;
-      hits = env4;
-      i = env3;
+      i = env4;
+      hits = env3;
       length$ = env2;
       point = env1;
       thing = env0;
@@ -4325,12 +4478,10 @@ $.Stage$ = function(_canvas, rootThing) {
   return t1;
 };
 
-$.SubCanvasThing$ = function(width, height, _canvas) {
-  return new $.SubCanvasThing(_canvas, $.List_List(null), $.EventHandle$(), null, width, height, 1, false, null, null, $.HashMap_HashMap(), $.HashMap_HashMap(), false);
-};
-
-$.TextThing$ = function(_value, width, height) {
-  return new $.TextThing(_value, "white", "black", $.List_List(null), $.EventHandle$(), null, width, height, 1, false, null, null, $.HashMap_HashMap(), $.HashMap_HashMap(), false);
+$.ThingMouseEventArgs$ = function(thing, sourceEvent) {
+  var t1 = new $.ThingMouseEventArgs(thing, sourceEvent);
+  t1.ThingMouseEventArgs$2(thing, sourceEvent);
+  return t1;
 };
 
 $.toStringWrapper.call$0 = $.toStringWrapper;
@@ -4355,45 +4506,37 @@ Isolate.$finishClasses($$);
 $$ = {};
 $.$int = {builtin$cls: '$int'};
 $.String = {builtin$cls: 'String'};
+$.List = {builtin$cls: 'List'};
 $.Node = {builtin$cls: 'Node'};
 $.Match = {builtin$cls: 'Match'};
+$.bool = {builtin$cls: 'bool'};
 $.CONSTANT2 = new Isolate.$isolateProperties.JSInt();
 $.CONSTANT = new Isolate.$isolateProperties.JSString();
 $.CONSTANT0 = new Isolate.$isolateProperties.NullThrownError();
-$.CONSTANT6 = new Isolate.$isolateProperties.HorizontalAlignment("center");
-$.CONSTANT9 = new Isolate.$isolateProperties.InvalidOperationError("The input sequence is empty.");
-$.CONSTANT13 = new Isolate.$isolateProperties.HorizontalAlignment("left");
 $.CONSTANT3 = new Isolate.$isolateProperties._DeletedKeySentinel();
-$.CONSTANT7 = new Isolate.$isolateProperties.EventArgs();
-$.CONSTANT11 = new Isolate.$isolateProperties._UndefinedValue();
-$.CONSTANT17 = new Isolate.$isolateProperties.Object();
-$.CONSTANT5 = new Isolate.$isolateProperties.VerticalAlignment("middle");
-$.CONSTANT10 = new Isolate.$isolateProperties.ShapeType("Rect");
-$.CONSTANT18 = new Isolate.$isolateProperties.Coordinate(0, 0);
-$.CONSTANT12 = new Isolate.$isolateProperties.ShapeType("Ellipse");
-$.CONSTANT8 = new Isolate.$isolateProperties.DisposedError("Invalid operation on disposed object");
-$.CONSTANT16 = new Isolate.$isolateProperties.VerticalAlignment("bottom");
-$.CONSTANT15 = new Isolate.$isolateProperties.VerticalAlignment("top");
-$.CONSTANT14 = new Isolate.$isolateProperties.HorizontalAlignment("right");
+$.CONSTANT5 = new Isolate.$isolateProperties.EventArgs();
+$.CONSTANT11 = new Isolate.$isolateProperties.Object();
+$.CONSTANT8 = new Isolate.$isolateProperties._UndefinedValue();
+$.CONSTANT9 = new Isolate.$isolateProperties.Vector(0, 10);
+$.CONSTANT10 = new Isolate.$isolateProperties.ShapeType("Ellipse");
+$.CONSTANT7 = new Isolate.$isolateProperties.ShapeType("Rect");
+$.CONSTANT6 = new Isolate.$isolateProperties.DisposedError("Invalid operation on disposed object");
+$.CONSTANT12 = new Isolate.$isolateProperties.Coordinate(0, 0);
 $.CONSTANT1 = new Isolate.$isolateProperties.JSArray();
 $.CONSTANT4 = new Isolate.$isolateProperties.JSNumber();
-$.Primitives_hashCodeSeed = 0;
-$.Primitives_DOLLAR_CHAR_VALUE = 36;
+$.Property_Undefined = Isolate.$isolateProperties.CONSTANT8;
 $._HashMapImpl__DELETED_KEY = Isolate.$isolateProperties.CONSTANT3;
 $._HashMapImpl__INITIAL_CAPACITY = 8;
-$.Property_Undefined = Isolate.$isolateProperties.CONSTANT11;
-$.VerticalAlignment_BOTTOM = Isolate.$isolateProperties.CONSTANT16;
-$.VerticalAlignment_MIDDLE = Isolate.$isolateProperties.CONSTANT5;
-$.VerticalAlignment_TOP = Isolate.$isolateProperties.CONSTANT15;
-$.HorizontalAlignment_LEFT = Isolate.$isolateProperties.CONSTANT13;
-$.HorizontalAlignment_RIGHT = Isolate.$isolateProperties.CONSTANT14;
-$.HorizontalAlignment_CENTER = Isolate.$isolateProperties.CONSTANT6;
-$._getTypeNameOf = null;
-$._cachedBrowserPrefix = null;
 $.GlobalId__globalId = 0;
+$._getTypeNameOf = null;
+$.ShapeType_rect = Isolate.$isolateProperties.CONSTANT7;
+$.ShapeType_ellipse = Isolate.$isolateProperties.CONSTANT10;
 $._DateImpl__MAX_MILLISECONDS_SINCE_EPOCH = 8640000000000000;
-$.ShapeType_rect = Isolate.$isolateProperties.CONSTANT10;
-$.ShapeType_ellipse = Isolate.$isolateProperties.CONSTANT12;
+$._cachedBrowserPrefix = null;
+$.Primitives_hashCodeSeed = 0;
+$.Primitives_DOLLAR_CHAR_VALUE = 36;
+$.TxThing__widgetSize = 20;
+$.MouseManager__autoCursor = "auto";
 $.getInterceptor$JSStringJSArray = function(receiver) {
   if (typeof receiver == 'string')
     return $.JSString.prototype;
@@ -4442,14 +4585,53 @@ $.getInterceptor$JSArray = function(receiver) {
     return $.JSArray.prototype;
   return $.ObjectInterceptor.prototype;
 };
+Isolate.$lazy($, '_dragStartingEvent', 'MouseManager__dragStartingEvent', 'get$MouseManager__dragStartingEvent', function() {
+  return $.AttachedEvent$("_dragStartingEvent");
+});
+Isolate.$lazy($, '_dragEvent', 'MouseManager__dragEvent', 'get$MouseManager__dragEvent', function() {
+  return $.AttachedEvent$("_dragStarting");
+});
 Isolate.$lazy($, '_containerTransformProperty', 'PanelThing__containerTransformProperty', 'get$PanelThing__containerTransformProperty', function() {
   return $.Property$("panelTransform", null);
+});
+Isolate.$lazy($, '_clickManagerProperty', 'MouseManager__clickManagerProperty', 'get$MouseManager__clickManagerProperty', function() {
+  return $.Property$("_clickManager", null);
+});
+Isolate.$lazy($, '_isClickableProperty', 'MouseManager__isClickableProperty', 'get$MouseManager__isClickableProperty', function() {
+  return $.Property$("isClickable", false);
+});
+Isolate.$lazy($, '_isDraggableProperty', 'MouseManager__isDraggableProperty', 'get$MouseManager__isDraggableProperty', function() {
+  return $.Property$("isDraggable", false);
+});
+Isolate.$lazy($, 'isMouseOverProperty', 'Mouse_isMouseOverProperty', 'get$Mouse_isMouseOverProperty', function() {
+  return $.Property$("IsMouseOver", false);
+});
+Isolate.$lazy($, '_cursorProperty', 'MouseManager__cursorProperty', 'get$MouseManager__cursorProperty', function() {
+  return $.Property$("_cursor", null);
+});
+Isolate.$lazy($, 'isMouseDirectlyOverProperty', 'Mouse_isMouseDirectlyOverProperty', 'get$Mouse_isMouseDirectlyOverProperty', function() {
+  return $.Property$("IsMouseDirectlyOver", false);
+});
+Isolate.$lazy($, '_clickEvent', 'MouseManager__clickEvent', 'get$MouseManager__clickEvent', function() {
+  return $.AttachedEvent$("clickEvent");
+});
+Isolate.$lazy($, '_stageMouseCacheProperty', 'Mouse__stageMouseCacheProperty', 'get$Mouse__stageMouseCacheProperty', function() {
+  return $.Property$("_stageMouseCacheProperty", null);
+});
+Isolate.$lazy($, '_mouseDownEvent', 'MouseManager__mouseDownEvent', 'get$MouseManager__mouseDownEvent', function() {
+  return $.AttachedEvent$("mouseDown");
 });
 Isolate.$lazy($, 'quoteRegExp', 'quoteRegExp', 'get$quoteRegExp', function() {
   return $.JSSyntaxRegExp$("[-[\\]{}()*+?.,\\\\^$|#\\s]", false, false);
 });
-Isolate.$lazy($, '_navLayerTransformProp', 'NavThing__navLayerTransformProp', 'get$NavThing__navLayerTransformProp', function() {
-  return $.Property$("navLayerTxProp", null);
+Isolate.$lazy($, '_mouseUpEvent', 'MouseManager__mouseUpEvent', 'get$MouseManager__mouseUpEvent', function() {
+  return $.AttachedEvent$("mouseUp");
+});
+Isolate.$lazy($, '_mouseMoveEvent', 'MouseManager__mouseMoveEvent', 'get$MouseManager__mouseMoveEvent', function() {
+  return $.AttachedEvent$("mouseMove");
+});
+Isolate.$lazy($, '_mouseOutEvent', 'MouseManager__mouseOutEvent', 'get$MouseManager__mouseOutEvent', function() {
+  return $.AttachedEvent$("mouseOut");
 });
 var $ = null;
 Isolate.$finishClasses($$);
@@ -4497,9 +4679,6 @@ $.$defineNativeClass('HTMLAppletElement', {"":"height=,name>,width="
 $.$defineNativeClass('Attr', {"":"name>,value="
 });
 
-$.$defineNativeClass('HTMLBaseFontElement', {"":"size>"
-});
-
 $.$defineNativeClass('HTMLBodyElement', {
  get$on: function() {
   return $.BodyElementEvents$(this);
@@ -4518,7 +4697,7 @@ $.$defineNativeClass('HTMLCanvasElement', {"":"height=,width=",
 }
 });
 
-$.$defineNativeClass('CanvasRenderingContext2D', {"":"fillStyle<,globalAlpha=,textBaseline<",
+$.$defineNativeClass('CanvasRenderingContext2D', {"":"fillStyle<,globalAlpha=",
  beginPath$0: function() {
   return this.beginPath();
 },
@@ -4537,20 +4716,11 @@ $.$defineNativeClass('CanvasRenderingContext2D', {"":"fillStyle<,globalAlpha=,te
  drawImage$3: function(canvas_OR_image_OR_video, sx_OR_x, sy_OR_y) {
   return this.drawImage(canvas_OR_image_OR_video, sx_OR_x, sy_OR_y);
 },
- drawImage$5: function(canvas_OR_image_OR_video, sx_OR_x, sy_OR_y, sw_OR_width, height_OR_sh) {
-  return this.drawImage(canvas_OR_image_OR_video, sx_OR_x, sy_OR_y, sw_OR_width, height_OR_sh);
-},
  fill$0: function() {
   return this.fill();
 },
  fillRect$4: function(x, y, width, height) {
   return this.fillRect(x,y,width,height);
-},
- fillText$4: function(text, x, y, maxWidth) {
-  return this.fillText(text,x,y,maxWidth);
-},
- fillText$3: function(text, x, y) {
-  return this.fillText(text, x, y);
 },
  moveTo$2: function(x, y) {
   return this.moveTo(x,y);
@@ -4600,6 +4770,9 @@ $.$defineNativeClass('CSSStyleDeclaration', {"":"length>",
  clear$1: function(arg0) {
   return this.get$clear().call$1(arg0);
 },
+ set$cursor: function(value) {
+  this.setProperty$3("cursor", value, "");
+},
  get$height: function() {
   return this.getPropertyValue$1("height");
 },
@@ -4608,9 +4781,6 @@ $.$defineNativeClass('CSSStyleDeclaration', {"":"length>",
 },
  get$left: function() {
   return this.getPropertyValue$1("left");
-},
- get$size: function() {
-  return this.getPropertyValue$1("size");
 },
  get$top: function() {
   return this.getPropertyValue$1("top");
@@ -4659,6 +4829,14 @@ $.$defineNativeClass('DocumentFragment', {
  get$parent: function() {
   return;
 },
+ get$style: function() {
+  return $.Element_Element$tag("div").get$style();
+},
+ blur$0: function() {
+},
+ get$blur: function() {
+  return new $.BoundClosure0(this, 'blur$0');
+},
  get$on: function() {
   return $.ElementEvents$(this);
 },
@@ -4682,7 +4860,7 @@ $.$defineNativeClass('DOMException', {"":"name>",
 }
 });
 
-$.$defineNativeClass('Element', {"":"id>",
+$.$defineNativeClass('Element', {"":"id>,style>",
  query$1: function(selectors) {
   return this.$$dom_querySelector$1(selectors);
 },
@@ -4692,6 +4870,12 @@ $.$defineNativeClass('Element', {"":"id>",
   } else {
     return Object.prototype.get$on.call(this);
   }
+},
+ blur$0: function() {
+  return this.blur();
+},
+ get$blur: function() {
+  return new $.BoundClosure0(this, 'blur$0');
 },
  getBoundingClientRect$0: function() {
   return this.getBoundingClientRect();
@@ -4708,6 +4892,9 @@ $.$defineNativeClass('HTMLEmbedElement', {"":"height=,name>,width="
 $.$defineNativeClass('Event', {
  get$target: function() {
   return $._convertNativeToDart_EventTarget(this.target);
+},
+ preventDefault$0: function() {
+  return this.preventDefault();
 }
 });
 
@@ -4748,9 +4935,6 @@ $.$defineNativeClass('FileException', {"":"name>",
  toString$0: function() {
   return this.toString();
 }
-});
-
-$.$defineNativeClass('HTMLFontElement', {"":"size>"
 });
 
 $.$defineNativeClass('HTMLFormElement', {"":"length>,name>"
@@ -4816,9 +5000,6 @@ $.$defineNativeClass('HTMLCollection', {
  indexOf$1: function(element) {
   return this.indexOf$2(element, 0);
 },
- get$first: function() {
-  return this.operator$index$1(0);
-},
  removeAt$1: function(pos) {
   throw $.$$throw($.UnsupportedError$("Cannot removeAt on immutable List."));
 },
@@ -4857,7 +5038,7 @@ $.$defineNativeClass('HTMLIFrameElement', {"":"height=,name>,width="
 $.$defineNativeClass('HTMLImageElement', {"":"height=,width=,x>,y>"
 });
 
-$.$defineNativeClass('HTMLInputElement', {"":"height=,name>,pattern>,size>,value=,width=",
+$.$defineNativeClass('HTMLInputElement', {"":"height=,name>,pattern>,value=,width=",
  get$on: function() {
   return $.InputElementEvents$(this);
 },
@@ -4888,7 +5069,7 @@ $.$defineNativeClass('HTMLMetaElement', {"":"name>"
 $.$defineNativeClass('HTMLMeterElement', {"":"value="
 });
 
-$.$defineNativeClass('MouseEvent', {"":"x>,y>",
+$.$defineNativeClass('MouseEvent', {"":"clientX>,clientY>,x>,y>",
  get$offsetX: function() {
   if (!!this.offsetX)
     return this.offsetX;
@@ -4953,9 +5134,6 @@ $.$defineNativeClass('NamedNodeMap', {
 },
  indexOf$1: function(element) {
   return this.indexOf$2(element, 0);
-},
- get$first: function() {
-  return this.operator$index$1(0);
 },
  removeAt$1: function(pos) {
   throw $.$$throw($.UnsupportedError$("Cannot removeAt on immutable List."));
@@ -5041,9 +5219,6 @@ $.$defineNativeClass('NodeList', {
  indexOf$1: function(element) {
   return this.indexOf$2(element, 0);
 },
- get$first: function() {
-  return this.operator$index$1(0);
-},
  removeAt$1: function(pos) {
   throw $.$$throw($.UnsupportedError$("Cannot removeAt on immutable List."));
 },
@@ -5082,7 +5257,7 @@ $.$defineNativeClass('RangeException', {"":"name>",
 }
 });
 
-$.$defineNativeClass('HTMLSelectElement', {"":"length=,name>,size>,value="
+$.$defineNativeClass('HTMLSelectElement', {"":"length=,name>,value="
 });
 
 $.$defineNativeClass('Storage', {
@@ -5094,6 +5269,11 @@ $.$defineNativeClass('Storage', {
 },
  operator$indexSet$2: function(key, value) {
   this.$$dom_setItem$2(key, value);
+},
+ putIfAbsent$2: function(key, ifAbsent) {
+  if (this.$$dom_getItem$1(key) == null)
+    this.operator$indexSet$2(key, ifAbsent.call$0());
+  return this.operator$index$1(key);
 },
  remove$1: function(key) {
   var value = this.operator$index$1(key);
@@ -5184,9 +5364,6 @@ $.$defineNativeClass('Uint8Array', {
 },
  indexOf$1: function(element) {
   return this.indexOf$2(element, 0);
-},
- get$first: function() {
-  return this.operator$index$1(0);
 },
  removeAt$1: function(pos) {
   throw $.$$throw($.UnsupportedError$("Cannot removeAt on immutable List."));
@@ -5445,7 +5622,10 @@ $.$defineNativeClass('SVGTextElement', {
 }
 });
 
-$.$defineNativeClass('SVGTextPositioningElement', {"":"x>,y>"
+$.$defineNativeClass('SVGTextPositioningElement', {"":"x>,y>",
+ rotate$3: function(arg0, arg1, arg2) {
+  return this.rotate.call$3(arg0, arg1, arg2);
+}
 });
 
 $.$defineNativeClass('SVGUseElement', {"":"height>,width>,x>,y>",
@@ -5454,12 +5634,12 @@ $.$defineNativeClass('SVGUseElement', {"":"height>,width>,x>,y>",
 }
 });
 
-// 105 dynamic classes.
+// 103 dynamic classes.
 // 236 classes
 // 21 !leaf
 (function() {
-  var v0_TextPositioningElement = 'SVGTextPositioningElement|SVGAltGlyphElement|SVGTRefElement|SVGTSpanElement|SVGTextElement', v1_MediaElement = 'HTMLMediaElement|HTMLVideoElement|HTMLAudioElement', v2_SvgElement = [v0_TextPositioningElement, 'SVGElement|SVGAElement|SVGAltGlyphDefElement|SVGTextContentElement|SVGTextPathElement|SVGAltGlyphItemElement|SVGAnimationElement|SVGAnimateColorElement|SVGAnimateElement|SVGAnimateMotionElement|SVGAnimateTransformElement|SVGSetElement|SVGCircleElement|SVGClipPathElement|SVGComponentTransferFunctionElement|SVGFEFuncRElement|SVGFEFuncBElement|SVGFEFuncAElement|SVGFEFuncGElement|SVGCursorElement|SVGDefsElement|SVGEllipseElement|SVGFECompositeElement|SVGFEConvolveMatrixElement|SVGFEBlendElement|SVGFEDisplacementMapElement|SVGDescElement|SVGFEDiffuseLightingElement|SVGFEDistantLightElement|SVGFEDropShadowElement|SVGFEOffsetElement|SVGFEMergeNodeElement|SVGFEMorphologyElement|SVGFontFaceElement|SVGFEComponentTransferElement|SVGFEMergeElement|SVGFESpotLightElement|SVGFETileElement|SVGFETurbulenceElement|SVGFEGaussianBlurElement|SVGFESpecularLightingElement|SVGFEColorMatrixElement|SVGGradientElement|SVGLinearGradientElement|SVGRadialGradientElement|SVGHKernElement|SVGFontFaceFormatElement|SVGFEPointLightElement|SVGGlyphElement|SVGFEImageElement|SVGLineElement|SVGMPathElement|SVGMarkerElement|SVGMaskElement|SVGMissingGlyphElement|SVGFilterElement|SVGFEFloodElement|SVGForeignObjectElement|SVGPathElement|SVGFontFaceNameElement|SVGFontFaceUriElement|SVGGElement|SVGFontElement|SVGMetadataElement|SVGGlyphRefElement|SVGImageElement|SVGFontFaceSrcElement|SVGPatternElement|SVGPolygonElement|SVGPolylineElement|SVGRectElement|SVGScriptElement|SVGStopElement|SVGStyleElement|SVGSwitchElement|SVGSymbolElement|SVGTitleElement|SVGSVGElement|SVGUseElement|SVGVKernElement|SVGViewElement'].join('|'), v3_MouseEvent = 'MouseEvent|WheelEvent', v4_Element = [v1_MediaElement, v2_SvgElement, 'Element|HTMLUListElement|HTMLUnknownElement|HTMLElement|HTMLAnchorElement|HTMLAppletElement|HTMLAreaElement|HTMLBRElement|HTMLBaseElement|HTMLBodyElement|HTMLBaseFontElement|HTMLButtonElement|HTMLCanvasElement|HTMLContentElement|HTMLDListElement|HTMLDataListElement|HTMLDirectoryElement|HTMLDetailsElement|HTMLDivElement|HTMLEmbedElement|HTMLFieldSetElement|HTMLFontElement|HTMLFormElement|HTMLFrameElement|HTMLFrameSetElement|HTMLHRElement|HTMLHeadElement|HTMLHeadingElement|HTMLHtmlElement|HTMLIFrameElement|HTMLImageElement|HTMLInputElement|HTMLKeygenElement|HTMLLIElement|HTMLLabelElement|HTMLLegendElement|HTMLLinkElement|HTMLMapElement|HTMLMarqueeElement|HTMLMenuElement|HTMLMetaElement|HTMLMeterElement|HTMLModElement|HTMLOListElement|HTMLObjectElement|HTMLOptGroupElement|HTMLOptionElement|HTMLOutputElement|HTMLParagraphElement|HTMLParamElement|HTMLPreElement|HTMLProgressElement|HTMLQuoteElement|HTMLScriptElement|HTMLSelectElement|HTMLShadowElement|HTMLSourceElement|HTMLSpanElement|HTMLStyleElement|HTMLTableCaptionElement|HTMLTableCellElement|HTMLTableColElement|HTMLTableElement|HTMLTableRowElement|HTMLTableSectionElement|HTMLTextAreaElement|HTMLTitleElement|HTMLTrackElement'].join('|'), v5_CharacterData = 'CharacterData|Text|CDATASection|Comment', v6_Document = 'Document|SVGDocument|HTMLDocument', v7_DocumentFragment = 'DocumentFragment|ShadowRoot', v8_Node = [v4_Element, v5_CharacterData, v6_Document, v7_DocumentFragment, 'Node|Attr|DocumentType|EntityReference|Notation|ProcessingInstruction'].join('|');
-  $.dynamicSetMetadata([['Uint8Array', 'Uint8Array|Uint8ClampedArray'], ['HTMLMediaElement', v1_MediaElement], ['SVGTextPositioningElement', v0_TextPositioningElement], ['SVGElement', v2_SvgElement], ['Element', v4_Element], ['MouseEvent', v3_MouseEvent], ['Event', [v3_MouseEvent, 'Event|WebKitTransitionEvent|UIEvent|CompositionEvent|SVGZoomEvent|KeyboardEvent|TextEvent|TouchEvent|WebGLContextEvent|IDBVersionChangeEvent|IDBVersionChangeEvent|WebKitAnimationEvent|BeforeLoadEvent|CloseEvent|CustomEvent|DeviceMotionEvent|DeviceOrientationEvent|ErrorEvent|HashChangeEvent|AudioProcessingEvent|ProgressEvent|XMLHttpRequestProgressEvent|OfflineAudioCompletionEvent|MediaKeyEvent|MediaStreamEvent|MediaStreamTrackEvent|MessageEvent|MutationEvent|OverflowEvent|PageTransitionEvent|PopStateEvent|RTCDataChannelEvent|RTCIceCandidateEvent|SpeechInputEvent|SpeechRecognitionError|SpeechRecognitionEvent|StorageEvent|TrackEvent'].join('|')], ['CharacterData', v5_CharacterData], ['Document', v6_Document], ['DocumentFragment', v7_DocumentFragment], ['Node', v8_Node], ['EventTarget', [v8_Node, 'EventTarget|DOMWindow'].join('|')], ['HTMLCollection', 'HTMLCollection|HTMLFormControlsCollection|HTMLOptionsCollection'], ['NodeList', 'NodeList|RadioNodeList']]);
+  var v0_TextPositioningElement = 'SVGTextPositioningElement|SVGAltGlyphElement|SVGTRefElement|SVGTSpanElement|SVGTextElement', v1_MediaElement = 'HTMLMediaElement|HTMLVideoElement|HTMLAudioElement', v2_SvgElement = [v0_TextPositioningElement, 'SVGElement|SVGAElement|SVGAltGlyphDefElement|SVGTextContentElement|SVGTextPathElement|SVGAltGlyphItemElement|SVGAnimationElement|SVGAnimateColorElement|SVGAnimateElement|SVGAnimateMotionElement|SVGAnimateTransformElement|SVGSetElement|SVGCircleElement|SVGClipPathElement|SVGComponentTransferFunctionElement|SVGFEFuncRElement|SVGFEFuncBElement|SVGFEFuncAElement|SVGFEFuncGElement|SVGCursorElement|SVGDefsElement|SVGEllipseElement|SVGFECompositeElement|SVGFEBlendElement|SVGFEDisplacementMapElement|SVGDescElement|SVGFEDiffuseLightingElement|SVGFEGaussianBlurElement|SVGFEDistantLightElement|SVGFEDropShadowElement|SVGFEOffsetElement|SVGFEMergeNodeElement|SVGFEMorphologyElement|SVGFontFaceElement|SVGFEComponentTransferElement|SVGFEMergeElement|SVGFEConvolveMatrixElement|SVGFETileElement|SVGFETurbulenceElement|SVGFEPointLightElement|SVGFESpecularLightingElement|SVGFEColorMatrixElement|SVGGradientElement|SVGLinearGradientElement|SVGRadialGradientElement|SVGHKernElement|SVGFontFaceFormatElement|SVGFontFaceNameElement|SVGGlyphElement|SVGFEImageElement|SVGLineElement|SVGMPathElement|SVGMarkerElement|SVGMaskElement|SVGMetadataElement|SVGMissingGlyphElement|SVGFilterElement|SVGFEFloodElement|SVGForeignObjectElement|SVGPathElement|SVGFontFaceUriElement|SVGFontElement|SVGFESpotLightElement|SVGGlyphRefElement|SVGImageElement|SVGFontFaceSrcElement|SVGPatternElement|SVGGElement|SVGPolygonElement|SVGPolylineElement|SVGRectElement|SVGScriptElement|SVGStopElement|SVGStyleElement|SVGSwitchElement|SVGSymbolElement|SVGTitleElement|SVGSVGElement|SVGUseElement|SVGVKernElement|SVGViewElement'].join('|'), v3_MouseEvent = 'MouseEvent|WheelEvent', v4_Element = [v1_MediaElement, v2_SvgElement, 'Element|HTMLUListElement|HTMLUnknownElement|HTMLElement|HTMLAnchorElement|HTMLAppletElement|HTMLAreaElement|HTMLBRElement|HTMLBaseElement|HTMLBaseFontElement|HTMLBodyElement|HTMLButtonElement|HTMLCanvasElement|HTMLContentElement|HTMLDListElement|HTMLDetailsElement|HTMLDirectoryElement|HTMLDataListElement|HTMLDivElement|HTMLEmbedElement|HTMLFieldSetElement|HTMLFontElement|HTMLFormElement|HTMLFrameElement|HTMLFrameSetElement|HTMLHRElement|HTMLHeadElement|HTMLHeadingElement|HTMLHtmlElement|HTMLIFrameElement|HTMLImageElement|HTMLInputElement|HTMLKeygenElement|HTMLLIElement|HTMLLabelElement|HTMLLegendElement|HTMLLinkElement|HTMLMapElement|HTMLMarqueeElement|HTMLMenuElement|HTMLMetaElement|HTMLMeterElement|HTMLModElement|HTMLOListElement|HTMLObjectElement|HTMLOptGroupElement|HTMLOptionElement|HTMLOutputElement|HTMLParagraphElement|HTMLParamElement|HTMLPreElement|HTMLProgressElement|HTMLQuoteElement|HTMLScriptElement|HTMLSelectElement|HTMLShadowElement|HTMLSourceElement|HTMLSpanElement|HTMLStyleElement|HTMLTableCaptionElement|HTMLTableCellElement|HTMLTableColElement|HTMLTableElement|HTMLTableRowElement|HTMLTableSectionElement|HTMLTextAreaElement|HTMLTitleElement|HTMLTrackElement'].join('|'), v5_CharacterData = 'CharacterData|Text|CDATASection|Comment', v6_Document = 'Document|SVGDocument|HTMLDocument', v7_DocumentFragment = 'DocumentFragment|ShadowRoot', v8_Node = [v4_Element, v5_CharacterData, v6_Document, v7_DocumentFragment, 'Node|Attr|DocumentType|EntityReference|Notation|ProcessingInstruction'].join('|');
+  $.dynamicSetMetadata([['Uint8Array', 'Uint8Array|Uint8ClampedArray'], ['HTMLMediaElement', v1_MediaElement], ['SVGTextPositioningElement', v0_TextPositioningElement], ['SVGElement', v2_SvgElement], ['Element', v4_Element], ['MouseEvent', v3_MouseEvent], ['Event', [v3_MouseEvent, 'Event|TrackEvent|WebKitTransitionEvent|UIEvent|CompositionEvent|SVGZoomEvent|KeyboardEvent|TextEvent|TouchEvent|WebGLContextEvent|IDBVersionChangeEvent|IDBVersionChangeEvent|WebKitAnimationEvent|BeforeLoadEvent|CloseEvent|CustomEvent|DeviceMotionEvent|DeviceOrientationEvent|ErrorEvent|HashChangeEvent|AudioProcessingEvent|ProgressEvent|XMLHttpRequestProgressEvent|OfflineAudioCompletionEvent|MediaKeyEvent|MediaStreamEvent|MediaStreamTrackEvent|MessageEvent|MutationEvent|OverflowEvent|PageTransitionEvent|PopStateEvent|RTCDataChannelEvent|RTCIceCandidateEvent|SpeechInputEvent|SpeechRecognitionError|SpeechRecognitionEvent|StorageEvent'].join('|')], ['CharacterData', v5_CharacterData], ['Document', v6_Document], ['DocumentFragment', v7_DocumentFragment], ['Node', v8_Node], ['EventTarget', [v8_Node, 'EventTarget|DOMWindow'].join('|')], ['HTMLCollection', 'HTMLCollection|HTMLFormControlsCollection|HTMLOptionsCollection'], ['NodeList', 'NodeList|RadioNodeList']]);
 })();
 
 
@@ -5637,4 +5817,4 @@ Isolate.$finishIsolateConstructor = function(oldIsolate) {
 };
 }
 
-//@ sourceMappingURL=nav_demo.dart.js.map
+//@ sourceMappingURL=frames_demo.dart.js.map
