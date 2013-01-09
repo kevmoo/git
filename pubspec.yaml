@@ -4,7 +4,7 @@ homepage: https://github.com/kevmoo/bot.dart
 version: 0.10.0-dev
 description: A collection of (mostly) general libraries to make working with Dart more productive.
 dependencies:
-  args: '>=0.2.9 <2.10.0'
-  meta: '>=0.2.9 <2.10.0'
-  logging: '>=0.2.9 <2.10.0'
-  unittest: '>=0.2.9 <2.10.0'
+  args: '>=0.2.10 <2.11.0'
+  meta: '>=0.2.10 <2.11.0'
+  logging: '>=0.2.10 <2.11.0'
+  unittest: '>=0.2.10 <2.11.0'
