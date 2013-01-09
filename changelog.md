@@ -1,6 +1,6 @@
 # Changelog - Dart Bag of Tricks
 
-## 0.10.0-beta 09 Jan 2013 (SDK 0.2.10.1 r16761)
+## 0.10.0 - 09 Jan 2013 (SDK 0.2.10.1 r16761)
 
 * __BREAKING__ Import file names have been updated to include the `bot_` prefix.
     * `import 'package:bot/bot_retained.dart';` instead of `import 'package:bot/retained.dart';`
