@@ -1,134 +1,116 @@
 part of bot;
 
-abstract class ListBase<T> extends Enumerable<T> implements SequenceCollection<T> {
+abstract class ListBase<E> extends Enumerable<E> implements List<E> {
 
   const ListBase();
 
-  //
-  // Iterable bits
-  //
-  /**
-   * Returns an [Iterator] that iterates over this [Iterable] object.
-   */
-  Iterator<T> iterator() {
-    return new IndexIterator<T>(length, (i) => this[i]);
-  }
-
-  //
-  // Collection bits
-  //
-  /**
-   * Applies the function [f] to each element of this collection.
-   */
-  void forEach(void f(T element)) {
-    for(var i = 0; i < length; i++) {
-      f(this[i]);
+  List<E> getRange(int start, int length) {
+    List<E> result = <E>[];
+    for (int i = 0; i < length; i++) {
+      result.add(this[start + i]);
     }
+    return result;
   }
 
-  /**
-   * Returns true if every elements of this collection satisify the
-   * predicate [f]. Returns false otherwise.
-   */
-  bool every(bool f(T element)) {
-    for (var i = 0; i < length; i++) {
-      if(!f(this[i])) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  /**
-   * Returns true if one element of this collection satisfies the
-   * predicate [f]. Returns false otherwise.
-   */
-  bool some(bool f(T element)) {
-    for (var i = 0; i < length; i++) {
-      if(f(this[i])) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  /**
-   * Returns true if there is no element in this collection.
-   */
-  bool get isEmpty => length == 0;
-
-  /**
-   * Returns the number of elements in this collection.
-   */
-  int get length;
-
-  /**
-   * Returns the element at the given [index] in the list or throws
-   * an [IndexOutOfRangeException] if [index] is out of bounds.
-   */
-  T operator [](int index);
-
-  /**
-   * Returns the first index of [element] in the list. Searches the
-   * list from index [start] to the length of the list. Returns
-   * -1 if [element] is not found.
-   */
-  int indexOf(T element, [int start=0]) {
-    for (var i = start; i < length; i++) {
-      if(this[i] == element) {
-        return i;
-      }
+  int indexOf(E value, [int start = 0]) {
+    for (int i = start; i < length; i++) {
+      if (this[i] == value) return i;
     }
     return -1;
   }
 
-  /**
-   * Returns the last index of [element] in the list. Searches the
-   * list from index [start] to 0. Returns -1 if [element] is not found.
-   */
-  int lastIndexOf(T element, [int start=0]) {
-    // DARTBUG: having trouble testing this in the compiler. :-/
-    var lastIndex = -1;
-    for (var i = start; i < length; i++) {
-      if(this[i] == element) {
-        lastIndex = i;
-      }
+  int lastIndexOf(E value, [int start]) {
+    if (start == null) start = length - 1;
+    for (int i = start; i >= 0; i--) {
+      if (this[i] == value) return i;
     }
-    return lastIndex;
+    return -1;
   }
 
-  /**
-   * Returns the last element of the list, or throws an out of bounds
-   * exception if the list is empty.
-   */
-  T last() => this[this.length-1];
+  Iterator<E> get iterator => new ListIterator(this);
 
-  /**
-   * Returns a new list containing [itemCount] elements from the list,
-   * starting at [start].
-   * Returns an empty list if [itemCount] is 0.
-   * Throws an [IllegalArgumentException] if [itemCount] is negative.
-   * Throws an [IndexOutOfRangeException] if [start] or
-   * [:start + itemCount - 1:] are out of range.
-   */
-  List<T> getRange(int start, int itemCount)  {
-    requireArgument(itemCount >= 0, 'count');
+  void operator []=(int index, E value) {
+    throw new UnsupportedError(
+        "Cannot modify an unmodifiable list");
+  }
 
-    final lastIndex = start + itemCount - 1;
+  void set length(int newLength) {
+    throw new UnsupportedError(
+        "Cannot change the length of an unmodifiable list");
+  }
 
-    if(itemCount > 0) {
-      if(start < 0) {
-        throw new RangeError(start);
-      }
-      else if(lastIndex >= length) {
-        throw new RangeError(lastIndex);
-      }
-    }
+  void add(E value) {
+    throw new UnsupportedError(
+        "Cannot add to an unmodifiable list");
+  }
 
-    var list = new List<T>();
-    for(var i = start; i <= lastIndex; i++) {
-      list.add(this[i]);
-    }
-    return list;
+  void addLast(E value) {
+    throw new UnsupportedError(
+        "Cannot add to an unmodifiable list");
+  }
+
+  void addAll(Iterable<E> iterable) {
+    throw new UnsupportedError(
+        "Cannot add to an unmodifiable list");
+  }
+
+  void remove(E element) {
+    throw new UnsupportedError(
+        "Cannot remove from an unmodifiable list");
+  }
+
+  void removeAll(Iterable elements) {
+    throw new UnsupportedError(
+        "Cannot remove from an unmodifiable list");
+  }
+
+  void retainAll(Iterable elements) {
+    throw new UnsupportedError(
+        "Cannot remove from an unmodifiable list");
+  }
+
+  void retainMatching(Func1<E, bool> test) {
+    throw new UnsupportedError(
+    "Cannot modify an unmodifiable list");
+  }
+
+  void removeMatching(bool test(E element)) {
+    throw new UnsupportedError(
+        "Cannot remove from an unmodifiable list");
+  }
+  void sort([Comparator<E> compare]) {
+    throw new UnsupportedError(
+        "Cannot modify an unmodifiable list");
+  }
+
+  void clear() {
+    throw new UnsupportedError(
+        "Cannot clear an unmodifiable list");
+  }
+
+  E removeAt(int index) {
+    throw new UnsupportedError(
+        "Cannot remove from an unmodifiable list");
+  }
+
+  E removeLast() {
+    throw new UnsupportedError(
+        "Cannot remove from an unmodifiable list");
+  }
+
+  void setRange(int start, int length, List<E> from, [int startFrom]) {
+    throw new UnsupportedError(
+        "Cannot modify an unmodifiable list");
+  }
+
+  void removeRange(int start, int length) {
+    throw new UnsupportedError(
+        "Cannot remove from an unmodifiable list");
+  }
+
+  void insertRange(int start, int length, [E initialValue]) {
+    throw new UnsupportedError(
+        "Cannot insert range in an unmodifiable list");
   }
 }
+

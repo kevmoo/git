@@ -25,7 +25,7 @@ class TestFutureValueResult {
   }
 
   static void _testExceptionRoundTrip() {
-    final initialVal = new FutureValueResult.fromException('oops');
+    final initialVal = new FutureValueResult.fromException('oops', 'bad things');
 
     final map = initialVal.toMap();
 
@@ -35,6 +35,7 @@ class TestFutureValueResult {
     expect(newVal, equals(initialVal));
     expect(newVal, isNot(same(initialVal)));
 
-    expect(newVal.exception, equals('oops'));
+    expect(newVal.error, equals('oops'));
+    expect(newVal.stackTrace, equals('bad things'));
   }
 }

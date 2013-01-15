@@ -6,7 +6,7 @@ class TempDir extends DisposableImpl {
   static Future<TempDir> create() {
     final startDir = new Directory('');
     return startDir.createTemp()
-        .transform((newDir) => new TempDir._internal(newDir));
+        .then((newDir) => new TempDir._internal(newDir));
   }
 
   TempDir._internal(this.dir) {
@@ -18,7 +18,7 @@ class TempDir extends DisposableImpl {
 
   Future<TempDir> populate(DirectoryPopulater populater) {
     return populater.populate(dir)
-        .transform((Directory outputDir) {
+        .then((Directory outputDir) {
           assert(dir == outputDir);
           return this;
         });

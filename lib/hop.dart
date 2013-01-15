@@ -1,5 +1,6 @@
 library hop;
 
+import 'dart:async';
 import 'dart:io' as io;
 import 'package:args/args.dart';
 import 'package:bot/bot.dart';
@@ -25,8 +26,8 @@ void runHopCore() {
   final runner = new Runner(_sharedConfig, options.arguments);
   final future = runner.run();
 
-  future.onComplete((Future<RunResult> f) {
-    io.exit(f.value.exitCode);
+  future.then((RunResult rr) {
+    io.exit(rr.exitCode);
   });
 }
 

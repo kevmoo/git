@@ -3,7 +3,7 @@ part of bot;
 // RGB-HSL conversion logic borrowed with love from Google Closure Library
 // http://code.google.com/p/closure-library/source/browse/trunk/closure/goog/color/color.js
 
-class RgbColor implements Hashable {
+class RgbColor {
   final int r, g, b;
 
   const RgbColor._internal(this.r, this.g, this.b);
@@ -96,7 +96,7 @@ class RgbColor implements Hashable {
   }
 
   static final RegExp _validHexColorRe = new RegExp('^#(?:[0-9a-f]{6})\$',
-      multiLine: false, ignoreCase: true);
+      multiLine: false, caseSensitive: false);
 
   static bool _isValidHexColor(String str) {
     return _validHexColorRe.hasMatch(str);

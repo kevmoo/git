@@ -1,6 +1,6 @@
 part of bot;
 
-class Grouping<K extends Hashable, V> {
+class Grouping<K, V> {
   final HashMap<K, List<V>> _values = new HashMap<K, List<V>>();
 
   Grouping(Iterable<V> source, [Func1<V, K> keyFunc = null]) {
@@ -36,9 +36,9 @@ class Grouping<K extends Hashable, V> {
   /**
    * Returns a collection containing all the keys in the map.
    */
-  Collection<K> getKeys() => _values.keys;
+  Iterable<K> getKeys() => _values.keys;
 
-  Enumerable<V> getValues() => $(_values.values).selectMany((a) => a);
+  Iterable<V> getValues() => CollectionUtil.selectMany(_values.values, (a) => a);
 
   /**
    * The number of {key, value} pairs in the map.

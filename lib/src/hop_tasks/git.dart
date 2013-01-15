@@ -4,8 +4,8 @@ Future<bool> branchForDir(TaskContext ctx, String sourceBranch, String sourceDir
     String targetBranch) {
 
   return Process.run('git', ['ls-tree', '-d', sourceBranch, sourceDir])
-      .transform(_getTreeFromLsTree)
-      .chain((String tree) =>
+      .then(_getTreeFromLsTree)
+      .then((String tree) =>
           _fromSourceDirTree(ctx, tree, targetBranch, sourceDir, sourceBranch));
 }
 
@@ -23,7 +23,7 @@ Future<bool> _fromSourceDirTree(TaskContext ctx, String tree,
   final branchNameRef = 'refs/heads/$targetBranch';
 
   return Process.run('git', ['rev-parse', '--verify', '-p', branchNameRef])
-      .chain((ProcessResult rppr) {
+      .then((ProcessResult rppr) {
         if(rppr.exitCode == 0) {
           // existing branch
           final parent = rppr.stdout.trim();
@@ -41,8 +41,8 @@ Future<bool> _withExistingBranch(TaskContext ctx, String parent, String dirSha,
     String sourceDir, List<String> gitArgs, String sourceBranch,
     String branchNameRef, String targetBranch) {
   return Process.run('git', ['cat-file', '-p', parent])
-      .transform(_getParentTree)
-      .chain((String parentTree) =>
+      .then(_getParentTree)
+      .then((String parentTree) =>
           _continueWithExistingBranch(ctx, parent, parentTree, dirSha, sourceDir,
               gitArgs, sourceBranch, branchNameRef, targetBranch));
 }
@@ -72,8 +72,8 @@ Future<bool> _getMasterCommit(TaskContext ctx, String verb, List<String> gitArgs
     String sourceBranch, String sourceDir, String branchNameRef, String targetBranch) {
 
   return Process.run('git', ['rev-parse', sourceBranch])
-      .transform(_transformRevParse)
-      .chain((masterCommit) => _doCommitSimple(ctx, verb, gitArgs, sourceDir,
+      .then(_transformRevParse)
+      .then((masterCommit) => _doCommitSimple(ctx, verb, gitArgs, sourceDir,
           masterCommit, branchNameRef, targetBranch));
 }
 
@@ -91,14 +91,14 @@ Future<bool> _doCommitSimple(TaskContext ctx, String verb, List<String> gitArgs,
   gitArgs.addAll(['-m', 'Contents of $sourceDir from commit $masterCommit']);
 
   return Process.run('git', gitArgs)
-      .chain((ProcessResult pr) {
+      .then((ProcessResult pr) {
         require(pr.exitCode == 0, pr.stderr);
 
         final newCommitSha = pr.stdout.trim();
         ctx.info('Create new commit: $newCommitSha');
 
         return Process.run('git', ['update-ref', branchNameRef, newCommitSha])
-            .transform((ProcessResult updateRefPr) {
+            .then((ProcessResult updateRefPr) {
               require(updateRefPr.exitCode == 0);
               ctx.info("Branch '$targetBranch' $verb");
               return true;

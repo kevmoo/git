@@ -12,7 +12,7 @@ class MapDirectoryPopulater extends DirectoryPopulater {
   Future<Directory> populate(Directory dir) {
     assert(dir != null);
     return IoHelpers.isEmpty(dir)
-        .chain((bool isEmpty) {
+        .then((bool isEmpty) {
           if(!isEmpty) {
             throw 'target directory must be empty';
           }
@@ -27,7 +27,7 @@ class MapDirectoryPopulater extends DirectoryPopulater {
 
     final completer = new Completer();
 
-    return Futures.forEach(content.keys, (String key) {
+    return Future.forEach(content.keys, (String key) {
       final v = content[key];
 
       if(v is Map) {
@@ -37,7 +37,7 @@ class MapDirectoryPopulater extends DirectoryPopulater {
       } else {
         throw 'value for $key was $v - expected Map or String';
       }
-    }).transform((obj) {
+    }).then((obj) {
       return dir;
     });
   }
@@ -54,7 +54,7 @@ class MapDirectoryPopulater extends DirectoryPopulater {
     final subDir = new Directory.fromPath(subDirPath);
     assert(!subDir.existsSync());
     return subDir.create()
-        .chain((theNewDir) {
+        .then((theNewDir) {
           assert(theNewDir == subDir);
           return _populate(theNewDir, content);
         });

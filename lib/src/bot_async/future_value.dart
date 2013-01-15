@@ -30,8 +30,7 @@ abstract class FutureValue<TInput, TOutput> {
     assert(_future == null);
     assert(!_pending);
     _future = getFuture(_input);
-    _future.handleException(_futureException);
-    _future.then(_futureCompleted);
+    _future.then(_futureCompleted, onError: _futureException);
   }
 
   bool _futureException(Object exception) {

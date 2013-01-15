@@ -1,5 +1,6 @@
 library bot_test;
 
+import 'dart:async';
 import 'package:unittest/unittest.dart';
 import 'bot.dart';
 

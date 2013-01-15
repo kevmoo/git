@@ -3,7 +3,7 @@ part of bot_git;
 class Git {
   static Future<ProcessResult> runGit(List<String> args, [bool throwOnError = true]) {
     return Process.run('git', args)
-        .transform((ProcessResult pr) {
+        .then((ProcessResult pr) {
           if(throwOnError) {
             _throwIfProcessFailed(pr, 'git', args);
           }

@@ -2,8 +2,8 @@ part of bot_io;
 
 class Console {
 
-  static Iterable<String> getTable(Sequence source,
-      Sequence<ColumnDefinition> columns, {includeHeader: false}) {
+  static Iterable<String> getTable(List source,
+      List<ColumnDefinition> columns, {includeHeader: false}) {
     requireArgumentNotNull(source, 'source');
     requireArgumentNotNull(columns, 'columns');
     requireArgument(columns.length > 0, 'columns',
@@ -39,10 +39,10 @@ class Console {
       }
     }
 
-    return cells.rows.map((r) => _getRow(r, maxWidths));
+    return cells.rows.mappedBy((r) => _getRow(r, maxWidths));
   }
 
-  static String _getRow(ListBase<String> row, List<int> columnWidths) {
+  static String _getRow(List<String> row, List<int> columnWidths) {
     final minBuffer = 3;
 
     assert(row.length == columnWidths.length);

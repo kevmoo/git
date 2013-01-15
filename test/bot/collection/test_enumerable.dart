@@ -14,8 +14,8 @@ class TestEnumerable {
       test('forEach', _testForEach);
       test('forEachWithIndex', _testForEachWithIndex);
       group('group', () {
-        test('complex', _testComplexGrouping);
         test('simple', _testSimpleGrouping);
+        test('complex', _testComplexGrouping);
       });
       test('isEmpty', _testIsEmpty);
       test('join', _testJoin);
@@ -43,32 +43,31 @@ class TestEnumerable {
 
   static void _testFirst() {
     final enum = $([0,1,2]);
-    expect(enum.first(), equals(0));
+    expect(enum.first, equals(0));
 
-    expect(() => $([]).first(), throwsInvalidOperationError);
+    expect(() => $([]).first, throwsStateError);
 
-    expect(enum.first((e) => e == 1), equals(1));
+    expect(enum.firstMatching((e) => e == 1), equals(1));
 
-    expect(() => enum.first((e) => e == 4), throwsInvalidOperationError);
+    expect(() => enum.firstMatching((e) => e == 4), throwsStateError);
 
-    expect(enum.firstOrDefault((e) => e == 1), equals(1));
-    expect(enum.firstOrDefault((e) => e == 4), equals(null));
-    expect(enum.firstOrDefault((e) => e == 4, -42), equals(-42));
+    expect(enum.firstMatching((e) => e == 1), equals(1));
+    expect(() => enum.firstMatching((e) => e == 4), throwsStateError);
+    expect(enum.firstMatching((e) => e == 4, orElse: () => -42), equals(-42));
   }
 
   static void _testSingle() {
-    expect($([42]).single(), equals(42));
-    expect(() => $([]).single(), throwsInvalidOperationError);
-    expect(() => $([1, 2]).single(), throwsInvalidOperationError);
+    expect($([42]).single, equals(42));
+    expect(() => $([]).single, throwsStateError);
+    expect(() => $([1, 2]).single, throwsStateError);
 
-    expect($([3,4,5]).single((e) => e % 2 == 0), equals(4));
-    expect(() => $([3,4,5]).single((e) => e % 2 == 1), throwsInvalidOperationError);
-    expect(() => $([3,5,7]).single((e) => e % 2 == 0), throwsInvalidOperationError);
+    expect($([3,4,5]).singleMatching((e) => e % 2 == 0), equals(4));
+    expect(() => $([3,4,5]).singleMatching((e) => e % 2 == 1), throwsStateError);
+    expect(() => $([3,5,7]).singleMatching((e) => e % 2 == 0), throwsStateError);
 
-    expect($([3,4,5]).singleOrDefault((e) => e % 2 == 0), equals(4));
-    expect($([3,4,5]).singleOrDefault((e) => e == 2), equals(null));
-    expect($([3,4,5]).singleOrDefault((e) => e == 2, -42), equals(-42));
-    expect(() => $([3,5,7]).singleOrDefault((e) => e % 2 == 1), throwsInvalidOperationError);
+    expect($([3,4,5]).singleMatching((e) => e % 2 == 0), equals(4));
+    expect(() => $([3,4,5]).singleMatching((e) => e == 2), throwsStateError);
+    expect(() => $([3,5,7]).singleMatching((e) => e % 2 == 1), throwsStateError);
   }
 
   static void _testJoin() {
@@ -154,7 +153,7 @@ class TestEnumerable {
   static void _testCount() {
     final e = $([1,2,3,4,5,6]);
 
-    expect(e.count(), equals(6));
+    expect(e.length, equals(6));
 
     var count = e.count((x) => x % 2 == 0);
     expect(count, equals(3));
@@ -163,16 +162,16 @@ class TestEnumerable {
   static void _testLength() {
     final e = $([1,2,3,4,5,6]);
 
-    expect(e.count(), equals(6));
+    expect(e.length, equals(6));
   }
 
   static void _testFilter() {
-    final e = $([1,2,3,4,5,6]).filter((x) => x % 2 == 0);
+    final e = $([1,2,3,4,5,6]).where((x) => x % 2 == 0);
     expect(e, orderedEquals([2,4,6]));
   }
 
   static void _testMap() {
-    final e = $([1,2,3,4,5,6]).map((x) => x * 2);
+    final e = $([1,2,3,4,5,6]).mappedBy((x) => x * 2);
     expect(e, orderedEquals([2,4,6,8,10,12]));
   }
 
@@ -196,7 +195,7 @@ class TestEnumerable {
 
     final valEnumerable = $([1,2,3]);
 
-    int sum = valEnumerable.aggregate(0, summer);
+    int sum = valEnumerable.reduce(0, summer);
     expect(sum, equals(6));
 
     Func2<String, String, String> prepender = (current, next) {
@@ -205,7 +204,7 @@ class TestEnumerable {
 
     final strsEnumerable = $(['first', 'second', 'third']);
 
-    String str = strsEnumerable.aggregate('', prepender);
+    String str = strsEnumerable.reduce('', prepender);
     expect(str, equals('thirdsecondfirst'));
   }
 

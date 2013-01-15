@@ -7,7 +7,7 @@ class IoHelpers {
     assert(dir != null);
     assert(content != null);
     return dir.exists()
-        .chain((bool doesExist) {
+        .then((bool doesExist) {
           if(!doesExist) {
             return new Future.immediate(false);
           } else {
@@ -37,12 +37,12 @@ class IoHelpers {
       if(completed) {
         completer.complete(map);
       } else {
-        completer.completeException('done, but not completed...weird...');
+        completer.completeError('done, but not completed...weird...');
       }
     };
 
     lister.onError = (e) {
-      completer.completeException(e);
+      completer.completeError(e);
     };
 
     lister.onFile = (String filePath) {
@@ -57,7 +57,7 @@ class IoHelpers {
 
   static Future<bool> _verifyContents(Directory dir, Map<String, dynamic> content) {
     return _mapContents(dir)
-        .chain((Map<String, dynamic> map) {
+        .then((Map<String, dynamic> map) {
           if(map.length != content.length) {
             return new Future.immediate(false);
           }
@@ -80,12 +80,12 @@ class IoHelpers {
             return new Future.immediate(false);
           }
 
-          final futures = content.keys.map((name) {
+          final futures = content.keys.mappedBy((name) {
             return _verifyChildContent(dir, name, content[name], map[name]);
           });
 
-          return Futures.wait(futures)
-              .transform((List<bool> results){
+          return Future.wait(futures)
+              .then((List<bool> results){
                 return results.every((v) => v);
               });
         });

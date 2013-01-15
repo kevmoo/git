@@ -1,5 +1,6 @@
 library test_bot_io;
 
+import 'dart:async';
 import 'package:unittest/unittest.dart';
 import 'package:bot/bot_io.dart';
 import 'package:bot/bot_test.dart';
@@ -20,7 +21,7 @@ void _testTempDirPopulate() {
                }
   };
 
-  final future = TempDir.create().chain((TempDir td) {
+  final future = TempDir.create().then((TempDir td) {
     assert(_tempDir == null);
     _tempDir = td;
 
@@ -70,10 +71,10 @@ void _testTempDirPopulate3(bool expectTrue, Map fileMap) {
   final mapEmpty = {};
 
   final maps = [mapFewer, mapMore, mapDiff, mapEmpty];
-  final futures = maps.map(_tempDir.verifyContents);
+  final futures = maps.mappedBy(_tempDir.verifyContents);
 
   // every one should return false
-  final aggregateFuture = Futures.wait(futures).transform((list) => list.every((match) => !match));
+  final aggregateFuture = Future.wait(futures).then((list) => list.every((match) => !match));
 
   expectFutureComplete(aggregateFuture, (val) => _testTempDirPopulate4(val, fileMap));
 }

@@ -3,7 +3,7 @@ part of bot;
 // RGB-HSL conversion logic borrowed with love from Google Closure Library
 // http://code.google.com/p/closure-library/source/browse/trunk/closure/goog/color/color.js
 
-class HslColor implements Hashable {
+class HslColor {
   final num h, s, l;
 
   const HslColor._internal(this.h, this.s, this.l);

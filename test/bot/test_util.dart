@@ -39,7 +39,7 @@ class TestUtil {
   }
 
   static void _hashCodeFun(List<int> items, int expectedValue) {
-    int hashCode = Util.getHashCode(items.map((i) => new _SimpleHash(i)));
+    int hashCode = Util.getHashCode(items.mappedBy((i) => new _SimpleHash(i)));
     expect(hashCode, equals(expectedValue));
   }
 }

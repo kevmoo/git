@@ -16,8 +16,7 @@ abstract class ResourceLoader<T> {
   String _state = StateUnloaded;
 
   ResourceLoader(Iterable<String> urlList) :
-    _entries = $(urlList).map((url) => new _ResourceEntry(url))
-        .toReadOnlyCollection();
+    _entries = new ReadOnlyCollection(urlList.mappedBy((url) => new _ResourceEntry(url)));
 
   int get completedCount => _entries.count((e) => e.completed);
 
@@ -80,12 +79,12 @@ abstract class ResourceLoader<T> {
 
   _ResourceEntry<T> _getByUrl(String url) {
     assert(url != null);
-    return _entries.single((e) => e.url == url);
+    return _entries.singleMatching((e) => e.url == url);
   }
 
   _ResourceEntry<T> _getByBlobUrl(String blobUrl) {
     assert(blobUrl != null);
-    return _entries.single((e) => e.matchesBlobUrl(blobUrl));
+    return _entries.singleMatching((e) => e.matchesBlobUrl(blobUrl));
   }
 
   void _httpLoad(String url) {

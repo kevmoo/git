@@ -7,8 +7,8 @@ class AsyncTests {
 
   static void _testNullResult() {
     _testSimpleAsyncTask((ctx) => null,
-      (Future f) {
-        expect(f.value, RunResult.ERROR);
+      (value) {
+        expect(value, RunResult.ERROR);
       }
     );
   }
@@ -24,10 +24,9 @@ class AsyncTests {
     final runner = new TestRunner(tasks, [name]);
     final future = runner.run();
     expect(future, isNotNull);
-    expect(future.isComplete, isTrue);
 
     final onComplete = expectAsync1(completeHandler);
 
-    future.onComplete(onComplete);
+    future.then(onComplete);
   }
 }

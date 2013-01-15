@@ -149,7 +149,7 @@ class MouseManager {
     //       Mouse capture anyone?
 
     final hits = _updateMouseLocation(getMouseEventCoordinate(e));
-    final thing = $(hits).firstOrDefault((e) => getClickable(e));
+    final thing = hits.firstMatching((e) => getClickable(e), orElse: () => null);
 
     if(thing != null) {
       _doMouseUp(thing, e);

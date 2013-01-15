@@ -6,7 +6,7 @@ import 'test_console.dart' as console;
 import 'test_shared.dart' as shared;
 
 main() {
-  final config = new VmConfiguration();
+  final config = new VMConfiguration();
   testCore(config);
 }
 

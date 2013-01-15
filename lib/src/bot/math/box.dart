@@ -1,6 +1,6 @@
 part of bot;
 
-class Box implements Hashable{
+class Box {
   final num left, top, width, height;
 
   const Box(this.left, this.top, this.width, this.height);

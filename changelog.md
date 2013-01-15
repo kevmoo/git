@@ -1,5 +1,10 @@
 # Changelog - Dart Bag of Tricks
 
+## 0.11.0 - 22 Jan 2013 (SDK 0.3.1.1 r17328)
+
+_No features were knowingly added, removed, or changed but a lot of code was churned to support the
+updated SDK._
+
 ## 0.10.0 - 09 Jan 2013 (SDK 0.2.10.1 r16761)
 
 * __BREAKING__ Import file names have been updated to include the `bot_` prefix.

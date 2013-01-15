@@ -1,6 +1,7 @@
 library bot;
 
 import 'dart:collection';
+import 'dart:collection-dev';
 import 'dart:math' as math;
 
 part 'src/bot/requires.dart';
@@ -21,7 +22,6 @@ part 'src/bot/collection/array_2d.dart';
 part 'src/bot/collection/collection_util.dart';
 part 'src/bot/collection/enumerable.dart';
 part 'src/bot/collection/grouping.dart';
-part 'src/bot/collection/index_iterator.dart';
 part 'src/bot/collection/list_base.dart';
 part 'src/bot/collection/number_enumerable.dart';
 part 'src/bot/collection/read_only_collection.dart';

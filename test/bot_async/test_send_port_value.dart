@@ -13,8 +13,8 @@ class TestSendPortValue {
       expect(tv.output, equals(25));
     });
 
-    final onError = expectAsync1((String args) {
-      expect(args, equals('wah?'));
+    final onError = expectAsync1((AsyncError args) {
+      expect(args.error, equals('wah?'));
     });
 
     tv.outputChanged.add(callback);
@@ -31,8 +31,8 @@ class TestSendPortValue {
       expect(tv.output, equals(new Tuple3(5,6,11)));
     });
 
-    final onError = expectAsync1((String args) {
-      expect(args, equals('wah?'));
+    final onError = expectAsync1((AsyncError args) {
+      expect(args.error, equals('wah?'));
     });
 
     tv.outputChanged.add(callback);

@@ -44,7 +44,7 @@ class TestListBase extends ListBase<int> {
   }
 
   static void _testLast() {
-    expect(instance.last(), 1);
+    expect(instance.last, 1);
   }
 
   static void _testReduce() {
@@ -60,8 +60,8 @@ class TestListBase extends ListBase<int> {
   static void _testMap() {
     Func1<int, int> dub = (i) => i * 2;
 
-    var list = instance.map(dub);
-    expect(list.count(), equals(_length));
+    var list = instance.mappedBy(dub);
+    expect(list.length, equals(_length));
     expect(list, orderedEquals([10, 8, 6, 4, 2]));
   }
 
@@ -75,18 +75,27 @@ class TestListBase extends ListBase<int> {
     }
 
     //
-    // Start at index `_length`
+    // Look at the 2nd half for indexOf
     //
     for (var i = 1; i <= _length; i++) {
       expect(flipped.indexOf(i, _length), equals(_length + i - 1));
-      expect(flipped.lastIndexOf(i, _length), equals(_length + i - 1));
+    }
+
+    //
+    // Look at the 1st half for lastIndexOf
+    //
+    for (var i = 1; i <= _length; i++) {
+      final expected = _length - i;
+      expect(flipped.lastIndexOf(i, _length - 1), expected);
     }
 
     //
     // look for '1' after the last '1'
     //
     expect(flipped.indexOf(1, _length + 1), equals(-1));
-    expect(flipped.lastIndexOf(1, _length + 1), equals(-1));
+
+    // look for the last '1' before the first '1'
+    expect(flipped.lastIndexOf(1, _length - 2), equals(-1));
 
     //
     // look for '0' which isn't there
@@ -114,7 +123,7 @@ class TestListBase extends ListBase<int> {
 
     expect(roc([1, 2, 3, 4]).getRange(1, 2), orderedEquals([2, 3]));
 
-    expect(() => mt.getRange(0, -1), throwsArgumentError);
+    expect(mt.getRange(0, -1), orderedEquals([]));
 
     expect(() => mt.getRange(-1, 1), throwsArgumentError);
     expect(() => mt.getRange(1, 1), throwsArgumentError);
@@ -149,13 +158,13 @@ class TestListBase extends ListBase<int> {
   }
 
   static void _testFilter() {
-    var list = new List<int>.from(instance.filter(_lt3));
+    var list = new List<int>.from(instance.where(_lt3));
     expect(list, orderedEquals([2, 1]));
 
-    list = new List<int>.from(flipped.filter(_lt3));
+    list = new List<int>.from(flipped.where(_lt3));
     expect(list, orderedEquals([2, 1, 1, 2]));
 
-    list = new List<int>.from(flipped.filter(_lt0));
+    list = new List<int>.from(flipped.where(_lt0));
     expect(list, orderedEquals([]));
   }
 

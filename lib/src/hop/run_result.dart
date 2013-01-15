@@ -27,4 +27,6 @@ class RunResult {
   const RunResult._internal(this.exitCode);
 
   bool get success => exitCode == SUCCESS.exitCode;
+
+  String toString() => 'RunResult - $exitCode';
 }

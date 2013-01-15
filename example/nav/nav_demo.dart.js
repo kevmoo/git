@@ -11,2494 +11,3171 @@ init();
 
 var $$ = {};
 var $ = Isolate.$isolateProperties;
-$$.ListIterator = {"":"Object;i,list",
- get$hasNext: function() {
-  return $.lt(this.i, this.list.length);
-},
- next$0: function() {
-  var value, t1;
-  if (this.get$hasNext() !== true)
-    throw $.$$throw($.StateError$("No more elements"));
-  value = this.list[this.i];
-  t1 = this.i;
-  if (typeof t1 !== 'number')
-    return this.next$0$bailout0(1, t1, value);
-  this.i = t1 + 1;
-  return value;
-},
- next$0$bailout0: function(state0, t1, value) {
-  this.i = $.add(t1, 1);
-  return value;
-}
-};
-
-$$.Closure = {"":"Object;",
- toString$0: function() {
-  return "Closure";
-}
-};
-
-$$.Null = {"":"Object;"
-};
-
-$$.MetaInfo = {"":"Object;_tag>,_tags,_liblib0$_set>",
- _liblib0$_set$2: function(arg0, arg1) {
-  return this._liblib0$_set.call$2(arg0, arg1);
-}
-};
-
-$$.JSSyntaxRegExp = {"":"Object;_liblib0$_pattern,_multiLine,_ignoreCase",
- firstMatch$1: function(str) {
-  var m, matchStart, t1, matchEnd;
-  m = $.regExpExec(this, $.checkString(str));
-  if (m == null)
-    return;
-  matchStart = m.index;
-  t1 = $.getInterceptor$JSStringJSArray(m).operator$index$1(m, 0);
-  t1 = $.getInterceptor$JSStringJSArray(t1).get$length(t1);
-  if (typeof t1 !== 'number')
-    throw $.iae(t1);
-  matchEnd = matchStart + t1;
-  return $._MatchImplementation$(this.get$pattern(), str, matchStart, matchEnd, m);
-},
- hasMatch$1: function(str) {
-  return $.regExpTest(this, $.checkString(str));
-},
- allMatches$1: function(str) {
-  $.checkString(str);
-  return $._AllMatchesIterable$(this, str);
-},
- get$pattern: function() {
-  return this._liblib0$_pattern;
-},
- get$multiLine: function() {
-  return this._multiLine;
-},
- get$ignoreCase: function() {
-  return this._ignoreCase;
-},
- is$JSSyntaxRegExp: true
-};
-
-$$._MatchImplementation = {"":"Object;pattern>,str,start,end,_groups",
- operator$index$1: function(index) {
-  var t1 = this._groups;
-  if (typeof t1 !== 'string' && (typeof t1 !== 'object' || t1 === null || t1.constructor !== Array && !t1.is$JavaScriptIndexingBehavior()))
-    return this.operator$index$1$bailout1(1, index, t1);
-  if (index !== (index | 0))
-    throw $.iae(index);
-  if (index < 0 || index >= t1.length)
-    throw $.ioore(index);
-  return t1[index];
-},
- operator$index$1$bailout1: function(state0, index, t1) {
-  return $.getInterceptor$JSStringJSArray(t1).operator$index$1(t1, index);
-}
-};
-
-$$._AllMatchesIterable = {"":"Object;_re,_str",
- iterator$0: function() {
-  return $._AllMatchesIterator$(this._re, this._str);
-}
-};
-
-$$._AllMatchesIterator = {"":"Object;_re,_str,_liblib0$_next=,_done",
- next$0: function() {
-  if (this.get$hasNext() !== true)
-    throw $.$$throw($.StateError$("No more elements"));
-  var next = this._liblib0$_next;
-  this._liblib0$_next = null;
-  return next;
-},
- get$hasNext: function() {
-  if (this._done)
-    return false;
-  else if (!(this._liblib0$_next == null))
-    return true;
-  this._liblib0$_next = this._re.firstMatch$1(this._str);
-  if (this._liblib0$_next == null) {
-    this._done = true;
-    return false;
-  } else
-    return true;
-}
-};
-
-$$.StringMatch = {"":"Object;start,str,pattern>",
- operator$index$1: function(g) {
-  return this.group$1(g);
-},
- group$1: function(group_) {
-  if (!$.eqB(group_, 0))
-    throw $.$$throw($.RangeError$value(group_));
-  return this.pattern;
-}
-};
-
-$$._DateImpl = {"":"Object;millisecondsSinceEpoch>,isUtc",
- operator$eq$1: function(other) {
-  if (!(typeof other === 'object' && other !== null && !!other.is$Date))
-    return false;
-  return $.eq(this.millisecondsSinceEpoch, other.get$millisecondsSinceEpoch());
-},
- operator$lt$1: function(other) {
-  return $.lt(this.millisecondsSinceEpoch, other.get$millisecondsSinceEpoch());
-},
- operator$le$1: function(other) {
-  return $.le(this.millisecondsSinceEpoch, other.get$millisecondsSinceEpoch());
-},
- operator$gt$1: function(other) {
-  return $.gt(this.millisecondsSinceEpoch, other.get$millisecondsSinceEpoch());
-},
- operator$ge$1: function(other) {
-  return $.ge(this.millisecondsSinceEpoch, other.get$millisecondsSinceEpoch());
-},
- get$hashCode: function() {
-  return this.millisecondsSinceEpoch;
-},
- toString$0: function() {
-  var t1, t2, t3, y, m, d, h, min, sec, ms;
-  t1 = new $._DateImpl_toString_fourDigits();
-  t2 = new $._DateImpl_toString_threeDigits();
-  t3 = new $._DateImpl_toString_twoDigits();
-  y = t1.call$1(this.get$year());
-  m = t3.call$1(this.get$month());
-  d = t3.call$1(this.get$day());
-  h = t3.call$1(this.get$hour());
-  min = t3.call$1(this.get$minute());
-  sec = t3.call$1(this.get$second());
-  ms = t2.call$1(this.get$millisecond());
-  if (this.isUtc === true)
-    return $.S(y) + "-" + $.S(m) + "-" + $.S(d) + " " + $.S(h) + ":" + $.S(min) + ":" + $.S(sec) + "." + $.S(ms) + "Z";
-  else
-    return $.S(y) + "-" + $.S(m) + "-" + $.S(d) + " " + $.S(h) + ":" + $.S(min) + ":" + $.S(sec) + "." + $.S(ms);
-},
- add$1: function(duration) {
-  var ms, t2;
-  ms = this.millisecondsSinceEpoch;
-  if (typeof ms !== 'number')
-    return this.add$1$bailout0(1, duration, ms);
-  t2 = duration.get$inMilliseconds();
-  if (typeof t2 !== 'number')
-    return this.add$1$bailout0(2, ms, t2);
-  return $.Date_Date$fromMillisecondsSinceEpoch(ms + t2, this.isUtc);
-},
- add$1$bailout0: function(state0, env0, env1) {
-  switch (state0) {
-    case 1:
-      ms = env1;
-      duration = env0;
-      break;
-    case 2:
-      t2 = env1;
-      ms = env0;
-      break;
+$$.DartError = {"": "Object;",
+  get$stack: function() {
+    return this.stack;
+  },
+  toString$0: function() {
+    var dartException = this.dartException;
+    if (!!Error.captureStackTrace || this.get$stack() == null)
+      return $.getInterceptor(dartException).toString$0(dartException);
+    else
+      return $.S(dartException) + "\n" + $.S(this.get$stack());
+  },
+  DartError$1: function(dartException) {
+    this.dartException = dartException;
+    this.toString = $.DartError_toStringWrapper.call$0;
   }
-  switch (state0) {
-    case 0:
-      ms = this.millisecondsSinceEpoch;
-    case 1:
-      state0 = 0;
-      t2 = duration.get$inMilliseconds();
-    case 2:
-      var ms, duration, t2;
-      state0 = 0;
-      return $.Date_Date$fromMillisecondsSinceEpoch($.add(ms, t2), this.isUtc);
+};
+
+$$.Closure = {"": "Object;",
+  toString$0: function() {
+    return "Closure";
   }
-},
- get$year: function() {
-  return $.Primitives_getYear(this);
-},
- get$month: function() {
-  return $.Primitives_getMonth(this);
-},
- get$day: function() {
-  return $.Primitives_getDay(this);
-},
- get$hour: function() {
-  return $.Primitives_getHours(this);
-},
- get$minute: function() {
-  return $.Primitives_getMinutes(this);
-},
- get$second: function() {
-  return $.Primitives_getSeconds(this);
-},
- get$millisecond: function() {
-  return $.Primitives_getMilliseconds(this);
-},
- _DateImpl$now$0: function() {
-  $.Primitives_lazyAsJsDate(this);
-},
- _DateImpl$fromMillisecondsSinceEpoch$2: function(millisecondsSinceEpoch, isUtc) {
-  var t1 = this.millisecondsSinceEpoch;
-  if ($.gtB($.getInterceptor$JSNumber(t1).abs$0(t1), 8640000000000000))
-    throw $.$$throw($.ArgumentError$(t1));
-  t1 = this.isUtc;
-  if (t1 == null)
-    throw $.$$throw($.ArgumentError$(t1));
-},
- is$Date: true
 };
 
-$$.NullThrownError = {"":"Object;",
- toString$0: function() {
-  return "Throw of null.";
-}
+$$.Null = {"": "Object;"};
+
+$$.MetaInfo = {"": "Object;_tag>,_tags,_liblib1$_set>"};
+
+$$.JSSyntaxRegExp = {"": "Object;_liblib1$_pattern,_isMultiLine,_isCaseSensitive",
+  firstMatch$1: function(str) {
+    var m, matchStart, t1, matchEnd;
+    m = $.regExpExec(this, $.checkString(str));
+    if (m == null)
+      return;
+    matchStart = m.index;
+    t1 = $.getInterceptor$JSStringJSArray(m).operator$index$1(m, 0);
+    t1 = $.getInterceptor$JSStringJSArray(t1).get$length(t1);
+    if (typeof t1 !== "number")
+      throw $.iae(t1);
+    matchEnd = matchStart + t1;
+    return $._MatchImplementation$(this.get$pattern(), str, matchStart, matchEnd, m);
+  },
+  hasMatch$1: function(str) {
+    return $.regExpTest(this, $.checkString(str));
+  },
+  allMatches$1: function(str) {
+    $.checkString(str);
+    return $._AllMatchesIterable$(this, str);
+  },
+  get$pattern: function() {
+    return this._liblib1$_pattern;
+  },
+  get$isMultiLine: function() {
+    return this._isMultiLine;
+  },
+  get$isCaseSensitive: function() {
+    return this._isCaseSensitive;
+  },
+  is$JSSyntaxRegExp: true
 };
 
-$$.ArgumentError = {"":"Object;message>",
- toString$0: function() {
-  if (!(this.get$message() == null))
-    return "Illegal argument(s): " + $.S(this.get$message());
-  return "Illegal argument(s)";
-}
+$$._MatchImplementation = {"": "Object;pattern>,str,start,end,_groups",
+  operator$index$1: function(index) {
+    var t1 = this._groups;
+    if (typeof t1 !== "string" && (typeof t1 !== "object" || t1 === null || t1.constructor !== Array && !t1.is$JavaScriptIndexingBehavior()))
+      return this.operator$index$1$bailout1(1, index, t1);
+    if (index !== (index | 0))
+      throw $.iae(index);
+    if (index < 0 || index >= t1.length)
+      throw $.ioore(index);
+    return t1[index];
+  },
+  operator$index$1$bailout1: function(state0, index, t1) {
+    return $.getInterceptor$JSStringJSArray(t1).operator$index$1(t1, index);
+  }
 };
 
-$$.RangeError = {"":"ArgumentError;message",
- toString$0: function() {
-  return "RangeError: " + $.S(this.message);
-}
+$$._AllMatchesIterable = {"": "Iterable;_re,_str",
+  get$iterator: function() {
+    return $._AllMatchesIterator$(this._re, this._str);
+  }
 };
 
-$$.NoSuchMethodError = {"":"Object;_receiver,_memberName,_arguments,_namedArguments,_existingArgumentNames",
- toString$0: function() {
-  var t1, t2, t3, t4, t5, actualParameters, i, formalParameters;
-  t1 = {};
-  t1.sb_0 = $.StringBuffer_StringBuffer("");
-  t1.i_1 = 0;
-  t2 = this._arguments;
-  if (typeof t2 !== 'string' && (typeof t2 !== 'object' || t2 === null || t2.constructor !== Array && !t2.is$JavaScriptIndexingBehavior()))
-    return this.toString$0$bailout(1, t1, t2);
-  for (; $.ltB(t1.i_1, t2.length); t1.i_1 = $.add(t1.i_1, 1)) {
-    if ($.gtB(t1.i_1, 0)) {
-      t3 = t1.sb_0;
-      $.getInterceptor$JSArray(t3).add$1(t3, ", ");
+$$._AllMatchesIterator = {"": "Object;_re,_str,_liblib1$_current",
+  get$current: function() {
+    return this._liblib1$_current;
+  },
+  moveNext$0: function() {
+    this._liblib1$_current = this._re.firstMatch$1(this._str);
+    return !(this._liblib1$_current == null);
+  }
+};
+
+$$.StringMatch = {"": "Object;start,str,pattern>",
+  operator$index$1: function(g) {
+    return this.group$1(g);
+  },
+  group$1: function(group_) {
+    if (!$.eqB(group_, 0))
+      throw $.$$throw($.RangeError$value(group_));
+    return this.pattern;
+  }
+};
+
+$$._DateImpl = {"": "Object;millisecondsSinceEpoch>,isUtc",
+  operator$eq$1: function(other) {
+    if (!(typeof other === "object" && other !== null && !!other.is$Date))
+      return false;
+    return $.eq(this.millisecondsSinceEpoch, other.get$millisecondsSinceEpoch());
+  },
+  operator$lt$1: function(other) {
+    return $.lt(this.millisecondsSinceEpoch, other.get$millisecondsSinceEpoch());
+  },
+  operator$le$1: function(other) {
+    return $.le(this.millisecondsSinceEpoch, other.get$millisecondsSinceEpoch());
+  },
+  operator$gt$1: function(other) {
+    return $.gt(this.millisecondsSinceEpoch, other.get$millisecondsSinceEpoch());
+  },
+  operator$ge$1: function(other) {
+    return $.ge(this.millisecondsSinceEpoch, other.get$millisecondsSinceEpoch());
+  },
+  get$hashCode: function() {
+    return this.millisecondsSinceEpoch;
+  },
+  toString$0: function() {
+    var t1, t2, t3, y, m, d, h, min, sec, ms;
+    t1 = new $._DateImpl_toString_fourDigits();
+    t2 = new $._DateImpl_toString_threeDigits();
+    t3 = new $._DateImpl_toString_twoDigits();
+    y = t1.call$1(this.get$year());
+    m = t3.call$1(this.get$month());
+    d = t3.call$1(this.get$day());
+    h = t3.call$1(this.get$hour());
+    min = t3.call$1(this.get$minute());
+    sec = t3.call$1(this.get$second());
+    ms = t2.call$1(this.get$millisecond());
+    if (this.isUtc === true)
+      return $.S(y) + "-" + $.S(m) + "-" + $.S(d) + " " + $.S(h) + ":" + $.S(min) + ":" + $.S(sec) + "." + $.S(ms) + "Z";
+    else
+      return $.S(y) + "-" + $.S(m) + "-" + $.S(d) + " " + $.S(h) + ":" + $.S(min) + ":" + $.S(sec) + "." + $.S(ms);
+  },
+  add$1: function(duration) {
+    var ms, t2;
+    ms = this.millisecondsSinceEpoch;
+    if (typeof ms !== "number")
+      return this.add$1$bailout0(1, duration, ms);
+    t2 = duration.get$inMilliseconds();
+    if (typeof t2 !== "number")
+      return this.add$1$bailout0(2, ms, t2);
+    return $.Date_Date$fromMillisecondsSinceEpoch(ms + t2, this.isUtc);
+  },
+  add$1$bailout0: function(state0, env0, env1) {
+    switch (state0) {
+      case 1:
+        ms = env1;
+        duration = env0;
+        break;
+      case 2:
+        t2 = env1;
+        ms = env0;
+        break;
     }
-    t3 = t1.sb_0;
-    t4 = $.getInterceptor$JSArray(t3);
-    t5 = t1.i_1;
-    if (t5 !== (t5 | 0))
-      throw $.iae(t5);
-    if (t5 < 0 || t5 >= t2.length)
-      throw $.ioore(t5);
-    t4.add$1(t3, $.Error_safeToString(t2[t5]));
-  }
-  t2 = this._namedArguments;
-  if (!(t2 == null))
-    $.getInterceptor$JSArray(t2).forEach$1(t2, new $.NoSuchMethodError_toString_anon(t1));
-  t2 = this._existingArgumentNames;
-  if (typeof t2 !== 'string' && (typeof t2 !== 'object' || t2 === null || t2.constructor !== Array && !t2.is$JavaScriptIndexingBehavior()))
-    return this.toString$0$bailout(2, t1, t2);
-  t3 = t1.sb_0;
-  actualParameters = $.getInterceptor(t3).toString$0(t3);
-  t1.sb_0 = $.StringBuffer_StringBuffer("");
-  for (i = 0; i < t2.length; ++i) {
-    if (i > 0) {
-      t3 = t1.sb_0;
-      $.getInterceptor$JSArray(t3).add$1(t3, ", ");
+    switch (state0) {
+      case 0:
+        ms = this.millisecondsSinceEpoch;
+      case 1:
+        state0 = 0;
+        t2 = duration.get$inMilliseconds();
+      case 2:
+        var ms, duration, t2;
+        state0 = 0;
+        return $.Date_Date$fromMillisecondsSinceEpoch($.getInterceptor$JSNumber(ms).operator$add$1(ms, t2), this.isUtc);
     }
-    t3 = t1.sb_0;
-    t4 = $.getInterceptor$JSArray(t3);
-    if (i >= t2.length)
-      throw $.ioore(i);
-    t4.add$1(t3, t2[i]);
+  },
+  get$year: function() {
+    return $.Primitives_getYear(this);
+  },
+  get$month: function() {
+    return $.Primitives_getMonth(this);
+  },
+  get$day: function() {
+    return $.Primitives_getDay(this);
+  },
+  get$hour: function() {
+    return $.Primitives_getHours(this);
+  },
+  get$minute: function() {
+    return $.Primitives_getMinutes(this);
+  },
+  get$second: function() {
+    return $.Primitives_getSeconds(this);
+  },
+  get$millisecond: function() {
+    return $.Primitives_getMilliseconds(this);
+  },
+  _DateImpl$now$0: function() {
+    $.Primitives_lazyAsJsDate(this);
+  },
+  _DateImpl$fromMillisecondsSinceEpoch$2: function(millisecondsSinceEpoch, isUtc) {
+    var t1 = this.millisecondsSinceEpoch;
+    if ($.gtB($.getInterceptor$JSNumber(t1).abs$0(t1), 8640000000000000))
+      throw $.$$throw($.ArgumentError$(t1));
+    t1 = this.isUtc;
+    if (t1 == null)
+      throw $.$$throw($.ArgumentError$(t1));
+  },
+  is$Date: true
+};
+
+$$.NullThrownError = {"": "Object;",
+  toString$0: function() {
+    return "Throw of null.";
   }
-  t1 = t1.sb_0;
-  formalParameters = $.getInterceptor(t1).toString$0(t1);
-  t1 = this._memberName;
-  return "NoSuchMethodError: incorrect number of arguments passed to method named '" + $.S(t1) + "'\n" + "Receiver: " + $.S($.Error_safeToString(this._receiver)) + "\n" + "Tried calling: " + $.S(t1) + "(" + $.S(actualParameters) + ")\n" + "Found: " + $.S(t1) + "(" + $.S(formalParameters) + ")";
-},
- toString$0$bailout: function(state0, env0, env1) {
-  switch (state0) {
-    case 1:
-      t2 = env1;
-      t1 = env0;
-      break;
-    case 2:
-      t2 = env1;
-      t1 = env0;
-      break;
+};
+
+$$.ArgumentError = {"": "Object;message>",
+  toString$0: function() {
+    if (!(this.get$message() == null))
+      return "Illegal argument(s): " + $.S(this.get$message());
+    return "Illegal argument(s)";
   }
-  switch (state0) {
-    case 0:
-      t1 = {};
-      t1.sb_0 = $.StringBuffer_StringBuffer("");
-      t1.i_1 = 0;
-      t2 = this._arguments;
-    case 1:
-      state0 = 0;
-      if (!(t2 == null))
-        for (t3 = $.getInterceptor$JSStringJSArray(t2); $.ltB(t1.i_1, t3.get$length(t2)); t1.i_1 = $.add(t1.i_1, 1)) {
-          if ($.gtB(t1.i_1, 0)) {
-            t4 = t1.sb_0;
-            $.getInterceptor$JSArray(t4).add$1(t4, ", ");
-          }
-          t4 = t1.sb_0;
-          $.getInterceptor$JSArray(t4).add$1(t4, $.Error_safeToString(t3.operator$index$1(t2, t1.i_1)));
-        }
-      t2 = this._namedArguments;
-      if (!(t2 == null))
-        $.getInterceptor$JSArray(t2).forEach$1(t2, new $.NoSuchMethodError_toString_anon(t1));
-      t2 = this._existingArgumentNames;
-    case 2:
-      var t1, t2, t3, t4, actualParameters, i, formalParameters;
-      state0 = 0;
-      if (t2 == null)
-        return "NoSuchMethodError : method not found: '" + $.S(this._memberName) + "'\n" + "Receiver: " + $.S($.Error_safeToString(this._receiver)) + "\n" + "Arguments: [" + $.S(t1.sb_0) + "]";
-      else {
+};
+
+$$.RangeError = {"": "ArgumentError;message",
+  toString$0: function() {
+    return "RangeError: " + $.S(this.message);
+  }
+};
+
+$$.NoSuchMethodError = {"": "Object;_receiver,_memberName,_arguments,_namedArguments,_existingArgumentNames",
+  toString$0: function() {
+    var t1, t2, t3, t4, t5, actualParameters, i, formalParameters;
+    t1 = {};
+    t1.sb_0 = $.StringBuffer_StringBuffer("");
+    t1.i_1 = 0;
+    t2 = this._arguments;
+    if (typeof t2 !== "string" && (typeof t2 !== "object" || t2 === null || t2.constructor !== Array && !t2.is$JavaScriptIndexingBehavior()))
+      return this.toString$0$bailout(1, t1, t2);
+    for (; $.ltB(t1.i_1, t2.length); t3 = t1.i_1, t1.i_1 = $.getInterceptor$JSNumber(t3).operator$add$1(t3, 1)) {
+      if ($.gtB(t1.i_1, 0)) {
         t3 = t1.sb_0;
-        actualParameters = $.getInterceptor(t3).toString$0(t3);
-        t1.sb_0 = $.StringBuffer_StringBuffer("");
-        for (t3 = $.getInterceptor$JSStringJSArray(t2), i = 0; $.ltB(i, t3.get$length(t2)); ++i) {
-          if (i > 0) {
-            t4 = t1.sb_0;
-            $.getInterceptor$JSArray(t4).add$1(t4, ", ");
-          }
-          t4 = t1.sb_0;
-          $.getInterceptor$JSArray(t4).add$1(t4, t3.operator$index$1(t2, i));
-        }
-        t1 = t1.sb_0;
-        formalParameters = $.getInterceptor(t1).toString$0(t1);
-        t1 = this._memberName;
-        return "NoSuchMethodError: incorrect number of arguments passed to method named '" + $.S(t1) + "'\n" + "Receiver: " + $.S($.Error_safeToString(this._receiver)) + "\n" + "Tried calling: " + $.S(t1) + "(" + $.S(actualParameters) + ")\n" + "Found: " + $.S(t1) + "(" + $.S(formalParameters) + ")";
+        $.getInterceptor$JSArray(t3).add$1(t3, ", ");
       }
+      t3 = t1.sb_0;
+      t4 = t1.i_1;
+      if (t4 !== (t4 | 0))
+        throw $.iae(t4);
+      if (t4 < 0 || t4 >= t2.length)
+        throw $.ioore(t4);
+      t5 = $.Error_safeToString(t2[t4]);
+      $.getInterceptor$JSArray(t3).add$1(t3, t5);
+    }
+    t2 = this._namedArguments;
+    if (!(t2 == null)) {
+      t3 = new $.NoSuchMethodError_toString_anon(t1);
+      $.getInterceptor$JSArray(t2).forEach$1(t2, t3);
+    }
+    t2 = this._existingArgumentNames;
+    if (typeof t2 !== "string" && (typeof t2 !== "object" || t2 === null || t2.constructor !== Array && !t2.is$JavaScriptIndexingBehavior()))
+      return this.toString$0$bailout(2, t1, t2);
+    t3 = t1.sb_0;
+    actualParameters = $.getInterceptor(t3).toString$0(t3);
+    t1.sb_0 = $.StringBuffer_StringBuffer("");
+    for (i = 0; i < t2.length; ++i) {
+      if (i > 0) {
+        t3 = t1.sb_0;
+        $.getInterceptor$JSArray(t3).add$1(t3, ", ");
+      }
+      t3 = t1.sb_0;
+      if (i >= t2.length)
+        throw $.ioore(i);
+      t4 = t2[i];
+      $.getInterceptor$JSArray(t3).add$1(t3, t4);
+    }
+    t1 = t1.sb_0;
+    formalParameters = $.getInterceptor(t1).toString$0(t1);
+    t1 = this._memberName;
+    return "NoSuchMethodError: incorrect number of arguments passed to method named '" + $.S(t1) + "'\n" + "Receiver: " + $.S($.Error_safeToString(this._receiver)) + "\n" + "Tried calling: " + $.S(t1) + "(" + $.S(actualParameters) + ")\n" + "Found: " + $.S(t1) + "(" + $.S(formalParameters) + ")";
+  },
+  toString$0$bailout: function(state0, env0, env1) {
+    switch (state0) {
+      case 1:
+        t2 = env1;
+        t1 = env0;
+        break;
+      case 2:
+        t2 = env1;
+        t1 = env0;
+        break;
+    }
+    switch (state0) {
+      case 0:
+        t1 = {};
+        t1.sb_0 = $.StringBuffer_StringBuffer("");
+        t1.i_1 = 0;
+        t2 = this._arguments;
+      case 1:
+        state0 = 0;
+        if (!(t2 == null))
+          for (t3 = $.getInterceptor$JSStringJSArray(t2); $.ltB(t1.i_1, t3.get$length(t2)); t4 = t1.i_1, t1.i_1 = $.getInterceptor$JSNumber(t4).operator$add$1(t4, 1)) {
+            if ($.gtB(t1.i_1, 0)) {
+              t4 = t1.sb_0;
+              $.getInterceptor$JSArray(t4).add$1(t4, ", ");
+            }
+            t4 = t1.sb_0;
+            t5 = $.Error_safeToString(t3.operator$index$1(t2, t1.i_1));
+            $.getInterceptor$JSArray(t4).add$1(t4, t5);
+          }
+        t2 = this._namedArguments;
+        if (!(t2 == null)) {
+          t3 = new $.NoSuchMethodError_toString_anon(t1);
+          $.getInterceptor$JSArray(t2).forEach$1(t2, t3);
+        }
+        t2 = this._existingArgumentNames;
+      case 2:
+        var t1, t2, t3, t4, t5, actualParameters, i, formalParameters;
+        state0 = 0;
+        if (t2 == null)
+          return "NoSuchMethodError : method not found: '" + $.S(this._memberName) + "'\n" + "Receiver: " + $.S($.Error_safeToString(this._receiver)) + "\n" + "Arguments: [" + $.S(t1.sb_0) + "]";
+        else {
+          t3 = t1.sb_0;
+          actualParameters = $.getInterceptor(t3).toString$0(t3);
+          t1.sb_0 = $.StringBuffer_StringBuffer("");
+          for (t3 = $.getInterceptor$JSStringJSArray(t2), i = 0; $.ltB(i, t3.get$length(t2)); ++i) {
+            if (i > 0) {
+              t4 = t1.sb_0;
+              $.getInterceptor$JSArray(t4).add$1(t4, ", ");
+            }
+            t4 = t1.sb_0;
+            t5 = t3.operator$index$1(t2, i);
+            $.getInterceptor$JSArray(t4).add$1(t4, t5);
+          }
+          t1 = t1.sb_0;
+          formalParameters = $.getInterceptor(t1).toString$0(t1);
+          t1 = this._memberName;
+          return "NoSuchMethodError: incorrect number of arguments passed to method named '" + $.S(t1) + "'\n" + "Receiver: " + $.S($.Error_safeToString(this._receiver)) + "\n" + "Tried calling: " + $.S(t1) + "(" + $.S(actualParameters) + ")\n" + "Found: " + $.S(t1) + "(" + $.S(formalParameters) + ")";
+        }
+    }
   }
-}
 };
 
-$$.UnsupportedError = {"":"Object;message",
- toString$0: function() {
-  return "Unsupported operation: " + this.message;
-}
+$$.UnsupportedError = {"": "Object;message",
+  toString$0: function() {
+    return "Unsupported operation: " + this.message;
+  }
 };
 
-$$.StateError = {"":"Object;message>",
- toString$0: function() {
-  return "Bad state: " + $.S(this.get$message());
-}
+$$.StateError = {"": "Object;message>",
+  toString$0: function() {
+    return "Bad state: " + $.S(this.get$message());
+  }
 };
 
-$$.StackOverflowError = {"":"Object;",
- toString$0: function() {
-  return "Stack Overflow";
-}
+$$.StackOverflowError = {"": "Object;",
+  toString$0: function() {
+    return "Stack Overflow";
+  }
 };
 
-$$.RuntimeError = {"":"Object;message",
- toString$0: function() {
-  return "RuntimeError: " + this.message;
-}
+$$.RuntimeError = {"": "Object;message",
+  toString$0: function() {
+    return "RuntimeError: " + this.message;
+  }
 };
 
-$$._ExceptionImplementation = {"":"Object;message",
- toString$0: function() {
-  var t1 = this.message;
-  if (t1 == null)
-    return "Exception";
-  return "Exception: " + $.S(t1);
-}
+$$._ExceptionImplementation = {"": "Object;message",
+  toString$0: function() {
+    var t1 = this.message;
+    if (t1 == null)
+      return "Exception";
+    return "Exception: " + $.S(t1);
+  }
 };
 
-$$.FormatException = {"":"Object;message",
- toString$0: function() {
-  return "FormatException: " + $.S(this.message);
-}
+$$.IllegalJSRegExpException = {"": "Object;_pattern,_errmsg",
+  toString$0: function() {
+    return "IllegalJSRegExpException: '" + $.S(this._pattern) + "' '" + this._errmsg + "'";
+  }
 };
 
-$$.IllegalJSRegExpException = {"":"Object;_pattern,_errmsg",
- toString$0: function() {
-  return "IllegalJSRegExpException: '" + $.S(this._pattern) + "' '" + this._errmsg + "'";
-}
+$$.Iterable = {"": "Object;",
+  mappedBy$1: function(f) {
+    return $.MappedIterable$(this, f);
+  },
+  contains$1: function(element) {
+    var t1;
+    for (t1 = $.getInterceptor$JSArray(this).get$iterator(this); t1.moveNext$0() === true;)
+      if ($.eqB(t1.get$current(), element))
+        return true;
+    return false;
+  },
+  forEach$1: function(f) {
+    var t1;
+    for (t1 = $.getInterceptor$JSArray(this).get$iterator(this); t1.moveNext$0() === true;)
+      f.call$1(t1.get$current());
+  },
+  get$length: function() {
+    var it, count;
+    it = $.getInterceptor$JSArray(this).get$iterator(this);
+    for (count = 0; it.moveNext$0() === true;)
+      ++count;
+    return count;
+  },
+  get$isEmpty: function() {
+    return $.getInterceptor$JSArray(this).get$iterator(this).moveNext$0() !== true;
+  },
+  get$first: function() {
+    var it = $.getInterceptor$JSArray(this).get$iterator(this);
+    if (it.moveNext$0() !== true)
+      throw $.$$throw($.StateError$("No elements"));
+    return it.get$current();
+  }
 };
 
-$$._HashMapImpl = {"":"Object;_keys,_values,_loadLimit,_numberOfEntries,_numberOfDeleted",
- _probeForAdding$1: function(key) {
-  var t1, hash, numberOfProbes, insertionIndex, existingKey, numberOfProbes0;
-  if (key == null)
-    throw $.$$throw($.ArgumentError$(null));
-  t1 = $.getInterceptor(key).get$hashCode(key);
-  if (t1 !== (t1 | 0))
-    return this._probeForAdding$1$bailout(1, key, t1);
-  hash = (t1 & this._keys.length - 1) >>> 0;
-  for (numberOfProbes = 1, insertionIndex = -1; true; numberOfProbes = numberOfProbes0) {
-    t1 = this._keys;
-    if (hash < 0 || hash >= t1.length)
-      throw $.ioore(hash);
-    existingKey = t1[hash];
-    if (existingKey == null) {
-      if (insertionIndex < 0)
+$$.Iterator = {"": "Object;"};
+
+$$._HashMapImpl = {"": "Object;_keys>,_values>,_loadLimit,_numberOfEntries,_numberOfDeleted",
+  _probeForAdding$1: function(key) {
+    var t1, hash, insertionIndex, numberOfProbes, existingKey, numberOfProbes0;
+    if (key == null)
+      throw $.$$throw($.ArgumentError$(null));
+    t1 = $.getInterceptor(key).get$hashCode(key);
+    if (t1 !== (t1 | 0))
+      return this._probeForAdding$1$bailout(1, key, t1);
+    hash = (t1 & this._keys.length - 1) >>> 0;
+    for (insertionIndex = -1, numberOfProbes = 1; true; numberOfProbes = numberOfProbes0) {
+      t1 = this._keys;
+      if (hash < 0 || hash >= t1.length)
+        throw $.ioore(hash);
+      existingKey = t1[hash];
+      if (existingKey == null) {
+        if (insertionIndex < 0)
+          return hash;
+        return insertionIndex;
+      } else if ($.eqB(existingKey, key))
         return hash;
-      return insertionIndex;
-    } else if ($.eqB(existingKey, key))
-      return hash;
-    else if (insertionIndex < 0 && existingKey === $.CONSTANT3)
-      insertionIndex = hash;
-    numberOfProbes0 = numberOfProbes + 1;
-    hash = $._HashMapImpl__nextProbe(hash, numberOfProbes, this._keys.length);
+      else if (insertionIndex < 0 && existingKey === $.CONSTANT3)
+        insertionIndex = hash;
+      numberOfProbes0 = numberOfProbes + 1;
+      hash = $._HashMapImpl__nextProbe(hash, numberOfProbes, this._keys.length);
+      if (hash !== (hash | 0))
+        return this._probeForAdding$1$bailout(2, hash, key, numberOfProbes0, insertionIndex);
+    }
+  },
+  _probeForAdding$1$bailout: function(state0, env0, env1, env2, env3) {
+    switch (state0) {
+      case 1:
+        t1 = env1;
+        key = env0;
+        break;
+      case 2:
+        insertionIndex = env3;
+        numberOfProbes0 = env2;
+        key = env1;
+        hash = env0;
+        break;
+    }
+    switch (state0) {
+      case 0:
+        if (key == null)
+          throw $.$$throw($.ArgumentError$(null));
+        t1 = $.getInterceptor(key).get$hashCode(key);
+      case 1:
+        state0 = 0;
+        t3 = this._keys.length - 1;
+        hash = $.getInterceptor$JSNumber(t1).operator$and$1(t1, t3);
+        insertionIndex = -1;
+        numberOfProbes = 1;
+      case 2:
+        var t1, key, t3, hash, insertionIndex, numberOfProbes, existingKey, numberOfProbes0;
+        L0:
+          while (true)
+            switch (state0) {
+              case 0:
+                if (!true)
+                  break L0;
+                t1 = this._keys;
+                if (hash !== (hash | 0))
+                  throw $.iae(hash);
+                if (hash < 0 || hash >= t1.length)
+                  throw $.ioore(hash);
+                existingKey = t1[hash];
+                if (existingKey == null) {
+                  if (insertionIndex < 0)
+                    return hash;
+                  return insertionIndex;
+                } else if ($.eqB(existingKey, key))
+                  return hash;
+                else if (insertionIndex < 0 && existingKey === $.CONSTANT3)
+                  insertionIndex = hash;
+                numberOfProbes0 = numberOfProbes + 1;
+                hash = $._HashMapImpl__nextProbe(hash, numberOfProbes, this._keys.length);
+              case 2:
+                state0 = 0;
+                numberOfProbes = numberOfProbes0;
+            }
+    }
+  },
+  _probeForLookup$1: function(key) {
+    var t1, t2, hash, numberOfProbes, existingKey, numberOfProbes0;
+    if (key == null)
+      throw $.$$throw($.ArgumentError$(null));
+    t1 = $.getInterceptor(key).get$hashCode(key);
+    t2 = this._keys.length - 1;
+    hash = $.getInterceptor$JSNumber(t1).operator$and$1(t1, t2);
     if (hash !== (hash | 0))
-      return this._probeForAdding$1$bailout(2, key, insertionIndex, hash, numberOfProbes0);
-  }
-},
- _probeForAdding$1$bailout: function(state0, env0, env1, env2, env3) {
-  switch (state0) {
-    case 1:
-      t1 = env1;
-      key = env0;
-      break;
-    case 2:
-      numberOfProbes0 = env3;
-      hash = env2;
-      insertionIndex = env1;
-      key = env0;
-      break;
-  }
-  switch (state0) {
-    case 0:
-      if (key == null)
-        throw $.$$throw($.ArgumentError$(null));
-      t1 = $.getInterceptor(key).get$hashCode(key);
-    case 1:
-      state0 = 0;
-      hash = $.and(t1, this._keys.length - 1);
-      numberOfProbes = 1;
-      insertionIndex = -1;
-    case 2:
-      var t1, key, hash, numberOfProbes, insertionIndex, existingKey, numberOfProbes0;
-      L0:
-        while (true)
+      return this._probeForLookup$1$bailout(1, key, hash);
+    for (numberOfProbes = 1; true; numberOfProbes = numberOfProbes0) {
+      t1 = this._keys;
+      if (hash !== (hash | 0))
+        throw $.iae(hash);
+      if (hash < 0 || hash >= t1.length)
+        throw $.ioore(hash);
+      existingKey = t1[hash];
+      if (existingKey == null)
+        return -1;
+      if ($.eqB(existingKey, key))
+        return hash;
+      numberOfProbes0 = numberOfProbes + 1;
+      hash = $._HashMapImpl__nextProbe(hash, numberOfProbes, this._keys.length);
+    }
+  },
+  _probeForLookup$1$bailout: function(state0, key, hash) {
+    var numberOfProbes, t1, existingKey, numberOfProbes0;
+    for (numberOfProbes = 1; true; numberOfProbes = numberOfProbes0) {
+      t1 = this._keys;
+      if (hash !== (hash | 0))
+        throw $.iae(hash);
+      if (hash < 0 || hash >= t1.length)
+        throw $.ioore(hash);
+      existingKey = t1[hash];
+      if (existingKey == null)
+        return -1;
+      if ($.eqB(existingKey, key))
+        return hash;
+      numberOfProbes0 = numberOfProbes + 1;
+      hash = $._HashMapImpl__nextProbe(hash, numberOfProbes, this._keys.length);
+    }
+  },
+  _ensureCapacity$0: function() {
+    var t1, newNumberOfEntries, capacity, numberOfFreeOrDeleted;
+    t1 = this._numberOfEntries;
+    newNumberOfEntries = $.getInterceptor$JSNumber(t1).operator$add$1(t1, 1);
+    if ($.geB(newNumberOfEntries, this._loadLimit)) {
+      this._grow$1(this._keys.length * 2);
+      return;
+    }
+    capacity = this._keys.length;
+    if (typeof newNumberOfEntries !== "number")
+      throw $.iae(newNumberOfEntries);
+    numberOfFreeOrDeleted = capacity - newNumberOfEntries;
+    t1 = this._numberOfDeleted;
+    if (t1 > numberOfFreeOrDeleted - t1)
+      this._grow$1(capacity);
+  },
+  _grow$1: function(newCapacity) {
+    var capacity, t1, oldKeys, oldValues, i, key, value, newIndex;
+    capacity = this._keys.length;
+    t1 = $.getInterceptor$JSNumber(newCapacity).operator$mul$1(newCapacity, 3);
+    this._loadLimit = $.getInterceptor$JSNumber(t1).operator$tdiv$1(t1, 4);
+    oldKeys = this._keys;
+    oldValues = this._values;
+    this._keys = $.List_List$fixedLength(newCapacity, null);
+    this._values = $.List_List$fixedLength(newCapacity, null);
+    for (i = 0; i < capacity; ++i) {
+      if (i >= oldKeys.length)
+        throw $.ioore(i);
+      key = oldKeys[i];
+      if (key == null || key === $.CONSTANT3)
+        continue;
+      if (i >= oldValues.length)
+        throw $.ioore(i);
+      value = oldValues[i];
+      newIndex = this._probeForAdding$1(key);
+      t1 = this._keys;
+      if (newIndex !== (newIndex | 0))
+        throw $.iae(newIndex);
+      if (newIndex < 0 || newIndex >= t1.length)
+        throw $.ioore(newIndex);
+      t1[newIndex] = key;
+      t1 = this._values;
+      if (newIndex >= t1.length)
+        throw $.ioore(newIndex);
+      t1[newIndex] = value;
+    }
+    this._numberOfDeleted = 0;
+  },
+  clear$0: function() {
+    var t1, length$, t2, t3, i;
+    this._numberOfEntries = 0;
+    this._numberOfDeleted = 0;
+    t1 = this._keys;
+    length$ = t1.length;
+    for (t2 = this._values, t3 = t2.length, i = 0; i < length$; ++i) {
+      t1[i] = null;
+      if (i >= t3)
+        throw $.ioore(i);
+      t2[i] = null;
+    }
+  },
+  operator$indexSet$2: function(key, value) {
+    var index, t1;
+    this._ensureCapacity$0();
+    index = this._probeForAdding$1(key);
+    t1 = this._keys;
+    if (index !== (index | 0))
+      throw $.iae(index);
+    if (index < 0 || index >= t1.length)
+      throw $.ioore(index);
+    t1 = t1[index];
+    if (t1 == null || t1 === $.CONSTANT3) {
+      t1 = this._numberOfEntries;
+      if (typeof t1 !== "number")
+        return this.operator$indexSet$2$bailout0(1, key, value, index, t1);
+      this._numberOfEntries = t1 + 1;
+    }
+    t1 = this._keys;
+    if (index >= t1.length)
+      throw $.ioore(index);
+    t1[index] = key;
+    t1 = this._values;
+    if (index >= t1.length)
+      throw $.ioore(index);
+    t1[index] = value;
+  },
+  operator$indexSet$2$bailout0: function(state0, env0, env1, env2, env3) {
+    switch (state0) {
+      case 1:
+        t1 = env3;
+        index = env2;
+        value = env1;
+        key = env0;
+        break;
+    }
+    switch (state0) {
+      case 0:
+        this._ensureCapacity$0();
+        index = this._probeForAdding$1(key);
+        t1 = this._keys;
+        if (index !== (index | 0))
+          throw $.iae(index);
+        if (index < 0 || index >= t1.length)
+          throw $.ioore(index);
+        t1 = t1[index];
+      case 1:
+        var index, t1, value, key;
+        if (state0 === 1 || state0 === 0 && (t1 == null || t1 === $.CONSTANT3))
           switch (state0) {
             case 0:
-              if (!true)
-                break L0;
-              t1 = this._keys;
-              if (hash !== (hash | 0))
-                throw $.iae(hash);
-              if (hash < 0 || hash >= t1.length)
-                throw $.ioore(hash);
-              existingKey = t1[hash];
-              if (existingKey == null) {
-                if (insertionIndex < 0)
-                  return hash;
-                return insertionIndex;
-              } else if ($.eqB(existingKey, key))
-                return hash;
-              else if (insertionIndex < 0 && existingKey === $.CONSTANT3)
-                insertionIndex = hash;
-              numberOfProbes0 = numberOfProbes + 1;
-              hash = $._HashMapImpl__nextProbe(hash, numberOfProbes, this._keys.length);
-            case 2:
+              t1 = this._numberOfEntries;
+            case 1:
               state0 = 0;
-              numberOfProbes = numberOfProbes0;
+              this._numberOfEntries = $.getInterceptor$JSNumber(t1).operator$add$1(t1, 1);
           }
-  }
-},
- _probeForLookup$1: function(key) {
-  var hash, numberOfProbes, t1, existingKey, numberOfProbes0;
-  if (key == null)
-    throw $.$$throw($.ArgumentError$(null));
-  hash = $.and($.getInterceptor(key).get$hashCode(key), this._keys.length - 1);
-  if (hash !== (hash | 0))
-    return this._probeForLookup$1$bailout(1, key, hash);
-  for (numberOfProbes = 1; true; numberOfProbes = numberOfProbes0) {
-    t1 = this._keys;
-    if (hash !== (hash | 0))
-      throw $.iae(hash);
-    if (hash < 0 || hash >= t1.length)
-      throw $.ioore(hash);
-    existingKey = t1[hash];
-    if (existingKey == null)
-      return -1;
-    if ($.eqB(existingKey, key))
-      return hash;
-    numberOfProbes0 = numberOfProbes + 1;
-    hash = $._HashMapImpl__nextProbe(hash, numberOfProbes, this._keys.length);
-  }
-},
- _probeForLookup$1$bailout: function(state0, key, hash) {
-  var numberOfProbes, t1, existingKey, numberOfProbes0;
-  for (numberOfProbes = 1; true; numberOfProbes = numberOfProbes0) {
-    t1 = this._keys;
-    if (hash !== (hash | 0))
-      throw $.iae(hash);
-    if (hash < 0 || hash >= t1.length)
-      throw $.ioore(hash);
-    existingKey = t1[hash];
-    if (existingKey == null)
-      return -1;
-    if ($.eqB(existingKey, key))
-      return hash;
-    numberOfProbes0 = numberOfProbes + 1;
-    hash = $._HashMapImpl__nextProbe(hash, numberOfProbes, this._keys.length);
-  }
-},
- _ensureCapacity$0: function() {
-  var newNumberOfEntries, capacity, numberOfFreeOrDeleted, t1;
-  newNumberOfEntries = $.add(this._numberOfEntries, 1);
-  if ($.geB(newNumberOfEntries, this._loadLimit)) {
-    this._grow$1(this._keys.length * 2);
-    return;
-  }
-  capacity = this._keys.length;
-  if (typeof newNumberOfEntries !== 'number')
-    throw $.iae(newNumberOfEntries);
-  numberOfFreeOrDeleted = capacity - newNumberOfEntries;
-  t1 = this._numberOfDeleted;
-  if (t1 > numberOfFreeOrDeleted - t1)
-    this._grow$1(capacity);
-},
- _grow$1: function(newCapacity) {
-  var capacity, oldKeys, oldValues, i, key, value, newIndex, t1;
-  capacity = this._keys.length;
-  this._loadLimit = $.tdiv($.mul(newCapacity, 3), 4);
-  oldKeys = this._keys;
-  oldValues = this._values;
-  this._keys = $.List_List(newCapacity);
-  this._values = $.List_List(newCapacity);
-  for (i = 0; i < capacity; ++i) {
-    if (i >= oldKeys.length)
-      throw $.ioore(i);
-    key = oldKeys[i];
-    if (key == null || key === $.CONSTANT3)
-      continue;
-    if (i >= oldValues.length)
-      throw $.ioore(i);
-    value = oldValues[i];
-    newIndex = this._probeForAdding$1(key);
-    t1 = this._keys;
-    if (newIndex !== (newIndex | 0))
-      throw $.iae(newIndex);
-    if (newIndex < 0 || newIndex >= t1.length)
-      throw $.ioore(newIndex);
-    t1[newIndex] = key;
-    t1 = this._values;
-    if (newIndex >= t1.length)
-      throw $.ioore(newIndex);
-    t1[newIndex] = value;
-  }
-  this._numberOfDeleted = 0;
-},
- clear$0: function() {
-  var t1, length$, t2, t3, i;
-  this._numberOfEntries = 0;
-  this._numberOfDeleted = 0;
-  t1 = this._keys;
-  length$ = t1.length;
-  for (t2 = this._values, t3 = t2.length, i = 0; i < length$; ++i) {
-    t1[i] = null;
-    if (i >= t3)
-      throw $.ioore(i);
-    t2[i] = null;
-  }
-},
- operator$indexSet$2: function(key, value) {
-  var index, t1;
-  this._ensureCapacity$0();
-  index = this._probeForAdding$1(key);
-  t1 = this._keys;
-  if (index !== (index | 0))
-    throw $.iae(index);
-  if (index < 0 || index >= t1.length)
-    throw $.ioore(index);
-  t1 = t1[index];
-  if (t1 == null || t1 === $.CONSTANT3)
-    this._numberOfEntries = $.add(this._numberOfEntries, 1);
-  t1 = this._keys;
-  if (index >= t1.length)
-    throw $.ioore(index);
-  t1[index] = key;
-  t1 = this._values;
-  if (index >= t1.length)
-    throw $.ioore(index);
-  t1[index] = value;
-},
- operator$index$1: function(key) {
-  var index, t1;
-  index = this._probeForLookup$1(key);
-  if (typeof index !== 'number')
-    return this.operator$index$1$bailout0(1, index);
-  if (index < 0)
-    return;
-  t1 = this._values;
-  if (index !== (index | 0))
-    throw $.iae(index);
-  if (index < 0 || index >= t1.length)
-    throw $.ioore(index);
-  return t1[index];
-},
- operator$index$1$bailout0: function(state0, index) {
-  var t1;
-  if ($.ltB(index, 0))
-    return;
-  t1 = this._values;
-  if (index !== (index | 0))
-    throw $.iae(index);
-  if (index < 0 || index >= t1.length)
-    throw $.ioore(index);
-  return t1[index];
-},
- remove$1: function(key) {
-  var index, t1, value;
-  index = this._probeForLookup$1(key);
-  if ($.geB(index, 0)) {
-    this._numberOfEntries = $.sub(this._numberOfEntries, 1);
+        t1 = this._keys;
+        if (index >= t1.length)
+          throw $.ioore(index);
+        t1[index] = key;
+        t1 = this._values;
+        if (index >= t1.length)
+          throw $.ioore(index);
+        t1[index] = value;
+    }
+  },
+  operator$index$1: function(key) {
+    var index, t1;
+    index = this._probeForLookup$1(key);
+    if (typeof index !== "number")
+      return this.operator$index$1$bailout0(1, index);
+    if (index < 0)
+      return;
     t1 = this._values;
     if (index !== (index | 0))
       throw $.iae(index);
     if (index < 0 || index >= t1.length)
       throw $.ioore(index);
-    value = t1[index];
-    t1[index] = null;
-    t1 = this._keys;
-    if (index >= t1.length)
+    return t1[index];
+  },
+  operator$index$1$bailout0: function(state0, index) {
+    var t1;
+    if ($.ltB(index, 0))
+      return;
+    t1 = this._values;
+    if (index !== (index | 0))
+      throw $.iae(index);
+    if (index < 0 || index >= t1.length)
       throw $.ioore(index);
-    t1[index] = $.CONSTANT3;
-    this._numberOfDeleted = this._numberOfDeleted + 1;
-    return value;
-  }
-  return;
-},
- get$isEmpty: function() {
-  return $.eq(this._numberOfEntries, 0);
-},
- get$length: function() {
-  return this._numberOfEntries;
-},
- forEach$1: function(f) {
-  var length$, i, t1, key;
-  length$ = this._keys.length;
-  for (i = 0; i < length$; ++i) {
-    t1 = this._keys;
-    if (i >= t1.length)
-      throw $.ioore(i);
-    key = t1[i];
-    if (!(key == null) && !(key === $.CONSTANT3)) {
+    return t1[index];
+  },
+  remove$1: function(key) {
+    var index, t1, t2, value;
+    index = this._probeForLookup$1(key);
+    if ($.geB(index, 0)) {
+      t1 = this._numberOfEntries;
+      this._numberOfEntries = $.getInterceptor$JSNumber(t1).operator$sub$1(t1, 1);
+      t2 = this._values;
+      if (index !== (index | 0))
+        throw $.iae(index);
+      if (index < 0 || index >= t2.length)
+        throw $.ioore(index);
+      value = t2[index];
+      t2[index] = null;
+      t2 = this._keys;
+      if (index >= t2.length)
+        throw $.ioore(index);
+      t2[index] = $.CONSTANT3;
+      this._numberOfDeleted = this._numberOfDeleted + 1;
+      return value;
+    }
+    return;
+  },
+  get$isEmpty: function() {
+    return $.eq(this._numberOfEntries, 0);
+  },
+  get$length: function() {
+    return this._numberOfEntries;
+  },
+  forEach$1: function(f) {
+    var it, t1, t2, t3;
+    it = $._HashMapImplIndexIterator$(this);
+    for (; it.moveNext$0() === true;) {
+      t1 = this._keys;
+      t2 = it.get$current();
+      if (t2 !== (t2 | 0))
+        throw $.iae(t2);
+      if (t2 < 0 || t2 >= t1.length)
+        throw $.ioore(t2);
+      t2 = t1[t2];
       t1 = this._values;
-      if (i >= t1.length)
-        throw $.ioore(i);
-      f.call$2(key, t1[i]);
+      t3 = it.get$current();
+      if (t3 !== (t3 | 0))
+        throw $.iae(t3);
+      if (t3 < 0 || t3 >= t1.length)
+        throw $.ioore(t3);
+      f.call$2(t2, t1[t3]);
     }
+  },
+  containsKey$1: function(key) {
+    return !$.eqB(this._probeForLookup$1(key), -1);
+  },
+  toString$0: function() {
+    return $.Maps_mapToString(this);
+  },
+  _HashMapImpl$0: function() {
+    this._numberOfEntries = 0;
+    this._numberOfDeleted = 0;
+    this._loadLimit = $._HashMapImpl__computeLoadLimit(8);
+    this._keys = $.List_List$fixedLength(8, null);
+    this._values = $.List_List$fixedLength(8, null);
+  },
+  is$Map: function() {
+    return true;
   }
-},
- containsKey$1: function(key) {
-  return !$.eqB(this._probeForLookup$1(key), -1);
-},
- toString$0: function() {
-  return $.Maps_mapToString(this);
-},
- _HashMapImpl$0: function() {
-  this._numberOfEntries = 0;
-  this._numberOfDeleted = 0;
-  this._loadLimit = $._HashMapImpl__computeLoadLimit(8);
-  this._keys = $.List_List(8);
-  this._values = $.List_List(8);
-},
- is$Map: function() { return true; }
 };
 
-$$._DeletedKeySentinel = {"":"Object;"
-};
-
-$$._KeyValuePair = {"":"Object;key>,value="
-};
-
-$$._LinkedHashMapImpl = {"":"Object;_list,_map",
- operator$indexSet$2: function(key, value) {
-  var t1;
-  if (this._map.containsKey$1(key) === true) {
+$$._HashMapImplIterator = {"": "Object;",
+  moveNext$0: function() {
+    var t1, t2, length$, t3, newIndex, key;
     t1 = this._map;
-    $.getInterceptor$JSStringJSArray(t1).operator$index$1(t1, key).get$element().set$value(value);
-  } else {
-    this._list.addLast$1($._KeyValuePair$(key, value));
-    $.indexSet(this._map, key, this._list.lastEntry$0());
-  }
-},
- operator$index$1: function(key) {
-  var t1, entry;
-  t1 = this._map;
-  entry = $.getInterceptor$JSStringJSArray(t1).operator$index$1(t1, key);
-  if (entry == null)
-    return;
-  return entry.get$element().get$value();
-},
- remove$1: function(key) {
-  var entry = this._map.remove$1(key);
-  if (entry == null)
-    return;
-  entry.remove$0();
-  return entry.get$element().get$value();
-},
- forEach$1: function(f) {
-  this._list.forEach$1(new $._LinkedHashMapImpl_forEach_anon(f));
-},
- containsKey$1: function(key) {
-  return this._map.containsKey$1(key);
-},
- get$length: function() {
-  var t1 = this._map;
-  return $.getInterceptor$JSStringJSArray(t1).get$length(t1);
-},
- get$isEmpty: function() {
-  return $.eq(this.get$length(), 0);
-},
- clear$0: function() {
-  var t1 = this._map;
-  $.getInterceptor$JSArray(t1).clear$0(t1);
-  this._list.clear$0();
-},
- toString$0: function() {
-  return $.Maps_mapToString(this);
-},
- _LinkedHashMapImpl$0: function() {
-  this._map = $.HashMap_HashMap();
-  this._list = $.DoubleLinkedQueue$();
-},
- is$Map: function() { return true; }
-};
-
-$$.Object = {"":";",
- operator$eq$1: function(other) {
-  return this === other;
-},
- get$hashCode: function() {
-  return $.Primitives_objectHashCode(this);
-},
- toString$0: function() {
-  return $.Primitives_objectToString(this);
-}
-};
-
-$$.DoubleLinkedQueueEntry = {"":"Object;_previous=,_next=,_element>",
- _link$2: function(p, n) {
-  this._next = n;
-  this._previous = p;
-  p.set$_next(this);
-  n.set$_previous(this);
-},
- prepend$1: function(e) {
-  $.DoubleLinkedQueueEntry$(e)._link$2(this._previous, this);
-},
- remove$0: function() {
-  var t1 = this._next;
-  this._previous.set$_next(t1);
-  t1 = this._previous;
-  this._next.set$_previous(t1);
-  this._next = null;
-  this._previous = null;
-  return this._element;
-},
- _asNonSentinelEntry$0: function() {
-  return this;
-},
- previousEntry$0: function() {
-  return this._previous._asNonSentinelEntry$0();
-},
- get$element: function() {
-  return this._element;
-},
- DoubleLinkedQueueEntry$1: function(e) {
-  this._element = e;
-}
-};
-
-$$._DoubleLinkedQueueEntrySentinel = {"":"DoubleLinkedQueueEntry;_previous,_next,_element",
- remove$0: function() {
-  throw $.$$throw($.StateError$("Empty queue"));
-},
- _asNonSentinelEntry$0: function() {
-  return;
-},
- get$element: function() {
-  throw $.$$throw($.StateError$("Empty queue"));
-},
- _DoubleLinkedQueueEntrySentinel$0: function() {
-  this._link$2(this, this);
-}
-};
-
-$$.DoubleLinkedQueue = {"":"Object;_sentinel",
- addLast$1: function(value) {
-  this._sentinel.prepend$1(value);
-},
- add$1: function(value) {
-  this._sentinel.prepend$1(value);
-},
- removeLast$0: function() {
-  return this._sentinel._previous.remove$0();
-},
- get$first: function() {
-  return this._sentinel._next.get$element();
-},
- lastEntry$0: function() {
-  return this._sentinel.previousEntry$0();
-},
- get$length: function() {
-  var t1 = {};
-  t1.counter_0 = 0;
-  this.forEach$1(new $.DoubleLinkedQueue_length_anon(t1));
-  return t1.counter_0;
-},
- get$isEmpty: function() {
-  var t1 = this._sentinel;
-  return t1._next === t1;
-},
- clear$0: function() {
-  var t1 = this._sentinel;
-  t1._next = t1;
-  t1 = this._sentinel;
-  t1._previous = t1;
-},
- forEach$1: function(f) {
-  var entry, nextEntry;
-  entry = this._sentinel._next;
-  for (; !(entry === this._sentinel); entry = nextEntry) {
-    nextEntry = entry.get$_next();
-    f.call$1(entry.get$_element());
-  }
-},
- map$1: function(f) {
-  var other, entry, t1, nextEntry;
-  other = $.Queue_Queue();
-  entry = this._sentinel._next;
-  for (t1 = $.getInterceptor$JSArray(other); !(entry === this._sentinel); entry = nextEntry) {
-    nextEntry = entry.get$_next();
-    t1.addLast$1(other, f.call$1(entry.get$_element()));
-  }
-  return other;
-},
- iterator$0: function() {
-  return $._DoubleLinkedQueueIterator$(this._sentinel);
-},
- toString$0: function() {
-  return $.Collections_collectionToString(this);
-},
- DoubleLinkedQueue$0: function() {
-  this._sentinel = $._DoubleLinkedQueueEntrySentinel$();
-},
- is$Collection: function() { return true; }
-};
-
-$$._DoubleLinkedQueueIterator = {"":"Object;_sentinel,_currentEntry",
- get$hasNext: function() {
-  var t1, t2;
-  t1 = this._currentEntry.get$_next();
-  t2 = this._sentinel;
-  return !(t1 == null ? t2 == null : t1 === t2);
-},
- next$0: function() {
-  if (this.get$hasNext() !== true)
-    throw $.$$throw($.StateError$("No more elements"));
-  this._currentEntry = this._currentEntry.get$_next();
-  return this._currentEntry.get$element();
-},
- _DoubleLinkedQueueIterator$1: function(_sentinel) {
-  this._currentEntry = this._sentinel;
-}
-};
-
-$$._StringBufferImpl = {"":"Object;_buffer,_length",
- get$length: function() {
-  return this._length;
-},
- get$isEmpty: function() {
-  return $.eq(this._length, 0);
-},
- add$1: function(obj) {
-  var str, t1;
-  str = $.getInterceptor(obj).toString$0(obj);
-  if (!(typeof str === 'string'))
-    throw $.$$throw($.ArgumentError$("toString() did not return a string"));
-  if ($.CONSTANT.get$isEmpty(str) === true)
-    return;
-  t1 = this._buffer;
-  $.getInterceptor$JSArray(t1).add$1(t1, str);
-  this._length = $.add(this._length, str.length);
-},
- clear$0: function() {
-  this._buffer = $.List_List(null);
-  this._length = 0;
-},
- toString$0: function() {
-  var t1, result;
-  t1 = this._buffer;
-  if ($.eqB($.getInterceptor$JSStringJSArray(t1).get$length(t1), 0))
-    return "";
-  t1 = this._buffer;
-  if ($.eqB($.getInterceptor$JSStringJSArray(t1).get$length(t1), 1)) {
-    t1 = this._buffer;
-    return $.getInterceptor$JSStringJSArray(t1).operator$index$1(t1, 0);
-  }
-  result = $.stringJoinUnchecked($.Strings__toJsStringArray(this._buffer), "");
-  t1 = this._buffer;
-  $.getInterceptor$JSArray(t1).clear$0(t1);
-  t1 = this._buffer;
-  $.getInterceptor$JSArray(t1).add$1(t1, result);
-  return result;
-},
- _StringBufferImpl$1: function(content$) {
-  this.clear$0();
-  this.add$1(content$);
-}
-};
-
-$$.ObjectInterceptor = {"":"Object;",
- toString$0: function(receiver) {
-  return receiver.toString$0();
-},
- substring$1: function(receiver, a0) {
-  return receiver.substring$1(a0);
-},
- charCodeAt$1: function(receiver, a0) {
-  return receiver.charCodeAt$1(a0);
-},
- iterator$0: function(receiver) {
-  return receiver.iterator$0();
-},
- add$1: function(receiver, a0) {
-  return receiver.add$1(a0);
-},
- replaceAll$2: function(receiver, a0, a1) {
-  return receiver.replaceAll$2(a0, a1);
-},
- get$length: function(receiver) {
-  return receiver.get$length();
-},
- endsWith$1: function(receiver, a0) {
-  return receiver.endsWith$1(a0);
-},
- contains$2: function(receiver, a0, a1) {
-  return receiver.contains$2(a0, a1);
-},
- insertRange$3: function(receiver, a0, a1, a2) {
-  return receiver.insertRange$3(a0, a1, a2);
-},
- clear$0: function(receiver) {
-  return receiver.clear$0();
-},
- operator$index$1: function(receiver, a0) {
-  return receiver.operator$index$1(a0);
-},
- indexOf$2: function(receiver, a0, a1) {
-  return receiver.indexOf$2(a0, a1);
-},
- get$hashCode: function(receiver) {
-  return receiver.get$hashCode();
-},
- truncate$0: function(receiver) {
-  return receiver.truncate$0();
-},
- set$length: function(receiver, value) {
-  return receiver.set$length(value);
-},
- floor$0: function(receiver) {
-  return receiver.floor$0();
-},
- forEach$1: function(receiver, a0) {
-  return receiver.forEach$1(a0);
-},
- get$first: function(receiver) {
-  return receiver.get$first();
-},
- removeAt$1: function(receiver, a0) {
-  return receiver.removeAt$1(a0);
-},
- toInt$0: function(receiver) {
-  return receiver.toInt$0();
-},
- get$isEmpty: function(receiver) {
-  return receiver.get$isEmpty();
-},
- allMatches$1: function(receiver, a0) {
-  return receiver.allMatches$1(a0);
-},
- removeLast$0: function(receiver) {
-  return receiver.removeLast$0();
-},
- addLast$1: function(receiver, a0) {
-  return receiver.addLast$1(a0);
-},
- get$isNaN: function(receiver) {
-  return receiver.get$isNaN();
-},
- contains$1: function(receiver, a0) {
-  return receiver.contains$1(a0);
-},
- ceil$0: function(receiver) {
-  return receiver.ceil$0();
-},
- map$1: function(receiver, a0) {
-  return receiver.map$1(a0);
-},
- abs$0: function(receiver) {
-  return receiver.abs$0();
-},
- get$isInfinite: function(receiver) {
-  return receiver.get$isInfinite();
-},
- indexOf$1: function(receiver, a0) {
-  return receiver.indexOf$1(a0);
-}
-};
-
-$$.JSFunction = {"":"Object;",
- toString$0: function(receiver) {
-  return "Closure";
-}
-};
-
-$$.JSBool = {"":"Object;",
- toString$0: function(receiver) {
-  return String(receiver);
-},
- get$hashCode: function(receiver) {
-  return receiver ? 519018 : 218159;
-},
- is$bool: true
-};
-
-$$.JSNull = {"":"Object;",
- toString$0: function(receiver) {
-  return "null";
-},
- get$hashCode: function(receiver) {
-  return 0;
-}
-};
-
-$$.JSArray = {"":"Object;",
- add$1: function(receiver, value) {
-  $.checkGrowable(receiver, "add");
-  receiver.push(value);
-},
- removeAt$1: function(receiver, index) {
-  if (!(typeof index === 'number' && Math.floor(index) === index))
-    throw $.$$throw($.ArgumentError$(index));
-  if (index < 0 || index >= receiver.length)
-    throw $.$$throw($.RangeError$value(index));
-  $.checkGrowable(receiver, "removeAt");
-  return receiver.splice(index, 1)[0];
-},
- removeLast$0: function(receiver) {
-  $.checkGrowable(receiver, "removeLast");
-  if (receiver.length === 0)
-    throw $.$$throw($.RangeError$value(-1));
-  return receiver.pop();
-},
- addLast$1: function(receiver, value) {
-  $.checkGrowable(receiver, "addLast");
-  receiver.push(value);
-},
- clear$0: function(receiver) {
-  this.set$length(receiver, 0);
-},
- forEach$1: function(receiver, f) {
-  return $.Collections_forEach(receiver, f);
-},
- map$1: function(receiver, f) {
-  return $.Collections_map(receiver, [], f);
-},
- insertRange$3: function(receiver, start, length$, initialValue) {
-  return $.listInsertRange(receiver, start, length$, initialValue);
-},
- get$first: function(receiver) {
-  if (0 >= receiver.length)
-    throw $.ioore(0);
-  return receiver[0];
-},
- indexOf$2: function(receiver, element, start) {
-  if (!(typeof start === 'number' && Math.floor(start) === start))
-    throw $.$$throw($.ArgumentError$(start));
-  return $.Arrays_indexOf(receiver, element, start, receiver.length);
-},
- indexOf$1: function($receiver, element) {
-  return this.indexOf$2($receiver, element, 0);
-},
- contains$1: function(receiver, other) {
-  var i;
-  for (i = 0; i < receiver.length; ++i)
-    if ($.eqB(other, receiver[i]))
-      return true;
-  return false;
-},
- get$isEmpty: function(receiver) {
-  return receiver.length === 0;
-},
- toString$0: function(receiver) {
-  return $.Collections_collectionToString(receiver);
-},
- iterator$0: function(receiver) {
-  return $.ListIterator$(receiver);
-},
- get$hashCode: function(receiver) {
-  return $.Primitives_objectHashCode(receiver);
-},
- get$length: function(receiver) {
-  return receiver.length;
-},
- set$length: function(receiver, newLength) {
-  if (!(typeof newLength === 'number' && Math.floor(newLength) === newLength))
-    throw $.$$throw($.ArgumentError$(newLength));
-  if (newLength < 0)
-    throw $.$$throw($.RangeError$value(newLength));
-  $.checkGrowable(receiver, "set length");
-  receiver.length = newLength;
-},
- operator$index$1: function(receiver, index) {
-  if (!(typeof index === 'number' && Math.floor(index) === index))
-    throw $.$$throw($.ArgumentError$(index));
-  if (index >= receiver.length || index < 0)
-    throw $.$$throw($.RangeError$value(index));
-  return receiver[index];
-},
- is$List: function() { return true; },
- is$Collection: function() { return true; }
-};
-
-$$.JSNumber = {"":"Object;",
- get$isNaN: function(receiver) {
-  return isNaN(receiver);
-},
- abs$0: function(receiver) {
-  return Math.abs(receiver);
-},
- toInt$0: function(receiver) {
-  var truncated;
-  if (this.get$isNaN(receiver) === true)
-    throw $.$$throw($.FormatException$("NaN"));
-  if (this.get$isInfinite(receiver) === true)
-    throw $.$$throw($.FormatException$("Infinity"));
-  truncated = this.truncate$0(receiver);
-  return truncated == -0.0 ? 0 : truncated;
-},
- ceil$0: function(receiver) {
-  return Math.ceil(receiver);
-},
- floor$0: function(receiver) {
-  return Math.floor(receiver);
-},
- get$isInfinite: function(receiver) {
-  return receiver == Infinity || receiver == -Infinity;
-},
- truncate$0: function(receiver) {
-  return receiver < 0 ? this.ceil$0(receiver) : this.floor$0(receiver);
-},
- toString$0: function(receiver) {
-  if (receiver === 0 && (1 / receiver) < 0)
-    return "-0.0";
-  else
-    return String(receiver);
-},
- get$hashCode: function(receiver) {
-  return receiver & 536870911;
-}
-};
-
-$$.JSInt = {"":"JSNumber;"
-};
-
-$$.JSDouble = {"":"JSNumber;"
-};
-
-$$.JSString = {"":"Object;",
- charCodeAt$1: function(receiver, index) {
-  if (index < 0)
-    throw $.$$throw($.RangeError$value(index));
-  if (index >= receiver.length)
-    throw $.$$throw($.RangeError$value(index));
-  return receiver.charCodeAt(index);
-},
- allMatches$1: function(receiver, str) {
-  $.checkString(str);
-  return $.allMatchesInStringUnchecked(receiver, str);
-},
- endsWith$1: function(receiver, other) {
-  var otherLength, t1;
-  $.checkString(other);
-  otherLength = other.length;
-  t1 = receiver.length;
-  if (otherLength > t1)
-    return false;
-  return other === this.substring$1(receiver, t1 - otherLength);
-},
- replaceAll$2: function(receiver, from, to) {
-  $.checkString(to);
-  return $.stringReplaceAllUnchecked(receiver, from, to);
-},
- substring$2: function(receiver, startIndex, endIndex) {
-  $.checkNum(startIndex);
-  if (endIndex == null)
-    endIndex = receiver.length;
-  $.checkNum(endIndex);
-  if ($.ltB(startIndex, 0))
-    throw $.$$throw($.RangeError$value(startIndex));
-  if ($.gtB(startIndex, endIndex))
-    throw $.$$throw($.RangeError$value(startIndex));
-  if ($.gtB(endIndex, receiver.length))
-    throw $.$$throw($.RangeError$value(endIndex));
-  return receiver.substring(startIndex, endIndex);
-},
- substring$1: function($receiver, startIndex) {
-  return this.substring$2($receiver, startIndex, null);
-},
- indexOf$2: function(receiver, other, start) {
-  $.checkNull(other);
-  if (!(typeof start === 'number' && Math.floor(start) === start))
-    throw $.$$throw($.ArgumentError$(start));
-  if (!(typeof other === 'string'))
-    throw $.$$throw($.ArgumentError$(other));
-  if (start < 0)
-    return -1;
-  return receiver.indexOf(other, start);
-},
- indexOf$1: function($receiver, other) {
-  return this.indexOf$2($receiver, other, 0);
-},
- contains$2: function(receiver, other, startIndex) {
-  $.checkNull(other);
-  return $.stringContainsUnchecked(receiver, other, startIndex);
-},
- contains$1: function($receiver, other) {
-  return this.contains$2($receiver, other, 0);
-},
- get$isEmpty: function(receiver) {
-  return receiver.length === 0;
-},
- toString$0: function(receiver) {
-  return receiver;
-},
- get$hashCode: function(receiver) {
-  var hash, i, hash0, hash1;
-  for (hash = 0, i = 0; i < receiver.length; ++i, hash = hash1) {
-    hash0 = 536870911 & hash + receiver.charCodeAt(i);
-    hash1 = 536870911 & hash0 + ((524287 & hash0) << 10 >>> 0);
-    hash1 = hash1 ^ (hash1 >> 6);
-  }
-  hash0 = 536870911 & hash + ((67108863 & hash) << 3 >>> 0);
-  hash0 = hash0 ^ (hash0 >> 11);
-  return 536870911 & hash0 + ((16383 & hash0) << 15 >>> 0);
-},
- get$length: function(receiver) {
-  return receiver.length;
-},
- operator$index$1: function(receiver, index) {
-  if (!(typeof index === 'number' && Math.floor(index) === index))
-    throw $.$$throw($.ArgumentError$(index));
-  if (index >= receiver.length || index < 0)
-    throw $.$$throw($.RangeError$value(index));
-  return receiver[index];
-},
- is$String: true
-};
-
-$$.NavDemo = {"":"StageWrapper;_count,canvas,stage,rootThing,_invalidatedEventId,_frameRequested,_disposed",
- _forward$1: function(tx) {
-  var t1, t2;
-  t1 = this.rootThing;
-  if (t1.get$canForward() === true) {
-    t2 = this._count + 1;
-    this._count = t2;
-    t1.forward$2($.NavDemo__getDemoElement(t2), tx);
-  }
-},
- _canvas_mouseDown$1: function(e) {
-  var point, hits, t1;
-  point = $.getMouseEventCoordinate(e);
-  hits = $.RetainedUtil_hitTest(this.stage, point);
-  t1 = $.getInterceptor$JSStringJSArray(hits);
-  if ($.gtB(t1.get$length(hits), 0))
-    this._itemClick$1(t1.get$first(hits));
-},
- get$_canvas_mouseDown: function() {
-  return new $.BoundClosure(this, '_canvas_mouseDown$1');
-},
- _itemClick$1: function(element) {
-  var tx, lastTx;
-  if ($.eqB(element.get$width(), 300))
-    tx = $.AffineTransform_AffineTransform$fromTranslat(100, 100).scale$2(0.3333333333333333, 0.3333333333333333).createInverse$0();
-  else {
-    lastTx = element.getTransform$0();
-    tx = $.AffineTransform_AffineTransform$fromTranslat(lastTx.get$translateX(), lastTx.get$translateY()).scale$2(0.3333333333333333, 0.3333333333333333);
-  }
-  this._forward$1(tx);
-},
- NavDemo$_internal$2: function(canvas, nav) {
-  var t1;
-  this._forward$1($.AffineTransform$(1, 0, 0, 1, 0, 0));
-  t1 = canvas.get$on().get$mouseDown();
-  $.getInterceptor$JSArray(t1).add$1(t1, this.get$_canvas_mouseDown());
-}
-};
-
-$$.BodyElementEvents = {"":"ElementEvents;_ptr"
-};
-
-$$.DocumentEvents = {"":"ElementEvents;_ptr"
-};
-
-$$.ElementEvents = {"":"Events;_ptr",
- get$mouseDown: function() {
-  return this.operator$index$1("mousedown");
-}
-};
-
-$$.Events = {"":"Object;_ptr",
- operator$index$1: function(type) {
-  return $.EventListenerList$(this._ptr, type);
-}
-};
-
-$$.EventListenerList = {"":"Object;_ptr,_type",
- add$2: function(listener, useCapture) {
-  this._ptr.$$dom_addEventListener$3(this._type, listener, useCapture);
-  return this;
-},
- add$1: function(listener) {
-  return this.add$2(listener, false);
-},
- remove$2: function(listener, useCapture) {
-  this._ptr.$$dom_removeEventListener$3(this._type, listener, useCapture);
-  return this;
-},
- remove$1: function(listener) {
-  return this.remove$2(listener, false);
-}
-};
-
-$$.FrameSetElementEvents = {"":"ElementEvents;_ptr"
-};
-
-$$.InputElementEvents = {"":"ElementEvents;_ptr"
-};
-
-$$.MediaElementEvents = {"":"ElementEvents;_ptr"
-};
-
-$$.WindowEvents = {"":"Events;_ptr",
- get$mouseDown: function() {
-  return this.operator$index$1("mousedown");
-}
-};
-
-$$._DOMWindowCrossFrame = {"":"Object;_window",
- get$parent: function() {
-  return $._DOMWindowCrossFrame__createSafe(this._window.parent);
-},
- get$top: function() {
-  return $._DOMWindowCrossFrame__createSafe(this._window.top);
-}
-};
-
-$$.FixedSizeListIterator = {"":"_VariableSizeListIterator;_liblib$_length,_array,_pos",
- get$hasNext: function() {
-  return $.gt(this._liblib$_length, this._pos);
-}
-};
-
-$$._VariableSizeListIterator = {"":"Object;",
- get$hasNext: function() {
-  var t1 = this._array;
-  return $.gt($.getInterceptor$JSStringJSArray(t1).get$length(t1), this._pos);
-},
- next$0: function() {
-  var t1, t3, t4;
-  if (this.get$hasNext() !== true)
-    throw $.$$throw($.StateError$("No more elements"));
-  t1 = this._array;
-  if (typeof t1 !== 'string' && (typeof t1 !== 'object' || t1 === null || t1.constructor !== Array && !t1.is$JavaScriptIndexingBehavior()))
-    return this.next$0$bailout(1, t1);
-  t3 = $.getInterceptor$JSStringJSArray(t1);
-  t4 = this._pos;
-  if (typeof t4 !== 'number')
-    return this.next$0$bailout(2, t4, t3, t1);
-  this._pos = t4 + 1;
-  if (t4 !== (t4 | 0))
-    throw $.iae(t4);
-  if (t4 < 0 || t4 >= t1.length)
-    throw $.ioore(t4);
-  return t1[t4];
-},
- next$0$bailout: function(state0, env0, env1, env2) {
-  switch (state0) {
-    case 1:
-      t1 = env0;
-      break;
-    case 2:
-      t1 = env2;
-      t3 = env1;
-      t4 = env0;
-      break;
-  }
-  switch (state0) {
-    case 0:
-      if (this.get$hasNext() !== true)
-        throw $.$$throw($.StateError$("No more elements"));
-      t1 = this._array;
-    case 1:
-      state0 = 0;
-      t3 = $.getInterceptor$JSStringJSArray(t1);
-      t4 = this._pos;
-    case 2:
-      var t1, t3, t4;
-      state0 = 0;
-      this._pos = $.add(t4, 1);
-      return t3.operator$index$1(t1, t4);
-  }
-}
-};
-
-$$.Attachable = {"":"Object;name>"
-};
-
-$$.AttachableObject = {"":"DisposableImpl;",
- _set$2: function(key, value) {
-  this.validateNotDisposed$0();
-  $.indexSet(this._propertyValues, key, value);
-  this._fireChange$1(key);
-},
- get$_set: function() {
-  return new $.BoundClosure0(this, '_set$2');
-},
- _isSet$1: function(key) {
-  this.validateNotDisposed$0();
-  return this._propertyValues.containsKey$1(key);
-},
- _remove$1: function(key) {
-  this.validateNotDisposed$0();
-  if (this._isSet$1(key) === true) {
-    this._propertyValues.remove$1(key);
-    this._fireChange$1(key);
-  }
-},
- _getValueOrUndefined$3: function(key, obj, ifAbsent) {
-  var t1, value;
-  this.validateNotDisposed$0();
-  if (this._isSet$1(key) === true) {
-    t1 = this._propertyValues;
-    return $.getInterceptor$JSStringJSArray(t1).operator$index$1(t1, key);
-  } else if (!(ifAbsent == null)) {
-    value = ifAbsent.call$1(obj);
-    this._set$2(key, value);
-    return value;
-  } else
-    return $.CONSTANT11;
-},
- _fireChange$1: function(key) {
-  var t1, handle;
-  this.validateNotDisposed$0();
-  t1 = this._eventHandlers;
-  handle = $.getInterceptor$JSStringJSArray(t1).operator$index$1(t1, key);
-  if (!(handle == null))
-    handle.fireEvent$1(key);
-}
-};
-
-$$.Property = {"":"Attachable;defaultValue,name",
- get$2: function(obj, ifAbsent) {
-  var coreValue = this.getCore$2(obj, ifAbsent);
-  if (!(coreValue === $.CONSTANT11))
-    return coreValue;
-  else
-    return this.defaultValue;
-},
- get$1: function(obj) {
-  return this.get$2(obj, null);
-},
- getCore$2: function(obj, ifAbsent) {
-  return obj._getValueOrUndefined$3(this, obj, ifAbsent);
-},
- set$2: function(obj, value) {
-  obj._set$2(this, value);
-},
- clear$1: function(obj) {
-  return obj._remove$1(this);
-},
- toString$0: function() {
-  return "Property '" + $.S(this.name) + "'";
-}
-};
-
-$$._UndefinedValue = {"":"Object;"
-};
-
-$$.Enumerable = {"":"Object;",
- contains$1: function(item) {
-  var t1;
-  for (t1 = this.iterator$0(); t1.get$hasNext() === true;)
-    if ($.eqB(t1.next$0(), item))
-      return true;
-  return false;
-},
- get$isEmpty: function() {
-  return this.some$1(new $.Enumerable_isEmpty_anon()) !== true;
-},
- some$1: function(f) {
-  var t1;
-  $.requireArgumentNotNull(f, "f");
-  for (t1 = this.iterator$0(); t1.get$hasNext() === true;)
-    if (f.call$1(t1.next$0()) === true)
-      return true;
-  return false;
-},
- join$1: function(separator) {
-  var sb, t1, t2, t3;
-  sb = $.StringBuffer_StringBuffer("");
-  for (t1 = this.iterator$0(), t2 = $.getInterceptor$JSStringJSArray(sb); t1.get$hasNext() === true;) {
-    t3 = t1.next$0();
-    if ($.gtB(t2.get$length(sb), 0))
-      t2.add$1(sb, separator);
-    t2.add$1(sb, t3);
-  }
-  return $.getInterceptor(sb).toString$0(sb);
-},
- join$0: function() {
-  return this.join$1(", ");
-},
- map$1: function(f) {
-  $.requireArgumentNotNull(f, "f");
-  return $._FuncEnumerable$(this, new $.Enumerable_map_anon(f));
-},
- first$1: function(f) {
-  var iter;
-  if (f == null)
-    f = new $.Enumerable_first_anon();
-  iter = $._WhereIterator$(this.iterator$0(), f);
-  if (iter.get$hasNext() !== true)
-    throw $.$$throw($.CONSTANT9);
-  return iter.next$0();
-},
- get$first: function() {
-  return new $.BoundClosure1(this, 'first$1');
-},
- forEach$1: function(f) {
-  var t1;
-  for (t1 = this.iterator$0(); t1.get$hasNext() === true;)
-    f.call$1(t1.next$0());
-},
- toList$0: function() {
-  return $.List_List$from(this);
-},
- toString$0: function() {
-  return "[" + $.S(this.join$0()) + "]";
-}
-};
-
-$$._SimpleEnumerable = {"":"Enumerable;_source",
- iterator$0: function() {
-  return $.CONSTANT1.iterator$0(this._source);
-}
-};
-
-$$._FuncEnumerable = {"":"Enumerable;_source,_func",
- _func$1: function(arg0) {
-  return this._func.call$1(arg0);
-},
- iterator$0: function() {
-  return this._func$1(this._source.iterator$0());
-}
-};
-
-$$._SelectIterator = {"":"Object;_source,_func",
- _func$1: function(arg0) {
-  return this._func.call$1(arg0);
-},
- get$hasNext: function() {
-  return this._source.get$hasNext();
-},
- next$0: function() {
-  return this._func$1(this._source.next$0());
-}
-};
-
-$$._WhereIterator = {"":"Object;_source,_func,_liblib1$_next=,_current",
- _func$1: function(arg0) {
-  return this._func.call$1(arg0);
-},
- get$hasNext: function() {
-  if (this._liblib1$_next == null) {
-    this._liblib1$_next = false;
-    for (var t1 = this._source; t1.get$hasNext() === true;) {
-      this._current = t1.next$0();
-      if (this._func$1(this._current) === true) {
-        this._liblib1$_next = true;
-        break;
+    t2 = t1._keys;
+    length$ = t2.length;
+    t3 = this._index;
+    if (t3 !== (t3 | 0))
+      return this.moveNext$0$bailout(1, length$, t3, t1);
+    newIndex = t3 + 1;
+    for (; newIndex < length$;) {
+      if (newIndex < 0)
+        throw $.ioore(newIndex);
+      key = t2[newIndex];
+      if (!(key == null) && !(key === $.CONSTANT3)) {
+        this._current = this._computeCurrentFromIndex$3(newIndex, t2, t1._values);
+        this._index = newIndex;
+        return true;
       }
+      ++newIndex;
     }
-  }
-  return this._liblib1$_next;
-},
- next$0: function() {
-  if (this.get$hasNext() !== true)
-    throw $.$$throw($.StateError$("No more elements"));
-  this._liblib1$_next = null;
-  return this._current;
-}
-};
-
-$$.DisposedError = {"":"Object;message>"
-};
-
-$$.DisposableImpl = {"":"Object;",
- validateNotDisposed$0: function() {
-  if (this._disposed)
-    throw $.$$throw($.CONSTANT8);
-}
-};
-
-$$.EventArgs = {"":"Object;"
-};
-
-$$.EventHandle = {"":"DisposableImpl;_handlers,_disposed",
- fireEvent$1: function(args) {
-  var t1 = this._handlers;
-  if (!(t1 == null))
-    $.getInterceptor$JSArray(t1).forEach$1(t1, new $.EventHandle_fireEvent_anon(args));
-},
- add$1: function(handler) {
-  var id, t1;
-  id = $.GlobalId_GlobalId();
-  if (this._handlers == null)
-    this._handlers = $.HashMap_HashMap();
-  t1 = this._handlers;
-  if (typeof t1 !== 'object' || t1 === null || (t1.constructor !== Array || !!t1.immutable$list) && !t1.is$JavaScriptIndexingBehavior())
-    return this.add$1$bailout(1, handler, t1, id);
-  if (id !== (id | 0))
-    throw $.iae(id);
-  if (id < 0 || id >= t1.length)
-    throw $.ioore(id);
-  t1[id] = handler;
-  return id;
-},
- add$1$bailout: function(state0, handler, t1, id) {
-  $.indexSet(t1, id, handler);
-  return id;
-},
- remove$1: function(id) {
-  var t1 = this._handlers;
-  if (!(t1 == null))
-    return !(t1.remove$1(id) == null);
-  else
+    this._index = length$;
+    this._current = null;
     return false;
-}
+  },
+  moveNext$0$bailout: function(state0, length$, t2, t1) {
+    var newIndex, key;
+    newIndex = $.getInterceptor$JSNumber(t2).operator$add$1(t2, 1);
+    for (; $.ltB(newIndex, length$);) {
+      t2 = t1._keys;
+      if (newIndex !== (newIndex | 0))
+        throw $.iae(newIndex);
+      if (newIndex < 0 || newIndex >= t2.length)
+        throw $.ioore(newIndex);
+      key = t2[newIndex];
+      if (!(key == null) && !(key === $.CONSTANT3)) {
+        this._current = this._computeCurrentFromIndex$3(newIndex, t2, t1._values);
+        this._index = newIndex;
+        return true;
+      }
+      ++newIndex;
+    }
+    this._index = length$;
+    this._current = null;
+    return false;
+  },
+  get$current: function() {
+    return this._current;
+  }
 };
 
-$$.DetailedArgumentError = {"":"Object;argument,details",
- get$message: function() {
-  return "Illegal argument: \"" + $.S(this.argument) + "\" -- " + $.S(this.details);
-},
- toString$0: function() {
-  return this.get$message();
-},
- DetailedArgumentError$2: function(argument, details) {
-  $.requireArgumentNotNullOrEmpty(this.argument, "argument");
-  $.requireArgumentNotNullOrEmpty(this.details, "details");
-}
+$$._HashMapImplIndexIterator = {"": "_HashMapImplIterator;_map,_index,_current",
+  _computeCurrentFromIndex$3: function(index, keys, values) {
+    return index;
+  }
 };
 
-$$.InvalidOperationError = {"":"Object;message"
+$$._DeletedKeySentinel = {"": "Object;"};
+
+$$._KeyValuePair = {"": "Object;key>,value="};
+
+$$._LinkedHashMapImpl = {"": "Object;_list,_map",
+  operator$indexSet$2: function(key, value) {
+    var t1, t3;
+    if (this._map.containsKey$1(key) === true) {
+      t1 = this._map;
+      if (typeof t1 !== "string" && (typeof t1 !== "object" || t1 === null || t1.constructor !== Array && !t1.is$JavaScriptIndexingBehavior()))
+        return this.operator$indexSet$2$bailout(1, key, value, t1);
+      if (key !== (key | 0))
+        throw $.iae(key);
+      if (key < 0 || key >= t1.length)
+        throw $.ioore(key);
+      t1[key].get$element().set$value(value);
+    } else {
+      this._list.addLast$1($._KeyValuePair$(key, value));
+      t1 = this._map;
+      if (typeof t1 !== "object" || t1 === null || (t1.constructor !== Array || !!t1.immutable$list) && !t1.is$JavaScriptIndexingBehavior())
+        return this.operator$indexSet$2$bailout(2, t1, key);
+      t3 = this._list.lastEntry$0();
+      if (key !== (key | 0))
+        throw $.iae(key);
+      if (key < 0 || key >= t1.length)
+        throw $.ioore(key);
+      t1[key] = t3;
+    }
+  },
+  operator$indexSet$2$bailout: function(state0, env0, env1, env2) {
+    switch (state0) {
+      case 1:
+        t1 = env2;
+        value = env1;
+        key = env0;
+        break;
+      case 2:
+        key = env1;
+        t1 = env0;
+        break;
+    }
+    switch (state0) {
+      case 0:
+      default:
+        var t1, value, key, t3;
+        if (state0 === 1 || state0 === 0 && this._map.containsKey$1(key) === true)
+          switch (state0) {
+            case 0:
+              t1 = this._map;
+            case 1:
+              state0 = 0;
+              $.getInterceptor$JSStringJSArray(t1).operator$index$1(t1, key).get$element().set$value(value);
+          }
+        else
+          switch (state0) {
+            case 0:
+              this._list.addLast$1($._KeyValuePair$(key, value));
+              t1 = this._map;
+            case 2:
+              state0 = 0;
+              t3 = this._list.lastEntry$0();
+              $.getInterceptor$JSArray(t1).operator$indexSet$2(t1, key, t3);
+          }
+    }
+  },
+  operator$index$1: function(key) {
+    var t1, entry;
+    t1 = this._map;
+    entry = $.getInterceptor$JSStringJSArray(t1).operator$index$1(t1, key);
+    if (entry == null)
+      return;
+    return entry.get$element().get$value();
+  },
+  remove$1: function(key) {
+    var t1, entry;
+    t1 = this._map;
+    entry = $.getInterceptor$JSArray(t1).remove$1(t1, key);
+    if (entry == null)
+      return;
+    entry.remove$0();
+    return entry.get$element().get$value();
+  },
+  forEach$1: function(f) {
+    this._list.forEach$1(new $._LinkedHashMapImpl_forEach_anon(f));
+  },
+  containsKey$1: function(key) {
+    return this._map.containsKey$1(key);
+  },
+  get$length: function() {
+    var t1 = this._map;
+    return $.getInterceptor$JSStringJSArray(t1).get$length(t1);
+  },
+  get$isEmpty: function() {
+    return $.eq($.getInterceptor$JSStringJSArray(this).get$length(this), 0);
+  },
+  clear$0: function() {
+    var t1 = this._map;
+    $.getInterceptor$JSArray(t1).clear$0(t1);
+    this._list.clear$0();
+  },
+  toString$0: function() {
+    return $.Maps_mapToString(this);
+  },
+  _LinkedHashMapImpl$0: function() {
+    this._map = $.HashMap_HashMap();
+    this._list = $.DoubleLinkedQueue$();
+  },
+  is$Map: function() {
+    return true;
+  }
 };
 
-$$.NullArgumentError = {"":"DetailedArgumentError;argument,details"
+$$.Object = {"": ";",
+  operator$eq$1: function(other) {
+    return this === other;
+  },
+  get$hashCode: function() {
+    return $.Primitives_objectHashCode(this);
+  },
+  toString$0: function() {
+    return "Instance of '" + $.S($.Primitives_objectTypeName(this)) + "'";
+  }
 };
 
-$$.GlobalId = {"":"Object;id>,_hashCode",
- get$hashCode: function() {
-  return this._hashCode;
-},
- operator$eq$1: function(other) {
-  return !(other == null) && $.eqB(other.get$id(), this.id);
-}
+$$.DoubleLinkedQueueEntry = {"": "Object;_previous=,_next=,_element",
+  _link$2: function(p, n) {
+    this._next = n;
+    this._previous = p;
+    p.set$_next(this);
+    n.set$_previous(this);
+  },
+  prepend$1: function(e) {
+    $.DoubleLinkedQueueEntry$(e)._link$2(this._previous, this);
+  },
+  remove$0: function() {
+    var t1 = this._next;
+    this._previous.set$_next(t1);
+    t1 = this._previous;
+    this._next.set$_previous(t1);
+    this._next = null;
+    this._previous = null;
+    return this._element;
+  },
+  _asNonSentinelEntry$0: function() {
+    return this;
+  },
+  previousEntry$0: function() {
+    return this._previous._asNonSentinelEntry$0();
+  },
+  nextEntry$0: function() {
+    return this._next._asNonSentinelEntry$0();
+  },
+  get$element: function() {
+    return this._element;
+  },
+  DoubleLinkedQueueEntry$1: function(e) {
+    this._element = e;
+  }
 };
 
-$$.AffineTransform = {"":"Object;_scX>,_shY>,_shX>,_scY>,_tX>,_tY>",
- get$scaleX: function() {
-  return this._scX;
-},
- get$scaleY: function() {
-  return this._scY;
-},
- get$translateX: function() {
-  return this._tX;
-},
- get$translateY: function() {
-  return this._tY;
-},
- get$shearX: function() {
-  return this._shX;
-},
- get$shearY: function() {
-  return this._shY;
-},
- get$determinant: function() {
-  return $.sub($.mul(this._scX, this._scY), $.mul(this._shX, this._shY));
-},
- scale$2: function(sx, sy) {
-  this._scX = $.mul(this._scX, sx);
-  this._shY = $.mul(this._shY, sx);
-  this._shX = $.mul(this._shX, sy);
-  this._scY = $.mul(this._scY, sy);
-  return this;
-},
- concatenate$1: function(tx) {
-  var m0, m1, m00, m10;
-  m0 = this._scX;
-  m1 = this._shX;
-  this._scX = $.add($.mul(tx.get$_scX(), m0), $.mul(tx.get$_shY(), m1));
-  this._shX = $.add($.mul(tx.get$_shX(), m0), $.mul(tx.get$_scY(), m1));
-  this._tX = $.add(this._tX, $.add($.mul(tx.get$_tX(), m0), $.mul(tx.get$_tY(), m1)));
-  m00 = this._shY;
-  m10 = this._scY;
-  this._shY = $.add($.mul(tx.get$_scX(), m00), $.mul(tx.get$_shY(), m10));
-  this._scY = $.add($.mul(tx.get$_shX(), m00), $.mul(tx.get$_scY(), m10));
-  this._tY = $.add(this._tY, $.add($.mul(tx.get$_tX(), m00), $.mul(tx.get$_tY(), m10)));
-  return this;
-},
- get$concatenate: function() {
-  return new $.BoundClosure(this, 'concatenate$1');
-},
- setToTranslation$2: function(dx, dy) {
-  return this.setTransform$6(1, 0, 0, 1, dx, dy);
-},
- setFromTransfrom$1: function(tx) {
-  $.requireArgumentNotNull(tx, "tx");
-  return this.setTransform$6(tx.get$_scX(), tx.get$_shY(), tx.get$_shX(), tx.get$_scY(), tx.get$_tX(), tx.get$_tY());
-},
- setTransform$6: function(m00, m10, m01, m11, m02, m12) {
-  this._scX = m00;
-  this._shY = m10;
-  this._shX = m01;
-  this._scY = m11;
-  this._tX = m02;
-  this._tY = m12;
-  return this;
-},
- transformCoordinate$1: function(point) {
-  return $.Coordinate$($.add($.add($.mul(point.get$x(), this._scX), $.mul(point.get$y(), this._shX)), this._tX), $.add($.add($.mul(point.get$x(), this._shY), $.mul(point.get$y(), this._scY)), this._tY));
-},
- createInverse$0: function() {
-  var det = this.get$determinant();
-  return $.AffineTransform$($.div(this._scY, det), $.div($.neg(this._shY), det), $.div($.neg(this._shX), det), $.div(this._scX, det), $.div($.sub($.mul(this._shX, this._tY), $.mul(this._scY, this._tX)), det), $.div($.sub($.mul(this._shY, this._tX), $.mul(this._scX, this._tY)), det));
-},
- lerpTx$2: function(other, x) {
-  $.requireArgumentNotNull(other, "other");
-  return $.AffineTransform$($.lerp(this.get$scaleX(), other.get$scaleX(), x), $.lerp(this.get$shearY(), other.get$shearY(), x), $.lerp(this.get$shearX(), other.get$shearX(), x), $.lerp(this.get$scaleY(), other.get$scaleY(), x), $.lerp(this.get$translateX(), other.get$translateX(), x), $.lerp(this.get$translateY(), other.get$translateY(), x));
-},
- clone$0: function() {
-  return $.AffineTransform$(this._scX, this._shY, this._shX, this._scY, this._tX, this._tY);
-},
- operator$eq$1: function(other) {
-  return !(other == null) && $.eqB(this._scX, other.get$_scX()) && $.eqB(this._shX, other.get$_shX()) && $.eqB(this._tX, other.get$_tX()) && $.eqB(this._shY, other.get$_shY()) && $.eqB(this._scY, other.get$_scY()) && $.eqB(this._tY, other.get$_tY());
-},
- toString$0: function() {
-  var t1 = $.$$([this.get$scaleX(), this.get$shearY(), this.get$shearX(), this.get$scaleY(), this.get$translateX(), this.get$translateY()]);
-  return $.Strings_join($.getInterceptor$JSArray(t1).map$1(t1, new $.AffineTransform_toString_anon()).toList$0(), ", ");
-}
+$$._DoubleLinkedQueueEntrySentinel = {"": "DoubleLinkedQueueEntry;_previous,_next,_element",
+  remove$0: function() {
+    throw $.$$throw($.StateError$("Empty queue"));
+  },
+  _asNonSentinelEntry$0: function() {
+    return;
+  },
+  get$element: function() {
+    throw $.$$throw($.StateError$("Empty queue"));
+  },
+  _DoubleLinkedQueueEntrySentinel$0: function() {
+    this._link$2(this, this);
+  }
 };
 
-$$.Box = {"":"Object;left>,top>,width>,height>",
- get$topLeft: function() {
-  return $.Coordinate$(this.left, this.top);
-},
- get$size: function() {
-  return $.Size$(this.width, this.height);
-},
- contains$1: function(point) {
-  var t1, t2, t3;
-  t1 = point.get$x();
-  t2 = this.left;
-  if ($.geB(t1, t2)) {
+$$.DoubleLinkedQueue = {"": "Iterable;_sentinel",
+  addLast$1: function(value) {
+    this._sentinel.prepend$1(value);
+  },
+  add$1: function(value) {
+    this._sentinel.prepend$1(value);
+  },
+  removeLast$0: function() {
+    return this._sentinel._previous.remove$0();
+  },
+  remove$1: function(o) {
+    var entry = this._sentinel.nextEntry$0();
+    for (; !(entry === this._sentinel);) {
+      if ($.eqB(entry.get$element(), o)) {
+        entry.remove$0();
+        return;
+      }
+      entry = entry.get$_next();
+    }
+  },
+  get$first: function() {
+    return this._sentinel._next.get$element();
+  },
+  lastEntry$0: function() {
+    return this._sentinel.previousEntry$0();
+  },
+  get$isEmpty: function() {
+    var t1 = this._sentinel;
+    return t1._next === t1;
+  },
+  clear$0: function() {
+    var t1 = this._sentinel;
+    t1._next = t1;
+    t1 = this._sentinel;
+    t1._previous = t1;
+  },
+  get$iterator: function() {
+    return $._DoubleLinkedQueueIterator$(this._sentinel);
+  },
+  toString$0: function() {
+    return $.Collections_collectionToString(this);
+  },
+  DoubleLinkedQueue$0: function() {
+    this._sentinel = $._DoubleLinkedQueueEntrySentinel$();
+  },
+  is$Collection: function() {
+    return true;
+  }
+};
+
+$$._DoubleLinkedQueueIterator = {"": "Object;_sentinel,_currentEntry,_current",
+  moveNext$0: function() {
+    var t1, t2;
+    t1 = this._currentEntry;
+    if (t1 == null)
+      return false;
+    this._currentEntry = t1.get$_next();
+    t1 = this._currentEntry;
+    t2 = this._sentinel;
+    if (t1 == null ? t2 == null : t1 === t2) {
+      this._currentEntry = null;
+      this._current = null;
+      this._sentinel = null;
+      return false;
+    }
+    this._current = t1.get$element();
+    return true;
+  },
+  get$current: function() {
+    return this._current;
+  }
+};
+
+$$._StringBufferImpl = {"": "Object;_buffer,_length",
+  get$length: function() {
+    return this._length;
+  },
+  get$isEmpty: function() {
+    return $.eq(this._length, 0);
+  },
+  add$1: function(obj) {
+    var str, t1, t2;
+    str = $.getInterceptor(obj).toString$0(obj);
+    if (!(typeof str === "string"))
+      throw $.$$throw($.ArgumentError$("toString() did not return a string"));
+    if ($.CONSTANT.get$isEmpty(str) === true)
+      return;
+    t1 = this._buffer;
+    $.getInterceptor$JSArray(t1).add$1(t1, str);
+    t1 = this._length;
+    t2 = str.length;
+    this._length = $.getInterceptor$JSNumber(t1).operator$add$1(t1, t2);
+  },
+  clear$0: function() {
+    this._buffer = $.List_List(0);
+    this._length = 0;
+  },
+  toString$0: function() {
+    var t1, result;
+    t1 = this._buffer;
+    if ($.eqB($.getInterceptor$JSStringJSArray(t1).get$length(t1), 0))
+      return "";
+    t1 = this._buffer;
+    if ($.eqB($.getInterceptor$JSStringJSArray(t1).get$length(t1), 1)) {
+      t1 = this._buffer;
+      return $.getInterceptor$JSStringJSArray(t1).operator$index$1(t1, 0);
+    }
+    result = $.Strings__toJsStringArray(this._buffer).join("");
+    t1 = this._buffer;
+    $.getInterceptor$JSArray(t1).clear$0(t1);
+    t1 = this._buffer;
+    $.getInterceptor$JSArray(t1).add$1(t1, result);
+    return result;
+  },
+  _StringBufferImpl$1: function(content$) {
+    this.clear$0();
+    this.add$1(content$);
+  }
+};
+
+$$.MappedIterable = {"": "Iterable;_iterable,_f",
+  _f$1: function(arg0) {
+    return this._f.call$1(arg0);
+  },
+  get$iterator: function() {
+    var t1 = this._iterable;
+    return $.MappedIterator$($.getInterceptor$JSArray(t1).get$iterator(t1), this._f);
+  },
+  get$length: function() {
+    var t1 = this._iterable;
+    return $.getInterceptor$JSStringJSArray(t1).get$length(t1);
+  },
+  get$isEmpty: function() {
+    var t1 = this._iterable;
+    return $.getInterceptor$JSStringJSArray(t1).get$isEmpty(t1);
+  }
+};
+
+$$.MappedIterator = {"": "Iterator;_liblib2$_current,_iterator,_f",
+  _f$1: function(arg0) {
+    return this._f.call$1(arg0);
+  },
+  moveNext$0: function() {
+    var t1 = this._iterator;
+    if (t1.moveNext$0() === true) {
+      this._liblib2$_current = this._f$1(t1.get$current());
+      return true;
+    } else {
+      this._liblib2$_current = null;
+      return false;
+    }
+  },
+  get$current: function() {
+    return this._liblib2$_current;
+  }
+};
+
+$$.NonExtensibleListMixin = {"": "Iterable;",
+  get$iterator: function() {
+    return $.ListIterator$(this);
+  },
+  forEach$1: function(f) {
+    var t1, i;
+    for (t1 = $.getInterceptor$JSStringJSArray(this), i = 0; $.ltB(i, t1.get$length(this)); ++i)
+      f.call$1(this.operator$index$1(i));
+  },
+  contains$1: function(value) {
+    var t1, i;
+    for (t1 = $.getInterceptor$JSStringJSArray(this), i = 0; $.ltB(i, t1.get$length(this)); ++i)
+      if ($.eqB(this.operator$index$1(i), value))
+        return true;
+    return false;
+  },
+  get$isEmpty: function() {
+    return $.eq($.getInterceptor$JSStringJSArray(this).get$length(this), 0);
+  },
+  indexOf$2: function(value, start) {
+    var t1, i, t2;
+    if (typeof start !== "number")
+      return this.indexOf$2$bailout(1, value, start);
+    t1 = $.getInterceptor$JSStringJSArray(this);
+    i = start;
+    while (true) {
+      t2 = t1.get$length(this);
+      if (typeof t2 !== "number")
+        return this.indexOf$2$bailout(2, value, t2, i);
+      if (!(i < t2))
+        break;
+      if ($.eqB(this.operator$index$1(i), value))
+        return i;
+      ++i;
+    }
+    return -1;
+  },
+  indexOf$2$bailout: function(state0, env0, env1, env2) {
+    switch (state0) {
+      case 1:
+        start = env1;
+        value = env0;
+        break;
+      case 2:
+        i = env2;
+        t2 = env1;
+        value = env0;
+        break;
+    }
+    switch (state0) {
+      case 0:
+      case 1:
+        state0 = 0;
+        t1 = $.getInterceptor$JSStringJSArray(this);
+        i = start;
+      case 2:
+        var start, value, t1, i, t2;
+        L0:
+          while (true)
+            switch (state0) {
+              case 0:
+                t2 = t1.get$length(this);
+              case 2:
+                state0 = 0;
+                if (!$.ltB(i, t2))
+                  break L0;
+                if ($.eqB(this.operator$index$1(i), value))
+                  return i;
+                i = $.getInterceptor$JSNumber(i).operator$add$1(i, 1);
+            }
+        return -1;
+    }
+  },
+  indexOf$1: function(value) {
+    return this.indexOf$2(value, 0);
+  },
+  get$first: function() {
+    if ($.gtB($.getInterceptor$JSStringJSArray(this).get$length(this), 0))
+      return this.operator$index$1(0);
+    throw $.$$throw($.StateError$("No elements"));
+  },
+  operator$indexSet$2: function(index, value) {
+    throw $.$$throw($.UnsupportedError$("Cannot modify an unmodifiable list"));
+  },
+  set$length: function(newLength) {
+    throw $.$$throw($.UnsupportedError$("Cannot change the length of an unmodifiable list"));
+  },
+  add$1: function(value) {
+    throw $.$$throw($.UnsupportedError$("Cannot add to an unmodifiable list"));
+  },
+  addLast$1: function(value) {
+    throw $.$$throw($.UnsupportedError$("Cannot add to an unmodifiable list"));
+  },
+  remove$1: function(element) {
+    throw $.$$throw($.UnsupportedError$("Cannot remove from an unmodifiable list"));
+  },
+  clear$0: function() {
+    throw $.$$throw($.UnsupportedError$("Cannot clear an unmodifiable list"));
+  },
+  removeAt$1: function(index) {
+    throw $.$$throw($.UnsupportedError$("Cannot remove from an unmodifiable list"));
+  },
+  removeLast$0: function() {
+    throw $.$$throw($.UnsupportedError$("Cannot remove from an unmodifiable list"));
+  },
+  insertRange$3: function(start, length$, initialValue) {
+    throw $.$$throw($.UnsupportedError$("Cannot insert range in an unmodifiable list"));
+  },
+  is$List: function() {
+    return true;
+  },
+  is$Collection: function() {
+    return true;
+  }
+};
+
+$$.ListIterator = {"": "Object;_liblib2$_list,_liblib2$_position,_liblib2$_current",
+  moveNext$0: function() {
+    var t1, nextPosition, t2, t3;
+    t1 = this._liblib2$_position;
+    if (typeof t1 !== "number")
+      return this.moveNext$0$bailout2(1, t1);
+    nextPosition = t1 + 1;
+    t1 = this._liblib2$_list;
+    t2 = $.getInterceptor$JSStringJSArray(t1);
+    t3 = t2.get$length(t1);
+    if (typeof t3 !== "number")
+      return this.moveNext$0$bailout2(2, t1, t2, t3, nextPosition);
+    if (nextPosition < t3) {
+      this._liblib2$_current = t1.operator$index$1(nextPosition);
+      this._liblib2$_position = nextPosition;
+      return true;
+    }
+    this._liblib2$_position = t2.get$length(t1);
+    this._liblib2$_current = null;
+    return false;
+  },
+  moveNext$0$bailout2: function(state0, env0, env1, env2, env3) {
+    switch (state0) {
+      case 1:
+        t1 = env0;
+        break;
+      case 2:
+        nextPosition = env3;
+        t3 = env2;
+        t2 = env1;
+        t1 = env0;
+        break;
+    }
+    switch (state0) {
+      case 0:
+        t1 = this._liblib2$_position;
+      case 1:
+        state0 = 0;
+        nextPosition = $.getInterceptor$JSNumber(t1).operator$add$1(t1, 1);
+        t1 = this._liblib2$_list;
+        t2 = $.getInterceptor$JSStringJSArray(t1);
+        t3 = t2.get$length(t1);
+      case 2:
+        var t1, nextPosition, t2, t3;
+        state0 = 0;
+        if ($.ltB(nextPosition, t3)) {
+          this._liblib2$_current = t1.operator$index$1(nextPosition);
+          this._liblib2$_position = nextPosition;
+          return true;
+        }
+        this._liblib2$_position = t2.get$length(t1);
+        this._liblib2$_current = null;
+        return false;
+    }
+  },
+  get$current: function() {
+    return this._liblib2$_current;
+  }
+};
+
+$$.MappedList = {"": "NonExtensibleListMixin;_liblib2$_list,_f",
+  _f$1: function(arg0) {
+    return this._f.call$1(arg0);
+  },
+  operator$index$1: function(index) {
+    var t1 = this._liblib2$_list;
+    if (typeof t1 !== "string" && (typeof t1 !== "object" || t1 === null || t1.constructor !== Array && !t1.is$JavaScriptIndexingBehavior()))
+      return this.operator$index$1$bailout2(1, index, t1);
+    if (index !== (index | 0))
+      throw $.iae(index);
+    if (index < 0 || index >= t1.length)
+      throw $.ioore(index);
+    return this._f$1(t1[index]);
+  },
+  operator$index$1$bailout2: function(state0, index, t1) {
+    return this._f$1($.getInterceptor$JSStringJSArray(t1).operator$index$1(t1, index));
+  },
+  get$length: function() {
+    var t1 = this._liblib2$_list;
+    return $.getInterceptor$JSStringJSArray(t1).get$length(t1);
+  }
+};
+
+$$.ObjectInterceptor = {"": "Object;",
+  toString$0: function(receiver) {
+    return receiver.toString$0();
+  },
+  substring$1: function(receiver, a0) {
+    return receiver.substring$1(a0);
+  },
+  charCodeAt$1: function(receiver, a0) {
+    return receiver.charCodeAt$1(a0);
+  },
+  get$iterator: function(receiver) {
+    return receiver.get$iterator();
+  },
+  add$1: function(receiver, a0) {
+    return receiver.add$1(a0);
+  },
+  operator$indexSet$2: function(receiver, a0, a1) {
+    return receiver.operator$indexSet$2(a0, a1);
+  },
+  get$length: function(receiver) {
+    return receiver.get$length();
+  },
+  endsWith$1: function(receiver, a0) {
+    return receiver.endsWith$1(a0);
+  },
+  replaceAll$2: function(receiver, a0, a1) {
+    return receiver.replaceAll$2(a0, a1);
+  },
+  operator$shr$1: function(receiver, a0) {
+    return receiver.operator$shr$1(a0);
+  },
+  clear$0: function(receiver) {
+    return receiver.clear$0();
+  },
+  operator$mul$1: function(receiver, a0) {
+    return receiver.operator$mul$1(a0);
+  },
+  contains$2: function(receiver, a0, a1) {
+    return receiver.contains$2(a0, a1);
+  },
+  insertRange$3: function(receiver, a0, a1, a2) {
+    return receiver.insertRange$3(a0, a1, a2);
+  },
+  abs$0: function(receiver) {
+    return receiver.abs$0();
+  },
+  truncate$0: function(receiver) {
+    return receiver.truncate$0();
+  },
+  operator$index$1: function(receiver, a0) {
+    return receiver.operator$index$1(a0);
+  },
+  indexOf$2: function(receiver, a0, a1) {
+    return receiver.indexOf$2(a0, a1);
+  },
+  operator$div$1: function(receiver, a0) {
+    return receiver.operator$div$1(a0);
+  },
+  get$isEmpty: function(receiver) {
+    return receiver.get$isEmpty();
+  },
+  addLast$1: function(receiver, a0) {
+    return receiver.addLast$1(a0);
+  },
+  get$isInfinite: function(receiver) {
+    return receiver.get$isInfinite();
+  },
+  allMatches$1: function(receiver, a0) {
+    return receiver.allMatches$1(a0);
+  },
+  toInt$0: function(receiver) {
+    return receiver.toInt$0();
+  },
+  removeLast$0: function(receiver) {
+    return receiver.removeLast$0();
+  },
+  set$length: function(receiver, value) {
+    return receiver.set$length(value);
+  },
+  indexOf$1: function(receiver, a0) {
+    return receiver.indexOf$1(a0);
+  },
+  ceil$0: function(receiver) {
+    return receiver.ceil$0();
+  },
+  operator$add$1: function(receiver, a0) {
+    return receiver.operator$add$1(a0);
+  },
+  contains$1: function(receiver, a0) {
+    return receiver.contains$1(a0);
+  },
+  get$isNaN: function(receiver) {
+    return receiver.get$isNaN();
+  },
+  operator$tdiv$1: function(receiver, a0) {
+    return receiver.operator$tdiv$1(a0);
+  },
+  get$first: function(receiver) {
+    return receiver.get$first();
+  },
+  mappedBy$1: function(receiver, a0) {
+    return receiver.mappedBy$1(a0);
+  },
+  get$hashCode: function(receiver) {
+    return receiver.get$hashCode();
+  },
+  operator$sub$1: function(receiver, a0) {
+    return receiver.operator$sub$1(a0);
+  },
+  floor$0: function(receiver) {
+    return receiver.floor$0();
+  },
+  operator$and$1: function(receiver, a0) {
+    return receiver.operator$and$1(a0);
+  },
+  forEach$1: function(receiver, a0) {
+    return receiver.forEach$1(a0);
+  },
+  removeAt$1: function(receiver, a0) {
+    return receiver.removeAt$1(a0);
+  },
+  operator$negate$0: function(receiver) {
+    return receiver.operator$negate$0();
+  },
+  remove$1: function(receiver, a0) {
+    return receiver.remove$1(a0);
+  }
+};
+
+$$.JSFunction = {"": "Object;",
+  toString$0: function(receiver) {
+    return "Closure";
+  }
+};
+
+$$.JSBool = {"": "Object;",
+  toString$0: function(receiver) {
+    return String(receiver);
+  },
+  get$hashCode: function(receiver) {
+    return receiver ? 519018 : 218159;
+  },
+  is$bool: true
+};
+
+$$.JSNull = {"": "Object;",
+  toString$0: function(receiver) {
+    return "null";
+  },
+  get$hashCode: function(receiver) {
+    return 0;
+  }
+};
+
+$$.JSArray = {"": "Object;",
+  add$1: function(receiver, value) {
+    $.checkGrowable(receiver, "add");
+    receiver.push(value);
+  },
+  removeAt$1: function(receiver, index) {
+    if (!(typeof index === "number" && Math.floor(index) === index))
+      throw $.$$throw($.ArgumentError$(index));
+    if (index < 0 || index >= receiver.length)
+      throw $.$$throw($.RangeError$value(index));
+    $.checkGrowable(receiver, "removeAt");
+    return receiver.splice(index, 1)[0];
+  },
+  removeLast$0: function(receiver) {
+    $.checkGrowable(receiver, "removeLast");
+    if (receiver.length === 0)
+      throw $.$$throw($.RangeError$value(-1));
+    return receiver.pop();
+  },
+  remove$1: function(receiver, element) {
+    var i;
+    $.checkGrowable(receiver, "remove");
+    for (i = 0; i < receiver.length; ++i)
+      if ($.eqB(receiver[i], element)) {
+        receiver.splice(i, 1);
+        return;
+      }
+  },
+  addLast$1: function(receiver, value) {
+    $.checkGrowable(receiver, "addLast");
+    receiver.push(value);
+  },
+  clear$0: function(receiver) {
+    this.set$length(receiver, 0);
+  },
+  forEach$1: function(receiver, f) {
+    var t1;
+    for (t1 = this.get$iterator(receiver); t1.moveNext$0() === true;)
+      f.call$1(t1.get$current());
+    return;
+  },
+  mappedBy$1: function(receiver, f) {
+    return $.MappedList$(receiver, f);
+  },
+  insertRange$3: function(receiver, start, length$, initialValue) {
+    return $.listInsertRange(receiver, start, length$, initialValue);
+  },
+  get$first: function(receiver) {
+    if (receiver.length > 0)
+      return receiver[0];
+    throw $.$$throw($.StateError$("No elements"));
+  },
+  indexOf$2: function(receiver, element, start) {
+    if (!(typeof start === "number" && Math.floor(start) === start))
+      throw $.$$throw($.ArgumentError$(start));
+    return $.Arrays_indexOf(receiver, element, start, receiver.length);
+  },
+  indexOf$1: function($receiver, element) {
+    return this.indexOf$2($receiver, element, 0);
+  },
+  contains$1: function(receiver, other) {
+    var i;
+    for (i = 0; i < receiver.length; ++i)
+      if ($.eqB(other, receiver[i]))
+        return true;
+    return false;
+  },
+  get$isEmpty: function(receiver) {
+    return receiver.length === 0;
+  },
+  toString$0: function(receiver) {
+    return $.Collections_collectionToString(receiver);
+  },
+  get$iterator: function(receiver) {
+    return $._ArrayIterator$(receiver);
+  },
+  get$hashCode: function(receiver) {
+    return $.Primitives_objectHashCode(receiver);
+  },
+  get$length: function(receiver) {
+    return receiver.length;
+  },
+  set$length: function(receiver, newLength) {
+    if (!(typeof newLength === "number" && Math.floor(newLength) === newLength))
+      throw $.$$throw($.ArgumentError$(newLength));
+    if (newLength < 0)
+      throw $.$$throw($.RangeError$value(newLength));
+    $.checkGrowable(receiver, "set length");
+    receiver.length = newLength;
+  },
+  operator$index$1: function(receiver, index) {
+    if (!(typeof index === "number" && Math.floor(index) === index))
+      throw $.$$throw($.ArgumentError$(index));
+    if (index >= receiver.length || index < 0)
+      throw $.$$throw($.RangeError$value(index));
+    return receiver[index];
+  },
+  operator$indexSet$2: function(receiver, index, value) {
+    $.checkMutable(receiver, "indexed set");
+    if (!(typeof index === "number" && Math.floor(index) === index))
+      throw $.$$throw($.ArgumentError$(index));
+    if (index >= receiver.length || index < 0)
+      throw $.$$throw($.RangeError$value(index));
+    receiver[index] = value;
+  },
+  is$List: function() {
+    return true;
+  },
+  is$Collection: function() {
+    return true;
+  }
+};
+
+$$._ArrayIterator = {"": "Object;_liblib0$_list,_liblib0$_position,_liblib0$_current",
+  get$current: function() {
+    return this._liblib0$_current;
+  },
+  moveNext$0: function() {
+    var t1, nextPosition, length$;
+    t1 = this._liblib0$_position;
+    if (t1 !== (t1 | 0))
+      return this.moveNext$0$bailout1(1, t1);
+    nextPosition = t1 + 1;
+    t1 = this._liblib0$_list;
+    length$ = t1.length;
+    if (nextPosition < length$) {
+      this._liblib0$_position = nextPosition;
+      if (nextPosition < 0 || nextPosition >= t1.length)
+        throw $.ioore(nextPosition);
+      this._liblib0$_current = t1[nextPosition];
+      return true;
+    }
+    this._liblib0$_position = length$;
+    this._liblib0$_current = null;
+    return false;
+  },
+  moveNext$0$bailout1: function(state0, t1) {
+    var nextPosition, length$;
+    nextPosition = $.getInterceptor$JSNumber(t1).operator$add$1(t1, 1);
+    t1 = this._liblib0$_list;
+    length$ = t1.length;
+    if ($.ltB(nextPosition, length$)) {
+      this._liblib0$_position = nextPosition;
+      if (nextPosition !== (nextPosition | 0))
+        throw $.iae(nextPosition);
+      if (nextPosition < 0 || nextPosition >= t1.length)
+        throw $.ioore(nextPosition);
+      this._liblib0$_current = t1[nextPosition];
+      return true;
+    }
+    this._liblib0$_position = length$;
+    this._liblib0$_current = null;
+    return false;
+  }
+};
+
+$$.JSNumber = {"": "Object;",
+  get$isNaN: function(receiver) {
+    return isNaN(receiver);
+  },
+  abs$0: function(receiver) {
+    return Math.abs(receiver);
+  },
+  toInt$0: function(receiver) {
+    var truncated;
+    if (this.get$isNaN(receiver) === true)
+      throw $.$$throw($.UnsupportedError$("NaN"));
+    if (this.get$isInfinite(receiver) === true)
+      throw $.$$throw($.UnsupportedError$("Infinity"));
+    truncated = this.truncate$0(receiver);
+    return truncated == -0.0 ? 0 : truncated;
+  },
+  ceil$0: function(receiver) {
+    return Math.ceil(receiver);
+  },
+  floor$0: function(receiver) {
+    return Math.floor(receiver);
+  },
+  get$isInfinite: function(receiver) {
+    return receiver == Infinity || receiver == -Infinity;
+  },
+  truncate$0: function(receiver) {
+    return receiver < 0 ? this.ceil$0(receiver) : this.floor$0(receiver);
+  },
+  toString$0: function(receiver) {
+    if (receiver === 0 && (1 / receiver) < 0)
+      return "-0.0";
+    else
+      return String(receiver);
+  },
+  get$hashCode: function(receiver) {
+    return receiver & 0x1FFFFFFF;
+  },
+  operator$negate$0: function(receiver) {
+    return -receiver;
+  },
+  operator$add$1: function(receiver, other) {
+    if (!(typeof other === "number"))
+      throw $.$$throw($.ArgumentError$(other));
+    return receiver + other;
+  },
+  operator$sub$1: function(receiver, other) {
+    if (!(typeof other === "number"))
+      throw $.$$throw($.ArgumentError$(other));
+    return receiver - other;
+  },
+  operator$div$1: function(receiver, other) {
+    if (!(typeof other === "number"))
+      throw $.$$throw($.ArgumentError$(other));
+    return receiver / other;
+  },
+  operator$mul$1: function(receiver, other) {
+    if (!(typeof other === "number"))
+      throw $.$$throw($.ArgumentError$(other));
+    return receiver * other;
+  },
+  operator$tdiv$1: function(receiver, other) {
+    return this.truncate$0(receiver / other);
+  },
+  operator$shr$1: function(receiver, other) {
+    if (other < 0)
+      throw $.$$throw($.ArgumentError$(other));
+    if (receiver > 0) {
+      if (other > 31)
+        return 0;
+      return receiver >>> other;
+    }
+    if (other > 31)
+      other = 31;
+    return (receiver >> other) >>> 0;
+  },
+  operator$and$1: function(receiver, other) {
+    if (!(typeof other === "number"))
+      throw $.$$throw($.ArgumentError$(other));
+    return (receiver & other) >>> 0;
+  }
+};
+
+$$.JSInt = {"": "JSNumber;"};
+
+$$.JSDouble = {"": "JSNumber;"};
+
+$$.JSString = {"": "Object;",
+  charCodeAt$1: function(receiver, index) {
+    if (index < 0)
+      throw $.$$throw($.RangeError$value(index));
+    if (index >= receiver.length)
+      throw $.$$throw($.RangeError$value(index));
+    return receiver.charCodeAt(index);
+  },
+  allMatches$1: function(receiver, str) {
+    $.checkString(str);
+    return $.allMatchesInStringUnchecked(receiver, str);
+  },
+  endsWith$1: function(receiver, other) {
+    var otherLength, t1;
+    $.checkString(other);
+    otherLength = other.length;
+    t1 = receiver.length;
+    if (otherLength > t1)
+      return false;
+    return other === this.substring$1(receiver, t1 - otherLength);
+  },
+  replaceAll$2: function(receiver, from, to) {
+    $.checkString(to);
+    return $.stringReplaceAllUnchecked(receiver, from, to);
+  },
+  substring$2: function(receiver, startIndex, endIndex) {
+    $.checkNum(startIndex);
+    if (endIndex == null)
+      endIndex = receiver.length;
+    $.checkNum(endIndex);
+    if ($.ltB(startIndex, 0))
+      throw $.$$throw($.RangeError$value(startIndex));
+    if ($.gtB(startIndex, endIndex))
+      throw $.$$throw($.RangeError$value(startIndex));
+    if ($.gtB(endIndex, receiver.length))
+      throw $.$$throw($.RangeError$value(endIndex));
+    return receiver.substring(startIndex, endIndex);
+  },
+  substring$1: function($receiver, startIndex) {
+    return this.substring$2($receiver, startIndex, null);
+  },
+  indexOf$2: function(receiver, other, start) {
+    $.checkNull(other);
+    if (!(typeof start === "number" && Math.floor(start) === start))
+      throw $.$$throw($.ArgumentError$(start));
+    if (!(typeof other === "string"))
+      throw $.$$throw($.ArgumentError$(other));
+    if (start < 0)
+      return -1;
+    return receiver.indexOf(other, start);
+  },
+  indexOf$1: function($receiver, other) {
+    return this.indexOf$2($receiver, other, 0);
+  },
+  contains$2: function(receiver, other, startIndex) {
+    $.checkNull(other);
+    return $.stringContainsUnchecked(receiver, other, startIndex);
+  },
+  contains$1: function($receiver, other) {
+    return this.contains$2($receiver, other, 0);
+  },
+  get$isEmpty: function(receiver) {
+    return receiver.length === 0;
+  },
+  toString$0: function(receiver) {
+    return receiver;
+  },
+  get$hashCode: function(receiver) {
+    var i, hash, hash0, hash1;
+    for (i = 0, hash = 0; i < receiver.length; ++i, hash = hash1) {
+      hash0 = 536870911 & hash + receiver.charCodeAt(i);
+      hash1 = 536870911 & hash0 + ((524287 & hash0) << 10 >>> 0);
+      hash1 = hash1 ^ (hash1 >> 6);
+    }
+    hash0 = 536870911 & hash + ((67108863 & hash) << 3 >>> 0);
+    hash0 = hash0 ^ (hash0 >> 11);
+    return 536870911 & hash0 + ((16383 & hash0) << 15 >>> 0);
+  },
+  get$length: function(receiver) {
+    return receiver.length;
+  },
+  operator$index$1: function(receiver, index) {
+    if (!(typeof index === "number" && Math.floor(index) === index))
+      throw $.$$throw($.ArgumentError$(index));
+    if (index >= receiver.length || index < 0)
+      throw $.$$throw($.RangeError$value(index));
+    return receiver[index];
+  },
+  is$String: true
+};
+
+$$.NavDemo = {"": "StageWrapper;_count,canvas,stage,rootThing,_invalidatedEventId,_frameRequested,_disposed",
+  _forward$1: function(tx) {
+    var t1, t2;
+    t1 = this.rootThing;
+    if (t1.get$canForward() === true) {
+      t2 = this._count + 1;
+      this._count = t2;
+      t1.forward$2($.NavDemo__getDemoElement(t2), tx);
+    }
+  },
+  _canvas_mouseDown$1: function(e) {
+    var point, hits, t1;
+    point = $.Coordinate$(e.get$offsetX(), e.get$offsetY());
+    hits = $.RetainedUtil__hitTest(this.stage.rootThing, point);
+    t1 = $.getInterceptor$JSStringJSArray(hits);
+    if ($.gtB(t1.get$length(hits), 0))
+      this._itemClick$1(t1.get$first(hits));
+  },
+  get$_canvas_mouseDown: function() {
+    return new $.BoundClosure(this, "_canvas_mouseDown$1");
+  },
+  _itemClick$1: function(element) {
+    var tx, lastTx;
+    if ($.eqB(element.get$width(), 300))
+      tx = $.AffineTransform_AffineTransform$fromTranslat(100, 100).scale$2(0.3333333333333333, 0.3333333333333333).createInverse$0();
+    else {
+      lastTx = element.getTransform$0();
+      tx = $.AffineTransform_AffineTransform$fromTranslat(lastTx.get$translateX(), lastTx.get$translateY()).scale$2(0.3333333333333333, 0.3333333333333333);
+    }
+    this._forward$1(tx);
+  },
+  NavDemo$_internal$2: function(canvas, nav) {
+    var t1, t2;
+    this._forward$1($.AffineTransform$(1, 0, 0, 1, 0, 0));
+    t1 = canvas.get$on().get$mouseDown();
+    t2 = this.get$_canvas_mouseDown();
+    $.getInterceptor$JSArray(t1).add$1(t1, t2);
+  }
+};
+
+$$.BodyElementEvents = {"": "ElementEvents;_ptr"};
+
+$$.DocumentEvents = {"": "ElementEvents;_ptr"};
+
+$$.ElementEvents = {"": "Events;_ptr",
+  get$mouseDown: function() {
+    return this.operator$index$1("mousedown");
+  }
+};
+
+$$.Events = {"": "Object;_ptr",
+  operator$index$1: function(type) {
+    return $.EventListenerList$(this._ptr, type);
+  }
+};
+
+$$.EventListenerList = {"": "Object;_ptr,_type",
+  add$2: function(listener, useCapture) {
+    this._ptr.$$dom_addEventListener$3(this._type, listener, useCapture);
+    return this;
+  },
+  add$1: function(listener) {
+    return this.add$2(listener, false);
+  },
+  remove$2: function(listener, useCapture) {
+    this._ptr.$$dom_removeEventListener$3(this._type, listener, useCapture);
+    return this;
+  },
+  remove$1: function(listener) {
+    return this.remove$2(listener, false);
+  }
+};
+
+$$.InputElementEvents = {"": "ElementEvents;_ptr"};
+
+$$.MediaElementEvents = {"": "ElementEvents;_ptr"};
+
+$$.WindowEvents = {"": "Events;_ptr",
+  get$mouseDown: function() {
+    return this.operator$index$1("mousedown");
+  }
+};
+
+$$._FrameSetElementEvents = {"": "ElementEvents;_ptr"};
+
+$$._DOMWindowCrossFrame = {"": "Object;_window",
+  get$parent: function() {
+    return $._DOMWindowCrossFrame__createSafe(this._window.parent);
+  },
+  get$top: function() {
+    return $._DOMWindowCrossFrame__createSafe(this._window.top);
+  }
+};
+
+$$.FixedSizeListIterator = {"": "Object;_array,_liblib$_length,_position,_liblib$_current",
+  moveNext$0: function() {
+    var t1, nextPosition;
+    t1 = this._position;
+    if (typeof t1 !== "number")
+      return this.moveNext$0$bailout0(1, t1);
+    nextPosition = t1 + 1;
+    t1 = this._liblib$_length;
+    if (typeof t1 !== "number")
+      return this.moveNext$0$bailout0(2, t1, nextPosition);
+    if (nextPosition < t1) {
+      t1 = this._array;
+      if (typeof t1 !== "string" && (typeof t1 !== "object" || t1 === null || t1.constructor !== Array && !t1.is$JavaScriptIndexingBehavior()))
+        return this.moveNext$0$bailout0(3, nextPosition, t1);
+      if (nextPosition !== (nextPosition | 0))
+        throw $.iae(nextPosition);
+      if (nextPosition < 0 || nextPosition >= t1.length)
+        throw $.ioore(nextPosition);
+      this._liblib$_current = t1[nextPosition];
+      this._position = nextPosition;
+      return true;
+    }
+    this._liblib$_current = null;
+    this._position = t1;
+    return false;
+  },
+  moveNext$0$bailout0: function(state0, env0, env1) {
+    switch (state0) {
+      case 1:
+        t1 = env0;
+        break;
+      case 2:
+        nextPosition = env1;
+        t1 = env0;
+        break;
+      case 3:
+        t1 = env1;
+        nextPosition = env0;
+        break;
+    }
+    switch (state0) {
+      case 0:
+        t1 = this._position;
+      case 1:
+        state0 = 0;
+        nextPosition = $.getInterceptor$JSNumber(t1).operator$add$1(t1, 1);
+        t1 = this._liblib$_length;
+      case 2:
+        state0 = 0;
+      case 3:
+        var t1, nextPosition;
+        if (state0 === 3 || state0 === 0 && $.ltB(nextPosition, t1))
+          switch (state0) {
+            case 0:
+              t1 = this._array;
+            case 3:
+              state0 = 0;
+              this._liblib$_current = $.getInterceptor$JSStringJSArray(t1).operator$index$1(t1, nextPosition);
+              this._position = nextPosition;
+              return true;
+          }
+        this._liblib$_current = null;
+        this._position = t1;
+        return false;
+    }
+  },
+  get$current: function() {
+    return this._liblib$_current;
+  }
+};
+
+$$.Attachable = {"": "Object;name>"};
+
+$$.AttachableObject = {"": "DisposableImpl;",
+  _set$2: function(key, value) {
+    var t1;
+    this.validateNotDisposed$0();
+    t1 = this._propertyValues;
+    $.getInterceptor$JSArray(t1).operator$indexSet$2(t1, key, value);
+    this._fireChange$1(key);
+  },
+  _isSet$1: function(key) {
+    this.validateNotDisposed$0();
+    return this._propertyValues.containsKey$1(key);
+  },
+  _remove$1: function(key) {
+    var t1;
+    this.validateNotDisposed$0();
+    if (this._isSet$1(key) === true) {
+      t1 = this._propertyValues;
+      $.getInterceptor$JSArray(t1).remove$1(t1, key);
+      this._fireChange$1(key);
+    }
+  },
+  _getValueOrUndefined$3: function(key, obj, ifAbsent) {
+    var t1, value;
+    this.validateNotDisposed$0();
+    if (this._isSet$1(key) === true) {
+      t1 = this._propertyValues;
+      return $.getInterceptor$JSStringJSArray(t1).operator$index$1(t1, key);
+    } else if (!(ifAbsent == null)) {
+      value = ifAbsent.call$1(obj);
+      this._set$2(key, value);
+      return value;
+    } else
+      return $.CONSTANT10;
+  },
+  _fireChange$1: function(key) {
+    var t1, handle;
+    this.validateNotDisposed$0();
+    t1 = this._eventHandlers;
+    handle = $.getInterceptor$JSStringJSArray(t1).operator$index$1(t1, key);
+    if (!(handle == null))
+      handle.fireEvent$1(key);
+  }
+};
+
+$$.Property = {"": "Attachable;defaultValue,name",
+  get$2: function(obj, ifAbsent) {
+    var coreValue = this.getCore$2(obj, ifAbsent);
+    if (!(coreValue === $.CONSTANT10))
+      return coreValue;
+    else
+      return this.defaultValue;
+  },
+  get$1: function(obj) {
+    return this.get$2(obj, null);
+  },
+  getCore$2: function(obj, ifAbsent) {
+    return obj._getValueOrUndefined$3(this, obj, ifAbsent);
+  },
+  set$2: function(obj, value) {
+    obj._set$2(this, value);
+  },
+  clear$1: function(obj) {
+    return obj._remove$1(this);
+  },
+  toString$0: function() {
+    return "Property '" + $.S(this.name) + "'";
+  }
+};
+
+$$._UndefinedValue = {"": "Object;"};
+
+$$.DisposedError = {"": "Object;message>"};
+
+$$.DisposableImpl = {"": "Object;",
+  validateNotDisposed$0: function() {
+    if (this._disposed)
+      throw $.$$throw($.CONSTANT7);
+  }
+};
+
+$$.EventArgs = {"": "Object;"};
+
+$$.EventHandle = {"": "DisposableImpl;_handlers,_disposed",
+  fireEvent$1: function(args) {
+    var t1, t2;
+    t1 = this._handlers;
+    if (!(t1 == null)) {
+      t2 = new $.EventHandle_fireEvent_anon(args);
+      $.getInterceptor$JSArray(t1).forEach$1(t1, t2);
+    }
+  },
+  add$1: function(handler) {
+    var id, t1;
+    id = $.GlobalId_GlobalId();
+    if (this._handlers == null)
+      this._handlers = $.HashMap_HashMap();
+    t1 = this._handlers;
+    if (typeof t1 !== "object" || t1 === null || (t1.constructor !== Array || !!t1.immutable$list) && !t1.is$JavaScriptIndexingBehavior())
+      return this.add$1$bailout(1, handler, t1, id);
+    if (id !== (id | 0))
+      throw $.iae(id);
+    if (id < 0 || id >= t1.length)
+      throw $.ioore(id);
+    t1[id] = handler;
+    return id;
+  },
+  add$1$bailout: function(state0, handler, t1, id) {
+    $.getInterceptor$JSArray(t1).operator$indexSet$2(t1, id, handler);
+    return id;
+  },
+  remove$1: function(id) {
+    var t1 = this._handlers;
+    if (!(t1 == null))
+      return !($.getInterceptor$JSArray(t1).remove$1(t1, id) == null);
+    else
+      return false;
+  }
+};
+
+$$.DetailedArgumentError = {"": "Object;argument,details",
+  get$message: function() {
+    return "Illegal argument: \"" + $.S(this.argument) + "\" -- " + $.S(this.details);
+  },
+  toString$0: function() {
+    return this.get$message();
+  },
+  DetailedArgumentError$2: function(argument, details) {
+    $.requireArgumentNotNullOrEmpty(this.argument, "argument");
+    $.requireArgumentNotNullOrEmpty(this.details, "details");
+  }
+};
+
+$$.InvalidOperationError = {"": "Object;message"};
+
+$$.NullArgumentError = {"": "DetailedArgumentError;argument,details"};
+
+$$.GlobalId = {"": "Object;id>,_hashCode",
+  get$hashCode: function() {
+    return this._hashCode;
+  },
+  operator$eq$1: function(other) {
+    return !(other == null) && $.eqB(other.get$id(), this.id);
+  }
+};
+
+$$.AffineTransform = {"": "Object;_scX>,_shY>,_shX>,_scY>,_tX>,_tY>",
+  get$scaleX: function() {
+    return this._scX;
+  },
+  get$scaleY: function() {
+    return this._scY;
+  },
+  get$translateX: function() {
+    return this._tX;
+  },
+  get$translateY: function() {
+    return this._tY;
+  },
+  get$shearX: function() {
+    return this._shX;
+  },
+  get$shearY: function() {
+    return this._shY;
+  },
+  get$determinant: function() {
+    var t1, t2, t3;
+    t1 = this._scX;
+    t2 = this._scY;
+    t2 = $.getInterceptor$JSNumber(t1).operator$mul$1(t1, t2);
+    t1 = this._shX;
+    t3 = this._shY;
+    t3 = $.getInterceptor$JSNumber(t1).operator$mul$1(t1, t3);
+    return $.getInterceptor$JSNumber(t2).operator$sub$1(t2, t3);
+  },
+  scale$2: function(sx, sy) {
+    var t1, t2, t3, t4;
+    t1 = this._scX;
+    this._scX = $.getInterceptor$JSNumber(t1).operator$mul$1(t1, sx);
+    t2 = this._shY;
+    this._shY = $.getInterceptor$JSNumber(t2).operator$mul$1(t2, sx);
+    t3 = this._shX;
+    this._shX = $.getInterceptor$JSNumber(t3).operator$mul$1(t3, sy);
+    t4 = this._scY;
+    this._scY = $.getInterceptor$JSNumber(t4).operator$mul$1(t4, sy);
+    return this;
+  },
+  concatenate$1: function(tx) {
+    var m0, m1, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13;
+    m0 = this._scX;
+    m1 = this._shX;
+    t1 = tx.get$_scX();
+    t1 = $.getInterceptor$JSNumber(t1).operator$mul$1(t1, m0);
+    t2 = tx.get$_shY();
+    t2 = $.getInterceptor$JSNumber(t2).operator$mul$1(t2, m1);
+    this._scX = $.getInterceptor$JSNumber(t1).operator$add$1(t1, t2);
+    t3 = tx.get$_shX();
+    t3 = $.getInterceptor$JSNumber(t3).operator$mul$1(t3, m0);
+    t4 = tx.get$_scY();
+    t4 = $.getInterceptor$JSNumber(t4).operator$mul$1(t4, m1);
+    this._shX = $.getInterceptor$JSNumber(t3).operator$add$1(t3, t4);
+    t5 = this._tX;
+    t6 = tx.get$_tX();
+    t6 = $.getInterceptor$JSNumber(t6).operator$mul$1(t6, m0);
+    t7 = tx.get$_tY();
+    t7 = $.getInterceptor$JSNumber(t7).operator$mul$1(t7, m1);
+    t7 = $.getInterceptor$JSNumber(t6).operator$add$1(t6, t7);
+    this._tX = $.getInterceptor$JSNumber(t5).operator$add$1(t5, t7);
+    m0 = this._shY;
+    m1 = this._scY;
+    t6 = tx.get$_scX();
+    t6 = $.getInterceptor$JSNumber(t6).operator$mul$1(t6, m0);
+    t8 = tx.get$_shY();
+    t8 = $.getInterceptor$JSNumber(t8).operator$mul$1(t8, m1);
+    this._shY = $.getInterceptor$JSNumber(t6).operator$add$1(t6, t8);
+    t9 = tx.get$_shX();
+    t9 = $.getInterceptor$JSNumber(t9).operator$mul$1(t9, m0);
+    t10 = tx.get$_scY();
+    t10 = $.getInterceptor$JSNumber(t10).operator$mul$1(t10, m1);
+    this._scY = $.getInterceptor$JSNumber(t9).operator$add$1(t9, t10);
+    t11 = this._tY;
+    t12 = tx.get$_tX();
+    t12 = $.getInterceptor$JSNumber(t12).operator$mul$1(t12, m0);
+    t13 = tx.get$_tY();
+    t13 = $.getInterceptor$JSNumber(t13).operator$mul$1(t13, m1);
+    t13 = $.getInterceptor$JSNumber(t12).operator$add$1(t12, t13);
+    this._tY = $.getInterceptor$JSNumber(t11).operator$add$1(t11, t13);
+    return this;
+  },
+  get$concatenate: function() {
+    return new $.BoundClosure(this, "concatenate$1");
+  },
+  setToTranslation$2: function(dx, dy) {
+    return this.setTransform$6(1, 0, 0, 1, dx, dy);
+  },
+  setFromTransfrom$1: function(tx) {
+    $.requireArgumentNotNull(tx, "tx");
+    return this.setTransform$6(tx.get$_scX(), tx.get$_shY(), tx.get$_shX(), tx.get$_scY(), tx.get$_tX(), tx.get$_tY());
+  },
+  setTransform$6: function(m00, m10, m01, m11, m02, m12) {
+    this._scX = m00;
+    this._shY = m10;
+    this._shX = m01;
+    this._scY = m11;
+    this._tX = m02;
+    this._tY = m12;
+    return this;
+  },
+  transformCoordinate$1: function(point) {
+    var t1, t2, t3, x;
     t1 = point.get$x();
-    t3 = this.width;
-    if (typeof t3 !== 'number')
-      throw $.iae(t3);
-    if ($.leB(t1, t2 + t3)) {
-      t1 = point.get$y();
-      t2 = this.top;
-      if ($.geB(t1, t2)) {
+    t2 = this._scX;
+    t2 = $.getInterceptor$JSNumber(t1).operator$mul$1(t1, t2);
+    t1 = point.get$y();
+    t3 = this._shX;
+    t3 = $.getInterceptor$JSNumber(t1).operator$mul$1(t1, t3);
+    t3 = $.getInterceptor$JSNumber(t2).operator$add$1(t2, t3);
+    t2 = this._tX;
+    x = $.getInterceptor$JSNumber(t3).operator$add$1(t3, t2);
+    t2 = point.get$x();
+    t3 = this._shY;
+    t3 = $.getInterceptor$JSNumber(t2).operator$mul$1(t2, t3);
+    t2 = point.get$y();
+    t1 = this._scY;
+    t1 = $.getInterceptor$JSNumber(t2).operator$mul$1(t2, t1);
+    t1 = $.getInterceptor$JSNumber(t3).operator$add$1(t3, t1);
+    t3 = this._tY;
+    return $.Coordinate$(x, $.getInterceptor$JSNumber(t1).operator$add$1(t1, t3));
+  },
+  createInverse$0: function() {
+    var det, t1, t2, t3, t4, t5, t6, t7, t8;
+    det = this.get$determinant();
+    t1 = this._scY;
+    t1 = $.getInterceptor$JSNumber(t1).operator$div$1(t1, det);
+    t2 = this._shY;
+    t2 = $.getInterceptor$JSNumber(t2).operator$negate$0(t2);
+    t2 = $.getInterceptor$JSNumber(t2).operator$div$1(t2, det);
+    t3 = this._shX;
+    t3 = $.getInterceptor$JSNumber(t3).operator$negate$0(t3);
+    t3 = $.getInterceptor$JSNumber(t3).operator$div$1(t3, det);
+    t4 = this._scX;
+    t4 = $.getInterceptor$JSNumber(t4).operator$div$1(t4, det);
+    t5 = this._shX;
+    t6 = this._tY;
+    t6 = $.getInterceptor$JSNumber(t5).operator$mul$1(t5, t6);
+    t5 = this._scY;
+    t7 = this._tX;
+    t7 = $.getInterceptor$JSNumber(t5).operator$mul$1(t5, t7);
+    t7 = $.getInterceptor$JSNumber(t6).operator$sub$1(t6, t7);
+    t7 = $.getInterceptor$JSNumber(t7).operator$div$1(t7, det);
+    t6 = this._shY;
+    t5 = this._tX;
+    t5 = $.getInterceptor$JSNumber(t6).operator$mul$1(t6, t5);
+    t6 = this._scX;
+    t8 = this._tY;
+    t8 = $.getInterceptor$JSNumber(t6).operator$mul$1(t6, t8);
+    t8 = $.getInterceptor$JSNumber(t5).operator$sub$1(t5, t8);
+    return $.AffineTransform$(t1, t2, t3, t4, t7, $.getInterceptor$JSNumber(t8).operator$div$1(t8, det));
+  },
+  lerpTx$2: function(other, x) {
+    $.requireArgumentNotNull(other, "other");
+    return $.AffineTransform$($.lerp(this.get$scaleX(), other.get$scaleX(), x), $.lerp(this.get$shearY(), other.get$shearY(), x), $.lerp(this.get$shearX(), other.get$shearX(), x), $.lerp(this.get$scaleY(), other.get$scaleY(), x), $.lerp(this.get$translateX(), other.get$translateX(), x), $.lerp(this.get$translateY(), other.get$translateY(), x));
+  },
+  clone$0: function() {
+    return $.AffineTransform$(this._scX, this._shY, this._shX, this._scY, this._tX, this._tY);
+  },
+  operator$eq$1: function(other) {
+    return !(other == null) && $.eqB(this._scX, other.get$_scX()) && $.eqB(this._shX, other.get$_shX()) && $.eqB(this._tX, other.get$_tX()) && $.eqB(this._shY, other.get$_shY()) && $.eqB(this._scY, other.get$_scY()) && $.eqB(this._tY, other.get$_tY());
+  },
+  toString$0: function() {
+    return $.Strings_join($.CONSTANT1.mappedBy$1([this.get$scaleX(), this.get$shearY(), this.get$shearX(), this.get$scaleY(), this.get$translateX(), this.get$translateY()], new $.AffineTransform_toString_anon()), ", ");
+  }
+};
+
+$$.Box = {"": "Object;left>,top>,width>,height>",
+  get$topLeft: function() {
+    return $.Coordinate$(this.left, this.top);
+  },
+  get$size: function() {
+    return $.Size$(this.width, this.height);
+  },
+  contains$1: function(point) {
+    var t1, t2, t3;
+    t1 = point.get$x();
+    t2 = this.left;
+    if ($.geB(t1, t2)) {
+      t1 = point.get$x();
+      t3 = this.width;
+      if (typeof t3 !== "number")
+        throw $.iae(t3);
+      if ($.leB(t1, t2 + t3)) {
         t1 = point.get$y();
-        t3 = this.height;
-        if (typeof t3 !== 'number')
-          throw $.iae(t3);
-        t1 = $.leB(t1, t2 + t3);
+        t2 = this.top;
+        if ($.geB(t1, t2)) {
+          t1 = point.get$y();
+          t3 = this.height;
+          if (typeof t3 !== "number")
+            throw $.iae(t3);
+          t1 = $.leB(t1, t2 + t3);
+        } else
+          t1 = false;
       } else
         t1 = false;
     } else
       t1 = false;
-  } else
-    t1 = false;
-  return t1;
-},
- operator$eq$1: function(other) {
-  return !(other == null) && $.eqB(other.get$left(), this.left) && $.eqB(other.get$top(), this.top) && $.eqB(other.get$width(), this.width) && $.eqB(other.get$height(), this.height);
-},
- toString$0: function() {
-  return "Location: " + $.S(this.get$topLeft()) + ", Size: " + $.S(this.get$size());
-},
- get$hashCode: function() {
-  return $.Util_getHashCode([this.left, this.top, this.width, this.height]);
-}
+    return t1;
+  },
+  operator$eq$1: function(other) {
+    return !(other == null) && $.eqB(other.get$left(), this.left) && $.eqB(other.get$top(), this.top) && $.eqB(other.get$width(), this.width) && $.eqB(other.get$height(), this.height);
+  },
+  toString$0: function() {
+    return "Location: " + $.S(this.get$topLeft()) + ", Size: " + $.S(this.get$size());
+  },
+  get$hashCode: function() {
+    return $.Util_getHashCode([this.left, this.top, this.width, this.height]);
+  }
 };
 
-$$.Coordinate = {"":"Object;x>,y>",
- operator$sub$1: function(other) {
-  return $.Vector$($.sub(this.x, other.get$x()), $.sub(this.y, other.get$y()));
-},
- operator$add$1: function(other) {
-  return $.Coordinate$($.add(this.x, other.get$x()), $.add(this.y, other.get$y()));
-},
- operator$eq$1: function(other) {
-  return !(other == null) && $.eqB(this.x, other.get$x()) && $.eqB(this.y, other.get$y());
-},
- toString$0: function() {
-  return "{x:" + $.S(this.x) + ", y:" + $.S(this.y) + "}";
-}
+$$.Coordinate = {"": "Object;x>,y>",
+  operator$sub$1: function(other) {
+    var t1, t3, t6;
+    t1 = this.x;
+    if (typeof t1 !== "number")
+      return this.operator$sub$1$bailout(1, other, t1);
+    t3 = other.get$x();
+    if (typeof t3 !== "number")
+      return this.operator$sub$1$bailout(2, other, t1, t3);
+    t3 = t1 - t3;
+    t1 = this.y;
+    if (typeof t1 !== "number")
+      return this.operator$sub$1$bailout(3, t3, t1, other);
+    t6 = other.get$y();
+    if (typeof t6 !== "number")
+      return this.operator$sub$1$bailout(4, t3, t1, t6);
+    return $.Vector$(t3, t1 - t6);
+  },
+  operator$sub$1$bailout: function(state0, env0, env1, env2) {
+    switch (state0) {
+      case 1:
+        t1 = env1;
+        other = env0;
+        break;
+      case 2:
+        t3 = env2;
+        t1 = env1;
+        other = env0;
+        break;
+      case 3:
+        other = env2;
+        t1 = env1;
+        t3 = env0;
+        break;
+      case 4:
+        t6 = env2;
+        t1 = env1;
+        t3 = env0;
+        break;
+    }
+    switch (state0) {
+      case 0:
+        t1 = this.x;
+      case 1:
+        state0 = 0;
+        t3 = other.get$x();
+      case 2:
+        state0 = 0;
+        t3 = $.getInterceptor$JSNumber(t1).operator$sub$1(t1, t3);
+        t1 = this.y;
+      case 3:
+        state0 = 0;
+        t6 = other.get$y();
+      case 4:
+        var t1, other, t3, t6;
+        state0 = 0;
+        return $.Vector$(t3, $.getInterceptor$JSNumber(t1).operator$sub$1(t1, t6));
+    }
+  },
+  operator$add$1: function(other) {
+    var t1, t3, t6;
+    t1 = this.x;
+    if (typeof t1 !== "number")
+      return this.operator$add$1$bailout(1, other, t1);
+    t3 = other.get$x();
+    if (typeof t3 !== "number")
+      return this.operator$add$1$bailout(2, other, t3, t1);
+    t3 = t1 + t3;
+    t1 = this.y;
+    if (typeof t1 !== "number")
+      return this.operator$add$1$bailout(3, t1, other, t3);
+    t6 = other.get$y();
+    if (typeof t6 !== "number")
+      return this.operator$add$1$bailout(4, t1, t6, t3);
+    return $.Coordinate$(t3, t1 + t6);
+  },
+  operator$add$1$bailout: function(state0, env0, env1, env2) {
+    switch (state0) {
+      case 1:
+        t1 = env1;
+        other = env0;
+        break;
+      case 2:
+        t1 = env2;
+        t3 = env1;
+        other = env0;
+        break;
+      case 3:
+        t3 = env2;
+        other = env1;
+        t1 = env0;
+        break;
+      case 4:
+        t3 = env2;
+        t6 = env1;
+        t1 = env0;
+        break;
+    }
+    switch (state0) {
+      case 0:
+        t1 = this.x;
+      case 1:
+        state0 = 0;
+        t3 = other.get$x();
+      case 2:
+        state0 = 0;
+        t3 = $.getInterceptor$JSNumber(t1).operator$add$1(t1, t3);
+        t1 = this.y;
+      case 3:
+        state0 = 0;
+        t6 = other.get$y();
+      case 4:
+        var t1, other, t3, t6;
+        state0 = 0;
+        return $.Coordinate$(t3, $.getInterceptor$JSNumber(t1).operator$add$1(t1, t6));
+    }
+  },
+  operator$eq$1: function(other) {
+    return !(other == null) && $.eqB(this.x, other.get$x()) && $.eqB(this.y, other.get$y());
+  },
+  toString$0: function() {
+    return "{x:" + $.S(this.x) + ", y:" + $.S(this.y) + "}";
+  }
 };
 
-$$.Size = {"":"Object;width>,height>",
- operator$eq$1: function(other) {
-  return !(other == null) && $.eqB(this.width, other.get$width()) && $.eqB(this.height, other.get$height());
-},
- get$area: function() {
-  return $.mul(this.width, this.height);
-},
- isEmpty$0: function() {
-  return $.eq(this.get$area(), 0);
-},
- get$isEmpty: function() {
-  return new $.BoundClosure2(this, 'isEmpty$0');
-},
- scale$1: function(magnitude) {
-  return $.Size$($.mul(this.width, magnitude), $.mul(this.height, magnitude));
-},
- operator$mul$1: function(magnitude) {
-  return this.scale$1(magnitude);
-},
- toString$0: function() {
-  return "(" + $.S(this.width) + " x " + $.S(this.height) + ")";
-}
+$$.Size = {"": "Object;width>,height>",
+  operator$eq$1: function(other) {
+    return !(other == null) && $.eqB(this.width, other.get$width()) && $.eqB(this.height, other.get$height());
+  },
+  get$area: function() {
+    var t1, t2;
+    t1 = this.width;
+    t2 = this.height;
+    return $.getInterceptor$JSNumber(t1).operator$mul$1(t1, t2);
+  },
+  isEmpty$0: function() {
+    return $.eq(this.get$area(), 0);
+  },
+  get$isEmpty: function() {
+    return new $.BoundClosure0(this, "isEmpty$0");
+  },
+  scale$1: function(magnitude) {
+    var t1, t2;
+    t1 = this.width;
+    t1 = $.getInterceptor$JSNumber(t1).operator$mul$1(t1, magnitude);
+    t2 = this.height;
+    return $.Size$(t1, $.getInterceptor$JSNumber(t2).operator$mul$1(t2, magnitude));
+  },
+  operator$mul$1: function(magnitude) {
+    return this.scale$1(magnitude);
+  },
+  toString$0: function() {
+    return "(" + $.S(this.width) + " x " + $.S(this.height) + ")";
+  }
 };
 
-$$.Vector = {"":"Coordinate;x,y",
- get$length: function() {
-  var t1, t2;
-  t1 = this.x;
-  t1 = $.mul(t1, t1);
-  t2 = this.y;
-  return $.sqrt($.add(t1, $.mul(t2, t2)));
-},
- operator$add$1: function(other) {
-  return $.Vector$($.add(this.x, other.get$x()), $.add(this.y, other.get$y()));
-},
- operator$mul$1: function(magnitude) {
-  return this.scale$1(magnitude);
-},
- scale$1: function(magnitude) {
-  return $.Vector$($.mul(this.x, magnitude), $.mul(this.y, magnitude));
-}
+$$.Vector = {"": "Coordinate;x,y",
+  get$length: function() {
+    var t1, t2;
+    t1 = this.x;
+    t1 = $.getInterceptor$JSNumber(t1).operator$mul$1(t1, t1);
+    t2 = this.y;
+    t2 = $.getInterceptor$JSNumber(t2).operator$mul$1(t2, t2);
+    return $.sqrt($.getInterceptor$JSNumber(t1).operator$add$1(t1, t2));
+  },
+  operator$add$1: function(other) {
+    var t1, t3, t6;
+    t1 = this.x;
+    if (typeof t1 !== "number")
+      return this.operator$add$1$bailout0(1, other, t1);
+    t3 = other.get$x();
+    if (typeof t3 !== "number")
+      return this.operator$add$1$bailout0(2, other, t3, t1);
+    t3 = t1 + t3;
+    t1 = this.y;
+    if (typeof t1 !== "number")
+      return this.operator$add$1$bailout0(3, t1, other, t3);
+    t6 = other.get$y();
+    if (typeof t6 !== "number")
+      return this.operator$add$1$bailout0(4, t1, t6, t3);
+    return $.Vector$(t3, t1 + t6);
+  },
+  operator$add$1$bailout0: function(state0, env0, env1, env2) {
+    switch (state0) {
+      case 1:
+        t1 = env1;
+        other = env0;
+        break;
+      case 2:
+        t1 = env2;
+        t3 = env1;
+        other = env0;
+        break;
+      case 3:
+        t3 = env2;
+        other = env1;
+        t1 = env0;
+        break;
+      case 4:
+        t3 = env2;
+        t6 = env1;
+        t1 = env0;
+        break;
+    }
+    switch (state0) {
+      case 0:
+        t1 = this.x;
+      case 1:
+        state0 = 0;
+        t3 = other.get$x();
+      case 2:
+        state0 = 0;
+        t3 = $.getInterceptor$JSNumber(t1).operator$add$1(t1, t3);
+        t1 = this.y;
+      case 3:
+        state0 = 0;
+        t6 = other.get$y();
+      case 4:
+        var t1, other, t3, t6;
+        state0 = 0;
+        return $.Vector$(t3, $.getInterceptor$JSNumber(t1).operator$add$1(t1, t6));
+    }
+  },
+  operator$mul$1: function(magnitude) {
+    return this.scale$1(magnitude);
+  },
+  scale$1: function(magnitude) {
+    var t1, t2;
+    t1 = this.x;
+    t1 = $.getInterceptor$JSNumber(t1).operator$mul$1(t1, magnitude);
+    t2 = this.y;
+    return $.Vector$(t1, $.getInterceptor$JSNumber(t2).operator$mul$1(t2, magnitude));
+  }
 };
 
-$$.HorizontalAlignment = {"":"_RetainedEnum;name"
-};
+$$.HorizontalAlignment = {"": "_RetainedEnum;name"};
 
-$$.VerticalAlignment = {"":"_RetainedEnum;name"
-};
+$$.VerticalAlignment = {"": "_RetainedEnum;name"};
 
-$$.NavThing = {"":"ParentThing;verticalAlignment,horizontalAlignment,_child,_txPanel,_childOffset,_transforms,_invalidatedEventHandle,_cacheCanvas,_width,_height,_alpha,_cacheEnabled,_lastDrawTime,_parent,_propertyValues,_eventHandlers,_disposed",
- get$visualChildCount: function() {
-  if (!(this._txPanel == null))
-    return 1;
-  else if (!(this._child == null))
-    return 1;
-  else
-    return 0;
-},
- getVisualChild$1: function(index) {
-  var t1;
-  if (typeof index !== 'number')
-    return this.getVisualChild$1$bailout(1, index);
-  if (index === 0) {
-    t1 = this._txPanel;
-    if (!(t1 == null))
-      return t1;
-    else {
-      t1 = this._child;
+$$.NavThing = {"": "ParentThing;verticalAlignment,horizontalAlignment,_child,_txPanel,_childOffset,_transforms,_invalidatedEventHandle,_cacheCanvas,_width,_height,_alpha,_cacheEnabled,_lastDrawTime,_parent,_propertyValues,_eventHandlers,_disposed",
+  get$visualChildCount: function() {
+    if (!(this._txPanel == null))
+      return 1;
+    else if (!(this._child == null))
+      return 1;
+    else
+      return 0;
+  },
+  getVisualChild$1: function(index) {
+    var t1;
+    if (typeof index !== "number")
+      return this.getVisualChild$1$bailout(1, index);
+    if (index === 0) {
+      t1 = this._txPanel;
       if (!(t1 == null))
         return t1;
+      else {
+        t1 = this._child;
+        if (!(t1 == null))
+          return t1;
+      }
     }
-  }
-  throw $.$$throw($.ArgumentError$(null));
-},
- getVisualChild$1$bailout: function(state0, index) {
-  var t1;
-  if ($.eqB(index, 0)) {
-    t1 = this._txPanel;
-    if (!(t1 == null))
-      return t1;
-    else {
-      t1 = this._child;
+    throw $.$$throw($.ArgumentError$(null));
+  },
+  getVisualChild$1$bailout: function(state0, index) {
+    var t1;
+    if ($.eqB(index, 0)) {
+      t1 = this._txPanel;
       if (!(t1 == null))
         return t1;
+      else {
+        t1 = this._child;
+        if (!(t1 == null))
+          return t1;
+      }
     }
-  }
-  throw $.$$throw($.ArgumentError$(null));
-},
- get$canForward: function() {
-  return this._txPanel == null;
-},
- forward$3: function(thing, tx, frameCount) {
-  var t1, existingTx, t2, t3, tempCanvas;
-  $.requireArgumentNotNull(thing, "thing");
-  $.requireArgumentNotNull(tx, "tx");
-  $.requireArgumentNotNull(frameCount, "frameCount");
-  $.require(this.get$canForward(), "Forward cannot be called");
-  t1 = this._child;
-  if (!(t1 == null)) {
-    t1.unregisterParent$1(this);
-    existingTx = $.get$NavThing__navLayerTransformProp().get$1(this._child);
-    this._child.removeTransform$1(existingTx);
-    this._child = null;
-    t2 = t1.get$width();
-    t2 = $.getInterceptor$JSNumber(t2).toInt$0(t2);
-    t3 = t1.get$height();
-    tempCanvas = $.CanvasElement_CanvasElement($.getInterceptor$JSNumber(t3).toInt$0(t3), t2);
-    t1.drawOverride$1(tempCanvas.get$context2d());
-    this._txPanel = $._NavLayerTxPanel__NavLayerTxPanel(this.get$width(), this.get$height(), tempCanvas, thing, tx, existingTx, frameCount, this.horizontalAlignment, this.verticalAlignment, this._childOffset);
-    this._txPanel.registerParent$1(this);
-  }
-  this._child = thing;
-  if (this._txPanel == null)
-    this._claimChild$0();
-  this.invalidateDraw$0();
-},
- forward$2: function(thing, tx) {
-  return this.forward$3(thing, tx, 30);
-},
- update$0: function() {
-  $.ParentThing.prototype.update$0.call(this);
-  var t1 = this._txPanel;
-  if (!(t1 == null))
-    if (t1.get$isDone() === true) {
-      this._txPanel.unregisterParent$1(this);
-      this._txPanel.remove$1(this._child);
-      this._txPanel = null;
+    throw $.$$throw($.ArgumentError$(null));
+  },
+  get$canForward: function() {
+    return this._txPanel == null;
+  },
+  forward$3: function(thing, tx, frameCount) {
+    var t1, existingTx, t2, t3, tempCanvas;
+    $.requireArgumentNotNull(thing, "thing");
+    $.requireArgumentNotNull(tx, "tx");
+    $.requireArgumentNotNull(frameCount, "frameCount");
+    $.require(this.get$canForward(), "Forward cannot be called");
+    t1 = this._child;
+    if (!(t1 == null)) {
+      t1.unregisterParent$1(this);
+      existingTx = $.get$NavThing__navLayerTransformProp().get$1(this._child);
+      this._child.removeTransform$1(existingTx);
+      this._child = null;
+      t2 = t1.get$width();
+      t2 = $.getInterceptor$JSNumber(t2).toInt$0(t2);
+      t3 = t1.get$height();
+      tempCanvas = $.CanvasElement_CanvasElement($.getInterceptor$JSNumber(t3).toInt$0(t3), t2);
+      t1.drawOverride$1(tempCanvas.get$context2d());
+      this._txPanel = $._NavLayerTxPanel__NavLayerTxPanel(this.get$width(), this.get$height(), tempCanvas, thing, tx, existingTx, frameCount, this.horizontalAlignment, this.verticalAlignment, this._childOffset);
+      this._txPanel.registerParent$1(this);
+    }
+    this._child = thing;
+    if (this._txPanel == null)
       this._claimChild$0();
-    }
-},
- _claimChild$0: function() {
-  var tx = this._child.addTransform$0();
-  $.get$NavThing__navLayerTransformProp().set$2(this._child, tx);
-  this._child.registerParent$1(this);
-}
-};
-
-$$._NavLayerTxPanel = {"":"PanelThing;_frames,_lastImage,_newChild,_startTx,_goalTx,_myTx,_i,_children,background,_transforms,_invalidatedEventHandle,_cacheCanvas,_width,_height,_alpha,_cacheEnabled,_lastDrawTime,_parent,_propertyValues,_eventHandlers,_disposed",
- get$isDone: function() {
-  return $.ge(this._i, this._frames);
-},
- update$0: function() {
-  var t1, t2, ratio, newTx;
-  t1 = this._i;
-  t2 = this._frames;
-  if ($.ltB(t1, t2)) {
-    t1 = this._i;
-    t2 = $.sub(t2, 1);
-    if (typeof t2 !== 'number')
-      throw $.iae(t2);
-    ratio = t1 / t2;
-    newTx = this._startTx.lerpTx$2(this._goalTx, ratio);
-    this._myTx.setFromTransfrom$1(newTx);
-    t2 = 1 - ratio;
-    this._lastImage.set$alpha(t2);
-    this._newChild.set$alpha(ratio);
-    this._i = this._i + 1;
-  }
-},
- drawOverride$1: function(ctx) {
-  $.PanelThing.prototype.drawOverride$1.call(this, ctx);
-  if (this.get$isDone() !== true)
     this.invalidateDraw$0();
-},
- _NavLayerTxPanel$_internal$7: function(width, height, _frames, _lastImage, _newChild, _startTx, _goalTx) {
-  this.add$1(this._lastImage);
-  this.add$1(this._newChild);
-  this._myTx = this.addTransform$0();
-  this._myTx.setFromTransfrom$1(this._startTx);
-}
-};
-
-$$.PanelThing = {"":"ParentThing;",
- add$1: function(thing) {
-  this.insertAt$2(thing, this._children.length);
-},
- insertAt$2: function(thing, index) {
-  var t1;
-  $.requireArgumentNotNull(thing, "thing");
-  $.requireArgument(thing.get$parent() == null, "thing", "already has a parent");
-  t1 = this._children;
-  $.requireArgument($.CONSTANT1.contains$1(t1, thing) !== true, "thing", "Cannot add twice");
-  if (index == null)
-    index = 0;
-  thing.registerParent$1(this);
-  $.CONSTANT1.insertRange$3(t1, index, 1, thing);
-  $.get$PanelThing__containerTransformProperty().set$2(thing, thing.addTransform$0());
-  this.onChildrenChanged$0();
-},
- remove$1: function(thing) {
-  var t1, index, item;
-  $.requireArgumentNotNull(thing, "thing");
-  t1 = this._children;
-  index = $.CONSTANT1.indexOf$1(t1, thing);
-  if ($.ltB(index, 0))
-    return false;
-  else {
-    item = $.CONSTANT1.removeAt$1(t1, index);
-    item.unregisterParent$1(this);
-    item.removeTransform$1($.get$PanelThing__containerTransformProperty().get$1(item));
-    $.get$PanelThing__containerTransformProperty().clear$1(item);
-    return true;
+  },
+  forward$2: function(thing, tx) {
+    return this.forward$3(thing, tx, 30);
+  },
+  update$0: function() {
+    var t1, t2;
+    $.ParentThing.prototype.update$0.call(this);
+    t1 = this._txPanel;
+    if (!(t1 == null))
+      if (t1.get$isDone() === true) {
+        this._txPanel.unregisterParent$1(this);
+        t1 = this._txPanel;
+        t2 = this._child;
+        $.getInterceptor$JSArray(t1).remove$1(t1, t2);
+        this._txPanel = null;
+        this._claimChild$0();
+      }
+  },
+  _claimChild$0: function() {
+    var tx = this._child.addTransform$0();
+    $.get$NavThing__navLayerTransformProp().set$2(this._child, tx);
+    this._child.registerParent$1(this);
   }
-},
- getVisualChild$1: function(index) {
-  var t1 = this._children;
-  if (index !== (index | 0))
-    throw $.iae(index);
-  if (index < 0 || index >= t1.length)
-    throw $.ioore(index);
-  return t1[index];
-},
- get$visualChildCount: function() {
-  return this._children.length;
-},
- getChildTransform$1: function(child) {
-  return $.get$PanelThing__containerTransformProperty().get$1(child);
-},
- drawOverride$1: function(ctx) {
-  var t1 = this.background;
-  if (!(t1 == null)) {
-    ctx.set$fillStyle(t1);
-    ctx.fillRect$4(0, 0, this.get$width(), this.get$height());
+};
+
+$$._NavLayerTxPanel = {"": "PanelThing;_frames,_lastImage,_newChild,_startTx,_goalTx,_myTx,_i,_children,background,_transforms,_invalidatedEventHandle,_cacheCanvas,_width,_height,_alpha,_cacheEnabled,_lastDrawTime,_parent,_propertyValues,_eventHandlers,_disposed",
+  get$isDone: function() {
+    return $.ge(this._i, this._frames);
+  },
+  update$0: function() {
+    var t1, t2, ratio, newTx;
+    t1 = this._i;
+    t2 = this._frames;
+    if ($.ltB(t1, t2)) {
+      t1 = this._i;
+      t2 = $.getInterceptor$JSNumber(t2).operator$sub$1(t2, 1);
+      if (typeof t2 !== "number")
+        throw $.iae(t2);
+      ratio = t1 / t2;
+      newTx = this._startTx.lerpTx$2(this._goalTx, ratio);
+      this._myTx.setFromTransfrom$1(newTx);
+      t2 = 1 - ratio;
+      this._lastImage.set$alpha(t2);
+      this._newChild.set$alpha(ratio);
+      this._i = this._i + 1;
+    }
+  },
+  drawOverride$1: function(ctx) {
+    $.PanelThing.prototype.drawOverride$1.call(this, ctx);
+    if (this.get$isDone() !== true)
+      this.invalidateDraw$0();
+  },
+  _NavLayerTxPanel$_internal$7: function(width, height, _frames, _lastImage, _newChild, _startTx, _goalTx) {
+    this.add$1(this._lastImage);
+    this.add$1(this._newChild);
+    this._myTx = this.addTransform$0();
+    this._myTx.setFromTransfrom$1(this._startTx);
   }
-  $.ParentThing.prototype.drawOverride$1.call(this, ctx);
-}
 };
 
-$$.ParentThing = {"":"Thing;",
- onChildrenChanged$0: function() {
-  this.invalidateDraw$0();
-},
- childInvalidated$1: function(child) {
-  this.invalidateDraw$0();
-},
- update$0: function() {
-  this._forEach$1(new $.ParentThing_update_anon());
-  $.Thing.prototype.update$0.call(this);
-},
- drawOverride$1: function(ctx) {
-  this._forEach$1(new $.ParentThing_drawOverride_anon(ctx));
-},
- _forEach$1: function(f) {
-  var length$, i;
-  length$ = this.get$visualChildCount();
-  if (typeof length$ !== 'number')
-    return this._forEach$1$bailout(1, f, length$);
-  for (i = 0; i < length$; ++i)
-    f.call$1(this.getVisualChild$1(i));
-},
- _forEach$1$bailout: function(state0, f, length$) {
-  var i;
-  for (i = 0; $.ltB(i, length$); ++i)
-    f.call$1(this.getVisualChild$1(i));
-},
- is$ParentThing: true
-};
-
-$$.CanvasThing = {"":"PanelThing;_children,background,_transforms,_invalidatedEventHandle,_cacheCanvas,_width,_height,_alpha,_cacheEnabled,_lastDrawTime,_parent,_propertyValues,_eventHandlers,_disposed",
- setTopLeft$2: function(thing, value) {
-  this.getChildTransform$1(thing).setToTranslation$2(value.x, value.y);
-  thing.invalidateDraw$0();
-}
-};
-
-$$.Thing = {"":"AttachableObject;",
- get$width: function() {
-  return this._width;
-},
- set$width: function(value) {
-  this._width = value;
-  this.invalidateDraw$0();
-},
- get$height: function() {
-  return this._height;
-},
- set$height: function(value) {
-  this._height = value;
-  this.invalidateDraw$0();
-},
- get$size: function() {
-  return $.Size$(this._width, this._height);
-},
- set$alpha: function(value) {
-  $.requireArgument($.isValidNumber(value), "value", null);
-  $.requireArgument($.geB(value, 0) && $.leB(value, 1), "value", null);
-  this._alpha = value;
-  if (!(this.get$parent() == null))
-    this._invalidateParent$0();
-},
- get$parent: function() {
-  return this._parent;
-},
- getTransform$0: function() {
-  var tx = $.AffineTransform$(1, 0, 0, 1, 0, 0);
-  $.CONSTANT1.forEach$1(this._transforms, tx.get$concatenate());
-  return tx;
-},
- update$0: function() {
-},
- drawCore$1: function(ctx) {
-  ctx.save$0();
-  $.CanvasUtil_transform(ctx, this.getTransform$0());
-  ctx.set$globalAlpha($.mul(ctx.get$globalAlpha(), this._alpha));
-  if (this._cacheEnabled)
-    this._drawCached$1(ctx);
-  else
-    this._drawNormal$1(ctx);
-  ctx.restore$0();
-},
- addTransform$0: function() {
-  this.validateNotDisposed$0();
-  var tx = $.AffineTransform$(1, 0, 0, 1, 0, 0);
-  this._transforms.push(tx);
-  return tx;
-},
- removeTransform$1: function(tx) {
-  var t1, index;
-  $.requireArgumentNotNull(tx, "tx");
-  t1 = this._transforms;
-  index = $.CONSTANT1.indexOf$1(t1, tx);
-  if ($.ltB(index, 0))
-    return false;
-  else {
-    $.CONSTANT1.removeAt$1(t1, index);
-    return true;
+$$.PanelThing = {"": "ParentThing;",
+  add$1: function(thing) {
+    this.insertAt$2(thing, this._children.length);
+  },
+  insertAt$2: function(thing, index) {
+    var t1;
+    $.requireArgumentNotNull(thing, "thing");
+    $.requireArgument(thing.get$parent() == null, "thing", "already has a parent");
+    t1 = this._children;
+    $.requireArgument($.CONSTANT1.contains$1(t1, thing) !== true, "thing", "Cannot add twice");
+    if (index == null)
+      index = 0;
+    thing.registerParent$1(this);
+    $.CONSTANT1.insertRange$3(t1, index, 1, thing);
+    $.get$PanelThing__containerTransformProperty().set$2(thing, thing.addTransform$0());
+    this.onChildrenChanged$0();
+  },
+  remove$1: function(thing) {
+    var t1, index, item;
+    $.requireArgumentNotNull(thing, "thing");
+    t1 = this._children;
+    index = $.CONSTANT1.indexOf$1(t1, thing);
+    if ($.ltB(index, 0))
+      return false;
+    else {
+      item = $.CONSTANT1.removeAt$1(t1, index);
+      item.unregisterParent$1(this);
+      item.removeTransform$1($.get$PanelThing__containerTransformProperty().get$1(item));
+      $.get$PanelThing__containerTransformProperty().clear$1(item);
+      return true;
+    }
+  },
+  getVisualChild$1: function(index) {
+    var t1 = this._children;
+    if (index !== (index | 0))
+      throw $.iae(index);
+    if (index < 0 || index >= t1.length)
+      throw $.ioore(index);
+    return t1[index];
+  },
+  get$visualChildCount: function() {
+    return this._children.length;
+  },
+  getChildTransform$1: function(child) {
+    return $.get$PanelThing__containerTransformProperty().get$1(child);
+  },
+  drawOverride$1: function(ctx) {
+    var t1 = this.background;
+    if (!(t1 == null)) {
+      ctx.set$fillStyle(t1);
+      ctx.fillRect$4(0, 0, this.get$width(), this.get$height());
+    }
+    $.ParentThing.prototype.drawOverride$1.call(this, ctx);
   }
-},
- invalidateDraw$0: function() {
-  this.validateNotDisposed$0();
-  if (!(this._lastDrawTime == null)) {
-    this._lastDrawTime = null;
-    this._invalidateParent$0();
+};
+
+$$.ParentThing = {"": "Thing;",
+  onChildrenChanged$0: function() {
+    this.invalidateDraw$0();
+  },
+  childInvalidated$1: function(child) {
+    this.invalidateDraw$0();
+  },
+  update$0: function() {
+    this._forEach$1(new $.ParentThing_update_anon());
+    $.Thing.prototype.update$0.call(this);
+  },
+  drawOverride$1: function(ctx) {
+    this._forEach$1(new $.ParentThing_drawOverride_anon(ctx));
+  },
+  _forEach$1: function(f) {
+    var length$, i;
+    length$ = this.get$visualChildCount();
+    if (typeof length$ !== "number")
+      return this._forEach$1$bailout(1, f, length$);
+    for (i = 0; i < length$; ++i)
+      f.call$1(this.getVisualChild$1(i));
+  },
+  _forEach$1$bailout: function(state0, f, length$) {
+    var i;
+    for (i = 0; $.ltB(i, length$); ++i)
+      f.call$1(this.getVisualChild$1(i));
+  },
+  is$ParentThing: true
+};
+
+$$.CanvasThing = {"": "PanelThing;_children,background,_transforms,_invalidatedEventHandle,_cacheCanvas,_width,_height,_alpha,_cacheEnabled,_lastDrawTime,_parent,_propertyValues,_eventHandlers,_disposed",
+  setTopLeft$2: function(thing, value) {
+    this.getChildTransform$1(thing).setToTranslation$2(value.x, value.y);
+    thing.invalidateDraw$0();
   }
-},
- registerParent$1: function(parent$) {
-  $.require(this._parent == null, "parent already set");
-  $.requireArgumentNotNull(parent$, "parent");
-  this._parent = parent$;
-},
- unregisterParent$1: function(parent$) {
-  $.requireArgumentNotNull(parent$, "parent");
-  $.requireArgument($.eq(parent$, this._parent), "parent", null);
-  this._parent = null;
-},
- _stageDraw$1: function(ctx) {
-  var dirty;
-  this.update$0();
-  dirty = this._lastDrawTime == null;
-  this.drawCore$1(ctx);
-  return dirty;
-},
- _drawCached$1: function(ctx) {
-  var t1;
-  if (this._lastDrawTime == null) {
-    if (this._cacheCanvas == null)
-      this._cacheCanvas = $.CanvasElement_CanvasElement(null, null);
-    t1 = this.get$width();
-    t1 = $.getInterceptor$JSNumber(t1).toInt$0(t1);
-    this._cacheCanvas.set$width(t1);
-    t1 = this.get$height();
-    t1 = $.getInterceptor$JSNumber(t1).toInt$0(t1);
-    this._cacheCanvas.set$height(t1);
-    this._drawNormal$1(this._cacheCanvas.get$context2d());
+};
+
+$$.Thing = {"": "AttachableObject;",
+  get$width: function() {
+    return this._width;
+  },
+  set$width: function(value) {
+    this._width = value;
+    this.invalidateDraw$0();
+  },
+  get$height: function() {
+    return this._height;
+  },
+  set$height: function(value) {
+    this._height = value;
+    this.invalidateDraw$0();
+  },
+  get$size: function() {
+    return $.Size$(this._width, this._height);
+  },
+  set$alpha: function(value) {
+    $.requireArgument($.isValidNumber(value), "value", null);
+    $.requireArgument($.geB(value, 0) && $.leB(value, 1), "value", null);
+    this._alpha = value;
+    if (!(this.get$parent() == null))
+      this._invalidateParent$0();
+  },
+  get$parent: function() {
+    return this._parent;
+  },
+  getTransform$0: function() {
+    var tx = $.AffineTransform$(1, 0, 0, 1, 0, 0);
+    $.CONSTANT1.forEach$1(this._transforms, tx.get$concatenate());
+    return tx;
+  },
+  update$0: function() {
+  },
+  drawCore$1: function(ctx) {
+    var t1, t2;
+    ctx.save$0();
+    $.CanvasUtil_transform(ctx, this.getTransform$0());
+    t1 = ctx.get$globalAlpha();
+    t2 = this._alpha;
+    ctx.set$globalAlpha($.getInterceptor$JSNumber(t1).operator$mul$1(t1, t2));
+    if (this._cacheEnabled)
+      this._drawCached$1(ctx);
+    else
+      this._drawNormal$1(ctx);
+    ctx.restore$0();
+  },
+  addTransform$0: function() {
+    this.validateNotDisposed$0();
+    var tx = $.AffineTransform$(1, 0, 0, 1, 0, 0);
+    this._transforms.push(tx);
+    return tx;
+  },
+  removeTransform$1: function(tx) {
+    var t1, index;
+    $.requireArgumentNotNull(tx, "tx");
+    t1 = this._transforms;
+    index = $.CONSTANT1.indexOf$1(t1, tx);
+    if ($.ltB(index, 0))
+      return false;
+    else {
+      $.CONSTANT1.removeAt$1(t1, index);
+      return true;
+    }
+  },
+  invalidateDraw$0: function() {
+    this.validateNotDisposed$0();
+    if (!(this._lastDrawTime == null)) {
+      this._lastDrawTime = null;
+      this._invalidateParent$0();
+    }
+  },
+  registerParent$1: function(parent$) {
+    $.require(this._parent == null, "parent already set");
+    $.requireArgumentNotNull(parent$, "parent");
+    this._parent = parent$;
+  },
+  unregisterParent$1: function(parent$) {
+    $.requireArgumentNotNull(parent$, "parent");
+    $.requireArgument($.eq(parent$, this._parent), "parent", null);
+    this._parent = null;
+  },
+  _stageDraw$1: function(ctx) {
+    var dirty;
+    this.update$0();
+    dirty = this._lastDrawTime == null;
+    this.drawCore$1(ctx);
+    return dirty;
+  },
+  _drawCached$1: function(ctx) {
+    var t1;
+    if (this._lastDrawTime == null) {
+      if (this._cacheCanvas == null)
+        this._cacheCanvas = $.CanvasElement_CanvasElement(null, null);
+      t1 = this.get$width();
+      t1 = $.getInterceptor$JSNumber(t1).toInt$0(t1);
+      this._cacheCanvas.set$width(t1);
+      t1 = this.get$height();
+      t1 = $.getInterceptor$JSNumber(t1).toInt$0(t1);
+      this._cacheCanvas.set$height(t1);
+      this._drawNormal$1(this._cacheCanvas.get$context2d());
+    }
+    ctx.drawImage$3(this._cacheCanvas, 0, 0);
+  },
+  _drawNormal$1: function(ctx) {
+    this._lastDrawTime = $.Date_Date$now().get$millisecondsSinceEpoch();
+    this.drawOverride$1(ctx);
+  },
+  _invalidateParent$0: function() {
+    this._invalidatedEventHandle.fireEvent$1($.CONSTANT6);
+    this._parent.childInvalidated$1(this);
   }
-  ctx.drawImage$3(this._cacheCanvas, 0, 0);
-},
- _drawNormal$1: function(ctx) {
-  this._lastDrawTime = $.Date_Date$now().get$millisecondsSinceEpoch();
-  this.drawOverride$1(ctx);
-},
- _invalidateParent$0: function() {
-  this._invalidatedEventHandle.fireEvent$1($.CONSTANT7);
-  this._parent.childInvalidated$1(this);
-}
 };
 
-$$.ShapeThing = {"":"Thing;_fillStyle,shapeType,_transforms,_invalidatedEventHandle,_cacheCanvas,_width,_height,_alpha,_cacheEnabled,_lastDrawTime,_parent,_propertyValues,_eventHandlers,_disposed",
- set$fillStyle: function(value) {
-  this._fillStyle = value;
-  this.invalidateDraw$0();
-},
- drawOverride$1: function(ctx) {
-  ctx.set$fillStyle(this._fillStyle);
-  switch (this.shapeType) {
-    case $.CONSTANT10:
-      ctx.fillRect$4(0, 0, this.get$size().get$width(), this.get$size().get$height());
-      break;
-    case $.CONSTANT12:
-      $.CanvasUtil_ellipse(ctx, 0, 0, this.get$width(), this.get$height());
-      ctx.fill$0();
-      break;
-    default:
-      throw $.$$throw("shape not known...");
+$$.ShapeThing = {"": "Thing;_fillStyle,shapeType,_transforms,_invalidatedEventHandle,_cacheCanvas,_width,_height,_alpha,_cacheEnabled,_lastDrawTime,_parent,_propertyValues,_eventHandlers,_disposed",
+  set$fillStyle: function(value) {
+    this._fillStyle = value;
+    this.invalidateDraw$0();
+  },
+  drawOverride$1: function(ctx) {
+    ctx.set$fillStyle(this._fillStyle);
+    switch (this.shapeType) {
+      case $.CONSTANT9:
+        ctx.fillRect$4(0, 0, this.get$size().get$width(), this.get$size().get$height());
+        break;
+      case $.CONSTANT11:
+        $.CanvasUtil_ellipse(ctx, 0, 0, this.get$width(), this.get$height());
+        ctx.fill$0();
+        break;
+      default:
+        throw $.$$throw("shape not known...");
+    }
+  },
+  toString$0: function() {
+    return "Shape [" + $.S(this._fillStyle) + ", " + $.S(this.shapeType.get$name()) + "]";
   }
-},
- toString$0: function() {
-  return "Shape [" + $.S(this._fillStyle) + ", " + $.S(this.shapeType.get$name()) + "]";
-}
 };
 
-$$.ShapeType = {"":"_RetainedEnum;name"
-};
+$$.ShapeType = {"": "_RetainedEnum;name"};
 
-$$.Stage = {"":"AttachableObject;_invalidatedEventHandle,_canvas,rootThing,_ctx,_propertyValues,_eventHandlers,_disposed",
- get$size: function() {
-  var t1 = this._canvas;
-  return $.Size$(t1.get$width(), t1.get$height());
-},
- get$invalidated: function() {
-  return this._invalidatedEventHandle;
-},
- draw$0: function() {
-  var t1, t2, t3;
-  this.validateNotDisposed$0();
-  t1 = this._ctx;
-  t2 = t1 == null;
-  t3 = this._canvas;
-  if (t2)
-    this._ctx = t3.get$context2d();
-  else
-    t1.clearRect$4(0, 0, t3.get$width(), t3.get$height());
-  return this.rootThing._stageDraw$1(this._ctx);
-},
- childInvalidated$1: function(child) {
-  this.validateNotDisposed$0();
-  this._invalidatedEventHandle.fireEvent$1($.CONSTANT7);
-},
- Stage$2: function(_canvas, rootThing) {
-  this.rootThing.registerParent$1(this);
-}
-};
-
-$$.StageWrapper = {"":"DisposableImpl;",
- requestFrame$0: function() {
-  if (!this._frameRequested) {
-    this._frameRequested = true;
-    $.window().requestAnimationFrame$1(this.get$drawFrame());
+$$.Stage = {"": "AttachableObject;_invalidatedEventHandle,_canvas,rootThing,_ctx,_propertyValues,_eventHandlers,_disposed",
+  get$size: function() {
+    var t1 = this._canvas;
+    return $.Size$(t1.get$width(), t1.get$height());
+  },
+  get$invalidated: function() {
+    return this._invalidatedEventHandle;
+  },
+  draw$0: function() {
+    var t1, t2, t3;
+    this.validateNotDisposed$0();
+    t1 = this._ctx;
+    t2 = t1 == null;
+    t3 = this._canvas;
+    if (t2)
+      this._ctx = t3.get$context2d();
+    else
+      t1.clearRect$4(0, 0, t3.get$width(), t3.get$height());
+    return this.rootThing._stageDraw$1(this._ctx);
+  },
+  childInvalidated$1: function(child) {
+    this.validateNotDisposed$0();
+    this._invalidatedEventHandle.fireEvent$1($.CONSTANT6);
+  },
+  Stage$2: function(_canvas, rootThing) {
+    this.rootThing.registerParent$1(this);
   }
-},
- drawFrame$1: function(highResTime) {
-  this._frameRequested = false;
-  this.stage.draw$0();
-},
- get$drawFrame: function() {
-  return new $.BoundClosure(this, 'drawFrame$1');
-},
- StageWrapper$2: function(canvas, rootThing) {
-  var t1 = this.stage.get$invalidated();
-  this._invalidatedEventId = $.getInterceptor$JSArray(t1).add$1(t1, new $.anon(this));
-}
 };
 
-$$.SubCanvasThing = {"":"Thing;_canvas,_transforms,_invalidatedEventHandle,_cacheCanvas,_width,_height,_alpha,_cacheEnabled,_lastDrawTime,_parent,_propertyValues,_eventHandlers,_disposed",
- drawOverride$1: function(ctx) {
-  ctx.drawImage$5(this._canvas, 0, 0, this.get$width(), this.get$height());
-}
-};
-
-$$.TextThing = {"":"Thing;_value,fillStyle<,textFillStyle,_transforms,_invalidatedEventHandle,_cacheCanvas,_width,_height,_alpha,_cacheEnabled,_lastDrawTime,_parent,_propertyValues,_eventHandlers,_disposed",
- drawOverride$1: function(ctx) {
-  var t1 = this.fillStyle;
-  if (!(t1 == null)) {
-    ctx.set$fillStyle(t1);
-    ctx.fillRect$4(0, 0, this.get$width(), this.get$height());
+$$.StageWrapper = {"": "DisposableImpl;",
+  requestFrame$0: function() {
+    if (!this._frameRequested) {
+      this._frameRequested = true;
+      window.requestAnimationFrame$1(this.get$drawFrame());
+    }
+  },
+  drawFrame$1: function(highResTime) {
+    this._frameRequested = false;
+    this.stage.draw$0();
+  },
+  get$drawFrame: function() {
+    return new $.BoundClosure(this, "drawFrame$1");
+  },
+  StageWrapper$2: function(canvas, rootThing) {
+    var t1, t2;
+    t1 = this.stage.get$invalidated();
+    t2 = new $.anon(this);
+    this._invalidatedEventId = $.getInterceptor$JSArray(t1).add$1(t1, t2);
   }
-  ctx.set$fillStyle(this.textFillStyle);
-  ctx.set$textBaseline("top");
-  ctx.fillText$3(this._value, 0, 0);
-}
 };
 
-$$._RetainedEnum = {"":"Object;name>",
- toString$0: function() {
-  return this.name;
-}
-};
-
-$$.Maps__emitMap_anon = {"":"Closure;box_0,result_1,visiting_2",
- call$2: function(k, v) {
-  var t1, t2;
-  t1 = this.box_0;
-  if (t1.first_0 !== true) {
-    t2 = this.result_1;
-    $.getInterceptor$JSArray(t2).add$1(t2, ", ");
+$$.SubCanvasThing = {"": "Thing;_canvas,_transforms,_invalidatedEventHandle,_cacheCanvas,_width,_height,_alpha,_cacheEnabled,_lastDrawTime,_parent,_propertyValues,_eventHandlers,_disposed",
+  drawOverride$1: function(ctx) {
+    ctx.drawImage$5(this._canvas, 0, 0, this.get$width(), this.get$height());
   }
-  t1.first_0 = false;
-  t1 = this.result_1;
-  t2 = this.visiting_2;
-  $.Collections__emitObject(k, t1, t2);
-  $.getInterceptor$JSArray(t1).add$1(t1, ": ");
-  $.Collections__emitObject(v, t1, t2);
-}
 };
 
-$$._LinkedHashMapImpl_forEach_anon = {"":"Closure;f_0",
- call$1: function(entry) {
-  this.f_0.call$2(entry.get$key(), entry.get$value());
-}
+$$.TextThing = {"": "Thing;_value,fillStyle<,textFillStyle,_transforms,_invalidatedEventHandle,_cacheCanvas,_width,_height,_alpha,_cacheEnabled,_lastDrawTime,_parent,_propertyValues,_eventHandlers,_disposed",
+  drawOverride$1: function(ctx) {
+    var t1 = this.fillStyle;
+    if (!(t1 == null)) {
+      ctx.set$fillStyle(t1);
+      ctx.fillRect$4(0, 0, this.get$width(), this.get$height());
+    }
+    ctx.set$fillStyle(this.textFillStyle);
+    ctx.set$textBaseline("top");
+    ctx.fillText$3(this._value, 0, 0);
+  }
 };
 
-$$.DoubleLinkedQueue_length_anon = {"":"Closure;box_0",
- call$1: function(element) {
-  var t1 = this.box_0;
-  t1.counter_0 = $.add(t1.counter_0, 1);
-}
+$$._RetainedEnum = {"": "Object;name>",
+  toString$0: function() {
+    return this.name;
+  }
 };
 
-$$.NoSuchMethodError_toString_anon = {"":"Closure;box_0",
- call$2: function(key, value) {
-  var t1, t2;
-  t1 = this.box_0;
-  if ($.gtB(t1.i_1, 0)) {
+$$.Maps__emitMap_anon = {"": "Closure;box_0,result_1,visiting_2",
+  call$2: function(k, v) {
+    var t1, t2;
+    t1 = this.box_0;
+    if (t1.first_0 !== true) {
+      t2 = this.result_1;
+      $.getInterceptor$JSArray(t2).add$1(t2, ", ");
+    }
+    t1.first_0 = false;
+    t1 = this.result_1;
+    t2 = this.visiting_2;
+    $.Collections__emitObject(k, t1, t2);
+    $.getInterceptor$JSArray(t1).add$1(t1, ": ");
+    $.Collections__emitObject(v, t1, t2);
+  }
+};
+
+$$._LinkedHashMapImpl_forEach_anon = {"": "Closure;f_0",
+  call$1: function(entry) {
+    this.f_0.call$2(entry.get$key(), entry.get$value());
+  }
+};
+
+$$.NoSuchMethodError_toString_anon = {"": "Closure;box_0",
+  call$2: function(key, value) {
+    var t1, t2, t3;
+    t1 = this.box_0;
+    if ($.gtB(t1.i_1, 0)) {
+      t2 = t1.sb_0;
+      $.getInterceptor$JSArray(t2).add$1(t2, ", ");
+    }
     t2 = t1.sb_0;
-    $.getInterceptor$JSArray(t2).add$1(t2, ", ");
+    $.getInterceptor$JSArray(t2).add$1(t2, key);
+    t2 = t1.sb_0;
+    $.getInterceptor$JSArray(t2).add$1(t2, ": ");
+    t2 = t1.sb_0;
+    t3 = $.Error_safeToString(value);
+    $.getInterceptor$JSArray(t2).add$1(t2, t3);
+    t3 = t1.i_1;
+    t1.i_1 = $.getInterceptor$JSNumber(t3).operator$add$1(t3, 1);
   }
-  t2 = t1.sb_0;
-  $.getInterceptor$JSArray(t2).add$1(t2, key);
-  t2 = t1.sb_0;
-  $.getInterceptor$JSArray(t2).add$1(t2, ": ");
-  t2 = t1.sb_0;
-  $.getInterceptor$JSArray(t2).add$1(t2, $.Error_safeToString(value));
-  t1.i_1 = $.add(t1.i_1, 1);
-}
 };
 
-$$.invokeClosure_anon = {"":"Closure;closure_0",
- call$0: function() {
-  return this.closure_0.call$0();
-}
+$$.invokeClosure_anon = {"": "Closure;closure_0",
+  call$0: function() {
+    return this.closure_0.call$0();
+  }
 };
 
-$$.invokeClosure_anon0 = {"":"Closure;closure_1,arg1_2",
- call$0: function() {
-  return this.closure_1.call$1(this.arg1_2);
-}
+$$.invokeClosure_anon0 = {"": "Closure;closure_1,arg1_2",
+  call$0: function() {
+    return this.closure_1.call$1(this.arg1_2);
+  }
 };
 
-$$.invokeClosure_anon1 = {"":"Closure;closure_3,arg1_4,arg2_5",
- call$0: function() {
-  return this.closure_3.call$2(this.arg1_4, this.arg2_5);
-}
+$$.invokeClosure_anon1 = {"": "Closure;closure_3,arg1_4,arg2_5",
+  call$0: function() {
+    return this.closure_3.call$2(this.arg1_4, this.arg2_5);
+  }
 };
 
-$$.anon = {"":"Closure;this_0",
- call$1: function(_) {
-  return this.this_0.requestFrame$0();
-}
+$$.anon = {"": "Closure;this_0",
+  call$1: function(_) {
+    return this.this_0.requestFrame$0();
+  }
 };
 
-$$._DateImpl_toString_fourDigits = {"":"Closure;",
- call$1: function(n) {
-  var absN, sign;
-  absN = $.getInterceptor$JSNumber(n).abs$0(n);
-  sign = $.ltB(n, 0) ? "-" : "";
-  if ($.geB(absN, 1000))
-    return $.S(n);
-  if ($.geB(absN, 100))
-    return sign + "0" + $.S(absN);
-  if ($.geB(absN, 10))
-    return sign + "00" + $.S(absN);
-  return sign + "000" + $.S(absN);
-}
+$$._DateImpl_toString_fourDigits = {"": "Closure;",
+  call$1: function(n) {
+    var absN, sign;
+    absN = $.getInterceptor$JSNumber(n).abs$0(n);
+    sign = $.ltB(n, 0) ? "-" : "";
+    if ($.geB(absN, 1000))
+      return $.S(n);
+    if ($.geB(absN, 100))
+      return sign + "0" + $.S(absN);
+    if ($.geB(absN, 10))
+      return sign + "00" + $.S(absN);
+    return sign + "000" + $.S(absN);
+  }
 };
 
-$$._DateImpl_toString_threeDigits = {"":"Closure;",
- call$1: function(n) {
-  if ($.geB(n, 100))
-    return $.S(n);
-  if ($.geB(n, 10))
+$$._DateImpl_toString_threeDigits = {"": "Closure;",
+  call$1: function(n) {
+    if ($.geB(n, 100))
+      return $.S(n);
+    if ($.geB(n, 10))
+      return "0" + $.S(n);
+    return "00" + $.S(n);
+  }
+};
+
+$$._DateImpl_toString_twoDigits = {"": "Closure;",
+  call$1: function(n) {
+    if ($.geB(n, 10))
+      return $.S(n);
     return "0" + $.S(n);
-  return "00" + $.S(n);
-}
+  }
 };
 
-$$._DateImpl_toString_twoDigits = {"":"Closure;",
- call$1: function(n) {
-  if ($.geB(n, 10))
-    return $.S(n);
-  return "0" + $.S(n);
-}
+$$.ParentThing_drawOverride_anon = {"": "Closure;ctx_0",
+  call$1: function(e) {
+    return e.drawCore$1(this.ctx_0);
+  }
 };
 
-$$.ParentThing_drawOverride_anon = {"":"Closure;ctx_0",
- call$1: function(e) {
-  return e.drawCore$1(this.ctx_0);
-}
+$$.EventHandle_fireEvent_anon = {"": "Closure;args_0",
+  call$2: function(id, handler) {
+    handler.call$1(this.args_0);
+  }
 };
 
-$$.EventHandle_fireEvent_anon = {"":"Closure;args_0",
- call$2: function(id, handler) {
-  handler.call$1(this.args_0);
-}
+$$.AffineTransform_toString_anon = {"": "Closure;",
+  call$1: function(n) {
+    return $.getInterceptor(n).toString$0(n);
+  }
 };
 
-$$.AffineTransform_toString_anon = {"":"Closure;",
- call$1: function(n) {
-  return $.getInterceptor(n).toString$0(n);
-}
+$$.ParentThing_update_anon = {"": "Closure;",
+  call$1: function(e) {
+    return e.update$0();
+  }
 };
 
-$$.Enumerable_map_anon = {"":"Closure;f_0",
- call$1: function(s) {
-  return $._SelectIterator$(s, this.f_0);
-}
+$$.BoundClosure = {"": "Closure;self,target",
+  call$1: function(p0) {
+    return this.self[this.target](p0);
+  }
 };
-
-$$.Enumerable_isEmpty_anon = {"":"Closure;",
- call$1: function(e) {
-  return true;
-}
-};
-
-$$.ParentThing_update_anon = {"":"Closure;",
- call$1: function(e) {
-  return e.update$0();
-}
-};
-
-$$.Enumerable_first_anon = {"":"Closure;",
- call$1: function(e) {
-  return true;
-}
-};
-
-$$.BoundClosure = {"":"Closure;self,target", call$1: function(p0) {
-  return this.self[this.target](p0);
-}
-};
-$$.BoundClosure0 = {"":"Closure;self,target", call$2: function(p0, p1) {
-  return this.self[this.target](p0, p1);
-}
-};
-$$.BoundClosure1 = {"":"Closure;self,target", call$1: function(p0) {
-  return this.self[this.target](p0);
-},
- call$0: function() {
-  return this.call$1(null);
-}
-};
-$$.BoundClosure2 = {"":"Closure;self,target", call$0: function() {
-  return this.self[this.target]();
-}
+$$.BoundClosure0 = {"": "Closure;self,target",
+  call$0: function() {
+    return this.self[this.target]();
+  }
 };
 $.main = function() {
-  $.NavDemo_NavDemo($.document().query$1("#content")).requestFrame$0();
+  $.NavDemo_NavDemo(document.query$1("#content")).requestFrame$0();
 };
 
 $.NavDemo_NavDemo = function(canvas) {
@@ -2515,58 +3192,46 @@ $.NavDemo$_internal = function(canvas, nav) {
 $.NavDemo__getDemoElement = function(count) {
   var canvas, back$, text, corner;
   canvas = $.CanvasThing$(300, 300);
-  back$ = $.ShapeThing$(300, 300, "#333", $.CONSTANT10);
+  back$ = $.ShapeThing$(300, 300, "#333", $.CONSTANT9);
   back$.set$alpha(0.5);
   canvas.add$1(back$);
   text = $.TextThing$("Click here - " + $.S(count), 100, 100);
   canvas.add$1(text);
   canvas.setTopLeft$2(text, $.Coordinate$(100, 100));
-  corner = $.ShapeThing$(100, 100, "red", $.CONSTANT10);
+  corner = $.ShapeThing$(100, 100, "red", $.CONSTANT9);
   canvas.add$1(corner);
   canvas.setTopLeft$2(corner, $.Coordinate$(0, 0));
-  corner = $.ShapeThing$(100, 100, "green", $.CONSTANT10);
+  corner = $.ShapeThing$(100, 100, "green", $.CONSTANT9);
   canvas.add$1(corner);
   canvas.setTopLeft$2(corner, $.Coordinate$(200, 0));
-  corner = $.ShapeThing$(100, 100, "blue", $.CONSTANT10);
+  corner = $.ShapeThing$(100, 100, "blue", $.CONSTANT9);
   canvas.add$1(corner);
   canvas.setTopLeft$2(corner, $.Coordinate$(0, 200));
-  corner = $.ShapeThing$(100, 100, "yellow", $.CONSTANT10);
+  corner = $.ShapeThing$(100, 100, "yellow", $.CONSTANT9);
   canvas.add$1(corner);
   canvas.setTopLeft$2(corner, $.Coordinate$(200, 200));
   return canvas;
 };
 
 $.Strings__toJsStringArray = function(strings) {
-  var t1, length$, i, string, array;
-  if (typeof strings !== 'string' && (typeof strings !== 'object' || strings === null || strings.constructor !== Array && !strings.is$JavaScriptIndexingBehavior()))
+  var length$, i, string;
+  if (typeof strings !== "object" || strings === null || (strings.constructor !== Array || !!strings.immutable$list) && !strings.is$JavaScriptIndexingBehavior())
     return $.Strings__toJsStringArray$bailout(1, strings);
   $.checkNull(strings);
-  t1 = $.getInterceptor$JSStringJSArray(strings);
+  if (!strings.constructor === Array)
+    strings = $.List_List$from(strings);
   length$ = strings.length;
-  if ($.isJsArray(strings)) {
-    for (i = 0; i < length$; ++i) {
-      if (i >= strings.length)
-        throw $.ioore(i);
-      string = strings[i];
-      if (!(typeof string === 'string'))
-        throw $.$$throw($.ArgumentError$(string));
-    }
-    array = strings;
-  } else {
-    array = $.List_List(length$);
-    for (i = 0; i < length$; ++i) {
-      if (i >= strings.length)
-        throw $.ioore(i);
-      string = strings[i];
-      if (!(typeof string === 'string'))
-        throw $.$$throw($.ArgumentError$(string));
-      array[i] = string;
-    }
+  for (i = 0; i < length$; ++i) {
+    if (i >= strings.length)
+      throw $.ioore(i);
+    string = strings[i];
+    if (!(typeof string === "string"))
+      throw $.$$throw($.ArgumentError$(string));
   }
-  return array;
+  return strings;
 };
 
-$.Strings__toJsStringArray$bailout = function(state0, env0, env1, env2, env3) {
+$.Strings__toJsStringArray$bailout = function(state0, env0, env1, env2) {
   switch (state0) {
     case 1:
       strings = env0;
@@ -2576,149 +3241,71 @@ $.Strings__toJsStringArray$bailout = function(state0, env0, env1, env2, env3) {
       t1 = env1;
       strings = env0;
       break;
-    case 3:
-      length$ = env3;
-      t1 = env2;
-      array = env1;
-      strings = env0;
-      break;
   }
   switch (state0) {
     case 0:
     case 1:
       state0 = 0;
       $.checkNull(strings);
+      if (!(!(strings == null) && strings.constructor === Array))
+        strings = $.List_List$from(strings);
       t1 = $.getInterceptor$JSStringJSArray(strings);
       length$ = t1.get$length(strings);
     case 2:
+      var strings, t1, length$, i, string;
       state0 = 0;
-    case 3:
-      var strings, t1, length$, i, string, array;
-      if (state0 === 0 && $.isJsArray(strings)) {
-        for (i = 0; $.ltB(i, length$); ++i) {
-          string = t1.operator$index$1(strings, i);
-          if (!(typeof string === 'string'))
-            throw $.$$throw($.ArgumentError$(string));
-        }
-        array = strings;
-      } else
-        switch (state0) {
-          case 0:
-            array = $.List_List(length$);
-          case 3:
-            state0 = 0;
-            for (i = 0; $.ltB(i, length$); ++i) {
-              string = t1.operator$index$1(strings, i);
-              if (!(typeof string === 'string'))
-                throw $.$$throw($.ArgumentError$(string));
-              $.indexSet(array, i, string);
-            }
-        }
-      return array;
+      for (i = 0; $.ltB(i, length$); ++i) {
+        string = t1.operator$index$1(strings, i);
+        if (!(typeof string === "string"))
+          throw $.$$throw($.ArgumentError$(string));
+      }
+      return strings;
   }
 };
 
-$.add = function(a, b) {
-  return typeof a === 'number' && typeof b === 'number' ? a + b : $.add$slow(a, b);
-};
-
-$.sub = function(a, b) {
-  return typeof a === 'number' && typeof b === 'number' ? a - b : $.sub$slow(a, b);
-};
-
-$.div = function(a, b) {
-  return typeof a === 'number' && typeof b === 'number' ? a / b : $.div$slow(a, b);
-};
-
-$.mul = function(a, b) {
-  return typeof a === 'number' && typeof b === 'number' ? a * b : $.mul$slow(a, b);
+$._ArrayIterator$ = function(_list) {
+  return new $._ArrayIterator(_list, -1, null);
 };
 
 $.gt = function(a, b) {
-  return typeof a === 'number' && typeof b === 'number' ? a > b : $.gt$slow(a, b);
+  return typeof a === "number" && typeof b === "number" ? a > b : $.gt$slow(a, b);
 };
 
 $.ge = function(a, b) {
-  return typeof a === 'number' && typeof b === 'number' ? a >= b : $.ge$slow(a, b);
+  return typeof a === "number" && typeof b === "number" ? a >= b : $.ge$slow(a, b);
 };
 
 $.lt = function(a, b) {
-  return typeof a === 'number' && typeof b === 'number' ? a < b : $.lt$slow(a, b);
+  return typeof a === "number" && typeof b === "number" ? a < b : $.lt$slow(a, b);
 };
 
 $.le = function(a, b) {
-  return typeof a === 'number' && typeof b === 'number' ? a <= b : $.le$slow(a, b);
+  return typeof a === "number" && typeof b === "number" ? a <= b : $.le$slow(a, b);
 };
 
 $.gtB = function(a, b) {
-  return typeof a === 'number' && typeof b === 'number' ? a > b : $.gt$slow(a, b) === true;
+  return typeof a === "number" && typeof b === "number" ? a > b : $.gt$slow(a, b) === true;
 };
 
 $.geB = function(a, b) {
-  return typeof a === 'number' && typeof b === 'number' ? a >= b : $.ge$slow(a, b) === true;
+  return typeof a === "number" && typeof b === "number" ? a >= b : $.ge$slow(a, b) === true;
 };
 
 $.ltB = function(a, b) {
-  return typeof a === 'number' && typeof b === 'number' ? a < b : $.lt$slow(a, b) === true;
+  return typeof a === "number" && typeof b === "number" ? a < b : $.lt$slow(a, b) === true;
 };
 
 $.leB = function(a, b) {
-  return typeof a === 'number' && typeof b === 'number' ? a <= b : $.le$slow(a, b) === true;
-};
-
-$.indexSet = function(a, index, value) {
-  var key;
-  if (a.constructor === Array && !a.immutable$list) {
-    key = index >>> 0;
-    if (key === index && key < a.length) {
-      a[key] = value;
-      return;
-    }
-  }
-  $.indexSet$slow(a, index, value);
+  return typeof a === "number" && typeof b === "number" ? a <= b : $.le$slow(a, b) === true;
 };
 
 $.checkNumbers = function(a, b) {
-  if (typeof a === 'number')
-    if (typeof b === 'number')
+  if (typeof a === "number")
+    if (typeof b === "number")
       return true;
     else
       throw $.$$throw($.ArgumentError$(b));
   return false;
-};
-
-$.isJsArray = function(value) {
-  return !(value == null) && value.constructor === Array;
-};
-
-$.add$slow = function(a, b) {
-  if ($.checkNumbers(a, b))
-    return a + b;
-  return a.operator$add$1(b);
-};
-
-$.div$slow = function(a, b) {
-  if ($.checkNumbers(a, b))
-    return a / b;
-  return a.operator$div$1(b);
-};
-
-$.mul$slow = function(a, b) {
-  if ($.checkNumbers(a, b))
-    return a * b;
-  return a.operator$mul$1(b);
-};
-
-$.sub$slow = function(a, b) {
-  if ($.checkNumbers(a, b))
-    return a - b;
-  return a.operator$sub$1(b);
-};
-
-$.tdiv = function(a, b) {
-  if ($.checkNumbers(a, b))
-    return $.CONSTANT4.truncate$0(a / b);
-  return a.operator$tdiv$1(b);
 };
 
 $.eq = function(a, b) {
@@ -2767,47 +3354,6 @@ $.le$slow = function(a, b) {
   return a.operator$le$1(b);
 };
 
-$.shr = function(a, b) {
-  if ($.checkNumbers(a, b)) {
-    if (b < 0)
-      throw $.$$throw($.ArgumentError$(b));
-    if (a > 0) {
-      if (b > 31)
-        return 0;
-      return a >>> b;
-    }
-    if (b > 31)
-      b = 31;
-    return (a >> b) >>> 0;
-  }
-  return a.operator$shr$1(b);
-};
-
-$.and = function(a, b) {
-  if ($.checkNumbers(a, b))
-    return (a & b) >>> 0;
-  return a.operator$and$1(b);
-};
-
-$.neg = function(a) {
-  if (typeof a === "number")
-    return -a;
-  return a.operator$negate$0();
-};
-
-$.indexSet$slow = function(a, index, value) {
-  if (!(a == null) && a.constructor === Array) {
-    if (!(typeof index === 'number' && Math.floor(index) === index))
-      throw $.$$throw($.ArgumentError$(index));
-    if (index < 0 || $.geB(index, $.getInterceptor$JSStringJSArray(a).get$length(a)))
-      throw $.$$throw($.RangeError$value(index));
-    $.checkMutable(a, "indexed set");
-    a[index] = value;
-    return;
-  }
-  a.operator$indexSet$2(index, value);
-};
-
 $.checkMutable = function(list, reason) {
   if (!!(list.immutable$list))
     throw $.$$throw($.UnsupportedError$(reason));
@@ -2820,19 +3366,17 @@ $.checkGrowable = function(list, reason) {
 
 $.S = function(value) {
   var res = $.getInterceptor(value).toString$0(value);
-  if (!(typeof res === 'string'))
+  if (!(typeof res === "string"))
     throw $.$$throw($.ArgumentError$(value));
   return res;
 };
 
-$.ListIterator$ = function(list) {
-  return new $.ListIterator(0, list);
-};
-
 $.Primitives_objectHashCode = function(object) {
-  var hash = object.$identityHash;
+  var hash, t1;
+  hash = object.$identityHash;
   if (hash == null) {
-    hash = $.add($.Primitives_hashCodeSeed, 1);
+    t1 = $.Primitives_hashCodeSeed;
+    hash = $.getInterceptor$JSNumber(t1).operator$add$1(t1, 1);
     $.Primitives_hashCodeSeed = hash;
     object.$identityHash = hash;
   }
@@ -2844,24 +3388,15 @@ $.Primitives_objectTypeName = function(object) {
   name$ = $.constructorNameFallback(object);
   if ($.eqB(name$, "Object")) {
     decompiled = String(object.constructor).match(/^\s*function\s*(\S*)\s*\(/)[1];
-    if (typeof decompiled === 'string')
+    if (typeof decompiled === "string")
       name$ = decompiled;
   }
   t1 = $.getInterceptor$JSString(name$);
   return t1.charCodeAt$1(name$, 0) === 36 ? t1.substring$1(name$, 1) : name$;
 };
 
-$.Primitives_objectToString = function(object) {
-  return "Instance of '" + $.S($.Primitives_objectTypeName(object)) + "'";
-};
-
-$.Primitives_newList = function(length$) {
-  var result;
-  if (length$ == null)
-    return new Array();
-  if (!(typeof length$ === 'number' && Math.floor(length$) === length$) || length$ < 0)
-    throw $.$$throw($.ArgumentError$(length$));
-  result = new Array(length$);
+$.Primitives_newFixedList = function(length$) {
+  var result = new Array(length$);
   result.fixed$length = true;
   return result;
 };
@@ -2914,15 +3449,15 @@ $.ioore = function(index) {
 
 $.listInsertRange = function(receiver, start, length$, initialValue) {
   var receiverLength, t1, t2, t3, i;
-  if (typeof receiver !== 'object' || receiver === null || (receiver.constructor !== Array || !!receiver.immutable$list) && !receiver.is$JavaScriptIndexingBehavior())
+  if (typeof receiver !== "object" || receiver === null || (receiver.constructor !== Array || !!receiver.immutable$list) && !receiver.is$JavaScriptIndexingBehavior())
     return $.listInsertRange$bailout(1, receiver, start, length$, initialValue);
   if ($.eqB(length$, 0))
     return;
-  if (!(typeof length$ === 'number' && Math.floor(length$) === length$))
+  if (!(typeof length$ === "number" && Math.floor(length$) === length$))
     throw $.$$throw($.ArgumentError$(length$));
   if (length$ < 0)
     throw $.$$throw($.ArgumentError$(length$));
-  if (!(typeof start === 'number' && Math.floor(start) === start))
+  if (!(typeof start === "number" && Math.floor(start) === start))
     throw $.$$throw($.ArgumentError$(start));
   receiverLength = receiver.length;
   if (start < 0 || start > receiverLength)
@@ -2944,11 +3479,11 @@ $.listInsertRange$bailout = function(state0, receiver, start, length$, initialVa
   var receiverLength, t1, t2, i;
   if ($.eqB(length$, 0))
     return;
-  if (!(typeof length$ === 'number' && Math.floor(length$) === length$))
+  if (!(typeof length$ === "number" && Math.floor(length$) === length$))
     throw $.$$throw($.ArgumentError$(length$));
   if (length$ < 0)
     throw $.$$throw($.ArgumentError$(length$));
-  if (!(typeof start === 'number' && Math.floor(start) === start))
+  if (!(typeof start === "number" && Math.floor(start) === start))
     throw $.$$throw($.ArgumentError$(start));
   receiverLength = receiver.length;
   if (start < 0 || start > receiverLength)
@@ -2959,7 +3494,7 @@ $.listInsertRange$bailout = function(state0, receiver, start, length$, initialVa
   $.Arrays_copy(receiver, start, receiver, t2, receiverLength - start);
   if (!(initialValue == null))
     for (i = start; i < t2; ++i)
-      $.indexSet(receiver, i, initialValue);
+      $.CONSTANT1.operator$indexSet$2(receiver, i, initialValue);
   $.CONSTANT1.set$length(receiver, t1);
 };
 
@@ -2970,31 +3505,37 @@ $.checkNull = function(object) {
 };
 
 $.checkNum = function(value) {
-  if (!(typeof value === 'number'))
+  if (!(typeof value === "number"))
     throw $.$$throw($.ArgumentError$(value));
   return value;
 };
 
 $.checkString = function(value) {
-  if (!(typeof value === 'string'))
+  if (!(typeof value === "string"))
     throw $.$$throw($.ArgumentError$(value));
   return value;
 };
 
 $.$$throw = function(ex) {
-  var jsError;
+  var wrapper;
   if (ex == null)
     ex = $.CONSTANT0;
-  jsError = new Error();
-  jsError.name = ex;
-  jsError.description = ex;
-  jsError.dartException = ex;
-  jsError.toString = $.toStringWrapper.call$0;
-  throw jsError;
+  wrapper = $.DartError$(ex);
+  if (!!Error.captureStackTrace)
+    Error.captureStackTrace(wrapper, $.$$throw);
+  else
+    wrapper.stack = new Error().stack;
+  return wrapper;
 };
 
-$.toStringWrapper = function() {
-  var t1 = this.dartException;
+$.DartError$ = function(dartException) {
+  var t1 = new $.DartError();
+  t1.DartError$1(dartException);
+  return t1;
+};
+
+$.DartError_toStringWrapper = function() {
+  var t1 = this;
   return $.getInterceptor(t1).toString$0(t1);
 };
 
@@ -3012,8 +3553,8 @@ $.unwrapException = function(ex) {
       return $.NoSuchMethodError$("", name$, [], $.makeLiteralMap([]), null);
     ieErrorCode = ex.number & 0xffff;
     ieFacilityNumber = ex.number>>16 & 0x1FFF;
-    if (typeof message === 'string')
-      if ($.CONSTANT.endsWith$1(message, "is null") === true || $.CONSTANT.endsWith$1(message, "is undefined") === true || $.CONSTANT.endsWith$1(message, "is null or undefined") === true || $.CONSTANT.endsWith$1(message, "of null") === true)
+    if (typeof message === "string")
+      if ($.CONSTANT.endsWith$1(message, "is null") === true || $.CONSTANT.endsWith$1(message, "is undefined") === true || $.CONSTANT.endsWith$1(message, "is null or undefined") === true || $.CONSTANT.endsWith$1(message, "of undefined") === true || $.CONSTANT.endsWith$1(message, "of null") === true)
         return $.NoSuchMethodError$(null, "<unknown>", [], $.makeLiteralMap([]), null);
       else {
         if (message.indexOf(" has no method ") === -1)
@@ -3026,25 +3567,28 @@ $.unwrapException = function(ex) {
         if (t1)
           return $.NoSuchMethodError$("", "<unknown>", [], $.makeLiteralMap([]), null);
       }
-    return $.Exception_Exception(typeof message === 'string' ? message : "");
+    return $.Exception_Exception(typeof message === "string" ? message : "");
   }
   if (ex instanceof RangeError) {
-    if (typeof message === 'string' && message.indexOf("call stack") !== -1)
+    if (typeof message === "string" && message.indexOf("call stack") !== -1)
       return $.StackOverflowError$();
     return $.ArgumentError$(null);
   }
   if (typeof InternalError == 'function' && ex instanceof InternalError)
-    if (typeof message === 'string' && message === "too much recursion")
+    if (typeof message === "string" && message === "too much recursion")
       return $.StackOverflowError$();
   return ex;
 };
 
 $.makeLiteralMap = function(keyValuePairs) {
-  var iterator, result;
-  iterator = $.CONSTANT1.iterator$0(keyValuePairs);
+  var iterator, result, t1, key;
+  iterator = $.CONSTANT1.get$iterator(keyValuePairs);
   result = $.LinkedHashMap_LinkedHashMap();
-  for (; iterator.get$hasNext() === true;)
-    $.indexSet(result, iterator.next$0(), iterator.next$0());
+  for (t1 = $.getInterceptor$JSArray(result); iterator.moveNext$0() === true;) {
+    key = iterator.get$current();
+    iterator.moveNext$0();
+    t1.operator$indexSet$2(result, key, iterator.get$current());
+  }
   return result;
 };
 
@@ -3066,9 +3610,8 @@ $.convertDartClosureToJS = function(closure, arity) {
   function$ = closure.$identity;
   if (!!function$)
     return function$;
-  function$ = function() {
-    return $.invokeClosure.call$5(closure, $, arity, arguments[0], arguments[1]);
-  };
+  $;
+  function$ = function($0, $1) { return $.invokeClosure.call$5(closure, $, arity, $0, $1); };
   closure.$identity = function$;
   return function$;
 };
@@ -3114,6 +3657,8 @@ $.typeNameInOpera = function(obj) {
   var name$ = $.constructorNameFallback(obj);
   if (name$ === "Window")
     return "DOMWindow";
+  if (name$ === "ApplicationCache")
+    return "DOMApplicationCache";
   return name$;
 };
 
@@ -3186,7 +3731,7 @@ $.constructorNameFallback = function(object) {
   constructor$ = object.constructor;
   if (typeof(constructor$) === "function") {
     name$ = constructor$.name;
-    if (typeof name$ === 'string')
+    if (typeof name$ === "string")
       t1 = !(name$ === "") && !(name$ === "Object") && !(name$ === "Function.prototype");
     else
       t1 = false;
@@ -3257,7 +3802,7 @@ $.dynamicBind = function(obj, name$, methods, arguments$) {
       method = $.dynamicBindLookup(hasOwnPropertyFunction, secondTag, methods);
   }
   if (method == null)
-    method = $.lookupDynamicClass(hasOwnPropertyFunction, methods, $.getTypeNameOf($.CONSTANT17));
+    method = $.lookupDynamicClass(hasOwnPropertyFunction, methods, $.getTypeNameOf($.CONSTANT16));
   proto = Object.getPrototypeOf(obj);
   if (method == null)
     method = function () {if (Object.getPrototypeOf(this) === proto) {throw new TypeError(name$ + " is not a function");} else {return Object.prototype[name$].apply(this, arguments);}};
@@ -3272,7 +3817,7 @@ $.dynamicBindLookup = function(hasOwnPropertyFunction, tag, methods) {
   if (method == null && !($._dynamicMetadata0() == null))
     for (i = 0; i < $._dynamicMetadata0().length; ++i) {
       entry = $._dynamicMetadata0()[i];
-      if ($.callHasOwnProperty(hasOwnPropertyFunction, entry.get$_liblib0$_set(), tag)) {
+      if ($.callHasOwnProperty(hasOwnPropertyFunction, entry.get$_liblib1$_set(), tag)) {
         method = $.lookupDynamicClass(hasOwnPropertyFunction, methods, entry.get$_tag());
         if (!(method == null))
           break;
@@ -3291,7 +3836,7 @@ $.dynamicFunction = function(name$) {
   if (!(f == null) && !!f.methods)
     return f.methods;
   methods = {};
-  dartMethod = Object.getPrototypeOf($.CONSTANT17)[name$];
+  dartMethod = Object.getPrototypeOf($.CONSTANT16)[name$];
   if (!(dartMethod == null))
     methods["Object"] = dartMethod;
   bind = function() {return $.dynamicBind.call$4(this, name$, methods, Array.prototype.slice.call(arguments));};
@@ -3352,18 +3897,18 @@ $.regExpGetNative = function(regExp) {
   return r == null ? regExp._re = $.regExpMakeNative(regExp, false) : r;
 };
 
-$.regExpMakeNative = function(regExp, global, exception) {
-  var pattern, multiLine, ignoreCase, sb, t1, t2, e;
+$.regExpMakeNative = function(regExp, global) {
+  var pattern, sb, e, isMultiLine, isCaseSensitive, t1, t2, exception;
   pattern = regExp.get$pattern();
-  multiLine = regExp.get$multiLine();
-  ignoreCase = regExp.get$ignoreCase();
+  isMultiLine = regExp.get$isMultiLine();
+  isCaseSensitive = regExp.get$isCaseSensitive();
   $.checkString(pattern);
   sb = $.StringBuffer_StringBuffer("");
-  if (multiLine === true) {
+  if (isMultiLine === true) {
     t1 = sb;
     $.getInterceptor$JSArray(t1).add$1(t1, "m");
   }
-  if (ignoreCase === true) {
+  if (isCaseSensitive !== true) {
     t1 = sb;
     $.getInterceptor$JSArray(t1).add$1(t1, "i");
   }
@@ -3384,15 +3929,15 @@ $.regExpMakeNative = function(regExp, global, exception) {
 
 };
 
-$.JSSyntaxRegExp$ = function(pattern, ignoreCase, multiLine) {
-  return new $.JSSyntaxRegExp(pattern, multiLine, ignoreCase);
+$.JSSyntaxRegExp$ = function(pattern, caseSensitive, multiLine) {
+  return new $.JSSyntaxRegExp(pattern, multiLine, caseSensitive);
 };
 
 $.JSSyntaxRegExp__globalVersionOf = function(other) {
   var t1, t2, re;
   t1 = other.get$pattern();
-  t2 = other.get$multiLine();
-  re = $.JSSyntaxRegExp$(t1, other.get$ignoreCase(), t2);
+  t2 = other.get$isMultiLine();
+  re = $.JSSyntaxRegExp$(t1, other.get$isCaseSensitive(), t2);
   re._re = $.regExpMakeNative(re, true);
   return re;
 };
@@ -3406,7 +3951,7 @@ $._AllMatchesIterable$ = function(_re, _str) {
 };
 
 $._AllMatchesIterator$ = function(re, _str) {
-  return new $._AllMatchesIterator($.JSSyntaxRegExp__globalVersionOf(re), _str, null, false);
+  return new $._AllMatchesIterator($.JSSyntaxRegExp__globalVersionOf(re), _str, null);
 };
 
 $.StringMatch$ = function(start, str, pattern) {
@@ -3415,7 +3960,7 @@ $.StringMatch$ = function(start, str, pattern) {
 
 $.allMatchesInStringUnchecked = function(needle, haystack) {
   var result, t1, length$, patternLength, startIndex, position, endIndex;
-  result = $.List_List(null);
+  result = $.List_List(0);
   t1 = $.getInterceptor$JSStringJSArray(haystack);
   length$ = t1.get$length(haystack);
   patternLength = needle.length;
@@ -3424,25 +3969,25 @@ $.allMatchesInStringUnchecked = function(needle, haystack) {
     if ($.eqB(position, -1))
       break;
     result.push($.StringMatch$(position, haystack, needle));
-    endIndex = $.add(position, patternLength);
+    endIndex = $.getInterceptor$JSNumber(position).operator$add$1(position, patternLength);
     if ($.eqB(endIndex, length$))
       break;
     else
-      startIndex = $.eqB(position, endIndex) ? $.add(startIndex, 1) : endIndex;
+      startIndex = $.eqB(position, endIndex) ? $.getInterceptor$JSNumber(startIndex).operator$add$1(startIndex, 1) : endIndex;
   }
   return result;
 };
 
 $.stringContainsUnchecked = function(receiver, other, startIndex) {
   var substr, t1;
-  if (typeof other === 'string')
+  if (typeof other === "string")
     return !$.eqB($.CONSTANT.indexOf$2(receiver, other, startIndex), -1);
-  else if (typeof other === 'object' && other !== null && !!other.is$JSSyntaxRegExp)
+  else if (typeof other === "object" && other !== null && !!other.is$JSSyntaxRegExp)
     return other.hasMatch$1($.CONSTANT.substring$1(receiver, startIndex));
   else {
     substr = $.CONSTANT.substring$1(receiver, startIndex);
     t1 = $.getInterceptor$JSString(other).allMatches$1(other, substr);
-    return $.getInterceptor$JSArray(t1).iterator$0(t1).get$hasNext();
+    return $.getInterceptor$JSArray(t1).get$iterator(t1).moveNext$0();
   }
 };
 
@@ -3452,6 +3997,7 @@ $.stringReplaceJS = function(receiver, replacer, to) {
 
 $.stringReplaceAllUnchecked = function(receiver, from, to) {
   var result, length$, t1, i;
+  $.checkString(to);
   if (from === "")
     if (receiver === "")
       return to;
@@ -3469,30 +4015,32 @@ $.stringReplaceAllUnchecked = function(receiver, from, to) {
       return t1.toString$0(result);
     }
   else
-    return $.stringReplaceJS(receiver, $.regExpMakeNative($.JSSyntaxRegExp$(from.replace($.regExpMakeNative($.get$quoteRegExp(), true), "\\$&"), false, false), true), to);
-};
-
-$.stringJoinUnchecked = function(array, separator) {
-  return array.join(separator);
+    return $.stringReplaceJS(receiver, $.regExpMakeNative($.JSSyntaxRegExp$(from.replace($.regExpMakeNative($.get$quoteRegExp(), true), "\\$&"), true, false), true), to);
 };
 
 $.Arrays_copy = function(src, srcStart, dst, dstStart, count) {
-  var i, j, t1, t2, t3;
-  if (typeof dst !== 'object' || dst === null || (dst.constructor !== Array || !!dst.immutable$list) && !dst.is$JavaScriptIndexingBehavior())
+  var i, j, t2, t3, t1;
+  if (typeof dst !== "object" || dst === null || (dst.constructor !== Array || !!dst.immutable$list) && !dst.is$JavaScriptIndexingBehavior())
     return $.Arrays_copy$bailout(1, src, srcStart, dst, dstStart, count);
-  if (count !== (count | 0))
-    return $.Arrays_copy$bailout(1, src, srcStart, dst, dstStart, count);
-  if (srcStart < dstStart)
-    for (i = srcStart + count - 1, j = dstStart + count - 1, t1 = src.length, t2 = dst.length; i >= srcStart; --i, --j) {
-      if (i < 0 || i >= t1)
+  if (srcStart < dstStart) {
+    i = srcStart + count - 1;
+    if (i !== (i | 0))
+      return $.Arrays_copy$bailout(2, src, dst, count, i, dstStart, srcStart);
+    j = dstStart + count - 1;
+    t2 = src.length;
+    t3 = dst.length;
+    for (; i >= srcStart; --i, --j) {
+      if (i < 0 || i >= t2)
         throw $.ioore(i);
-      t3 = src[i];
-      if (j < 0 || j >= t2)
+      t1 = src[i];
+      if (j !== (j | 0))
+        throw $.iae(j);
+      if (j < 0 || j >= t3)
         throw $.ioore(j);
-      dst[j] = t3;
+      dst[j] = t1;
     }
-  else
-    for (t1 = src.length, t2 = dst.length, j = dstStart, i = srcStart; i < srcStart + count; ++i, ++j) {
+  } else
+    for (t1 = src.length, t2 = dst.length, i = srcStart, j = dstStart; i < srcStart + count; ++i, ++j) {
       if (i < 0 || i >= t1)
         throw $.ioore(i);
       t3 = src[i];
@@ -3502,22 +4050,52 @@ $.Arrays_copy = function(src, srcStart, dst, dstStart, count) {
     }
 };
 
-$.Arrays_copy$bailout = function(state0, src, srcStart, dst, dstStart, count) {
-  var i, j;
-  if (srcStart < dstStart)
-    for (i = srcStart + count - 1, j = dstStart + count - 1; i >= srcStart; --i, --j) {
-      if (i !== (i | 0))
-        throw $.iae(i);
-      if (i < 0 || i >= src.length)
-        throw $.ioore(i);
-      $.indexSet(dst, j, src[i]);
-    }
-  else
-    for (j = dstStart, i = srcStart; i < srcStart + count; ++i, ++j) {
-      if (i < 0 || i >= src.length)
-        throw $.ioore(i);
-      $.indexSet(dst, j, src[i]);
-    }
+$.Arrays_copy$bailout = function(state0, env0, env1, env2, env3, env4, env5) {
+  switch (state0) {
+    case 1:
+      count = env4;
+      dstStart = env3;
+      dst = env2;
+      srcStart = env1;
+      src = env0;
+      break;
+    case 2:
+      srcStart = env5;
+      dstStart = env4;
+      i = env3;
+      count = env2;
+      dst = env1;
+      src = env0;
+      break;
+  }
+  switch (state0) {
+    case 0:
+    case 1:
+      state0 = 0;
+    case 2:
+      var count, dstStart, dst, srcStart, src, i, j;
+      if (state0 === 2 || state0 === 0 && srcStart < dstStart)
+        switch (state0) {
+          case 0:
+            i = srcStart + count - 1;
+          case 2:
+            state0 = 0;
+            j = dstStart + count - 1;
+            for (; i >= srcStart; --i, --j) {
+              if (i !== (i | 0))
+                throw $.iae(i);
+              if (i < 0 || i >= src.length)
+                throw $.ioore(i);
+              $.CONSTANT1.operator$indexSet$2(dst, j, src[i]);
+            }
+        }
+      else
+        for (i = srcStart, j = dstStart; i < srcStart + count; ++i, ++j) {
+          if (i < 0 || i >= src.length)
+            throw $.ioore(i);
+          $.CONSTANT1.operator$indexSet$2(dst, j, src[i]);
+        }
+  }
 };
 
 $.Arrays_indexOf = function(a, element, startIndex, endIndex) {
@@ -3535,30 +4113,17 @@ $.Arrays_indexOf = function(a, element, startIndex, endIndex) {
   return -1;
 };
 
-$.Collections_contains = function(iterable, element) {
+$.IterableMixinWorkaround_contains = function(iterable, element) {
   var t1;
-  for (t1 = $.getInterceptor$JSArray(iterable).iterator$0(iterable); t1.get$hasNext() === true;)
-    if ($.eqB(element, t1.next$0()))
+  for (t1 = $.getInterceptor$JSArray(iterable).get$iterator(iterable); t1.moveNext$0() === true;)
+    if ($.eqB(element, t1.get$current()))
       return true;
   return false;
 };
 
-$.Collections_forEach = function(iterable, f) {
-  var t1;
-  for (t1 = $.getInterceptor$JSArray(iterable).iterator$0(iterable); t1.get$hasNext() === true;)
-    f.call$1(t1.next$0());
-};
-
-$.Collections_map = function(source, destination, f) {
-  var t1;
-  for (t1 = $.getInterceptor$JSArray(source).iterator$0(source); t1.get$hasNext() === true;)
-    destination.push(f.call$1(t1.next$0()));
-  return destination;
-};
-
 $.Collections_collectionToString = function(c) {
   var result = $.StringBuffer_StringBuffer("");
-  $.Collections__emitCollection(c, result, $.List_List(null));
+  $.Collections__emitCollection(c, result, $.List_List(0));
   return $.getInterceptor(result).toString$0(result);
 };
 
@@ -3566,28 +4131,29 @@ $.Collections__emitCollection = function(c, result, visiting) {
   var t1, isList, t2, t3, first, t4;
   t1 = $.getInterceptor$JSArray(visiting);
   t1.add$1(visiting, c);
-  isList = typeof c === 'object' && c !== null && (c.constructor === Array || c.is$List());
-  t2 = $.getInterceptor$JSArray(result);
-  t2.add$1(result, isList ? "[" : "{");
-  for (t3 = $.getInterceptor$JSArray(c).iterator$0(c), first = true; t3.get$hasNext() === true; first = false) {
-    t4 = t3.next$0();
+  isList = typeof c === "object" && c !== null && (c.constructor === Array || c.is$List());
+  t2 = isList ? "[" : "{";
+  t3 = $.getInterceptor$JSArray(result);
+  t3.add$1(result, t2);
+  for (t2 = $.getInterceptor$JSArray(c).get$iterator(c), first = true; t2.moveNext$0() === true; first = false) {
+    t4 = t2.get$current();
     if (!first)
-      t2.add$1(result, ", ");
+      t3.add$1(result, ", ");
     $.Collections__emitObject(t4, result, visiting);
   }
-  t2.add$1(result, isList ? "]" : "}");
+  t3.add$1(result, isList ? "]" : "}");
   t1.removeLast$0(visiting);
 };
 
 $.Collections__emitObject = function(o, result, visiting) {
   var t1;
-  if (typeof o === 'object' && o !== null && (o.constructor === Array || o.is$Collection()))
+  if (typeof o === "object" && o !== null && (o.constructor === Array || o.is$Collection()))
     if ($.Collections__containsRef(visiting, o)) {
-      t1 = $.getInterceptor$JSArray(result);
-      t1.add$1(result, typeof o === 'object' && o !== null && (o.constructor === Array || o.is$List()) ? "[...]" : "{...}");
+      t1 = typeof o === "object" && o !== null && (o.constructor === Array || o.is$List()) ? "[...]" : "{...}";
+      $.getInterceptor$JSArray(result).add$1(result, t1);
     } else
       $.Collections__emitCollection(o, result, visiting);
-  else if (typeof o === 'object' && o !== null && o.is$Map())
+  else if (typeof o === "object" && o !== null && o.is$Map())
     if ($.Collections__containsRef(visiting, o))
       $.getInterceptor$JSArray(result).add$1(result, "{...}");
     else
@@ -3598,8 +4164,8 @@ $.Collections__emitObject = function(o, result, visiting) {
 
 $.Collections__containsRef = function(c, ref) {
   var t1, t2;
-  for (t1 = $.getInterceptor$JSArray(c).iterator$0(c); t1.get$hasNext() === true;) {
-    t2 = t1.next$0();
+  for (t1 = $.getInterceptor$JSArray(c).get$iterator(c); t1.moveNext$0() === true;) {
+    t2 = t1.get$current();
     if (t2 == null ? ref == null : t2 === ref)
       return true;
   }
@@ -3608,7 +4174,7 @@ $.Collections__containsRef = function(c, ref) {
 
 $.Maps_mapToString = function(m) {
   var result = $.StringBuffer_StringBuffer("");
-  $.Maps__emitMap(m, result, $.List_List(null));
+  $.Maps__emitMap(m, result, $.List_List(0));
   return $.getInterceptor(result).toString$0(result);
 };
 
@@ -3620,9 +4186,26 @@ $.Maps__emitMap = function(m, result, visiting) {
   t3 = $.getInterceptor$JSArray(result);
   t3.add$1(result, "{");
   t1.first_0 = true;
-  $.getInterceptor$JSArray(m).forEach$1(m, new $.Maps__emitMap_anon(t1, result, visiting));
+  t1 = new $.Maps__emitMap_anon(t1, result, visiting);
+  $.getInterceptor$JSArray(m).forEach$1(m, t1);
   t3.add$1(result, "}");
   t2.removeLast$0(visiting);
+};
+
+$.MappedIterable$ = function(_iterable, _f) {
+  return new $.MappedIterable(_iterable, _f);
+};
+
+$.MappedIterator$ = function(_iterator, _f) {
+  return new $.MappedIterator(null, _iterator, _f);
+};
+
+$.ListIterator$ = function(_list) {
+  return new $.ListIterator(_list, -1, null);
+};
+
+$.MappedList$ = function(_list, _f) {
+  return new $.MappedList(_list, _f);
 };
 
 $.Date_Date$now = function() {
@@ -3647,15 +4230,15 @@ $._DateImpl$now = function() {
 
 $.Error_safeToString = function(object) {
   var t1;
-  if (typeof object === 'number' && Math.floor(object) === object || typeof object === 'number' || typeof object === 'boolean' || null == object)
+  if (typeof object === "number" && Math.floor(object) === object || typeof object === "number" || typeof object === "boolean" || null == object)
     return $.getInterceptor(object).toString$0(object);
-  if (typeof object === 'string') {
+  if (typeof object === "string") {
     t1 = $.CONSTANT.replaceAll$2(object, "\\", "\\\\");
     t1 = $.getInterceptor$JSString(t1).replaceAll$2(t1, "\n", "\\n");
     t1 = $.getInterceptor$JSString(t1).replaceAll$2(t1, "\r", "\\r");
     return "\"" + $.S($.getInterceptor$JSString(t1).replaceAll$2(t1, "\"", "\\\"")) + "\"";
   }
-  return $.Primitives_objectToString(object);
+  return "Instance of '" + $.S($.Primitives_objectTypeName(object)) + "'";
 };
 
 $.ArgumentError$ = function(message) {
@@ -3694,23 +4277,42 @@ $._ExceptionImplementation$ = function(message) {
   return new $._ExceptionImplementation(message);
 };
 
-$.FormatException$ = function(message) {
-  return new $.FormatException(message);
-};
-
 $.IllegalJSRegExpException$ = function(_pattern, _errmsg) {
   return new $.IllegalJSRegExpException(_pattern, _errmsg);
 };
 
 $.List_List = function(length$) {
-  return $.Primitives_newList(length$);
+  if (!(typeof length$ === "number" && Math.floor(length$) === length$) || length$ < 0)
+    throw $.$$throw($.ArgumentError$("Length must be a positive integer: " + $.S(length$) + "."));
+  return new Array(length$);
+};
+
+$.List_List$fixedLength = function(length$, fill) {
+  var result, t1, i;
+  if (!(typeof length$ === "number" && Math.floor(length$) === length$) || length$ < 0)
+    throw $.$$throw($.ArgumentError$("Length must be a positive integer: " + $.S(length$) + "."));
+  result = $.Primitives_newFixedList(length$);
+  if (typeof result !== "object" || result === null || (result.constructor !== Array || !!result.immutable$list) && !result.is$JavaScriptIndexingBehavior())
+    return $.List_List$fixedLength$bailout(1, length$, fill, result);
+  if (!$.eqB(length$, 0) && !(fill == null))
+    for (t1 = result.length, i = 0; i < t1; ++i)
+      result[i] = fill;
+  return result;
+};
+
+$.List_List$fixedLength$bailout = function(state0, length$, fill, result) {
+  var i;
+  if (!$.eqB(length$, 0) && !(fill == null))
+    for (i = 0; i < result.length; ++i)
+      $.CONSTANT1.operator$indexSet$2(result, i, fill);
+  return result;
 };
 
 $.List_List$from = function(other) {
   var list, t1;
-  list = $.List_List(null);
-  for (t1 = other.iterator$0(); t1.get$hasNext() === true;)
-    list.push(t1.next$0());
+  list = $.List_List(0);
+  for (t1 = $.getInterceptor$JSArray(other).get$iterator(other); t1.moveNext$0() === true;)
+    list.push(t1.get$current());
   return list;
 };
 
@@ -3729,11 +4331,18 @@ $._HashMapImpl$ = function() {
 };
 
 $._HashMapImpl__computeLoadLimit = function(capacity) {
-  return $.tdiv(capacity * 3, 4);
+  return $.CONSTANT2.operator$tdiv$1(capacity * 3, 4);
 };
 
 $._HashMapImpl__nextProbe = function(currentProbe, numberOfProbes, length$) {
-  return $.and($.add(currentProbe, numberOfProbes), $.sub(length$, 1));
+  var t1, t2;
+  t1 = $.getInterceptor$JSNumber(currentProbe).operator$add$1(currentProbe, numberOfProbes);
+  t2 = $.getInterceptor$JSNumber(length$).operator$sub$1(length$, 1);
+  return $.getInterceptor$JSNumber(t1).operator$and$1(t1, t2);
+};
+
+$._HashMapImplIndexIterator$ = function(map) {
+  return new $._HashMapImplIndexIterator(map, -1, null);
 };
 
 $._KeyValuePair$ = function(key, value) {
@@ -3744,10 +4353,6 @@ $._LinkedHashMapImpl$ = function() {
   var t1 = new $._LinkedHashMapImpl(null, null);
   t1._LinkedHashMapImpl$0();
   return t1;
-};
-
-$.Queue_Queue = function() {
-  return $.DoubleLinkedQueue$();
 };
 
 $.DoubleLinkedQueueEntry$ = function(e) {
@@ -3769,14 +4374,12 @@ $.DoubleLinkedQueue$ = function() {
   return t1;
 };
 
-$._DoubleLinkedQueueIterator$ = function(_sentinel) {
-  var t1 = new $._DoubleLinkedQueueIterator(_sentinel, null);
-  t1._DoubleLinkedQueueIterator$1(_sentinel);
-  return t1;
+$._DoubleLinkedQueueIterator$ = function(sentinel) {
+  return new $._DoubleLinkedQueueIterator(sentinel, sentinel, null);
 };
 
-$.RegExp_RegExp = function(pattern, ignoreCase, multiLine) {
-  return $.JSSyntaxRegExp$(pattern, ignoreCase, multiLine);
+$.RegExp_RegExp = function(pattern, caseSensitive, multiLine) {
+  return $.JSSyntaxRegExp$(pattern, caseSensitive, multiLine);
 };
 
 $.StringBuffer_StringBuffer = function(content$) {
@@ -3791,15 +4394,11 @@ $._StringBufferImpl$ = function(content$) {
 
 $.Strings_join = function(strings, separator) {
   $.checkNull(strings);
-  return $.stringJoinUnchecked($.Strings__toJsStringArray(strings), separator);
+  return $.Strings__toJsStringArray(strings).join(separator);
 };
 
 $.window = function() {
   return window;
-};
-
-$.document = function() {
-  return document;
 };
 
 $.BodyElementEvents$ = function(_ptr) {
@@ -3807,7 +4406,7 @@ $.BodyElementEvents$ = function(_ptr) {
 };
 
 $.CanvasElement_CanvasElement = function(height, width) {
-  var e = $.document().$$dom_createElement$1("canvas");
+  var e = document.$$dom_createElement$1("canvas");
   if (!(width == null))
     e.set$width(width);
   if (!(height == null))
@@ -3844,10 +4443,6 @@ $.EventListenerList$ = function(_ptr, _type) {
   return new $.EventListenerList(_ptr, _type);
 };
 
-$.FrameSetElementEvents$ = function(_ptr) {
-  return new $.FrameSetElementEvents(_ptr);
-};
-
 $.InputElementEvents$ = function(_ptr) {
   return new $.InputElementEvents(_ptr);
 };
@@ -3858,6 +4453,10 @@ $.MediaElementEvents$ = function(_ptr) {
 
 $.WindowEvents$ = function(_ptr) {
   return new $.WindowEvents(_ptr);
+};
+
+$._FrameSetElementEvents$ = function(_ptr) {
+  return new $._FrameSetElementEvents(_ptr);
 };
 
 $._Device_userAgent = function() {
@@ -3885,6 +4484,17 @@ $._Device_isFirefox = function() {
   return $.getInterceptor$JSString(t1).contains$2(t1, "Firefox", 0);
 };
 
+$._Device_isWebKit = function() {
+  var t1, t2;
+  if ($._Device_isOpera() !== true) {
+    t1 = $._Device_userAgent();
+    t2 = $.getInterceptor$JSString(t1).contains$2(t1, "WebKit", 0) === true;
+    t1 = t2;
+  } else
+    t1 = false;
+  return t1;
+};
+
 $._convertNativeToDart_Window = function(win) {
   return $._DOMWindowCrossFrame__createSafe(win);
 };
@@ -3901,7 +4511,7 @@ $._DOMWindowCrossFrame$ = function(_window) {
 };
 
 $._DOMWindowCrossFrame__createSafe = function(w) {
-  var t1 = $.window();
+  var t1 = window;
   if (w == null ? t1 == null : w === t1)
     return w;
   else
@@ -3909,16 +4519,16 @@ $._DOMWindowCrossFrame__createSafe = function(w) {
 };
 
 $.FixedSizeListIterator$ = function(array) {
-  return new $.FixedSizeListIterator($.getInterceptor$JSStringJSArray(array).get$length(array), array, 0);
+  return new $.FixedSizeListIterator(array, $.getInterceptor$JSStringJSArray(array).get$length(array), -1, null);
 };
 
 $.Lists_indexOf = function(a, element, startIndex, endIndex) {
   var i;
-  if (typeof a !== 'string' && (typeof a !== 'object' || a === null || a.constructor !== Array && !a.is$JavaScriptIndexingBehavior()))
+  if (typeof a !== "string" && (typeof a !== "object" || a === null || a.constructor !== Array && !a.is$JavaScriptIndexingBehavior()))
     return $.Lists_indexOf$bailout(1, a, element, startIndex, endIndex);
-  if (typeof startIndex !== 'number')
+  if (typeof startIndex !== "number")
     return $.Lists_indexOf$bailout(1, a, element, startIndex, endIndex);
-  if (typeof endIndex !== 'number')
+  if (typeof endIndex !== "number")
     return $.Lists_indexOf$bailout(1, a, element, startIndex, endIndex);
   if (startIndex >= a.length)
     return -1;
@@ -3942,7 +4552,7 @@ $.Lists_indexOf$bailout = function(state0, a, element, startIndex, endIndex) {
     return -1;
   if ($.ltB(startIndex, 0))
     startIndex = 0;
-  for (i = startIndex; $.ltB(i, endIndex); i = $.add(i, 1))
+  for (i = startIndex; $.ltB(i, endIndex); i = $.getInterceptor$JSNumber(i).operator$add$1(i, 1))
     if ($.eqB(t1.operator$index$1(a, i), element))
       return i;
   return -1;
@@ -3954,31 +4564,6 @@ $.sqrt = function(x) {
 
 $.Property$ = function(name$, defaultValue) {
   return new $.Property(defaultValue, name$);
-};
-
-$.$$ = function(source) {
-  return $.Enumerable_Enumerable$fromIterable(source);
-};
-
-$.Enumerable_Enumerable$fromIterable = function(source) {
-  $.requireArgumentNotNull(source, "source");
-  return $._SimpleEnumerable$(source);
-};
-
-$._SimpleEnumerable$ = function(_source) {
-  return new $._SimpleEnumerable(_source);
-};
-
-$._FuncEnumerable$ = function(_source, _func) {
-  return new $._FuncEnumerable(_source, _func);
-};
-
-$._SelectIterator$ = function(_source, _func) {
-  return new $._SelectIterator(_source, _func);
-};
-
-$._WhereIterator$ = function(_source, _func) {
-  return new $._WhereIterator(_source, _func, null, null);
 };
 
 $.EventHandle$ = function() {
@@ -4007,7 +4592,7 @@ $.GlobalId$_internal = function(value) {
 
 $.GlobalId_GlobalId = function() {
   var t1 = $.GlobalId__globalId;
-  $.GlobalId__globalId = $.add(t1, 1);
+  $.GlobalId__globalId = $.getInterceptor$JSNumber(t1).operator$add$1(t1, 1);
   return $.GlobalId$_internal(t1);
 };
 
@@ -4057,7 +4642,9 @@ $.lerp = function(a, b, x) {
   } else
     t1 = false;
   $.requireArgument(t1, "x", null);
-  return $.add(a, $.mul(x, $.sub(b, a)));
+  t1 = $.getInterceptor$JSNumber(b).operator$sub$1(b, a);
+  t1 = $.getInterceptor$JSNumber(x).operator$mul$1(x, t1);
+  return $.getInterceptor$JSNumber(a).operator$add$1(a, t1);
 };
 
 $.Size$ = function(width, height) {
@@ -4101,17 +4688,17 @@ $._metaRequireArgumentNotNullOrEmpty = function(argName) {
 $.Util_getHashCode = function(source) {
   var t1, hash, t2, next, hash0, hash1;
   $.requireArgumentNotNull(source, "source");
-  for (t1 = $.CONSTANT1.iterator$0(source), hash = 0; t1.get$hasNext() === true; hash = hash1) {
-    t2 = t1.next$0();
+  for (t1 = $.CONSTANT1.get$iterator(source), hash = 0; t1.moveNext$0() === true; hash = hash1) {
+    t2 = t1.get$current();
     next = t2 == null ? 0 : $.getInterceptor(t2).get$hashCode(t2);
-    if (typeof next !== 'number')
+    if (typeof next !== "number")
       throw $.iae(next);
     hash0 = 536870911 & hash + next;
     hash1 = 536870911 & hash0 + ((524287 & hash0) << 10 >>> 0);
-    hash1 = (hash1 ^ $.shr(hash1, 6)) >>> 0;
+    hash1 = (hash1 ^ $.CONSTANT2.operator$shr$1(hash1, 6)) >>> 0;
   }
   hash0 = 536870911 & hash + ((67108863 & hash) << 3 >>> 0);
-  hash0 = (hash0 ^ $.shr(hash0, 11)) >>> 0;
+  hash0 = (hash0 ^ $.CONSTANT2.operator$shr$1(hash0, 11)) >>> 0;
   return 536870911 & hash0 + ((16383 & hash0) << 15 >>> 0);
 };
 
@@ -4122,23 +4709,25 @@ $.CanvasUtil_transform = function(ctx, tx) {
 };
 
 $.CanvasUtil_ellipse = function(ctx, x, y, width, height) {
-  var hB, vB, eX, eY, mX, mY, t1, t2, t3;
-  hB = $.mul($.div(width, 2), 0.5522847498307935);
-  vB = $.mul($.div(height, 2), 0.5522847498307935);
-  if (typeof width !== 'number')
+  var t1, hB, vB, eX, eY, mX, mY, t2, t3;
+  t1 = $.getInterceptor$JSNumber(width).operator$div$1(width, 2);
+  hB = $.getInterceptor$JSNumber(t1).operator$mul$1(t1, 0.5522847498307935);
+  t1 = $.getInterceptor$JSNumber(height).operator$div$1(height, 2);
+  vB = $.getInterceptor$JSNumber(t1).operator$mul$1(t1, 0.5522847498307935);
+  if (typeof width !== "number")
     throw $.iae(width);
   eX = x + width;
-  if (typeof height !== 'number')
+  if (typeof height !== "number")
     throw $.iae(height);
   eY = y + height;
   mX = x + width / 2;
   mY = y + height / 2;
   ctx.beginPath$0();
   ctx.moveTo$2(x, mY);
-  if (typeof vB !== 'number')
+  if (typeof vB !== "number")
     throw $.iae(vB);
   t1 = mY - vB;
-  if (typeof hB !== 'number')
+  if (typeof hB !== "number")
     throw $.iae(hB);
   t2 = mX - hB;
   ctx.bezierCurveTo$6(x, t1, t2, y, mX, y);
@@ -4150,16 +4739,12 @@ $.CanvasUtil_ellipse = function(ctx, x, y, width, height) {
   ctx.closePath$0();
 };
 
-$.getMouseEventCoordinate = function(event$) {
-  return $.Coordinate$(event$.get$offsetX(), event$.get$offsetY());
-};
-
 $.CanvasThing$ = function(w, h) {
-  return new $.CanvasThing($.List_List(null), null, $.List_List(null), $.EventHandle$(), null, w, h, 1, false, null, null, $.HashMap_HashMap(), $.HashMap_HashMap(), false);
+  return new $.CanvasThing($.List_List(0), null, $.List_List(0), $.EventHandle$(), null, w, h, 1, false, null, null, $.HashMap_HashMap(), $.HashMap_HashMap(), false);
 };
 
 $.NavThing$ = function(width, height) {
-  return new $.NavThing($.CONSTANT5, $.CONSTANT6, null, null, null, $.List_List(null), $.EventHandle$(), null, width, height, 1, false, null, null, $.HashMap_HashMap(), $.HashMap_HashMap(), false);
+  return new $.NavThing($.CONSTANT4, $.CONSTANT5, null, null, null, $.List_List(0), $.EventHandle$(), null, width, height, 1, false, null, null, $.HashMap_HashMap(), $.HashMap_HashMap(), false);
 };
 
 $._NavLayerTxPanel__NavLayerTxPanel = function(width, height, lastCanvas, newChild, startTx, ghostTx, frameCount, horizontalAlignment, verticalAlignment, childOffset) {
@@ -4174,13 +4759,13 @@ $._NavLayerTxPanel__NavLayerTxPanel = function(width, height, lastCanvas, newChi
 };
 
 $._NavLayerTxPanel$_internal = function(width, height, _frames, _lastImage, _newChild, _startTx, _goalTx) {
-  var t1 = new $._NavLayerTxPanel(_frames, _lastImage, _newChild, _startTx, _goalTx, null, 0, $.List_List(null), null, $.List_List(null), $.EventHandle$(), null, width, height, 1, false, null, null, $.HashMap_HashMap(), $.HashMap_HashMap(), false);
+  var t1 = new $._NavLayerTxPanel(_frames, _lastImage, _newChild, _startTx, _goalTx, null, 0, $.List_List(0), null, $.List_List(0), $.EventHandle$(), null, width, height, 1, false, null, null, $.HashMap_HashMap(), $.HashMap_HashMap(), false);
   t1._NavLayerTxPanel$_internal$7(width, height, _frames, _lastImage, _newChild, _startTx, _goalTx);
   return t1;
 };
 
 $.RetainedUtil_getOffsetVector = function(parentSize, childSize, horizontalAlignment, verticalAlignment, offset) {
-  var x, y;
+  var x, y, t1, t2;
   $.requireArgumentNotNull(parentSize, "parentSize");
   $.requireArgumentNotNull(childSize, "childSize");
   $.requireArgumentNotNull(horizontalAlignment, "horizontalAlignment");
@@ -4189,25 +4774,39 @@ $.RetainedUtil_getOffsetVector = function(parentSize, childSize, horizontalAlign
   x = offset.get$x();
   y = offset.get$y();
   switch (horizontalAlignment) {
+    case $.CONSTANT12:
+      break;
+    case $.CONSTANT5:
+      t1 = parentSize.width;
+      t2 = childSize.get$width();
+      t2 = $.getInterceptor$JSNumber(t1).operator$sub$1(t1, t2);
+      t2 = $.getInterceptor$JSNumber(t2).operator$div$1(t2, 2);
+      x = $.getInterceptor$JSNumber(x).operator$add$1(x, t2);
+      break;
     case $.CONSTANT13:
-      break;
-    case $.CONSTANT6:
-      x = $.add(x, $.div($.sub(parentSize.width, childSize.get$width()), 2));
-      break;
-    case $.CONSTANT14:
-      x = $.add(x, $.sub(parentSize.width, childSize.get$width()));
+      t1 = parentSize.width;
+      t2 = childSize.get$width();
+      t2 = $.getInterceptor$JSNumber(t1).operator$sub$1(t1, t2);
+      x = $.getInterceptor$JSNumber(x).operator$add$1(x, t2);
       break;
     default:
       throw $.$$throw($.ArgumentError$("horizontalAlignment value not expected " + $.S(horizontalAlignment)));
   }
   switch (verticalAlignment) {
+    case $.CONSTANT14:
+      break;
+    case $.CONSTANT4:
+      t1 = parentSize.height;
+      t2 = childSize.get$height();
+      t2 = $.getInterceptor$JSNumber(t1).operator$sub$1(t1, t2);
+      t2 = $.getInterceptor$JSNumber(t2).operator$div$1(t2, 2);
+      y = $.getInterceptor$JSNumber(y).operator$add$1(y, t2);
+      break;
     case $.CONSTANT15:
-      break;
-    case $.CONSTANT5:
-      y = $.add(y, $.div($.sub(parentSize.height, childSize.get$height()), 2));
-      break;
-    case $.CONSTANT16:
-      y = $.add(y, $.sub(parentSize.height, childSize.get$height()));
+      t1 = parentSize.height;
+      t2 = childSize.get$height();
+      t2 = $.getInterceptor$JSNumber(t1).operator$sub$1(t1, t2);
+      y = $.getInterceptor$JSNumber(y).operator$add$1(y, t2);
       break;
     default:
       throw $.$$throw($.ArgumentError$("verticalAlignment value not expected " + $.S(verticalAlignment)));
@@ -4215,26 +4814,21 @@ $.RetainedUtil_getOffsetVector = function(parentSize, childSize, horizontalAlign
   return $.Vector$(x, y);
 };
 
-$.RetainedUtil_hitTest = function(stage, point) {
-  return $.RetainedUtil__hitTest(stage.rootThing, point);
-};
-
 $.RetainedUtil__hitTest = function(thing, point) {
-  var bounds, hits, length$, t1, i, t2;
+  var bounds, hits, length$, t1, i;
   point = $.RetainedUtil_transformPointGlobalToLocal(thing, point);
   bounds = $.Box$(0, 0, thing.get$width(), thing.get$height());
-  hits = $.List_List(null);
+  hits = $.List_List(0);
   if (bounds.contains$1(point) === true) {
-    if (typeof thing === 'object' && thing !== null && !!thing.is$ParentThing) {
+    if (typeof thing === "object" && thing !== null && !!thing.is$ParentThing) {
       length$ = thing.get$visualChildCount();
-      if (typeof length$ !== 'number')
-        return $.RetainedUtil__hitTest$bailout(1, thing, point, hits, length$);
+      if (typeof length$ !== "number")
+        return $.RetainedUtil__hitTest$bailout(1, thing, hits, point, length$);
       for (t1 = length$ - 1, i = 0; i < length$; ++i) {
         hits = $.RetainedUtil__hitTest(thing.getVisualChild$1(t1 - i), point);
-        if (typeof hits !== 'object' || hits === null || hits.constructor !== Array || !!hits.fixed$length)
-          return $.RetainedUtil__hitTest$bailout(2, thing, i, hits, point, length$);
-        t2 = hits.length;
-        if (t2 > 0)
+        if (typeof hits !== "object" || hits === null || hits.constructor !== Array || !!hits.fixed$length)
+          return $.RetainedUtil__hitTest$bailout(2, thing, point, $.CONSTANT8, length$, hits, i);
+        if (hits.length > 0)
           break;
       }
       thing = thing;
@@ -4244,26 +4838,28 @@ $.RetainedUtil__hitTest = function(thing, point) {
   return hits;
 };
 
-$.RetainedUtil__hitTest$bailout = function(state0, env0, env1, env2, env3, env4, env5) {
+$.RetainedUtil__hitTest$bailout = function(state0, env0, env1, env2, env3, env4, env5, env6) {
   switch (state0) {
     case 1:
       length$ = env3;
-      hits = env2;
-      point = env1;
+      point = env2;
+      hits = env1;
       thing = env0;
       break;
     case 2:
-      length$ = env4;
-      point = env3;
-      hits = env2;
-      i = env1;
+      i = env5;
+      hits = env4;
+      length$ = env3;
+      t1 = env2;
+      point = env1;
       thing = env0;
       break;
     case 3:
-      t1 = env5;
+      t2 = env6;
+      i = env5;
       hits = env4;
-      i = env3;
-      length$ = env2;
+      length$ = env3;
+      t1 = env2;
       point = env1;
       thing = env0;
       break;
@@ -4272,19 +4868,20 @@ $.RetainedUtil__hitTest$bailout = function(state0, env0, env1, env2, env3, env4,
     case 0:
       point = $.RetainedUtil_transformPointGlobalToLocal(thing, point);
       bounds = $.Box$(0, 0, thing.get$width(), thing.get$height());
-      hits = $.List_List(null);
+      hits = $.List_List(0);
     default:
-      var point, bounds, hits, length$, thing, i, t1;
+      var point, bounds, hits, length$, thing, t1, i, t2;
       if (state0 === 3 || state0 === 2 || state0 === 1 || state0 === 0 && bounds.contains$1(point) === true)
         switch (state0) {
           case 0:
           default:
-            if (state0 === 3 || state0 === 2 || state0 === 1 || state0 === 0 && typeof thing === 'object' && thing !== null && !!thing.is$ParentThing)
+            if (state0 === 3 || state0 === 2 || state0 === 1 || state0 === 0 && typeof thing === "object" && thing !== null && !!thing.is$ParentThing)
               switch (state0) {
                 case 0:
                   length$ = thing.get$visualChildCount();
                 case 1:
                   state0 = 0;
+                  t1 = $.getInterceptor$JSNumber(length$);
                   i = 0;
                 default:
                   L0:
@@ -4293,13 +4890,14 @@ $.RetainedUtil__hitTest$bailout = function(state0, env0, env1, env2, env3, env4,
                         case 0:
                           if (!$.ltB(i, length$))
                             break L0;
-                          hits = $.RetainedUtil__hitTest(thing.getVisualChild$1($.sub($.sub(length$, 1), i)), point);
+                          t2 = t1.operator$sub$1(length$, 1);
+                          hits = $.RetainedUtil__hitTest(thing.getVisualChild$1($.getInterceptor$JSNumber(t2).operator$sub$1(t2, i)), point);
                         case 2:
                           state0 = 0;
-                          t1 = $.getInterceptor$JSStringJSArray(hits).get$length(hits);
+                          t2 = $.getInterceptor$JSStringJSArray(hits).get$length(hits);
                         case 3:
                           state0 = 0;
-                          if ($.gtB(t1, 0))
+                          if ($.gtB(t2, 0))
                             break L0;
                           ++i;
                       }
@@ -4316,7 +4914,7 @@ $.RetainedUtil_transformPointGlobalToLocal = function(thing, point) {
 };
 
 $.ShapeThing$ = function(w, h, fillStyle, shapeType) {
-  return new $.ShapeThing(fillStyle, shapeType, $.List_List(null), $.EventHandle$(), null, w, h, 1, false, null, null, $.HashMap_HashMap(), $.HashMap_HashMap(), false);
+  return new $.ShapeThing(fillStyle, shapeType, $.List_List(0), $.EventHandle$(), null, w, h, 1, false, null, null, $.HashMap_HashMap(), $.HashMap_HashMap(), false);
 };
 
 $.Stage$ = function(_canvas, rootThing) {
@@ -4326,19 +4924,19 @@ $.Stage$ = function(_canvas, rootThing) {
 };
 
 $.SubCanvasThing$ = function(width, height, _canvas) {
-  return new $.SubCanvasThing(_canvas, $.List_List(null), $.EventHandle$(), null, width, height, 1, false, null, null, $.HashMap_HashMap(), $.HashMap_HashMap(), false);
+  return new $.SubCanvasThing(_canvas, $.List_List(0), $.EventHandle$(), null, width, height, 1, false, null, null, $.HashMap_HashMap(), $.HashMap_HashMap(), false);
 };
 
 $.TextThing$ = function(_value, width, height) {
-  return new $.TextThing(_value, "white", "black", $.List_List(null), $.EventHandle$(), null, width, height, 1, false, null, null, $.HashMap_HashMap(), $.HashMap_HashMap(), false);
+  return new $.TextThing(_value, "white", "black", $.List_List(0), $.EventHandle$(), null, width, height, 1, false, null, null, $.HashMap_HashMap(), $.HashMap_HashMap(), false);
 };
 
-$.toStringWrapper.call$0 = $.toStringWrapper;
-$.toStringWrapper.$name = "toStringWrapper";
-$.invokeClosure.call$5 = $.invokeClosure;
-$.invokeClosure.$name = "invokeClosure";
+$.DartError_toStringWrapper.call$0 = $.DartError_toStringWrapper;
+$.DartError_toStringWrapper.$name = "DartError_toStringWrapper";
 $.typeNameInChrome.call$1 = $.typeNameInChrome;
 $.typeNameInChrome.$name = "typeNameInChrome";
+$.$$throw.call$1 = $.$$throw;
+$.$$throw.$name = "$$throw";
 $.typeNameInSafari.call$1 = $.typeNameInSafari;
 $.typeNameInSafari.$name = "typeNameInSafari";
 $.typeNameInOpera.call$1 = $.typeNameInOpera;
@@ -4351,51 +4949,52 @@ $.constructorNameFallback.call$1 = $.constructorNameFallback;
 $.constructorNameFallback.$name = "constructorNameFallback";
 $.dynamicBind.call$4 = $.dynamicBind;
 $.dynamicBind.$name = "dynamicBind";
+$.invokeClosure.call$5 = $.invokeClosure;
+$.invokeClosure.$name = "invokeClosure";
 Isolate.$finishClasses($$);
 $$ = {};
-$.$int = {builtin$cls: '$int'};
 $.String = {builtin$cls: 'String'};
-$.Node = {builtin$cls: 'Node'};
 $.Match = {builtin$cls: 'Match'};
+$.$int = {builtin$cls: '$int'};
+$.Node = {builtin$cls: 'Node'};
+$.CONSTANT14 = new Isolate.$isolateProperties.VerticalAlignment("top");
+$.CONSTANT13 = new Isolate.$isolateProperties.HorizontalAlignment("right");
+$.CONSTANT0 = new Isolate.$isolateProperties.NullThrownError();
+$.CONSTANT6 = new Isolate.$isolateProperties.EventArgs();
+$.CONSTANT10 = new Isolate.$isolateProperties._UndefinedValue();
+$.CONSTANT3 = new Isolate.$isolateProperties._DeletedKeySentinel();
+$.CONSTANT4 = new Isolate.$isolateProperties.VerticalAlignment("middle");
+$.CONSTANT17 = new Isolate.$isolateProperties.Coordinate(0, 0);
+$.CONSTANT1 = new Isolate.$isolateProperties.JSArray();
+$.CONSTANT8 = new Isolate.$isolateProperties.JSNumber();
 $.CONSTANT2 = new Isolate.$isolateProperties.JSInt();
 $.CONSTANT = new Isolate.$isolateProperties.JSString();
-$.CONSTANT0 = new Isolate.$isolateProperties.NullThrownError();
-$.CONSTANT6 = new Isolate.$isolateProperties.HorizontalAlignment("center");
-$.CONSTANT9 = new Isolate.$isolateProperties.InvalidOperationError("The input sequence is empty.");
-$.CONSTANT13 = new Isolate.$isolateProperties.HorizontalAlignment("left");
-$.CONSTANT3 = new Isolate.$isolateProperties._DeletedKeySentinel();
-$.CONSTANT7 = new Isolate.$isolateProperties.EventArgs();
-$.CONSTANT11 = new Isolate.$isolateProperties._UndefinedValue();
-$.CONSTANT17 = new Isolate.$isolateProperties.Object();
-$.CONSTANT5 = new Isolate.$isolateProperties.VerticalAlignment("middle");
-$.CONSTANT10 = new Isolate.$isolateProperties.ShapeType("Rect");
-$.CONSTANT18 = new Isolate.$isolateProperties.Coordinate(0, 0);
-$.CONSTANT12 = new Isolate.$isolateProperties.ShapeType("Ellipse");
-$.CONSTANT8 = new Isolate.$isolateProperties.DisposedError("Invalid operation on disposed object");
-$.CONSTANT16 = new Isolate.$isolateProperties.VerticalAlignment("bottom");
-$.CONSTANT15 = new Isolate.$isolateProperties.VerticalAlignment("top");
-$.CONSTANT14 = new Isolate.$isolateProperties.HorizontalAlignment("right");
-$.CONSTANT1 = new Isolate.$isolateProperties.JSArray();
-$.CONSTANT4 = new Isolate.$isolateProperties.JSNumber();
+$.CONSTANT11 = new Isolate.$isolateProperties.ShapeType("Ellipse");
+$.CONSTANT16 = new Isolate.$isolateProperties.Object();
+$.CONSTANT9 = new Isolate.$isolateProperties.ShapeType("Rect");
+$.CONSTANT15 = new Isolate.$isolateProperties.VerticalAlignment("bottom");
+$.CONSTANT12 = new Isolate.$isolateProperties.HorizontalAlignment("left");
+$.CONSTANT5 = new Isolate.$isolateProperties.HorizontalAlignment("center");
+$.CONSTANT7 = new Isolate.$isolateProperties.DisposedError("Invalid operation on disposed object");
+$.VerticalAlignment_TOP = Isolate.$isolateProperties.CONSTANT14;
+$._getTypeNameOf = null;
+$.GlobalId__globalId = 0;
+$.ShapeType_rect = Isolate.$isolateProperties.CONSTANT9;
+$.ShapeType_ellipse = Isolate.$isolateProperties.CONSTANT11;
+$._DateImpl__MAX_MILLISECONDS_SINCE_EPOCH = 8640000000000000;
+$._cachedBrowserPrefix = null;
+$.Property_Undefined = Isolate.$isolateProperties.CONSTANT10;
 $.Primitives_hashCodeSeed = 0;
-$.Primitives_DOLLAR_CHAR_VALUE = 36;
 $._HashMapImpl__DELETED_KEY = Isolate.$isolateProperties.CONSTANT3;
 $._HashMapImpl__INITIAL_CAPACITY = 8;
-$.Property_Undefined = Isolate.$isolateProperties.CONSTANT11;
-$.VerticalAlignment_BOTTOM = Isolate.$isolateProperties.CONSTANT16;
-$.VerticalAlignment_MIDDLE = Isolate.$isolateProperties.CONSTANT5;
-$.VerticalAlignment_TOP = Isolate.$isolateProperties.CONSTANT15;
-$.HorizontalAlignment_LEFT = Isolate.$isolateProperties.CONSTANT13;
-$.HorizontalAlignment_RIGHT = Isolate.$isolateProperties.CONSTANT14;
-$.HorizontalAlignment_CENTER = Isolate.$isolateProperties.CONSTANT6;
-$._getTypeNameOf = null;
-$._cachedBrowserPrefix = null;
-$.GlobalId__globalId = 0;
-$._DateImpl__MAX_MILLISECONDS_SINCE_EPOCH = 8640000000000000;
-$.ShapeType_rect = Isolate.$isolateProperties.CONSTANT10;
-$.ShapeType_ellipse = Isolate.$isolateProperties.CONSTANT12;
+$.Primitives_DOLLAR_CHAR_VALUE = 36;
+$.VerticalAlignment_MIDDLE = Isolate.$isolateProperties.CONSTANT4;
+$.VerticalAlignment_BOTTOM = Isolate.$isolateProperties.CONSTANT15;
+$.HorizontalAlignment_LEFT = Isolate.$isolateProperties.CONSTANT12;
+$.HorizontalAlignment_CENTER = Isolate.$isolateProperties.CONSTANT5;
+$.HorizontalAlignment_RIGHT = Isolate.$isolateProperties.CONSTANT13;
 $.getInterceptor$JSStringJSArray = function(receiver) {
-  if (typeof receiver == 'string')
+  if (typeof receiver == "string")
     return $.JSString.prototype;
   if (receiver == null)
     return void 0;
@@ -4404,32 +5003,32 @@ $.getInterceptor$JSStringJSArray = function(receiver) {
   return $.ObjectInterceptor.prototype;
 };
 $.getInterceptor$JSString = function(receiver) {
-  if (typeof receiver == 'string')
+  if (typeof receiver == "string")
     return $.JSString.prototype;
   if (receiver == null)
     return void 0;
   return $.ObjectInterceptor.prototype;
 };
 $.getInterceptor$JSNumber = function(receiver) {
-  if (typeof receiver == 'number')
+  if (typeof receiver == "number")
     return $.JSNumber.prototype;
   if (receiver == null)
     return void 0;
   return $.ObjectInterceptor.prototype;
 };
 $.getInterceptor = function(receiver) {
-  if (typeof receiver == 'number') {
+  if (typeof receiver == "number") {
     if (Math.floor(receiver) == receiver)
       return $.JSInt.prototype;
     return $.JSDouble.prototype;
   }
-  if (typeof receiver == 'string')
+  if (typeof receiver == "string")
     return $.JSString.prototype;
   if (receiver == null)
     return $.JSNull.prototype;
-  if (typeof receiver == 'function')
+  if (typeof receiver == "function")
     return $.JSFunction.prototype;
-  if (typeof receiver == 'boolean')
+  if (typeof receiver == "boolean")
     return $.JSBool.prototype;
   if (receiver.constructor == Array)
     return $.JSArray.prototype;
@@ -4446,7 +5045,7 @@ Isolate.$lazy($, '_containerTransformProperty', 'PanelThing__containerTransformP
   return $.Property$("panelTransform", null);
 });
 Isolate.$lazy($, 'quoteRegExp', 'quoteRegExp', 'get$quoteRegExp', function() {
-  return $.JSSyntaxRegExp$("[-[\\]{}()*+?.,\\\\^$|#\\s]", false, false);
+  return $.JSSyntaxRegExp$("[-[\\]{}()*+?.,\\\\^$|#\\s]", true, false);
 });
 Isolate.$lazy($, '_navLayerTransformProp', 'NavThing__navLayerTransformProp', 'get$NavThing__navLayerTransformProp', function() {
   return $.Property$("navLayerTxProp", null);
@@ -4472,757 +5071,892 @@ $.$defineNativeClass = function(cls, desc) {
 };
 
 (function(table) {
-  for (var key in table) {
+  for (var key in table)
     $.defineProperty(Object.prototype, key, table[key]);
-  }
 })({
- toString$0: function() { return $.toStringForNativeObject(this); },
- get$hashCode: function() { return $.hashCodeForNativeObject(this); },
- is$Collection: function() { return false; },
- is$JavaScriptIndexingBehavior: function() { return false; },
- is$Map: function() { return false; },
- is$List: function() { return false; },
- is$Element: function() { return false; }
-});
-
-$.$defineNativeClass('HTMLAnchorElement', {"":"name>",
- toString$0: function() {
-  return this.toString();
-}
-});
-
-$.$defineNativeClass('HTMLAppletElement', {"":"height=,name>,width="
-});
-
-$.$defineNativeClass('Attr', {"":"name>,value="
-});
-
-$.$defineNativeClass('HTMLBaseFontElement', {"":"size>"
-});
-
-$.$defineNativeClass('HTMLBodyElement', {
- get$on: function() {
-  return $.BodyElementEvents$(this);
-}
-});
-
-$.$defineNativeClass('HTMLButtonElement', {"":"name>,value="
-});
-
-$.$defineNativeClass('HTMLCanvasElement', {"":"height=,width=",
- getContext$1: function(contextId) {
-  return this.getContext(contextId);
-},
- get$context2d: function() {
-  return this.getContext$1("2d");
-}
-});
-
-$.$defineNativeClass('CanvasRenderingContext2D', {"":"fillStyle<,globalAlpha=,textBaseline<",
- beginPath$0: function() {
-  return this.beginPath();
-},
- bezierCurveTo$6: function(cp1x, cp1y, cp2x, cp2y, x, y) {
-  return this.bezierCurveTo(cp1x,cp1y,cp2x,cp2y,x,y);
-},
- clearRect$4: function(x, y, width, height) {
-  return this.clearRect(x,y,width,height);
-},
- closePath$0: function() {
-  return this.closePath();
-},
- drawImage$9: function(canvas_OR_image_OR_video, sx_OR_x, sy_OR_y, sw_OR_width, height_OR_sh, dx, dy, dw, dh) {
-  return this.drawImage(canvas_OR_image_OR_video,sx_OR_x,sy_OR_y,sw_OR_width,height_OR_sh,dx,dy,dw,dh);
-},
- drawImage$3: function(canvas_OR_image_OR_video, sx_OR_x, sy_OR_y) {
-  return this.drawImage(canvas_OR_image_OR_video, sx_OR_x, sy_OR_y);
-},
- drawImage$5: function(canvas_OR_image_OR_video, sx_OR_x, sy_OR_y, sw_OR_width, height_OR_sh) {
-  return this.drawImage(canvas_OR_image_OR_video, sx_OR_x, sy_OR_y, sw_OR_width, height_OR_sh);
-},
- fill$0: function() {
-  return this.fill();
-},
- fillRect$4: function(x, y, width, height) {
-  return this.fillRect(x,y,width,height);
-},
- fillText$4: function(text, x, y, maxWidth) {
-  return this.fillText(text,x,y,maxWidth);
-},
- fillText$3: function(text, x, y) {
-  return this.fillText(text, x, y);
-},
- moveTo$2: function(x, y) {
-  return this.moveTo(x,y);
-},
- restore$0: function() {
-  return this.restore();
-},
- save$0: function() {
-  return this.save();
-},
- scale$2: function(sx, sy) {
-  return this.scale(sx,sy);
-},
- transform$6: function(m11, m12, m21, m22, dx, dy) {
-  return this.transform(m11,m12,m21,m22,dx,dy);
-}
-});
-
-$.$defineNativeClass('CharacterData', {"":"length>",
- remove$0: function() {
-  return this.remove();
-}
-});
-
-$.$defineNativeClass('ClientRect', {"":"height>,left>,top>,width>"
-});
-
-$.$defineNativeClass('CSSStyleDeclaration', {"":"length>",
- _getPropertyValue$1: function(propertyName) {
-  return this.getPropertyValue(propertyName);
-},
- getPropertyValue$1: function(propertyName) {
-  var propValue = this._getPropertyValue$1(propertyName);
-  return !(propValue == null) ? propValue : "";
-},
- setProperty$3: function(propertyName, value, priority) {
-  this.setProperty(propertyName, value, priority);
-  if (!!this.setAttribute)
-    this.setAttribute(propertyName, value);
-},
- get$clear: function() {
-  return this.getPropertyValue$1("clear");
-},
- clear$0: function() {
-  return this.get$clear().call$0();
-},
- clear$1: function(arg0) {
-  return this.get$clear().call$1(arg0);
-},
- get$height: function() {
-  return this.getPropertyValue$1("height");
-},
- set$height: function(value) {
-  this.setProperty$3("height", value, "");
-},
- get$left: function() {
-  return this.getPropertyValue$1("left");
-},
- get$size: function() {
-  return this.getPropertyValue$1("size");
-},
- get$top: function() {
-  return this.getPropertyValue$1("top");
-},
- get$transform: function() {
-  return this.getPropertyValue$1($.S($._browserPrefix()) + "transform");
-},
- transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
-  return this.get$transform().call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-},
- get$width: function() {
-  return this.getPropertyValue$1("width");
-},
- set$width: function(value) {
-  this.setProperty$3("width", value, "");
-}
-});
-
-$.$defineNativeClass('Document', {
- get$on: function() {
-  return $.DocumentEvents$(this);
-},
- $$dom_createElement$1: function(tagName) {
-  return this.createElement(tagName);
-},
- $$dom_getElementById$1: function(elementId) {
-  return this.getElementById(elementId);
-},
- $$dom_querySelector$1: function(selectors) {
-  return this.querySelector(selectors);
-},
- query$1: function(selectors) {
-  if ($.RegExp_RegExp("^#[_a-zA-Z]\\w*$", false, false).hasMatch$1(selectors) === true)
-    return this.$$dom_getElementById$1($.CONSTANT.substring$1(selectors, 1));
-  return this.$$dom_querySelector$1(selectors);
-}
-});
-
-$.$defineNativeClass('DocumentFragment', {
- query$1: function(selectors) {
-  return this.$$dom_querySelector$1(selectors);
-},
- get$id: function() {
-  return "";
-},
- get$parent: function() {
-  return;
-},
- get$on: function() {
-  return $.ElementEvents$(this);
-},
- $$dom_querySelector$1: function(selectors) {
-  return this.querySelector(selectors);
-}
-});
-
-$.$defineNativeClass('DocumentType', {"":"name>",
- remove$0: function() {
-  return this.remove();
-}
-});
-
-$.$defineNativeClass('DOMError', {"":"name>"
-});
-
-$.$defineNativeClass('DOMException', {"":"name>",
- toString$0: function() {
-  return this.toString();
-}
-});
-
-$.$defineNativeClass('Element', {"":"id>",
- query$1: function(selectors) {
-  return this.$$dom_querySelector$1(selectors);
-},
- get$on: function() {
-  if (Object.getPrototypeOf(this).hasOwnProperty('get$on')) {
-    return $.ElementEvents$(this);
-  } else {
-    return Object.prototype.get$on.call(this);
+  is$JavaScriptIndexingBehavior: function() {
+    return false;
+  },
+  is$Collection: function() {
+    return false;
+  },
+  is$List: function() {
+    return false;
+  },
+  is$Map: function() {
+    return false;
+  },
+  is$Element: function() {
+    return false;
+  },
+  toString$0: function() {
+    return $.toStringForNativeObject(this);
+  },
+  get$hashCode: function() {
+    return $.hashCodeForNativeObject(this);
   }
-},
- getBoundingClientRect$0: function() {
-  return this.getBoundingClientRect();
-},
- $$dom_querySelector$1: function(selectors) {
-  return this.querySelector(selectors);
-},
- is$Element: function() { return true; }
 });
 
-$.$defineNativeClass('HTMLEmbedElement', {"":"height=,name>,width="
-});
-
-$.$defineNativeClass('Event', {
- get$target: function() {
-  return $._convertNativeToDart_EventTarget(this.target);
-}
-});
-
-$.$defineNativeClass('EventException', {"":"name>",
- toString$0: function() {
-  return this.toString();
-}
-});
-
-$.$defineNativeClass('EventTarget', {
- get$on: function() {
-  if (Object.getPrototypeOf(this).hasOwnProperty('get$on')) {
-    return $.Events$(this);
-  } else {
-    return Object.prototype.get$on.call(this);
+$.$defineNativeClass("HTMLAnchorElement", {"": "name>",
+  toString$0: function() {
+    return this.toString();
   }
-},
- $$dom_addEventListener$3: function(type, listener, useCapture) {
-  if (Object.getPrototypeOf(this).hasOwnProperty('$$dom_addEventListener$3')) {
-    return this.addEventListener(type,$.convertDartClosureToJS(listener, 1),useCapture);
-  } else {
-    return Object.prototype.$$dom_addEventListener$3.call(this, type, listener, useCapture);
+});
+
+$.$defineNativeClass("HTMLBodyElement", {
+  get$on: function() {
+    return $.BodyElementEvents$(this);
   }
-},
- $$dom_removeEventListener$3: function(type, listener, useCapture) {
-  if (Object.getPrototypeOf(this).hasOwnProperty('$$dom_removeEventListener$3')) {
-    return this.removeEventListener(type,$.convertDartClosureToJS(listener, 1),useCapture);
-  } else {
-    return Object.prototype.$$dom_removeEventListener$3.call(this, type, listener, useCapture);
+});
+
+$.$defineNativeClass("HTMLButtonElement", {"": "name>,value="});
+
+$.$defineNativeClass("HTMLCanvasElement", {"": "height=,width=",
+  getContext$1: function(contextId) {
+    return this.getContext(contextId);
+  },
+  get$context2d: function() {
+    return this.getContext$1("2d");
   }
-}
 });
 
-$.$defineNativeClass('HTMLFieldSetElement', {"":"name>"
-});
-
-$.$defineNativeClass('FileException', {"":"name>",
- toString$0: function() {
-  return this.toString();
-}
-});
-
-$.$defineNativeClass('HTMLFontElement', {"":"size>"
-});
-
-$.$defineNativeClass('HTMLFormElement', {"":"length>,name>"
-});
-
-$.$defineNativeClass('HTMLFrameElement', {"":"height>,name>,width>"
-});
-
-$.$defineNativeClass('HTMLFrameSetElement', {
- get$on: function() {
-  return $.FrameSetElementEvents$(this);
-}
-});
-
-$.$defineNativeClass('HTMLCollection', {
- get$length: function() {
-  if (Object.getPrototypeOf(this).hasOwnProperty('get$length')) {
-    return this.length;
-  } else {
-    return Object.prototype.get$length.call(this);
+$.$defineNativeClass("CanvasRenderingContext2D", {"": "fillStyle<,globalAlpha=,textBaseline<",
+  beginPath$0: function() {
+    return this.beginPath();
+  },
+  bezierCurveTo$6: function(cp1x, cp1y, cp2x, cp2y, x, y) {
+    return this.bezierCurveTo(cp1x,cp1y,cp2x,cp2y,x,y);
+  },
+  clearRect$4: function(x, y, width, height) {
+    return this.clearRect(x,y,width,height);
+  },
+  closePath$0: function() {
+    return this.closePath();
+  },
+  drawImage$9: function(canvas_OR_image_OR_video, sx_OR_x, sy_OR_y, sw_OR_width, height_OR_sh, dx, dy, dw, dh) {
+    return this.drawImage(canvas_OR_image_OR_video,sx_OR_x,sy_OR_y,sw_OR_width,height_OR_sh,dx,dy,dw,dh);
+  },
+  drawImage$3: function(canvas_OR_image_OR_video, sx_OR_x, sy_OR_y) {
+    return this.drawImage(canvas_OR_image_OR_video, sx_OR_x, sy_OR_y);
+  },
+  drawImage$5: function(canvas_OR_image_OR_video, sx_OR_x, sy_OR_y, sw_OR_width, height_OR_sh) {
+    return this.drawImage(canvas_OR_image_OR_video, sx_OR_x, sy_OR_y, sw_OR_width, height_OR_sh);
+  },
+  fill$0: function() {
+    return this.fill();
+  },
+  fillRect$4: function(x, y, width, height) {
+    return this.fillRect(x,y,width,height);
+  },
+  fillText$4: function(text, x, y, maxWidth) {
+    return this.fillText(text,x,y,maxWidth);
+  },
+  fillText$3: function(text, x, y) {
+    return this.fillText(text, x, y);
+  },
+  moveTo$2: function(x, y) {
+    return this.moveTo(x,y);
+  },
+  restore$0: function() {
+    return this.restore();
+  },
+  save$0: function() {
+    return this.save();
+  },
+  scale$2: function(sx, sy) {
+    return this.scale(sx,sy);
+  },
+  transform$6: function(m11, m12, m21, m22, dx, dy) {
+    return this.transform(m11,m12,m21,m22,dx,dy);
   }
-},
- operator$index$1: function(index) {
-  return this[index];
-},
- operator$indexSet$2: function(index, value) {
-  throw $.$$throw($.UnsupportedError$("Cannot assign element of immutable List."));
-},
- iterator$0: function() {
-  return $.FixedSizeListIterator$(this);
-},
- add$1: function(value) {
-  throw $.$$throw($.UnsupportedError$("Cannot add to immutable List."));
-},
- addLast$1: function(value) {
-  throw $.$$throw($.UnsupportedError$("Cannot add to immutable List."));
-},
- contains$1: function(element) {
-  return $.Collections_contains(this, element);
-},
- forEach$1: function(f) {
-  return $.Collections_forEach(this, f);
-},
- map$1: function(f) {
-  return $.Collections_map(this, [], f);
-},
- get$isEmpty: function() {
-  return $.eq($.getInterceptor$JSStringJSArray(this).get$length(this), 0);
-},
- set$length: function(value) {
-  if (Object.getPrototypeOf(this).hasOwnProperty('set$length')) {
-    throw $.$$throw($.UnsupportedError$("Cannot resize immutable List."));
-  } else {
-    return Object.prototype.set$length.call(this, value);
+});
+
+$.$defineNativeClass("CharacterData", {"": "length>",
+  remove$0: function() {
+    return this.remove();
   }
-},
- clear$0: function() {
-  throw $.$$throw($.UnsupportedError$("Cannot clear immutable List."));
-},
- indexOf$2: function(element, start) {
-  return $.Lists_indexOf(this, element, start, $.getInterceptor$JSStringJSArray(this).get$length(this));
-},
- indexOf$1: function(element) {
-  return this.indexOf$2(element, 0);
-},
- get$first: function() {
-  return this.operator$index$1(0);
-},
- removeAt$1: function(pos) {
-  throw $.$$throw($.UnsupportedError$("Cannot removeAt on immutable List."));
-},
- removeLast$0: function() {
-  throw $.$$throw($.UnsupportedError$("Cannot removeLast on immutable List."));
-},
- insertRange$3: function(start, rangeLength, initialValue) {
-  throw $.$$throw($.UnsupportedError$("Cannot insertRange on immutable List."));
-},
- is$List: function() { return true; },
- is$Collection: function() { return true; },
- is$JavaScriptIndexingBehavior: function() { return true; }
 });
 
-$.$defineNativeClass('HTMLOptionsCollection', {
- get$length: function() {
-  return this.length;
-},
- set$length: function(value) {
-  this.length = value;
-},
- remove$1: function(index) {
-  return this.remove(index);
-}
-});
+$.$defineNativeClass("ClientRect", {"": "height>,left>,top>,width>"});
 
-$.$defineNativeClass('XMLHttpRequestException', {"":"name>",
- toString$0: function() {
-  return this.toString();
-}
-});
-
-$.$defineNativeClass('HTMLIFrameElement', {"":"height=,name>,width="
-});
-
-$.$defineNativeClass('HTMLImageElement', {"":"height=,width=,x>,y>"
-});
-
-$.$defineNativeClass('HTMLInputElement', {"":"height=,name>,pattern>,size>,value=,width=",
- get$on: function() {
-  return $.InputElementEvents$(this);
-},
- is$Element: function() { return true; }
-});
-
-$.$defineNativeClass('HTMLKeygenElement', {"":"name>"
-});
-
-$.$defineNativeClass('HTMLLIElement', {"":"value="
-});
-
-$.$defineNativeClass('HTMLMapElement', {"":"name>"
-});
-
-$.$defineNativeClass('HTMLMarqueeElement', {"":"height=,width="
-});
-
-$.$defineNativeClass('HTMLMediaElement', {
- get$on: function() {
-  return $.MediaElementEvents$(this);
-}
-});
-
-$.$defineNativeClass('HTMLMetaElement', {"":"name>"
-});
-
-$.$defineNativeClass('HTMLMeterElement', {"":"value="
-});
-
-$.$defineNativeClass('MouseEvent', {"":"x>,y>",
- get$offsetX: function() {
-  if (!!this.offsetX)
-    return this.offsetX;
-  else {
-    var target = this.get$target();
-    if (!(typeof target === 'object' && target !== null && target.is$Element()))
-      throw $.$$throw($.UnsupportedError$("offsetX is only supported on elements"));
-    return $.sub(this.clientX, this.get$target().getBoundingClientRect$0().get$left());
+$.$defineNativeClass("CSSStyleDeclaration", {"": "length>",
+  _getPropertyValue$1: function(propertyName) {
+    return this.getPropertyValue(propertyName);
+  },
+  getPropertyValue$1: function(propertyName) {
+    var propValue = this._getPropertyValue$1(propertyName);
+    return !(propValue == null) ? propValue : "";
+  },
+  setProperty$3: function(propertyName, value, priority) {
+    this.setProperty(propertyName, value, priority);
+    if (!!this.setAttribute)
+      this.setAttribute(propertyName, value);
+  },
+  get$clear: function() {
+    return this.getPropertyValue$1("clear");
+  },
+  clear$0: function() {
+    return this.get$clear().call$0();
+  },
+  clear$1: function(arg0) {
+    return this.get$clear().call$1(arg0);
+  },
+  get$height: function() {
+    return this.getPropertyValue$1("height");
+  },
+  set$height: function(value) {
+    this.setProperty$3("height", value, "");
+  },
+  get$left: function() {
+    return this.getPropertyValue$1("left");
+  },
+  get$size: function() {
+    return this.getPropertyValue$1("size");
+  },
+  get$top: function() {
+    return this.getPropertyValue$1("top");
+  },
+  get$transform: function() {
+    return this.getPropertyValue$1($.S($._browserPrefix()) + "transform");
+  },
+  transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.get$transform().call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  },
+  get$width: function() {
+    return this.getPropertyValue$1("width");
+  },
+  set$width: function(value) {
+    this.setProperty$3("width", value, "");
   }
-},
- get$offsetY: function() {
-  if (!!this.offsetY)
-    return this.offsetY;
-  else {
-    var target = this.get$target();
-    if (!(typeof target === 'object' && target !== null && target.is$Element()))
-      throw $.$$throw($.UnsupportedError$("offsetY is only supported on elements"));
-    return $.sub(this.clientY, this.get$target().getBoundingClientRect$0().get$top());
+});
+
+$.$defineNativeClass("Document", {
+  get$on: function() {
+    return $.DocumentEvents$(this);
+  },
+  $$dom_createElement$1: function(tagName) {
+    return this.createElement(tagName);
+  },
+  $$dom_getElementById$1: function(elementId) {
+    return this.getElementById(elementId);
+  },
+  $$dom_querySelector$1: function(selectors) {
+    return this.querySelector(selectors);
+  },
+  query$1: function(selectors) {
+    if ($.RegExp_RegExp("^#[_a-zA-Z]\\w*$", true, false).hasMatch$1(selectors) === true)
+      return this.$$dom_getElementById$1($.CONSTANT.substring$1(selectors, 1));
+    return this.$$dom_querySelector$1(selectors);
   }
-}
 });
 
-$.$defineNativeClass('NamedNodeMap', {
- get$length: function() {
-  return this.length;
-},
- operator$index$1: function(index) {
-  return this[index];
-},
- operator$indexSet$2: function(index, value) {
-  throw $.$$throw($.UnsupportedError$("Cannot assign element of immutable List."));
-},
- iterator$0: function() {
-  return $.FixedSizeListIterator$(this);
-},
- add$1: function(value) {
-  throw $.$$throw($.UnsupportedError$("Cannot add to immutable List."));
-},
- addLast$1: function(value) {
-  throw $.$$throw($.UnsupportedError$("Cannot add to immutable List."));
-},
- contains$1: function(element) {
-  return $.Collections_contains(this, element);
-},
- forEach$1: function(f) {
-  return $.Collections_forEach(this, f);
-},
- map$1: function(f) {
-  return $.Collections_map(this, [], f);
-},
- get$isEmpty: function() {
-  return $.eq($.getInterceptor$JSStringJSArray(this).get$length(this), 0);
-},
- set$length: function(value) {
-  throw $.$$throw($.UnsupportedError$("Cannot resize immutable List."));
-},
- clear$0: function() {
-  throw $.$$throw($.UnsupportedError$("Cannot clear immutable List."));
-},
- indexOf$2: function(element, start) {
-  return $.Lists_indexOf(this, element, start, $.getInterceptor$JSStringJSArray(this).get$length(this));
-},
- indexOf$1: function(element) {
-  return this.indexOf$2(element, 0);
-},
- get$first: function() {
-  return this.operator$index$1(0);
-},
- removeAt$1: function(pos) {
-  throw $.$$throw($.UnsupportedError$("Cannot removeAt on immutable List."));
-},
- removeLast$0: function() {
-  throw $.$$throw($.UnsupportedError$("Cannot removeLast on immutable List."));
-},
- insertRange$3: function(start, rangeLength, initialValue) {
-  throw $.$$throw($.UnsupportedError$("Cannot insertRange on immutable List."));
-},
- is$List: function() { return true; },
- is$Collection: function() { return true; },
- is$JavaScriptIndexingBehavior: function() { return true; }
-});
-
-$.$defineNativeClass('Navigator', {"":"userAgent>"
-});
-
-$.$defineNativeClass('Node', {"":"parent:parentElement~",
- remove$0: function() {
-  if (Object.getPrototypeOf(this).hasOwnProperty('remove$0')) {
-    var t1 = this.parentNode;
-    if (!(t1 == null))
-      t1.$$dom_removeChild$1(this);
-  } else {
-    return Object.prototype.remove$0.call(this);
-  }
-},
- $$dom_addEventListener$3: function(type, listener, useCapture) {
-  return this.addEventListener(type,$.convertDartClosureToJS(listener, 1),useCapture);
-},
- contains$1: function(other) {
-  return this.contains(other);
-},
- $$dom_removeChild$1: function(oldChild) {
-  return this.removeChild(oldChild);
-},
- $$dom_removeEventListener$3: function(type, listener, useCapture) {
-  return this.removeEventListener(type,$.convertDartClosureToJS(listener, 1),useCapture);
-}
-});
-
-$.$defineNativeClass('NodeList', {
- get$length: function() {
-  return this.length;
-},
- operator$index$1: function(index) {
-  return this[index];
-},
- operator$indexSet$2: function(index, value) {
-  throw $.$$throw($.UnsupportedError$("Cannot assign element of immutable List."));
-},
- iterator$0: function() {
-  return $.FixedSizeListIterator$(this);
-},
- add$1: function(value) {
-  throw $.$$throw($.UnsupportedError$("Cannot add to immutable List."));
-},
- addLast$1: function(value) {
-  throw $.$$throw($.UnsupportedError$("Cannot add to immutable List."));
-},
- contains$1: function(element) {
-  return $.Collections_contains(this, element);
-},
- forEach$1: function(f) {
-  return $.Collections_forEach(this, f);
-},
- map$1: function(f) {
-  return $.Collections_map(this, [], f);
-},
- get$isEmpty: function() {
-  return $.eq($.getInterceptor$JSStringJSArray(this).get$length(this), 0);
-},
- set$length: function(value) {
-  throw $.$$throw($.UnsupportedError$("Cannot resize immutable List."));
-},
- clear$0: function() {
-  throw $.$$throw($.UnsupportedError$("Cannot clear immutable List."));
-},
- indexOf$2: function(element, start) {
-  return $.Lists_indexOf(this, element, start, $.getInterceptor$JSStringJSArray(this).get$length(this));
-},
- indexOf$1: function(element) {
-  return this.indexOf$2(element, 0);
-},
- get$first: function() {
-  return this.operator$index$1(0);
-},
- removeAt$1: function(pos) {
-  throw $.$$throw($.UnsupportedError$("Cannot removeAt on immutable List."));
-},
- removeLast$0: function() {
-  throw $.$$throw($.UnsupportedError$("Cannot removeLast on immutable List."));
-},
- insertRange$3: function(start, rangeLength, initialValue) {
-  throw $.$$throw($.UnsupportedError$("Cannot insertRange on immutable List."));
-},
- is$List: function() { return true; },
- is$Collection: function() { return true; },
- is$JavaScriptIndexingBehavior: function() { return true; }
-});
-
-$.$defineNativeClass('HTMLObjectElement', {"":"height=,name>,width="
-});
-
-$.$defineNativeClass('HTMLOptionElement', {"":"value="
-});
-
-$.$defineNativeClass('HTMLOutputElement', {"":"name>,value="
-});
-
-$.$defineNativeClass('HTMLParamElement', {"":"name>,value="
-});
-
-$.$defineNativeClass('HTMLProgressElement', {"":"value="
-});
-
-$.$defineNativeClass('RadioNodeList', {"":"value="
-});
-
-$.$defineNativeClass('RangeException', {"":"name>",
- toString$0: function() {
-  return this.toString();
-}
-});
-
-$.$defineNativeClass('HTMLSelectElement', {"":"length=,name>,size>,value="
-});
-
-$.$defineNativeClass('Storage', {
- containsKey$1: function(key) {
-  return !(this.$$dom_getItem$1(key) == null);
-},
- operator$index$1: function(key) {
-  return this.$$dom_getItem$1(key);
-},
- operator$indexSet$2: function(key, value) {
-  this.$$dom_setItem$2(key, value);
-},
- remove$1: function(key) {
-  var value = this.operator$index$1(key);
-  this.$$dom_removeItem$1(key);
-  return value;
-},
- clear$0: function() {
-  return this.$$dom_clear$0();
-},
- forEach$1: function(f) {
-  var i, key;
-  for (i = 0; true; ++i) {
-    key = this.$$dom_key$1(i);
-    if (key == null)
-      return;
-    f.call$2(key, this.operator$index$1(key));
-  }
-},
- get$length: function() {
-  return this.length;
-},
- get$isEmpty: function() {
-  return this.$$dom_key$1(0) == null;
-},
- $$dom_clear$0: function() {
-  return this.clear();
-},
- $$dom_getItem$1: function(key) {
-  return this.getItem(key);
-},
- $$dom_key$1: function(index) {
-  return this.key(index);
-},
- $$dom_removeItem$1: function(key) {
-  return this.removeItem(key);
-},
- $$dom_setItem$2: function(key, data) {
-  return this.setItem(key,data);
-},
- is$Map: function() { return true; }
-});
-
-$.$defineNativeClass('StorageEvent', {"":"key>"
-});
-
-$.$defineNativeClass('HTMLTextAreaElement', {"":"name>,value="
-});
-
-$.$defineNativeClass('Uint8Array', {
- get$length: function() {
-  return this.length;
-},
- operator$index$1: function(index) {
-  return this[index];
-},
- operator$indexSet$2: function(index, value) {
-  this[index] = value;
-},
- iterator$0: function() {
-  return $.FixedSizeListIterator$(this);
-},
- add$1: function(value) {
-  throw $.$$throw($.UnsupportedError$("Cannot add to immutable List."));
-},
- addLast$1: function(value) {
-  throw $.$$throw($.UnsupportedError$("Cannot add to immutable List."));
-},
- contains$1: function(element) {
-  return $.Collections_contains(this, element);
-},
- forEach$1: function(f) {
-  return $.Collections_forEach(this, f);
-},
- map$1: function(f) {
-  return $.Collections_map(this, [], f);
-},
- get$isEmpty: function() {
-  return $.eq($.getInterceptor$JSStringJSArray(this).get$length(this), 0);
-},
- set$length: function(value) {
-  throw $.$$throw($.UnsupportedError$("Cannot resize immutable List."));
-},
- clear$0: function() {
-  throw $.$$throw($.UnsupportedError$("Cannot clear immutable List."));
-},
- indexOf$2: function(element, start) {
-  return $.Lists_indexOf(this, element, start, $.getInterceptor$JSStringJSArray(this).get$length(this));
-},
- indexOf$1: function(element) {
-  return this.indexOf$2(element, 0);
-},
- get$first: function() {
-  return this.operator$index$1(0);
-},
- removeAt$1: function(pos) {
-  throw $.$$throw($.UnsupportedError$("Cannot removeAt on immutable List."));
-},
- removeLast$0: function() {
-  throw $.$$throw($.UnsupportedError$("Cannot removeLast on immutable List."));
-},
- insertRange$3: function(start, rangeLength, initialValue) {
-  throw $.$$throw($.UnsupportedError$("Cannot insertRange on immutable List."));
-},
- is$List: function() { return true; },
- is$Collection: function() { return true; },
- is$JavaScriptIndexingBehavior: function() { return true; }
-});
-
-$.$defineNativeClass('HTMLVideoElement', {"":"height=,width="
-});
-
-$.$defineNativeClass('WebGLRenderingContext', {
- clear$1: function(mask) {
-  return this.clear(mask);
-}
-});
-
-$.$defineNativeClass('DOMWindow', {"":"name>,navigator>",
- requestAnimationFrame$1: function(callback) {
-  this._ensureRequestAnimationFrame$0();
-  return this._requestAnimationFrame$1(callback);
-},
- _requestAnimationFrame$1: function(callback) {
-  return this.requestAnimationFrame($.convertDartClosureToJS(callback, 1));
-},
- _ensureRequestAnimationFrame$0: function() {
-  if (!!(this.requestAnimationFrame && this.cancelAnimationFrame))
+$.$defineNativeClass("DocumentFragment", {
+  query$1: function(selectors) {
+    return this.$$dom_querySelector$1(selectors);
+  },
+  get$id: function() {
+    return "";
+  },
+  get$parent: function() {
     return;
-    (function($this) {
+  },
+  get$on: function() {
+    return $.ElementEvents$(this);
+  },
+  $$dom_querySelector$1: function(selectors) {
+    return this.querySelector(selectors);
+  }
+});
+
+$.$defineNativeClass("DOMError", {"": "name>"});
+
+$.$defineNativeClass("DOMException", {
+  get$name: function() {
+    var errorName = this.name;
+    if ($._Device_isWebKit() === true && errorName === "SECURITY_ERR")
+      return "SecurityError";
+    if ($._Device_isWebKit() === true && errorName === "SYNTAX_ERR")
+      return "SyntaxError";
+    return errorName;
+  },
+  toString$0: function() {
+    return this.toString();
+  }
+});
+
+$.$defineNativeClass("Element", {"": "id>",
+  query$1: function(selectors) {
+    return this.$$dom_querySelector$1(selectors);
+  },
+  get$on: function() {
+    if (Object.getPrototypeOf(this).hasOwnProperty("get$on")) {
+      return $.ElementEvents$(this);
+    } else
+      return Object.prototype.get$on.call(this);
+  },
+  getBoundingClientRect$0: function() {
+    return this.getBoundingClientRect();
+  },
+  $$dom_querySelector$1: function(selectors) {
+    return this.querySelector(selectors);
+  },
+  is$Element: function() {
+    return true;
+  }
+});
+
+$.$defineNativeClass("HTMLEmbedElement", {"": "height=,name>,width="});
+
+$.$defineNativeClass("Event", {
+  get$target: function() {
+    return $._convertNativeToDart_EventTarget(this.target);
+  }
+});
+
+$.$defineNativeClass("EventException", {"": "name>",
+  toString$0: function() {
+    return this.toString();
+  }
+});
+
+$.$defineNativeClass("EventTarget", {
+  get$on: function() {
+    if (Object.getPrototypeOf(this).hasOwnProperty("get$on")) {
+      return $.Events$(this);
+    } else
+      return Object.prototype.get$on.call(this);
+  },
+  $$dom_addEventListener$3: function(type, listener, useCapture) {
+    if (Object.getPrototypeOf(this).hasOwnProperty("$$dom_addEventListener$3")) {
+      return this.addEventListener(type,$.convertDartClosureToJS(listener, 1),useCapture);
+    } else
+      return Object.prototype.$$dom_addEventListener$3.call(this, type, listener, useCapture);
+  },
+  $$dom_removeEventListener$3: function(type, listener, useCapture) {
+    if (Object.getPrototypeOf(this).hasOwnProperty("$$dom_removeEventListener$3")) {
+      return this.removeEventListener(type,$.convertDartClosureToJS(listener, 1),useCapture);
+    } else
+      return Object.prototype.$$dom_removeEventListener$3.call(this, type, listener, useCapture);
+  }
+});
+
+$.$defineNativeClass("HTMLFieldSetElement", {"": "name>"});
+
+$.$defineNativeClass("FileException", {"": "name>",
+  toString$0: function() {
+    return this.toString();
+  }
+});
+
+$.$defineNativeClass("HTMLFormElement", {"": "length>,name>"});
+
+$.$defineNativeClass("HTMLCollection", {
+  get$length: function() {
+    return this.length;
+  },
+  operator$index$1: function(index) {
+    return this[index];
+  },
+  operator$indexSet$2: function(index, value) {
+    throw $.$$throw($.UnsupportedError$("Cannot assign element of immutable List."));
+  },
+  get$iterator: function() {
+    return $.FixedSizeListIterator$(this);
+  },
+  contains$1: function(element) {
+    return $.IterableMixinWorkaround_contains(this, element);
+  },
+  forEach$1: function(f) {
+    var t1;
+    for (t1 = $.getInterceptor$JSArray(this).get$iterator(this); t1.moveNext$0() === true;)
+      f.call$1(t1.get$current());
+    return;
+  },
+  mappedBy$1: function(f) {
+    return $.MappedList$(this, f);
+  },
+  get$isEmpty: function() {
+    return $.eq($.getInterceptor$JSStringJSArray(this).get$length(this), 0);
+  },
+  add$1: function(value) {
+    throw $.$$throw($.UnsupportedError$("Cannot add to immutable List."));
+  },
+  addLast$1: function(value) {
+    throw $.$$throw($.UnsupportedError$("Cannot add to immutable List."));
+  },
+  set$length: function(value) {
+    throw $.$$throw($.UnsupportedError$("Cannot resize immutable List."));
+  },
+  clear$0: function() {
+    throw $.$$throw($.UnsupportedError$("Cannot clear immutable List."));
+  },
+  indexOf$2: function(element, start) {
+    return $.Lists_indexOf(this, element, start, $.getInterceptor$JSStringJSArray(this).get$length(this));
+  },
+  indexOf$1: function(element) {
+    return this.indexOf$2(element, 0);
+  },
+  get$first: function() {
+    if ($.gtB($.getInterceptor$JSStringJSArray(this).get$length(this), 0))
+      return this.operator$index$1(0);
+    throw $.$$throw($.StateError$("No elements"));
+  },
+  removeAt$1: function(pos) {
+    throw $.$$throw($.UnsupportedError$("Cannot remove from immutable List."));
+  },
+  removeLast$0: function() {
+    throw $.$$throw($.UnsupportedError$("Cannot remove from immutable List."));
+  },
+  remove$1: function(object) {
+    throw $.$$throw($.UnsupportedError$("Cannot remove from immutable List."));
+  },
+  insertRange$3: function(start, rangeLength, initialValue) {
+    throw $.$$throw($.UnsupportedError$("Cannot insertRange on immutable List."));
+  },
+  is$List: function() {
+    return true;
+  },
+  is$Collection: function() {
+    return true;
+  },
+  is$JavaScriptIndexingBehavior: function() {
+    return true;
+  }
+});
+
+$.$defineNativeClass("XMLHttpRequestException", {"": "name>",
+  toString$0: function() {
+    return this.toString();
+  }
+});
+
+$.$defineNativeClass("HTMLIFrameElement", {"": "height=,name>,width="});
+
+$.$defineNativeClass("HTMLImageElement", {"": "height=,width=,x>,y>"});
+
+$.$defineNativeClass("HTMLInputElement", {"": "height=,name>,pattern>,size>,value=,width=",
+  get$on: function() {
+    return $.InputElementEvents$(this);
+  },
+  is$Element: function() {
+    return true;
+  }
+});
+
+$.$defineNativeClass("HTMLKeygenElement", {"": "name>"});
+
+$.$defineNativeClass("HTMLLIElement", {"": "value="});
+
+$.$defineNativeClass("HTMLMapElement", {"": "name>"});
+
+$.$defineNativeClass("HTMLMediaElement", {
+  get$on: function() {
+    return $.MediaElementEvents$(this);
+  }
+});
+
+$.$defineNativeClass("HTMLMetaElement", {"": "name>"});
+
+$.$defineNativeClass("HTMLMeterElement", {"": "value="});
+
+$.$defineNativeClass("MouseEvent", {"": "x>,y>",
+  get$offsetX: function() {
+    var target, t1, t2;
+    if (!!this.offsetX)
+      return this.offsetX;
+    else {
+      target = this.get$target();
+      if (!(typeof target === "object" && target !== null && target.is$Element()))
+        throw $.$$throw($.UnsupportedError$("offsetX is only supported on elements"));
+      t1 = this.clientX;
+      t2 = this.get$target().getBoundingClientRect$0().get$left();
+      return $.getInterceptor$JSNumber(t1).operator$sub$1(t1, t2);
+    }
+  },
+  get$offsetY: function() {
+    var target, t1, t2;
+    if (!!this.offsetY)
+      return this.offsetY;
+    else {
+      target = this.get$target();
+      if (!(typeof target === "object" && target !== null && target.is$Element()))
+        throw $.$$throw($.UnsupportedError$("offsetY is only supported on elements"));
+      t1 = this.clientY;
+      t2 = this.get$target().getBoundingClientRect$0().get$top();
+      return $.getInterceptor$JSNumber(t1).operator$sub$1(t1, t2);
+    }
+  }
+});
+
+$.$defineNativeClass("NamedNodeMap", {
+  get$length: function() {
+    return this.length;
+  },
+  operator$index$1: function(index) {
+    return this[index];
+  },
+  operator$indexSet$2: function(index, value) {
+    throw $.$$throw($.UnsupportedError$("Cannot assign element of immutable List."));
+  },
+  get$iterator: function() {
+    return $.FixedSizeListIterator$(this);
+  },
+  contains$1: function(element) {
+    return $.IterableMixinWorkaround_contains(this, element);
+  },
+  forEach$1: function(f) {
+    var t1;
+    for (t1 = $.getInterceptor$JSArray(this).get$iterator(this); t1.moveNext$0() === true;)
+      f.call$1(t1.get$current());
+    return;
+  },
+  mappedBy$1: function(f) {
+    return $.MappedList$(this, f);
+  },
+  get$isEmpty: function() {
+    return $.eq($.getInterceptor$JSStringJSArray(this).get$length(this), 0);
+  },
+  add$1: function(value) {
+    throw $.$$throw($.UnsupportedError$("Cannot add to immutable List."));
+  },
+  addLast$1: function(value) {
+    throw $.$$throw($.UnsupportedError$("Cannot add to immutable List."));
+  },
+  set$length: function(value) {
+    throw $.$$throw($.UnsupportedError$("Cannot resize immutable List."));
+  },
+  clear$0: function() {
+    throw $.$$throw($.UnsupportedError$("Cannot clear immutable List."));
+  },
+  indexOf$2: function(element, start) {
+    return $.Lists_indexOf(this, element, start, $.getInterceptor$JSStringJSArray(this).get$length(this));
+  },
+  indexOf$1: function(element) {
+    return this.indexOf$2(element, 0);
+  },
+  get$first: function() {
+    if ($.gtB($.getInterceptor$JSStringJSArray(this).get$length(this), 0))
+      return this.operator$index$1(0);
+    throw $.$$throw($.StateError$("No elements"));
+  },
+  removeAt$1: function(pos) {
+    throw $.$$throw($.UnsupportedError$("Cannot remove from immutable List."));
+  },
+  removeLast$0: function() {
+    throw $.$$throw($.UnsupportedError$("Cannot remove from immutable List."));
+  },
+  remove$1: function(object) {
+    throw $.$$throw($.UnsupportedError$("Cannot remove from immutable List."));
+  },
+  insertRange$3: function(start, rangeLength, initialValue) {
+    throw $.$$throw($.UnsupportedError$("Cannot insertRange on immutable List."));
+  },
+  is$List: function() {
+    return true;
+  },
+  is$Collection: function() {
+    return true;
+  },
+  is$JavaScriptIndexingBehavior: function() {
+    return true;
+  }
+});
+
+$.$defineNativeClass("Navigator", {"": "userAgent>"});
+
+$.$defineNativeClass("Node", {"": "parent:parentElement~",
+  remove$0: function() {
+    if (Object.getPrototypeOf(this).hasOwnProperty("remove$0")) {
+      var t1 = this.parentNode;
+      if (!(t1 == null))
+        t1.$$dom_removeChild$1(this);
+    } else
+      return Object.prototype.remove$0.call(this);
+  },
+  $$dom_addEventListener$3: function(type, listener, useCapture) {
+    return this.addEventListener(type,$.convertDartClosureToJS(listener, 1),useCapture);
+  },
+  contains$1: function(other) {
+    return this.contains(other);
+  },
+  $$dom_removeChild$1: function(oldChild) {
+    return this.removeChild(oldChild);
+  },
+  $$dom_removeEventListener$3: function(type, listener, useCapture) {
+    return this.removeEventListener(type,$.convertDartClosureToJS(listener, 1),useCapture);
+  }
+});
+
+$.$defineNativeClass("NodeList", {
+  get$length: function() {
+    return this.length;
+  },
+  operator$index$1: function(index) {
+    return this[index];
+  },
+  operator$indexSet$2: function(index, value) {
+    throw $.$$throw($.UnsupportedError$("Cannot assign element of immutable List."));
+  },
+  get$iterator: function() {
+    return $.FixedSizeListIterator$(this);
+  },
+  contains$1: function(element) {
+    return $.IterableMixinWorkaround_contains(this, element);
+  },
+  forEach$1: function(f) {
+    var t1;
+    for (t1 = $.getInterceptor$JSArray(this).get$iterator(this); t1.moveNext$0() === true;)
+      f.call$1(t1.get$current());
+    return;
+  },
+  mappedBy$1: function(f) {
+    return $.MappedList$(this, f);
+  },
+  get$isEmpty: function() {
+    return $.eq($.getInterceptor$JSStringJSArray(this).get$length(this), 0);
+  },
+  add$1: function(value) {
+    throw $.$$throw($.UnsupportedError$("Cannot add to immutable List."));
+  },
+  addLast$1: function(value) {
+    throw $.$$throw($.UnsupportedError$("Cannot add to immutable List."));
+  },
+  set$length: function(value) {
+    throw $.$$throw($.UnsupportedError$("Cannot resize immutable List."));
+  },
+  clear$0: function() {
+    throw $.$$throw($.UnsupportedError$("Cannot clear immutable List."));
+  },
+  indexOf$2: function(element, start) {
+    return $.Lists_indexOf(this, element, start, $.getInterceptor$JSStringJSArray(this).get$length(this));
+  },
+  indexOf$1: function(element) {
+    return this.indexOf$2(element, 0);
+  },
+  get$first: function() {
+    if ($.gtB($.getInterceptor$JSStringJSArray(this).get$length(this), 0))
+      return this.operator$index$1(0);
+    throw $.$$throw($.StateError$("No elements"));
+  },
+  removeAt$1: function(pos) {
+    throw $.$$throw($.UnsupportedError$("Cannot remove from immutable List."));
+  },
+  removeLast$0: function() {
+    throw $.$$throw($.UnsupportedError$("Cannot remove from immutable List."));
+  },
+  remove$1: function(object) {
+    throw $.$$throw($.UnsupportedError$("Cannot remove from immutable List."));
+  },
+  insertRange$3: function(start, rangeLength, initialValue) {
+    throw $.$$throw($.UnsupportedError$("Cannot insertRange on immutable List."));
+  },
+  is$List: function() {
+    return true;
+  },
+  is$Collection: function() {
+    return true;
+  },
+  is$JavaScriptIndexingBehavior: function() {
+    return true;
+  }
+});
+
+$.$defineNativeClass("HTMLObjectElement", {"": "height=,name>,width="});
+
+$.$defineNativeClass("HTMLOptionElement", {"": "value="});
+
+$.$defineNativeClass("HTMLOutputElement", {"": "name>,value="});
+
+$.$defineNativeClass("HTMLParamElement", {"": "name>,value="});
+
+$.$defineNativeClass("HTMLProgressElement", {"": "value="});
+
+$.$defineNativeClass("RadioNodeList", {"": "value="});
+
+$.$defineNativeClass("RangeException", {"": "name>",
+  toString$0: function() {
+    return this.toString();
+  }
+});
+
+$.$defineNativeClass("HTMLSelectElement", {"": "length=,name>,size>,value="});
+
+$.$defineNativeClass("Storage", {
+  containsKey$1: function(key) {
+    return !(this.$$dom_getItem$1(key) == null);
+  },
+  operator$index$1: function(key) {
+    return this.$$dom_getItem$1(key);
+  },
+  operator$indexSet$2: function(key, value) {
+    this.$$dom_setItem$2(key, value);
+  },
+  remove$1: function(key) {
+    var value = this.operator$index$1(key);
+    this.$$dom_removeItem$1(key);
+    return value;
+  },
+  clear$0: function() {
+    return this.$$dom_clear$0();
+  },
+  forEach$1: function(f) {
+    var i, key;
+    for (i = 0; true; ++i) {
+      key = this.$$dom_key$1(i);
+      if (key == null)
+        return;
+      f.call$2(key, this.operator$index$1(key));
+    }
+  },
+  get$length: function() {
+    return this.length;
+  },
+  get$isEmpty: function() {
+    return this.$$dom_key$1(0) == null;
+  },
+  $$dom_clear$0: function() {
+    return this.clear();
+  },
+  $$dom_getItem$1: function(key) {
+    return this.getItem(key);
+  },
+  $$dom_key$1: function(index) {
+    return this.key(index);
+  },
+  $$dom_removeItem$1: function(key) {
+    return this.removeItem(key);
+  },
+  $$dom_setItem$2: function(key, data) {
+    return this.setItem(key,data);
+  },
+  is$Map: function() {
+    return true;
+  }
+});
+
+$.$defineNativeClass("StorageEvent", {"": "key>"});
+
+$.$defineNativeClass("HTMLTextAreaElement", {"": "name>,value="});
+
+$.$defineNativeClass("Uint8Array", {
+  get$length: function() {
+    if (Object.getPrototypeOf(this).hasOwnProperty("get$length")) {
+      return this.length;
+    } else
+      return Object.prototype.get$length.call(this);
+  },
+  operator$index$1: function(index) {
+    if (Object.getPrototypeOf(this).hasOwnProperty("operator$index$1")) {
+      return this[index];
+    } else
+      return Object.prototype.operator$index$1.call(this, index);
+  },
+  operator$indexSet$2: function(index, value) {
+    if (Object.getPrototypeOf(this).hasOwnProperty("operator$indexSet$2")) {
+      this[index] = value;
+    } else
+      return Object.prototype.operator$indexSet$2.call(this, index, value);
+  },
+  get$iterator: function() {
+    if (Object.getPrototypeOf(this).hasOwnProperty("get$iterator")) {
+      return $.FixedSizeListIterator$(this);
+    } else
+      return Object.prototype.get$iterator.call(this);
+  },
+  contains$1: function(element) {
+    if (Object.getPrototypeOf(this).hasOwnProperty("contains$1")) {
+      return $.IterableMixinWorkaround_contains(this, element);
+    } else
+      return Object.prototype.contains$1.call(this, element);
+  },
+  forEach$1: function(f) {
+    if (Object.getPrototypeOf(this).hasOwnProperty("forEach$1")) {
+      var t1;
+      for (t1 = $.getInterceptor$JSArray(this).get$iterator(this); t1.moveNext$0() === true;)
+        f.call$1(t1.get$current());
+      return;
+    } else
+      return Object.prototype.forEach$1.call(this, f);
+  },
+  mappedBy$1: function(f) {
+    if (Object.getPrototypeOf(this).hasOwnProperty("mappedBy$1")) {
+      return $.MappedList$(this, f);
+    } else
+      return Object.prototype.mappedBy$1.call(this, f);
+  },
+  get$isEmpty: function() {
+    if (Object.getPrototypeOf(this).hasOwnProperty("get$isEmpty")) {
+      return $.eq($.getInterceptor$JSStringJSArray(this).get$length(this), 0);
+    } else
+      return Object.prototype.get$isEmpty.call(this);
+  },
+  add$1: function(value) {
+    if (Object.getPrototypeOf(this).hasOwnProperty("add$1")) {
+      throw $.$$throw($.UnsupportedError$("Cannot add to immutable List."));
+    } else
+      return Object.prototype.add$1.call(this, value);
+  },
+  addLast$1: function(value) {
+    if (Object.getPrototypeOf(this).hasOwnProperty("addLast$1")) {
+      throw $.$$throw($.UnsupportedError$("Cannot add to immutable List."));
+    } else
+      return Object.prototype.addLast$1.call(this, value);
+  },
+  set$length: function(value) {
+    if (Object.getPrototypeOf(this).hasOwnProperty("set$length")) {
+      throw $.$$throw($.UnsupportedError$("Cannot resize immutable List."));
+    } else
+      return Object.prototype.set$length.call(this, value);
+  },
+  clear$0: function() {
+    if (Object.getPrototypeOf(this).hasOwnProperty("clear$0")) {
+      throw $.$$throw($.UnsupportedError$("Cannot clear immutable List."));
+    } else
+      return Object.prototype.clear$0.call(this);
+  },
+  indexOf$2: function(element, start) {
+    if (Object.getPrototypeOf(this).hasOwnProperty("indexOf$2")) {
+      return $.Lists_indexOf(this, element, start, $.getInterceptor$JSStringJSArray(this).get$length(this));
+    } else
+      return Object.prototype.indexOf$2.call(this, element, start);
+  },
+  indexOf$1: function(element) {
+    return this.indexOf$2(element, 0);
+  },
+  get$first: function() {
+    if (Object.getPrototypeOf(this).hasOwnProperty("get$first")) {
+      if ($.gtB($.getInterceptor$JSStringJSArray(this).get$length(this), 0))
+        return this.operator$index$1(0);
+      throw $.$$throw($.StateError$("No elements"));
+    } else
+      return Object.prototype.get$first.call(this);
+  },
+  removeAt$1: function(pos) {
+    if (Object.getPrototypeOf(this).hasOwnProperty("removeAt$1")) {
+      throw $.$$throw($.UnsupportedError$("Cannot remove from immutable List."));
+    } else
+      return Object.prototype.removeAt$1.call(this, pos);
+  },
+  removeLast$0: function() {
+    if (Object.getPrototypeOf(this).hasOwnProperty("removeLast$0")) {
+      throw $.$$throw($.UnsupportedError$("Cannot remove from immutable List."));
+    } else
+      return Object.prototype.removeLast$0.call(this);
+  },
+  remove$1: function(object) {
+    if (Object.getPrototypeOf(this).hasOwnProperty("remove$1")) {
+      throw $.$$throw($.UnsupportedError$("Cannot remove from immutable List."));
+    } else
+      return Object.prototype.remove$1.call(this, object);
+  },
+  insertRange$3: function(start, rangeLength, initialValue) {
+    if (Object.getPrototypeOf(this).hasOwnProperty("insertRange$3")) {
+      throw $.$$throw($.UnsupportedError$("Cannot insertRange on immutable List."));
+    } else
+      return Object.prototype.insertRange$3.call(this, start, rangeLength, initialValue);
+  },
+  is$List: function() {
+    return true;
+  },
+  is$Collection: function() {
+    return true;
+  },
+  is$JavaScriptIndexingBehavior: function() {
+    return true;
+  }
+});
+
+$.$defineNativeClass("Uint8ClampedArray", {
+  operator$index$1: function(index) {
+    return this[index];
+  },
+  operator$indexSet$2: function(index, value) {
+    this[index] = value;
+  },
+  get$iterator: function() {
+    return $.FixedSizeListIterator$(this);
+  },
+  contains$1: function(element) {
+    return $.IterableMixinWorkaround_contains(this, element);
+  },
+  forEach$1: function(f) {
+    var t1;
+    for (t1 = $.getInterceptor$JSArray(this).get$iterator(this); t1.moveNext$0() === true;)
+      f.call$1(t1.get$current());
+    return;
+  },
+  mappedBy$1: function(f) {
+    return $.MappedList$(this, f);
+  },
+  get$isEmpty: function() {
+    return $.eq($.getInterceptor$JSStringJSArray(this).get$length(this), 0);
+  },
+  add$1: function(value) {
+    throw $.$$throw($.UnsupportedError$("Cannot add to immutable List."));
+  },
+  addLast$1: function(value) {
+    throw $.$$throw($.UnsupportedError$("Cannot add to immutable List."));
+  },
+  set$length: function(value) {
+    throw $.$$throw($.UnsupportedError$("Cannot resize immutable List."));
+  },
+  clear$0: function() {
+    throw $.$$throw($.UnsupportedError$("Cannot clear immutable List."));
+  },
+  indexOf$2: function(element, start) {
+    return $.Lists_indexOf(this, element, start, $.getInterceptor$JSStringJSArray(this).get$length(this));
+  },
+  indexOf$1: function(element) {
+    return this.indexOf$2(element, 0);
+  },
+  get$first: function() {
+    if ($.gtB($.getInterceptor$JSStringJSArray(this).get$length(this), 0))
+      return this.operator$index$1(0);
+    throw $.$$throw($.StateError$("No elements"));
+  },
+  removeAt$1: function(pos) {
+    throw $.$$throw($.UnsupportedError$("Cannot remove from immutable List."));
+  },
+  removeLast$0: function() {
+    throw $.$$throw($.UnsupportedError$("Cannot remove from immutable List."));
+  },
+  remove$1: function(object) {
+    throw $.$$throw($.UnsupportedError$("Cannot remove from immutable List."));
+  },
+  insertRange$3: function(start, rangeLength, initialValue) {
+    throw $.$$throw($.UnsupportedError$("Cannot insertRange on immutable List."));
+  },
+  is$List: function() {
+    return true;
+  },
+  is$Collection: function() {
+    return true;
+  },
+  is$JavaScriptIndexingBehavior: function() {
+    return true;
+  }
+});
+
+$.$defineNativeClass("HTMLVideoElement", {"": "height=,width="});
+
+$.$defineNativeClass("WebGLRenderingContext", {
+  clear$1: function(mask) {
+    return this.clear(mask);
+  }
+});
+
+$.$defineNativeClass("DOMWindow", {"": "name>,navigator>",
+  requestAnimationFrame$1: function(callback) {
+    this._ensureRequestAnimationFrame$0();
+    return this._requestAnimationFrame$1(callback);
+  },
+  _requestAnimationFrame$1: function(callback) {
+    return this.requestAnimationFrame($.convertDartClosureToJS(callback, 1));
+  },
+  _ensureRequestAnimationFrame$0: function() {
+    if (!!(this.requestAnimationFrame && this.cancelAnimationFrame))
+      return;
+      (function($this) {
    var vendors = ['ms', 'moz', 'webkit', 'o'];
    for (var i = 0; i < vendors.length && !$this.requestAnimationFrame; ++i) {
      $this.requestAnimationFrame = $this[vendors[i] + 'RequestAnimationFrame'];
@@ -5238,228 +5972,209 @@ $.$defineNativeClass('DOMWindow', {"":"name>,navigator>",
    };
    $this.cancelAnimationFrame = function(id) { clearTimeout(id); }
   })(this);
-},
- get$on: function() {
-  return $.WindowEvents$(this);
-},
- get$parent: function() {
-  return $._convertNativeToDart_Window(this.parent);
-},
- get$top: function() {
-  return $._convertNativeToDart_Window(this.top);
-},
- $$dom_addEventListener$3: function(type, listener, useCapture) {
-  return this.addEventListener(type,$.convertDartClosureToJS(listener, 1),useCapture);
-},
- moveTo$2: function(x, y) {
-  return this.moveTo(x,y);
-},
- $$dom_removeEventListener$3: function(type, listener, useCapture) {
-  return this.removeEventListener(type,$.convertDartClosureToJS(listener, 1),useCapture);
-}
+  },
+  get$on: function() {
+    return $.WindowEvents$(this);
+  },
+  get$parent: function() {
+    return $._convertNativeToDart_Window(this.parent);
+  },
+  get$top: function() {
+    return $._convertNativeToDart_Window(this.top);
+  },
+  $$dom_addEventListener$3: function(type, listener, useCapture) {
+    return this.addEventListener(type,$.convertDartClosureToJS(listener, 1),useCapture);
+  },
+  moveTo$2: function(x, y) {
+    return this.moveTo(x,y);
+  },
+  $$dom_removeEventListener$3: function(type, listener, useCapture) {
+    return this.removeEventListener(type,$.convertDartClosureToJS(listener, 1),useCapture);
+  }
 });
 
-$.$defineNativeClass('XPathException', {"":"name>",
- toString$0: function() {
-  return this.toString();
-}
+$.$defineNativeClass("XPathException", {"": "name>",
+  toString$0: function() {
+    return this.toString();
+  }
 });
 
-$.$defineNativeClass('SVGAElement', {
- transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
-  return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-}
+$.$defineNativeClass("HTMLFrameSetElement", {
+  get$on: function() {
+    return $._FrameSetElementEvents$(this);
+  }
 });
 
-$.$defineNativeClass('SVGCircleElement', {
- transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
-  return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-}
+$.$defineNativeClass("SVGAElement", {
+  transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
 });
 
-$.$defineNativeClass('SVGClipPathElement', {
- transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
-  return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-}
+$.$defineNativeClass("SVGCircleElement", {
+  transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
 });
 
-$.$defineNativeClass('SVGCursorElement', {"":"x>,y>"
+$.$defineNativeClass("SVGClipPathElement", {
+  transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
 });
 
-$.$defineNativeClass('SVGDefsElement', {
- transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
-  return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-}
+$.$defineNativeClass("SVGCursorElement", {"": "x>,y>"});
+
+$.$defineNativeClass("SVGDefsElement", {
+  transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
 });
 
-$.$defineNativeClass('SVGEllipseElement', {
- transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
-  return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-}
+$.$defineNativeClass("SVGEllipseElement", {
+  transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
 });
 
-$.$defineNativeClass('SVGFEBlendElement', {"":"height>,width>,x>,y>"
+$.$defineNativeClass("SVGFEBlendElement", {"": "height>,width>,x>,y>"});
+
+$.$defineNativeClass("SVGFEColorMatrixElement", {"": "height>,width>,x>,y>"});
+
+$.$defineNativeClass("SVGFEComponentTransferElement", {"": "height>,width>,x>,y>"});
+
+$.$defineNativeClass("SVGFECompositeElement", {"": "height>,width>,x>,y>"});
+
+$.$defineNativeClass("SVGFEConvolveMatrixElement", {"": "height>,width>,x>,y>"});
+
+$.$defineNativeClass("SVGFEDiffuseLightingElement", {"": "height>,width>,x>,y>"});
+
+$.$defineNativeClass("SVGFEDisplacementMapElement", {"": "height>,width>,x>,y>",
+  scale$2: function(arg0, arg1) {
+    return this.scale.call$2(arg0, arg1);
+  }
 });
 
-$.$defineNativeClass('SVGFEColorMatrixElement', {"":"height>,width>,x>,y>"
+$.$defineNativeClass("SVGFEDropShadowElement", {"": "height>,width>,x>,y>"});
+
+$.$defineNativeClass("SVGFEFloodElement", {"": "height>,width>,x>,y>"});
+
+$.$defineNativeClass("SVGFEGaussianBlurElement", {"": "height>,width>,x>,y>"});
+
+$.$defineNativeClass("SVGFEImageElement", {"": "height>,width>,x>,y>"});
+
+$.$defineNativeClass("SVGFEMergeElement", {"": "height>,width>,x>,y>"});
+
+$.$defineNativeClass("SVGFEMorphologyElement", {"": "height>,width>,x>,y>"});
+
+$.$defineNativeClass("SVGFEOffsetElement", {"": "height>,width>,x>,y>"});
+
+$.$defineNativeClass("SVGFEPointLightElement", {"": "x>,y>"});
+
+$.$defineNativeClass("SVGFESpecularLightingElement", {"": "height>,width>,x>,y>"});
+
+$.$defineNativeClass("SVGFESpotLightElement", {"": "x>,y>"});
+
+$.$defineNativeClass("SVGFETileElement", {"": "height>,width>,x>,y>"});
+
+$.$defineNativeClass("SVGFETurbulenceElement", {"": "height>,width>,x>,y>"});
+
+$.$defineNativeClass("SVGFilterElement", {"": "height>,width>,x>,y>"});
+
+$.$defineNativeClass("SVGForeignObjectElement", {"": "height>,width>,x>,y>",
+  transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
 });
 
-$.$defineNativeClass('SVGFEComponentTransferElement', {"":"height>,width>,x>,y>"
+$.$defineNativeClass("SVGGElement", {
+  transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
 });
 
-$.$defineNativeClass('SVGFECompositeElement', {"":"height>,width>,x>,y>"
+$.$defineNativeClass("SVGGlyphRefElement", {"": "x>,y>"});
+
+$.$defineNativeClass("SVGImageElement", {"": "height>,width>,x>,y>",
+  transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
 });
 
-$.$defineNativeClass('SVGFEConvolveMatrixElement', {"":"height>,width>,x>,y>"
+$.$defineNativeClass("SVGLineElement", {
+  transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
 });
 
-$.$defineNativeClass('SVGFEDiffuseLightingElement', {"":"height>,width>,x>,y>"
+$.$defineNativeClass("SVGMaskElement", {"": "height>,width>,x>,y>"});
+
+$.$defineNativeClass("SVGPathElement", {
+  transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
 });
 
-$.$defineNativeClass('SVGFEDisplacementMapElement', {"":"height>,width>,x>,y>",
- scale$2: function(arg0, arg1) {
-  return this.scale.call$2(arg0, arg1);
-}
+$.$defineNativeClass("SVGPatternElement", {"": "height>,width>,x>,y>"});
+
+$.$defineNativeClass("SVGPolygonElement", {
+  transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
 });
 
-$.$defineNativeClass('SVGFEDropShadowElement', {"":"height>,width>,x>,y>"
+$.$defineNativeClass("SVGPolylineElement", {
+  transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
 });
 
-$.$defineNativeClass('SVGFEFloodElement', {"":"height>,width>,x>,y>"
+$.$defineNativeClass("SVGRectElement", {"": "height>,width>,x>,y>",
+  transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
 });
 
-$.$defineNativeClass('SVGFEGaussianBlurElement', {"":"height>,width>,x>,y>"
+$.$defineNativeClass("SVGElement", {
+  get$id: function() {
+    return this.id;
+  }
 });
 
-$.$defineNativeClass('SVGFEImageElement', {"":"height>,width>,x>,y>"
+$.$defineNativeClass("SVGException", {"": "name>",
+  toString$0: function() {
+    return this.toString();
+  }
 });
 
-$.$defineNativeClass('SVGFEMergeElement', {"":"height>,width>,x>,y>"
+$.$defineNativeClass("SVGSVGElement", {"": "height>,width>,x>,y>"});
+
+$.$defineNativeClass("SVGSwitchElement", {
+  transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
 });
 
-$.$defineNativeClass('SVGFEMorphologyElement', {"":"height>,width>,x>,y>"
+$.$defineNativeClass("SVGTextElement", {
+  transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
 });
 
-$.$defineNativeClass('SVGFEOffsetElement', {"":"height>,width>,x>,y>"
+$.$defineNativeClass("SVGTextPositioningElement", {"": "x>,y>"});
+
+$.$defineNativeClass("SVGUseElement", {"": "height>,width>,x>,y>",
+  transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
 });
 
-$.$defineNativeClass('SVGFEPointLightElement', {"":"x>,y>"
-});
-
-$.$defineNativeClass('SVGFESpecularLightingElement', {"":"height>,width>,x>,y>"
-});
-
-$.$defineNativeClass('SVGFESpotLightElement', {"":"x>,y>"
-});
-
-$.$defineNativeClass('SVGFETileElement', {"":"height>,width>,x>,y>"
-});
-
-$.$defineNativeClass('SVGFETurbulenceElement', {"":"height>,width>,x>,y>"
-});
-
-$.$defineNativeClass('SVGFilterElement', {"":"height>,width>,x>,y>"
-});
-
-$.$defineNativeClass('SVGForeignObjectElement', {"":"height>,width>,x>,y>",
- transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
-  return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-}
-});
-
-$.$defineNativeClass('SVGGElement', {
- transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
-  return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-}
-});
-
-$.$defineNativeClass('SVGGlyphRefElement', {"":"x>,y>"
-});
-
-$.$defineNativeClass('SVGImageElement', {"":"height>,width>,x>,y>",
- transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
-  return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-}
-});
-
-$.$defineNativeClass('SVGLineElement', {
- transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
-  return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-}
-});
-
-$.$defineNativeClass('SVGMaskElement', {"":"height>,width>,x>,y>"
-});
-
-$.$defineNativeClass('SVGPathElement', {
- transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
-  return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-}
-});
-
-$.$defineNativeClass('SVGPatternElement', {"":"height>,width>,x>,y>"
-});
-
-$.$defineNativeClass('SVGPolygonElement', {
- transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
-  return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-}
-});
-
-$.$defineNativeClass('SVGPolylineElement', {
- transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
-  return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-}
-});
-
-$.$defineNativeClass('SVGRectElement', {"":"height>,width>,x>,y>",
- transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
-  return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-}
-});
-
-$.$defineNativeClass('SVGElement', {
- get$id: function() {
-  return this.id;
-}
-});
-
-$.$defineNativeClass('SVGException', {"":"name>",
- toString$0: function() {
-  return this.toString();
-}
-});
-
-$.$defineNativeClass('SVGSVGElement', {"":"height>,width>,x>,y>"
-});
-
-$.$defineNativeClass('SVGSwitchElement', {
- transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
-  return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-}
-});
-
-$.$defineNativeClass('SVGTextElement', {
- transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
-  return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-}
-});
-
-$.$defineNativeClass('SVGTextPositioningElement', {"":"x>,y>"
-});
-
-$.$defineNativeClass('SVGUseElement', {"":"height>,width>,x>,y>",
- transform$6: function(arg0, arg1, arg2, arg3, arg4, arg5) {
-  return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-}
-});
-
-// 105 dynamic classes.
+// 98 dynamic classes.
 // 236 classes
 // 21 !leaf
 (function() {
-  var v0_TextPositioningElement = 'SVGTextPositioningElement|SVGAltGlyphElement|SVGTRefElement|SVGTSpanElement|SVGTextElement', v1_MediaElement = 'HTMLMediaElement|HTMLVideoElement|HTMLAudioElement', v2_SvgElement = [v0_TextPositioningElement, 'SVGElement|SVGAElement|SVGAltGlyphDefElement|SVGTextContentElement|SVGTextPathElement|SVGAltGlyphItemElement|SVGAnimationElement|SVGAnimateColorElement|SVGAnimateElement|SVGAnimateMotionElement|SVGAnimateTransformElement|SVGSetElement|SVGCircleElement|SVGClipPathElement|SVGComponentTransferFunctionElement|SVGFEFuncRElement|SVGFEFuncBElement|SVGFEFuncAElement|SVGFEFuncGElement|SVGCursorElement|SVGDefsElement|SVGEllipseElement|SVGFECompositeElement|SVGFEConvolveMatrixElement|SVGFEBlendElement|SVGFEDisplacementMapElement|SVGDescElement|SVGFEDiffuseLightingElement|SVGFEDistantLightElement|SVGFEDropShadowElement|SVGFEOffsetElement|SVGFEMergeNodeElement|SVGFEMorphologyElement|SVGFontFaceElement|SVGFEComponentTransferElement|SVGFEMergeElement|SVGFESpotLightElement|SVGFETileElement|SVGFETurbulenceElement|SVGFEGaussianBlurElement|SVGFESpecularLightingElement|SVGFEColorMatrixElement|SVGGradientElement|SVGLinearGradientElement|SVGRadialGradientElement|SVGHKernElement|SVGFontFaceFormatElement|SVGFEPointLightElement|SVGGlyphElement|SVGFEImageElement|SVGLineElement|SVGMPathElement|SVGMarkerElement|SVGMaskElement|SVGMissingGlyphElement|SVGFilterElement|SVGFEFloodElement|SVGForeignObjectElement|SVGPathElement|SVGFontFaceNameElement|SVGFontFaceUriElement|SVGGElement|SVGFontElement|SVGMetadataElement|SVGGlyphRefElement|SVGImageElement|SVGFontFaceSrcElement|SVGPatternElement|SVGPolygonElement|SVGPolylineElement|SVGRectElement|SVGScriptElement|SVGStopElement|SVGStyleElement|SVGSwitchElement|SVGSymbolElement|SVGTitleElement|SVGSVGElement|SVGUseElement|SVGVKernElement|SVGViewElement'].join('|'), v3_MouseEvent = 'MouseEvent|WheelEvent', v4_Element = [v1_MediaElement, v2_SvgElement, 'Element|HTMLUListElement|HTMLUnknownElement|HTMLElement|HTMLAnchorElement|HTMLAppletElement|HTMLAreaElement|HTMLBRElement|HTMLBaseElement|HTMLBodyElement|HTMLBaseFontElement|HTMLButtonElement|HTMLCanvasElement|HTMLContentElement|HTMLDListElement|HTMLDataListElement|HTMLDirectoryElement|HTMLDetailsElement|HTMLDivElement|HTMLEmbedElement|HTMLFieldSetElement|HTMLFontElement|HTMLFormElement|HTMLFrameElement|HTMLFrameSetElement|HTMLHRElement|HTMLHeadElement|HTMLHeadingElement|HTMLHtmlElement|HTMLIFrameElement|HTMLImageElement|HTMLInputElement|HTMLKeygenElement|HTMLLIElement|HTMLLabelElement|HTMLLegendElement|HTMLLinkElement|HTMLMapElement|HTMLMarqueeElement|HTMLMenuElement|HTMLMetaElement|HTMLMeterElement|HTMLModElement|HTMLOListElement|HTMLObjectElement|HTMLOptGroupElement|HTMLOptionElement|HTMLOutputElement|HTMLParagraphElement|HTMLParamElement|HTMLPreElement|HTMLProgressElement|HTMLQuoteElement|HTMLScriptElement|HTMLSelectElement|HTMLShadowElement|HTMLSourceElement|HTMLSpanElement|HTMLStyleElement|HTMLTableCaptionElement|HTMLTableCellElement|HTMLTableColElement|HTMLTableElement|HTMLTableRowElement|HTMLTableSectionElement|HTMLTextAreaElement|HTMLTitleElement|HTMLTrackElement'].join('|'), v5_CharacterData = 'CharacterData|Text|CDATASection|Comment', v6_Document = 'Document|SVGDocument|HTMLDocument', v7_DocumentFragment = 'DocumentFragment|ShadowRoot', v8_Node = [v4_Element, v5_CharacterData, v6_Document, v7_DocumentFragment, 'Node|Attr|DocumentType|EntityReference|Notation|ProcessingInstruction'].join('|');
-  $.dynamicSetMetadata([['Uint8Array', 'Uint8Array|Uint8ClampedArray'], ['HTMLMediaElement', v1_MediaElement], ['SVGTextPositioningElement', v0_TextPositioningElement], ['SVGElement', v2_SvgElement], ['Element', v4_Element], ['MouseEvent', v3_MouseEvent], ['Event', [v3_MouseEvent, 'Event|WebKitTransitionEvent|UIEvent|CompositionEvent|SVGZoomEvent|KeyboardEvent|TextEvent|TouchEvent|WebGLContextEvent|IDBVersionChangeEvent|IDBVersionChangeEvent|WebKitAnimationEvent|BeforeLoadEvent|CloseEvent|CustomEvent|DeviceMotionEvent|DeviceOrientationEvent|ErrorEvent|HashChangeEvent|AudioProcessingEvent|ProgressEvent|XMLHttpRequestProgressEvent|OfflineAudioCompletionEvent|MediaKeyEvent|MediaStreamEvent|MediaStreamTrackEvent|MessageEvent|MutationEvent|OverflowEvent|PageTransitionEvent|PopStateEvent|RTCDataChannelEvent|RTCIceCandidateEvent|SpeechInputEvent|SpeechRecognitionError|SpeechRecognitionEvent|StorageEvent|TrackEvent'].join('|')], ['CharacterData', v5_CharacterData], ['Document', v6_Document], ['DocumentFragment', v7_DocumentFragment], ['Node', v8_Node], ['EventTarget', [v8_Node, 'EventTarget|DOMWindow'].join('|')], ['HTMLCollection', 'HTMLCollection|HTMLFormControlsCollection|HTMLOptionsCollection'], ['NodeList', 'NodeList|RadioNodeList']]);
+  var v0_TextPositioningElement = "SVGTextPositioningElement|SVGAltGlyphElement|SVGTRefElement|SVGTSpanElement|SVGTextElement", v1_MediaElement = "HTMLMediaElement|HTMLVideoElement|HTMLAudioElement", v2_SvgElement = [v0_TextPositioningElement, "SVGElement|SVGAElement|SVGAltGlyphDefElement|SVGTextContentElement|SVGTextPathElement|SVGAltGlyphItemElement|SVGAnimationElement|SVGAnimateColorElement|SVGAnimateElement|SVGAnimateMotionElement|SVGAnimateTransformElement|SVGSetElement|SVGClipPathElement|SVGCursorElement|SVGDefsElement|SVGDescElement|SVGEllipseElement|SVGFEBlendElement|SVGFEColorMatrixElement|SVGFEConvolveMatrixElement|SVGFEDiffuseLightingElement|SVGFECompositeElement|SVGFEDistantLightElement|SVGFEDropShadowElement|SVGComponentTransferFunctionElement|SVGFEFuncAElement|SVGFEFuncGElement|SVGFEFuncBElement|SVGFEFuncRElement|SVGFEGaussianBlurElement|SVGFEImageElement|SVGFEOffsetElement|SVGFEPointLightElement|SVGFEComponentTransferElement|SVGCircleElement|SVGFilterElement|SVGFontElement|SVGFEFloodElement|SVGFontFaceFormatElement|SVGFontFaceNameElement|SVGFontFaceSrcElement|SVGFETurbulenceElement|SVGFontFaceElement|SVGFESpecularLightingElement|SVGFEMergeElement|SVGFEMergeNodeElement|SVGFEDisplacementMapElement|SVGFESpotLightElement|SVGFETileElement|SVGGElement|SVGFEMorphologyElement|SVGGlyphRefElement|SVGFontFaceUriElement|SVGMaskElement|SVGGradientElement|SVGLinearGradientElement|SVGRadialGradientElement|SVGHKernElement|SVGForeignObjectElement|SVGMarkerElement|SVGLineElement|SVGGlyphElement|SVGMissingGlyphElement|SVGImageElement|SVGPathElement|SVGMetadataElement|SVGMPathElement|SVGPatternElement|SVGPolygonElement|SVGPolylineElement|SVGRectElement|SVGScriptElement|SVGStopElement|SVGStyleElement|SVGSVGElement|SVGSwitchElement|SVGSymbolElement|SVGTitleElement|SVGUseElement|SVGVKernElement|SVGViewElement"].join("|"), v3_MouseEvent = "MouseEvent|WheelEvent", v4_Element = [v1_MediaElement, v2_SvgElement, "Element|HTMLScriptElement|HTMLSelectElement|HTMLShadowElement|HTMLSourceElement|HTMLSpanElement|HTMLStyleElement|HTMLTableCaptionElement|HTMLTableCellElement|HTMLTableColElement|HTMLTableElement|HTMLTableRowElement|HTMLTableSectionElement|HTMLTextAreaElement|HTMLTitleElement|HTMLTrackElement|HTMLUListElement|HTMLUnknownElement|HTMLAppletElement|HTMLBaseFontElement|HTMLDirectoryElement|HTMLFontElement|HTMLFrameElement|HTMLFrameSetElement|HTMLMarqueeElement|HTMLElement|HTMLAnchorElement|HTMLAreaElement|HTMLBRElement|HTMLBaseElement|HTMLBodyElement|HTMLButtonElement|HTMLCanvasElement|HTMLContentElement|HTMLDListElement|HTMLDataListElement|HTMLDetailsElement|HTMLDivElement|HTMLEmbedElement|HTMLFieldSetElement|HTMLFormElement|HTMLHRElement|HTMLHeadElement|HTMLHeadingElement|HTMLHtmlElement|HTMLIFrameElement|HTMLImageElement|HTMLInputElement|HTMLKeygenElement|HTMLLIElement|HTMLLabelElement|HTMLLegendElement|HTMLLinkElement|HTMLMapElement|HTMLMenuElement|HTMLMetaElement|HTMLMeterElement|HTMLModElement|HTMLOListElement|HTMLObjectElement|HTMLOptGroupElement|HTMLOptionElement|HTMLOutputElement|HTMLParagraphElement|HTMLParamElement|HTMLPreElement|HTMLProgressElement|HTMLQuoteElement"].join("|"), v5_DocumentFragment = "DocumentFragment|ShadowRoot", v6_CharacterData = "CharacterData|Text|CDATASection|Comment", v7_Document = "Document|SVGDocument|HTMLDocument", v8_Node = [v4_Element, v5_DocumentFragment, v6_CharacterData, v7_Document, "Node|Attr|DocumentType|EntityReference|Notation|ProcessingInstruction"].join("|");
+  $.dynamicSetMetadata([["CharacterData", v6_CharacterData], ["Document", v7_Document], ["DocumentFragment", v5_DocumentFragment], ["Uint8Array", "Uint8Array|Uint8ClampedArray"], ["HTMLMediaElement", v1_MediaElement], ["SVGTextPositioningElement", v0_TextPositioningElement], ["SVGElement", v2_SvgElement], ["Element", v4_Element], ["MouseEvent", v3_MouseEvent], ["Event", [v3_MouseEvent, "Event|RTCDataChannelEvent|RTCIceCandidateEvent|SpeechInputEvent|SpeechRecognitionError|SpeechRecognitionEvent|StorageEvent|UIEvent|TextEvent|TouchEvent|CompositionEvent|SVGZoomEvent|KeyboardEvent|TrackEvent|WebKitTransitionEvent|WebGLContextEvent|IDBVersionChangeEvent|IDBVersionChangeEvent|WebKitAnimationEvent|BeforeLoadEvent|CloseEvent|CustomEvent|DeviceMotionEvent|DeviceOrientationEvent|ErrorEvent|HashChangeEvent|ProgressEvent|XMLHttpRequestProgressEvent|AudioProcessingEvent|OfflineAudioCompletionEvent|MediaKeyEvent|MediaStreamEvent|MediaStreamTrackEvent|MessageEvent|MutationEvent|OverflowEvent|PageTransitionEvent|PopStateEvent"].join("|")], ["Node", v8_Node], ["EventTarget", [v8_Node, "EventTarget|DOMWindow"].join("|")], ["HTMLCollection", "HTMLCollection|HTMLFormControlsCollection|HTMLOptionsCollection"], ["NodeList", "NodeList|RadioNodeList"]]);
 })();
 
 
@@ -5603,11 +6318,12 @@ Isolate.$lazy = function(prototype, staticName, fieldName, getterName, lazyValue
         $[fieldName] = sentinelInProgress;
         try {
           result = $[fieldName] = lazyValue();
-        } catch (e) {
-          if ($[fieldName] === sentinelInProgress) {
-            $[fieldName] = null;
+        } finally {
+          if (result === sentinelUndefined) {
+            if ($[fieldName] === sentinelInProgress) {
+              $[fieldName] = null;
+            }
           }
-          throw e;
         }
       } else if (result === sentinelInProgress) {
         $.throwCyclicInit(staticName);

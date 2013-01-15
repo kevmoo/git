@@ -3,25 +3,25 @@ part of hop_tasks;
 // TODO: add post-build options to pretty-up the docs
 
 Task getCompileDocsFunc(String targetBranch, String packageDir,
-                        Func<Future<SequenceCollection<String>>> libGetter) {
+                        Func<Future<List<String>>> libGetter) {
   return new Task.async((ctx) => compileDocs(ctx, targetBranch, libGetter, packageDir),
       'Generate documentation for the provided libraries.');
 }
 
 Future<bool> compileDocs(TaskContext ctx, String targetBranch,
-    Func<Future<SequenceCollection<String>>> libGetter, String packageDir) {
+    Func<Future<List<String>>> libGetter, String packageDir) {
 
   final dir = new Directory('');
   final tempDocsDirFuture = dir.createTemp()
-      .transform((Directory dir) => dir.path);
+      .then((Directory dir) => dir.path);
   final tempGitDirFuture = dir.createTemp()
-      .chain((Directory dir) => _doGitCheckout(ctx, '.', dir.path, targetBranch));
+      .then((Directory dir) => _doGitCheckout(ctx, '.', dir.path, targetBranch));
   final getLibsFuture = libGetter();
   final commitMessageFuture = _getCommitMessageFuture(ctx);
 
-  return Futures.wait([tempDocsDirFuture, getLibsFuture, tempGitDirFuture,
+  return Future.wait([tempDocsDirFuture, getLibsFuture, tempGitDirFuture,
                        commitMessageFuture])
-      .chain((values) {
+      .then((values) {
         final outputDir = values[0];
         final libs = values[1];
         final gitDir = values[2];
@@ -35,31 +35,31 @@ Future<bool> _compileDocs(TaskContext ctx, String gitDir, String outputDir,
     String targetBranch, String commitMessage, List<String> libs, String packageDir) {
 
   return _ensureProperBranch(ctx, gitDir, outputDir, targetBranch)
-      .chain((_) => _dartDoc(ctx, outputDir, libs, packageDir))
-      .chain((bool dartDocSuccess) {
+      .then((_) => _dartDoc(ctx, outputDir, libs, packageDir))
+      .then((bool dartDocSuccess) {
         if(dartDocSuccess) {
           return _doCommitComplex(ctx, outputDir, gitDir, commitMessage);
         } else {
           throw 'boo! docs failed...clean up';
         }
       })
-      .chain((_) => _doPush(ctx, outputDir, gitDir, targetBranch))
-      .chain((_) => _deleteTempDirs([outputDir, gitDir]))
-      .transform((_) => true);
+      .then((_) => _doPush(ctx, outputDir, gitDir, targetBranch))
+      .then((_) => _deleteTempDirs([outputDir, gitDir]))
+      .then((_) => true);
 }
 
 Future<String> _getCommitMessageFuture(TaskContext ctx) {
   return _verifyCurrentWorkingTreeClean(ctx)
-      .chain((_) => _getCurrentBranchName(ctx))
-      .chain((String refName) => _getCommitMessageFromRefName(ctx, refName));
+      .then((_) => _getCurrentBranchName(ctx))
+      .then((String refName) => _getCommitMessageFromRefName(ctx, refName));
 }
 
 Future<String> _getCommitMessageFromRefName(TaskContext ctx, String refName) {
   return Process.run('git', ['show-ref', '--abbrev', refName])
-      .transform((ProcessResult pr) {
+      .then((ProcessResult pr) {
         _throwIfProcessFailed(ctx, pr);
         var split = new List<String>.from(
-            pr.stdout.split(' ').map((e) => e.trim()));
+            pr.stdout.split(' ').mappedBy((e) => e.trim()));
         assert(split.length == 2);
         assert(split[1] == refName);
 
@@ -71,7 +71,7 @@ Future<String> _getCommitMessageFromRefName(TaskContext ctx, String refName) {
 
 Future _verifyCurrentWorkingTreeClean(TaskContext ctx) {
   return Process.run('git', ['status', '--porcelain'])
-      .transform((ProcessResult pr) {
+      .then((ProcessResult pr) {
         _throwIfProcessFailed(ctx, pr);
         if(pr.stdout.length > 0) {
           ctx.fail('Working tree is dirty. Cannot generate docs.');
@@ -85,7 +85,7 @@ Future _verifyCurrentWorkingTreeClean(TaskContext ctx) {
 Future<String> _getCurrentBranchName(TaskContext ctx) {
   return Process.run('git', ['rev-parse', '--verify',
                                    '--symbolic-full-name', 'HEAD'])
-      .transform((ProcessResult pr) {
+      .then((ProcessResult pr) {
         _throwIfProcessFailed(ctx, pr);
 
         final refParseRegEx = new RegExp(r'^refs\/heads\/(.+)$', multiLine: true);
@@ -105,7 +105,7 @@ Future<String> _getCurrentBranchName(TaskContext ctx) {
 Future _deleteTempDirs(Collection<String> dirPaths) {
   final tmpDirPrefix = 'temp_dir';
   final delDirs = dirPaths
-      .map((p) => new Path(p));
+      .mappedBy((p) => new Path(p));
 
   delDirs.forEach((Path p) {
     if(!p.segments().last.startsWith(tmpDirPrefix)) {
@@ -114,10 +114,10 @@ Future _deleteTempDirs(Collection<String> dirPaths) {
   });
 
   final delDirFutures = delDirs
-      .map((Path p) => new Directory.fromPath(p))
-      .map((dir) => dir.delete(recursive: true));
+      .mappedBy((Path p) => new Directory.fromPath(p))
+      .mappedBy((dir) => dir.delete(recursive: true));
 
-  return Futures.wait(new List.from(delDirFutures));
+  return Future.wait(new List.from(delDirFutures));
 }
 
 Future<bool> _dartDoc(TaskContext ctx, String outputDir, Collection<String> libs,
@@ -133,9 +133,9 @@ Future<String> _doGitCheckout(TaskContext ctx, String sourceGitPath,
     String targetGitPath, String sourceGitBranch) {
 
   return _gitRemoteHasHead(sourceGitPath, 'refs/heads/$sourceGitBranch')
-      .chain((bool branchExists) => _doGitClone(ctx, sourceGitPath,
+      .then((bool branchExists) => _doGitClone(ctx, sourceGitPath,
           targetGitPath, sourceGitBranch, branchExists))
-      .transform((obj) => targetGitPath);
+      .then((obj) => targetGitPath);
 }
 
 Future _doGitClone(TaskContext ctx, String sourceGitPath,
@@ -147,7 +147,7 @@ Future _doGitClone(TaskContext ctx, String sourceGitPath,
     args.addAll(['--no-checkout']);
   }
   return Process.run('git', args)
-      .transform((ProcessResult pr) {
+      .then((ProcessResult pr) {
         _throwIfProcessFailed(ctx, pr);
         ctx.info("Created temp git repo at $targetGitPath");
       });
@@ -158,11 +158,11 @@ Future _ensureProperBranch(TaskContext ctx, String gitDir, String workTree,
   final args = _getGitArgs(gitDir, workTree, ['rev-parse', '--abbrev-ref', 'HEAD']);
 
   return Process.run('git', args)
-      .transform((ProcessResult pr) {
+      .then((ProcessResult pr) {
         _throwIfProcessFailed(ctx, pr);
         return pr.stdout.trim();
       })
-      .chain((String currentBranch) {
+      .then((String currentBranch) {
         if(currentBranch == desiredBranch) {
           // we have the right branch, cool
           return new Future.immediate(null);
@@ -177,12 +177,12 @@ Future _checkoutBare(TaskContext ctx, String gitDir, String workTree,
                      String desiredBranch) {
   final args = _getGitArgs(gitDir, workTree, ['checkout', '--orphan', desiredBranch]);
   return Process.run('git', args)
-      .chain((ProcessResult pr) {
+      .then((ProcessResult pr) {
         _throwIfProcessFailed(ctx, pr);
         final args = _getGitArgs(gitDir, workTree, ['rm', '-rf', '.']);
         return Process.run('git', args);
       })
-      .transform((ProcessResult pr) {
+      .then((ProcessResult pr) {
         _throwIfProcessFailed(ctx, pr);
       });
 }
@@ -193,7 +193,7 @@ Future _doCommitComplex(TaskContext ctx, String workTree, String gitDir,
 
   final args = _getGitArgs(gitDir, workTree, ['add', '--all']);
   return Process.run('git', args)
-      .chain((ProcessResult pr) {
+      .then((ProcessResult pr) {
         _throwIfProcessFailed(ctx, pr);
 
         // TODO: need more info for commit message
@@ -202,7 +202,7 @@ Future _doCommitComplex(TaskContext ctx, String workTree, String gitDir,
 
         return Process.run('git', args);
       })
-      .transform((ProcessResult pr) {
+      .then((ProcessResult pr) {
         if(pr.exitCode == 1) {
           // could be okay if nothing to commit. should check
           if(pr.stdout.contains("nothing to commit, working directory clean")) {
@@ -219,7 +219,7 @@ Future _doCommitComplex(TaskContext ctx, String workTree, String gitDir,
 Future _doPush(TaskContext ctx, String workTree, String gitDir, String branchName) {
   final args = _getGitArgs(gitDir, workTree, ['push', 'origin', branchName]);
   return Process.run('git', args)
-      .transform((ProcessResult pr) {
+      .then((ProcessResult pr) {
         _throwIfProcessFailed(ctx, pr);
         return null;
       });
@@ -238,7 +238,7 @@ Future<bool> _gitRemoteHasHead(String remote, String head) {
   requireArgumentNotNull(head, 'head');
   final args = ['ls-remote', '--exit-code', '--heads', remote, head];
   return Process.run('git', args)
-      .transform((ProcessResult pr) {
+      .then((ProcessResult pr) {
         if(pr.exitCode == 0) {
           return true;
         } else if(pr.exitCode == 2) {

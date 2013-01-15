@@ -16,12 +16,13 @@ class SendValuePort<TInput, TOutput> {
       try {
         final TOutput output = _func(value);
         _message = new FutureValueResult<TOutput>(output, outputSerializer);
-      } catch (ex) {
+      } catch (ex, stack) {
         // TODO: I'd love to use real exceptions here
         // but they blow up over the wire
         // so: to string!
         final String exString = ex.toString();
-        _message = new FutureValueResult<TOutput>.fromException(exString);
+        final String stackString = stack.toString();
+        _message = new FutureValueResult<TOutput>.fromException(exString, stackString);
       }
 
       final map = _message.toMap();

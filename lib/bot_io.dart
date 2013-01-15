@@ -1,5 +1,6 @@
 library bot_io;
 
+import 'dart:async';
 import 'dart:math' as math;
 import 'dart:io';
 import 'bot.dart';

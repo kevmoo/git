@@ -4,7 +4,7 @@ NumberEnumerable n$(Iterable<num> source) {
   return new NumberEnumerable.from(source);
 }
 
-abstract class NumberEnumerable<T extends num> extends Enumerable<T> {
+abstract class NumberEnumerable<T extends num> extends Iterable<T> {
 
   const NumberEnumerable() : super();
 
@@ -40,28 +40,6 @@ abstract class NumberEnumerable<T extends num> extends Enumerable<T> {
     }
     return theSum / theCount;
   }
-
-  num max() {
-    num theMax = null;
-    for(final n in this) {
-      if(n == null) {
-        throw const InvalidOperationError('Input contained a null item');
-      }
-      theMax = theMax == null ? n : math.max(theMax, n);
-    }
-    return theMax;
-  }
-
-  num min() {
-    num theMin = null;
-    for(final n in this) {
-      if(n == null) {
-        throw const InvalidOperationError('Input contained a null item');
-      }
-      theMin = theMin == null ? n : math.min(theMin, n);
-    }
-    return theMin;
-  }
 }
 
 class _SimpleNumEnumerable<T extends num> extends NumberEnumerable<T> {
@@ -69,7 +47,7 @@ class _SimpleNumEnumerable<T extends num> extends NumberEnumerable<T> {
 
   const _SimpleNumEnumerable(this._source) : super();
 
-  Iterator<T> iterator() => _source.iterator();
+  Iterator<T> get iterator => _source.iterator;
 }
 
 class _FuncNumEnumerable<TSource> extends NumberEnumerable {
@@ -78,7 +56,7 @@ class _FuncNumEnumerable<TSource> extends NumberEnumerable {
 
   const _FuncNumEnumerable(this._source, this._func) : super();
 
-  Iterator<num> iterator() => _func(_source.iterator());
+  Iterator<num> get iterator => _func(_source.iterator);
 }
 
 class _RangeEnumerable extends NumberEnumerable<int> {
@@ -87,23 +65,28 @@ class _RangeEnumerable extends NumberEnumerable<int> {
 
   const _RangeEnumerable(this._start, this._count);
 
-  Iterator<int> iterator() => new _RangeIterator(_start, _count);
+  Iterator<int> get iterator => new _RangeIterator(_start, _count);
 }
 
 class _RangeIterator implements Iterator<int> {
   final int _start;
   final int _count;
-
-  int _current = 0;
+  int _current = null;
 
   _RangeIterator(this._start, this._count);
 
-  bool get hasNext => _current < _count;
+  bool moveNext() {
+    if(_current == null) {
+      _current = _start - 1;
+    }
 
-  int next() {
-    assert(hasNext);
-    final val = _start + _current;
-    _current++;
-    return val;
+    if(_current < _start + _count - 1) {
+      _current++;
+      return true;
+    } else {
+      return false;
+    }
   }
+
+  int get current => _current;
 }

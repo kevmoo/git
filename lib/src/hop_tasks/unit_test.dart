@@ -45,7 +45,7 @@ ${testCase.stackTrace}''');
     }
   }
 
-  void onDone(int passed, int failed, int errors, List<unittest.TestCase> results,
+  void onSummary(int passed, int failed, int errors, List<unittest.TestCase> results,
               String uncaughtError) {
     final bool success = failed == 0 && errors == 0 && uncaughtError == null;
     final message = "$passed PASSED, $failed FAILED, $errors ERRORS";

@@ -14,7 +14,7 @@ class Array2d<T> extends ListBase<T> {
     requireArgumentNotNull(width, 'width');
     requireArgumentNotNull(source, 'source');
     final list = new List<T>.from(source);
-    final s = source == null ? null : new SequenceList<T>(list);
+    final s = source == null ? null : new ReadOnlyCollection<T>.wrap(list);
     return new Array2d.wrap(width, s);
   }
 
@@ -67,7 +67,7 @@ class Array2d<T> extends ListBase<T> {
 
   // TODO: test
   //  - especially equality across instances, rows, etc
-  ListBase<ListBase<T>> get rows =>
+  List<List<T>> get rows =>
       new _Array2dRows(this);
 
   T get(int x, int y) {
@@ -81,7 +81,7 @@ class Array2d<T> extends ListBase<T> {
   }
 
   List<T> getAdjacent(int x, int y) {
-    final m = getAdjacentIndices(x, y).map((i) => this[i]);
+    final m = getAdjacentIndices(x, y).mappedBy((i) => this[i]);
     return new List<T>.from(m);
   }
 
@@ -112,14 +112,14 @@ class Array2d<T> extends ListBase<T> {
   }
 }
 
-class _Array2dRows<T> extends ListBase<ListBase<T>> {
+class _Array2dRows<T> extends ListBase<List<T>> {
   final Array2d<T> source;
 
   _Array2dRows(this.source);
 
   int get length => source.height;
 
-  ListBase<T> operator [](int index) => new _Array2dRow<T>(this.source, index);
+  List<T> operator [](int index) => new _Array2dRow<T>(this.source, index);
 
   bool operator ==(other) {
     return other is _Array2dRows && other.source == this.source;

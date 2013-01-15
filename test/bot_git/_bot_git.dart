@@ -1,5 +1,6 @@
 library test_bot_git;
 
+import 'dart:async';
 import 'dart:io';
 import 'package:unittest/unittest.dart';
 import 'package:bot/bot.dart';
@@ -17,14 +18,14 @@ Future<Tuple<TempDir, GitDir>> _getTempGit() {
   TempDir _tempGitDir;
 
   return TempDir.create()
-    .chain((TempDir tempDir) {
+    .then((TempDir tempDir) {
       expect(_tempGitDir , isNull);
       _tempGitDir = tempDir;
 
       // initialize a new git dir
       return GitDir.init(_tempGitDir.dir);
     })
-    .transform((GitDir gitDir) {
+    .then((GitDir gitDir) {
       expect(gitDir, isNotNull);
 
       return new Tuple<TempDir, GitDir>(_tempGitDir, gitDir);
@@ -47,7 +48,7 @@ void _testGit() {
   TempDir tempGitDir;
 
   final future = _getTempGit()
-    .chain((Tuple items) {
+    .then((Tuple items) {
 
       tempGitDir = items.item1;
       gitDir = items.item2;
@@ -58,7 +59,7 @@ void _testGit() {
       // verify the new _gitDir has no branches
       return gitDir.getBranches();
     })
-    .chain((List<String> branches) {
+    .then((List<String> branches) {
 
       // branches should be an empty list
       expect(branches, isNotNull);
@@ -66,7 +67,7 @@ void _testGit() {
 
       // now create a new temp for the file contents
       return TempDir.create();
-    }).chain((TempDir td) {
+    }).then((TempDir td) {
       expect(tempContent, isNull);
       expect(td, isNotNull);
       tempContent = td;
@@ -74,16 +75,16 @@ void _testGit() {
       //logMessage('temp dir for content: $td');
       final populater = new MapDirectoryPopulater(_initialContentMap);
       return tempContent.populate(populater);
-    }).chain((TempDir dir) {
+    }).then((TempDir dir) {
       expect(dir, equals(tempContent));
 
       // now we'll write files to the object store
-      final paths = _initialContentMap.keys.map((String fileName) {
+      final paths = _initialContentMap.keys.mappedBy((String fileName) {
         return new Path(tempContent.path).append(fileName).toNativePath();
-      });
+      }).toList();
 
       return gitDir.writeObject(paths);
-    }).transform((Map<String, String> hashes) {
+    }).then((Map<String, String> hashes) {
 
       // the returned hash should be cool
       expect(hashes.length, equals(_initialContentMap.length));

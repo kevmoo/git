@@ -1,12 +1,12 @@
 part of bot;
 
 class ReadOnlyCollection<T> extends ListBase<T> {
-  final Sequence<T> _items;
+  final List<T> _items;
 
   /**
    * Wraps [source]. Changes to [source] will be reflected.
    **/
-  ReadOnlyCollection.wrap(Sequence<T> source) :
+  ReadOnlyCollection.wrap(List<T> source) :
     _items = source;
 
   const ReadOnlyCollection.empty() :

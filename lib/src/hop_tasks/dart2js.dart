@@ -4,8 +4,8 @@ Task createDart2JsTask(List<String> inputs, {String output: null,
   String packageRoot: null, bool minify: false, bool allowUnsafeEval: true,
   bool liveTypeAnalysis: false, rejectDeprecatedFeatures: false}) {
   return new Task.async((context) {
-    final futureFuncs = $(inputs)
-        .map((p) => () => _dart2js(context, p,
+    final futureFuncs = inputs
+        .mappedBy((p) => () => _dart2js(context, p,
             output: output,
             minify: minify,
             allowUnsafeEval: allowUnsafeEval,
@@ -68,7 +68,7 @@ Future<bool> _chainTasks(List<Func<Future<bool>>> futures, [int index=0]) {
   }
   final func = futures[index];
   final future = func();
-  return future.chain((bool status) {
+  return future.then((bool status) {
     if(status) {
       return _chainTasks(futures, index+1);
     } else {

@@ -1,5 +1,6 @@
 library test_bot_test;
 
+import 'dart:async';
 import 'dart:isolate';
 import 'package:unittest/unittest.dart';
 import 'package:bot/bot_test.dart';
@@ -38,8 +39,8 @@ void _testExpectFutureException() {
 }
 
 void _testExpectFutureExceptionWithComplete() {
-  final onFail = expectAsync1((value) {
-    expect(value, _failMessage);
+  final onFail = expectAsync1((AsyncError value) {
+    expect(value.error, _failMessage);
   });
   expectFutureFail(_getFuture(true), onFail);
 
@@ -49,7 +50,7 @@ void _testExpectFutureExceptionWithComplete() {
 Future _getFuture(bool shouldFail) {
   return spawnFunction(_echoIsolate)
       .call(shouldFail)
-      .transform((bool returnedFail) {
+      .then((bool returnedFail) {
         if(returnedFail) {
           throw _failMessage;
         }

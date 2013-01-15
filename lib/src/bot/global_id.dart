@@ -1,6 +1,6 @@
 part of bot;
 
-class GlobalId implements Hashable, Comparable {
+class GlobalId implements Comparable {
   static int _globalId = 0;
   final int id;
   final int _hashCode;

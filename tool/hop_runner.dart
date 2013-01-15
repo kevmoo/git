@@ -1,5 +1,6 @@
 library hop_runner;
 
+import 'dart:async';
 import 'dart:io';
 import 'package:bot/bot.dart';
 import 'package:bot/hop.dart';
@@ -20,8 +21,8 @@ void main() {
   //
   // Dart2js
   //
-  final paths = $(['click', 'drag', 'fract', 'frames', 'nav', 'spin'])
-      .map((d) => "example/$d/${d}_demo.dart")
+  final paths = ['click', 'drag', 'fract', 'frames', 'nav', 'spin']
+      .mappedBy((d) => "example/$d/${d}_demo.dart")
       .toList();
   paths.add('test/harness_browser.dart');
 
@@ -39,7 +40,7 @@ void _assertKnownPath() {
   assert(thisFile.existsSync());
 }
 
-Future<SequenceCollection<String>> _getLibs() {
+Future<List<String>> _getLibs() {
   final completer = new Completer<List<String>>();
 
   final lister = new Directory('lib').list();
@@ -49,7 +50,7 @@ Future<SequenceCollection<String>> _getLibs() {
     if(file.endsWith('.dart')) {
       // DARTBUG: http://code.google.com/p/dart/issues/detail?id=7389
       // still an issue with hop_tasks.
-      final forbidden = ['hop_tasks'].map((n) => '$n.dart');
+      final forbidden = ['hop_tasks'].mappedBy((n) => '$n.dart');
       if(forbidden.every((f) => !file.endsWith(f))) {
         libs.add(file);
       }
@@ -60,12 +61,12 @@ Future<SequenceCollection<String>> _getLibs() {
     if(done) {
       completer.complete(libs);
     } else {
-      completer.completeException('did not finish');
+      completer.completeError('did not finish');
     }
   };
 
   lister.onError = (error) {
-    completer.completeException(error);
+    completer.completeError(error);
   };
 
   return completer.future;

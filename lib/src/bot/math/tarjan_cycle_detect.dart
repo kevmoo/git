@@ -2,7 +2,7 @@ part of bot;
 
 // http://en.wikipedia.org/wiki/Tarjan's_strongly_connected_components_algorithm
 
-class TarjanCycleDetect<TNode extends Hashable> {
+class TarjanCycleDetect<TNode> {
 
   int _index = 0;
   final List<_TarjanNode> _stack;
@@ -59,7 +59,7 @@ class TarjanCycleDetect<TNode extends Hashable> {
   }
 }
 
-class _TarjanNode<TNode extends Hashable> implements Hashable {
+class _TarjanNode<TNode> {
   final TNode value;
   int index;
   int lowlink;
@@ -72,7 +72,7 @@ class _TarjanNode<TNode extends Hashable> implements Hashable {
   bool operator ==(_TarjanNode<TNode> other) => other.value == value;
 }
 
-class _TarjanList<TNode extends Hashable> {
+class _TarjanList<TNode> {
   final HashMap<_TarjanNode<TNode>, HashSet<_TarjanNode<TNode>>> _nodes;
 
   _TarjanList._internal(this._nodes);

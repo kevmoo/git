@@ -18,7 +18,7 @@ class GitDir {
 
   Future<List<String>> getBranches() {
     return Git.runGit(['ls-remote', _path.toNativePath()])
-        .transform((ProcessResult pr) {
+        .then((ProcessResult pr) {
           assert(pr.exitCode == 0);
 
           // TODO: not working *at all* yet.
@@ -30,7 +30,7 @@ class GitDir {
     final args = ['hash-object', '-t', 'blob', '-w', '--no-filters', '--'];
     args.addAll(paths);
     return _doGit(args)
-        .transform((ProcessResult pr) {
+        .then((ProcessResult pr) {
           final val = pr.stdout.trim();
           final shas = val.split(new RegExp(r'\s+'));
           assert(shas.length == paths.length);
@@ -56,7 +56,7 @@ class GitDir {
 
     // first, verify it's empty
     return IoHelpers.isEmpty(source)
-        .chain((bool isEmpty) {
+        .then((bool isEmpty) {
           if(!isEmpty) {
             throw 'source Directory is not empty';
           }
@@ -66,7 +66,7 @@ class GitDir {
 
   static Future<GitDir> _init(Directory source) {
     return Git.runGit(['init', source.path])
-        .transform((ProcessResult pr) {
+        .then((ProcessResult pr) {
           return new GitDir(source.path);
         });
   }

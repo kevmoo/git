@@ -1,6 +1,6 @@
 part of bot;
 
-class Attachable implements Hashable {
+class Attachable {
   final String name;
 
   Attachable(this.name);

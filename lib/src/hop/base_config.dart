@@ -10,7 +10,7 @@ class BaseConfig {
 
   /// Can only be accessed when frozen
   /// Always sorted
-  SequenceCollection<String> get taskNames {
+  List<String> get taskNames {
     requireFrozen();
     return _sortedTaskNames;
   }

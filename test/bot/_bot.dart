@@ -10,10 +10,10 @@ part 'test_tuple.dart';
 
 part 'events/test_events.dart';
 
-part 'collection/test_enumerable.dart';
-part 'collection/test_number_enumerable.dart';
-part 'collection/test_list_base.dart';
 part 'collection/test_collection_util.dart';
+part 'collection/test_enumerable.dart';
+part 'collection/test_list_base.dart';
+part 'collection/test_number_enumerable.dart';
 part 'collection/test_array_2d.dart';
 
 part 'test_util.dart';
@@ -35,8 +35,8 @@ void register() {
   group('bot', (){
     TestTuple.run();
     TestEnumerable.run();
-    TestNumberEnumerable.run();
     TestListBase.run();
+    TestNumberEnumerable.run();
     TestCollectionUtil.run();
     TestArray2d.run();
 

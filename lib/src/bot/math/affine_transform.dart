@@ -180,6 +180,6 @@ class AffineTransform implements Cloneable<AffineTransform> {
 
   String toString() {
     final values = [scaleX, shearY, shearX, scaleY, translateX, translateY];
-    return Strings.join($(values).map((n) => n.toString()).toList(), ', ');
+    return Strings.join(values.mappedBy((n) => n.toString()), ', ');
   }
 }
