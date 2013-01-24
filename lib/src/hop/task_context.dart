@@ -1,6 +1,7 @@
 part of hop;
 
 abstract class TaskContext extends DisposableImpl {
+  List<String> get arguments;
 
   void fine(String message) {
     _logCore(message, Level.FINE);

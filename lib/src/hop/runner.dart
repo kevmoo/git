@@ -18,32 +18,24 @@ class Runner {
 
     final ctx = getContext();
 
-    switch(_args.rest.length) {
-      case 0:
-        _printHelp(ctx);
-        return new Future.immediate(RunResult.SUCCESS);
-      case 1:
-        final taskName = _args.rest[0];
-        if(_state.hasTask(taskName)) {
-          var subCtx = ctx.getSubContext(taskName);
-          return _runTask(subCtx, taskName)
-              .then((RunResult result) => _logExitCode(ctx, result));
-        } else if(taskName == RAW_TASK_LIST_CMD) {
-          _printRawTasks(ctx);
-          return new Future.immediate(RunResult.SUCCESS);
-        }
-        else {
-          ctx.log('No task named "$taskName".');
-          return new Future.immediate(RunResult.BAD_USAGE);
-        }
+    if(_args.rest.length == 0) {
+      _printHelp(ctx);
+      return new Future.immediate(RunResult.SUCCESS);
+    }
 
-        // DARTBUG: http://code.google.com/p/dart/issues/detail?id=6563
-        // all paths have a return, this break shouldn't be needed
-        break;
-      default:
-        ctx.log('Too many arguments');
-        ctx.log('--options must come before task name');
-        return new Future.immediate(RunResult.BAD_USAGE);
+    final taskName = _args.rest[0];
+    final subArgs = _args.rest.getRange(1, _args.rest.length - 1);
+    if(_state.hasTask(taskName)) {
+      var subCtx = ctx.getSubContext(taskName, subArgs);
+      return _runTask(subCtx, taskName)
+          .then((RunResult result) => _logExitCode(ctx, result));
+    } else if(taskName == RAW_TASK_LIST_CMD) {
+      _printRawTasks(ctx);
+      return new Future.immediate(RunResult.SUCCESS);
+    }
+    else {
+      ctx.log('No task named "$taskName".');
+      return new Future.immediate(RunResult.BAD_USAGE);
     }
   }
 

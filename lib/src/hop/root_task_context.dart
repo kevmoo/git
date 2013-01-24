@@ -5,8 +5,8 @@ class RootTaskContext {
 
   RootTaskContext([bool enableColor=true]) : _enableColor = enableColor;
 
-  TaskContext getSubContext(String name) {
-    return new _SubTaskContext(this, name);
+  TaskContext getSubContext(String name, Iterable<String> arguments) {
+    return new _SubTaskContext(this, name, arguments);
   }
 
   void log(String message, [AnsiColor color = null]) {
@@ -76,8 +76,10 @@ class RootTaskContext {
 class _SubTaskContext extends TaskContext {
   final String _name;
   final RootTaskContext _parent;
+  final ReadOnlyCollection<String> arguments;
 
-  _SubTaskContext(this._parent, this._name);
+  _SubTaskContext(this._parent, this._name, Iterable<String> args) :
+    this.arguments = new ReadOnlyCollection(args);
 
   @override
   void _logCore(String message, Level logLevel) {

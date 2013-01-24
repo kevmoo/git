@@ -15,7 +15,7 @@ class AsyncTests {
 
   static Action0 _testSimpleAsyncTask(Func1<TaskContext,
                                      Future<bool>> taskFuture,
-                                     Action1<Future<bool>> completeHandler) {
+                                     Action1<RunResult> completeHandler) {
     final name = 'task_name';
     final tasks = new BaseConfig();
     tasks.addAsync(name, taskFuture);
