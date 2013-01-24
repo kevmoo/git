@@ -3,10 +3,14 @@ part of hop_tasks;
 Task createUnitTestTask(Action1<unittest.Configuration> unitTestAction) {
   return new Task.async((TaskContext ctx) {
     final config = new _HopTestConfiguration(ctx);
-    final future = config.future;
     unitTestAction(config);
+
+    unittest.filterTests((unittest.TestCase tc) {
+      return ctx.arguments.every((arg) => tc.description.contains(arg));
+    });
+
     unittest.runTests();
-    return future;
+    return config.future;
   }, 'Run unit tests in the console');
 }
 
