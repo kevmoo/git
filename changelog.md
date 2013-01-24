@@ -1,5 +1,16 @@
 # Changelog - Dart Bag of Tricks
 
+## 0.11.1 - 24 Jan 2013 (SDK 0.3.1.2 r17463)
+
+### hop
+
+* __NEW!__ Extra arguments after the task name are passed to the Task via
+an `arguments` property on `TaskContext`
+
+### hop_tasks
+
+* `createUnitTestTask` now uses extra arguments to filter the set of tests that are run
+
 ## 0.11.0 - 22 Jan 2013 (SDK 0.3.1.1 r17328)
 
 _No features were knowingly added, removed, or changed but a lot of code was churned to support the
