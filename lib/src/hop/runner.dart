@@ -1,6 +1,7 @@
 part of hop;
 
 class Runner {
+  static const String _colorParam = 'color';
   static const String RAW_TASK_LIST_CMD = 'print_raw_task_list';
   static final ArgParser _parser = _getParser();
   final ArgResults _args;
@@ -48,7 +49,7 @@ class Runner {
 
   @protected
   RootTaskContext getContext() {
-    final bool colorEnabled = _args['color'];
+    final bool colorEnabled = _args[_colorParam];
     return new RootTaskContext(colorEnabled);
   }
 
@@ -131,7 +132,7 @@ class Runner {
   static ArgParser _getParser() {
     final parser = new ArgParser();
 
-    parser.addFlag('color', defaultsTo: true);
+    parser.addFlag(_colorParam, defaultsTo: true);
 
 
     // TODO: put help in a const
