@@ -3097,16 +3097,13 @@ $$._FutureImpl = {"": "Object;_state,_resultOrListeners>",
     return prev;
   },
   _chain$1: function(future) {
-    var t1, t2;
     if (this.get$_isComplete() !== true)
       this._addListener$1(future._asListener$0());
+    else if (this.get$_hasValue() === true)
+      future._setValue$1(this._resultOrListeners);
     else {
-      t1 = this.get$_hasValue() === true;
-      t2 = this._resultOrListeners;
-      if (t1)
-        future._setValue$1(t2);
-      else
-        future._setError$1(t2);
+      this._clearUnhandledError$0();
+      future._setError$1(this._resultOrListeners);
     }
   },
   _asListener$0: function() {
@@ -5059,8 +5056,9 @@ $$._FutureImpl__scheduleUnhandledError_anon = {"": "Closure;this_0",
       t1._clearUnhandledError$0();
       error = t1.get$_resultOrListeners();
       $.print("Uncaught Error: " + $.S(error.get$error()));
-      if (!(t1.get$stackTrace() == null))
-        $.print("Stack Trace:\n" + $.S(error.get$stackTrace()) + "\n");
+      t1 = error.get$stackTrace();
+      if (!(t1 == null))
+        $.print("Stack Trace:\n" + $.S(t1) + "\n");
       throw $.$$throw(error.get$error());
     }
   }
