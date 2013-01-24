@@ -10,10 +10,10 @@ import '../test/harness_console.dart' as test_console;
 void main() {
   _assertKnownPath();
 
-  addSyncTask('hello', (ctx) {
+  addTask('hello', new Task.sync((ctx) {
     ctx.fine('Welcome to HOP!');
     return true;
-  });
+  }, 'Just sayin hi.'));
 
   addTask('test', createUnitTestTask(test_console.testCore));
   addTask('docs', getCompileDocsFunc('gh-pages', 'packages/', _getLibs));
