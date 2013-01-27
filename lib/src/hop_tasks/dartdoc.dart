@@ -11,13 +11,17 @@ Task getCompileDocsFunc(String targetBranch, String packageDir,
 Future<bool> compileDocs(TaskContext ctx, String targetBranch,
     Func<Future<List<String>>> libGetter, String packageDir) {
 
+  final parser = _getDartDocParser();
+  final parseResult = parser.parse(ctx.arguments);
+  final allowDirty = parseResult['allow-dirty'];
+
   final dir = new Directory('');
   final tempDocsDirFuture = dir.createTemp()
       .then((Directory dir) => dir.path);
   final tempGitDirFuture = dir.createTemp()
       .then((Directory dir) => _doGitCheckout(ctx, '.', dir.path, targetBranch));
   final getLibsFuture = libGetter();
-  final commitMessageFuture = _getCommitMessageFuture(ctx);
+  final commitMessageFuture = _getCommitMessageFuture(ctx, allowDirty);
 
   return Future.wait([tempDocsDirFuture, getLibsFuture, tempGitDirFuture,
                        commitMessageFuture])
@@ -29,6 +33,15 @@ Future<bool> compileDocs(TaskContext ctx, String targetBranch,
         return _compileDocs(ctx, gitDir, outputDir, targetBranch, commitMessage,
             libs, packageDir);
       });
+}
+
+ArgParser _getDartDocParser() {
+  final parser = new ArgParser();
+
+  // TODO: put help in a const
+  parser.addFlag('allow-dirty', abbr: 'd', help: 'Allow a dirty tree to run', defaultsTo: false);
+
+  return parser;
 }
 
 Future<bool> _compileDocs(TaskContext ctx, String gitDir, String outputDir,
@@ -48,8 +61,8 @@ Future<bool> _compileDocs(TaskContext ctx, String gitDir, String outputDir,
       .then((_) => true);
 }
 
-Future<String> _getCommitMessageFuture(TaskContext ctx) {
-  return _verifyCurrentWorkingTreeClean(ctx)
+Future<String> _getCommitMessageFuture(TaskContext ctx, bool allowDirty) {
+  return _verifyCurrentWorkingTreeClean(ctx, allowDirty)
       .then((_) => _getCurrentBranchName(ctx))
       .then((String refName) => _getCommitMessageFromRefName(ctx, refName));
 }
@@ -69,11 +82,11 @@ Future<String> _getCommitMessageFromRefName(TaskContext ctx, String refName) {
       });
 }
 
-Future _verifyCurrentWorkingTreeClean(TaskContext ctx) {
+Future _verifyCurrentWorkingTreeClean(TaskContext ctx, bool allowDirty) {
   return Process.run('git', ['status', '--porcelain'])
       .then((ProcessResult pr) {
         _throwIfProcessFailed(ctx, pr);
-        if(pr.stdout.length > 0) {
+        if(pr.stdout.length > 0 && !allowDirty) {
           ctx.fail('Working tree is dirty. Cannot generate docs.');
         }
 
