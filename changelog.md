@@ -1,5 +1,11 @@
 # Changelog - Dart Bag of Tricks
 
+## 0.11.2-dev *pre-release*
+
+### hop
+
+* Cleanly handle the case where an async task throws an exception before returning a future.
+
 ## 0.11.1 - 24 Jan 2013 (SDK 0.3.1.2 r17463)
 
 ### hop
