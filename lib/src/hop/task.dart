@@ -19,7 +19,14 @@ class Task {
 
   Future<bool> run(TaskContext ctx) {
     requireArgumentNotNull(ctx, 'ctx');
-    final f = _exec(ctx);
+
+    Future<bool> f;
+
+    try {
+      f = _exec(ctx);
+    } catch(error, stackTrace) {
+      return new Future.immediateError(error, stackTrace);
+    }
     if(f == null) {
       return new Future.immediateError(_nullFutureResultEx);
     } else {
