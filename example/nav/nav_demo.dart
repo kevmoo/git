@@ -23,7 +23,7 @@ class NavDemo extends StageWrapper<NavThing> {
   NavDemo._internal(CanvasElement canvas, NavThing nav) :
     super(canvas, nav) {
     _forward(new AffineTransform());
-    canvas.on.mouseDown.add(_canvas_mouseDown);
+    canvas.onMouseDown.listen(_canvas_mouseDown);
   }
 
   void _forward(AffineTransform tx) {

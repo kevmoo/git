@@ -14,10 +14,10 @@ class Dragger {
   Dragger(this._element) :
     _dragDeltaHandle = new EventHandle<Vector>(),
     _dragStartHandle = new EventHandle<CancelableEventArgs>() {
-    _element.on.mouseDown.add(_onMouseDown);
-    window.on.mouseMove.add(_handleMove);
-    window.on.mouseUp.add(_endDrag);
-    window.on.blur.add(_endDrag);
+    _element.onMouseDown.listen(_onMouseDown);
+    window.onMouseMove.listen(_handleMove);
+    window.onMouseUp.listen(_endDrag);
+    window.onBlur.listen(_endDrag);
   }
 
   EventRoot<Vector> get dragDelta => _dragDeltaHandle;

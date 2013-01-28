@@ -44,8 +44,8 @@ class SpinDemo extends StageWrapper<CanvasThing> {
 
   SpinDemo._internal(CanvasElement canvas, CanvasThing thing, this._tx) :
     super(canvas, thing) {
-    canvas.on.mouseMove.add(_canvas_mouseMove);
-    canvas.on.mouseOut.add(_canvas_mouseOut);
+    canvas.onMouseMove.listen(_canvas_mouseMove);
+    canvas.onMouseOut.listen(_canvas_mouseOut);
   }
 
   void drawFrame(double highResTime){

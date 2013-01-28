@@ -6,7 +6,7 @@ class ImageLoader extends ResourceLoader<ImageElement> {
   void _doLoad(String blobUrl) {
     final img = new ImageElement(src: blobUrl);
     assert(!img.complete);
-    img.on.load.add((args) {
+    img.onLoad.listen((args) {
       assert(args.type == 'load');
       _loadResourceSucceed(blobUrl, img);
     });

@@ -56,14 +56,14 @@ class MouseManager {
   MouseManager._internal(this._stage) {
     // The value is set in the above factory
     assert(!_clickManagerProperty.isSet(this._stage));
-    _stage._canvas.on.mouseMove.add(_mouseMove);
-    _stage._canvas.on.mouseOut.add(_mouseOut);
-    _stage._canvas.on.mouseUp.add(_mouseUp);
-    _stage._canvas.on.mouseDown.add(_mouseDown);
+    _stage._canvas.onMouseMove.listen(_mouseMove);
+    _stage._canvas.onMouseOut.listen(_mouseOut);
+    _stage._canvas.onMouseUp.listen(_mouseUp);
+    _stage._canvas.onMouseDown.listen(_mouseDown);
 
-    window.on.mouseMove.add(_windowMouseMove);
-    window.on.mouseUp.add(_windowMouseUp);
-    window.on.blur.add(_windowBlur);
+    window.onMouseMove.listen(_windowMouseMove);
+    window.onMouseUp.listen(_windowMouseUp);
+    window.onBlur.listen(_windowBlur);
   }
 
   static void setCursor(Thing thing, String value) {

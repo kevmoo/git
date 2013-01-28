@@ -14,7 +14,7 @@ class TarjanCycleDetect<TNode> {
     _stack = new List<_TarjanNode<TNode>>(),
     _scc = new List<List<TNode>>();
 
-  static List<List> getStronglyConnectedComponents(HashMap graph) {
+  static List<List> getStronglyConnectedComponents(Map graph) {
     assert(graph != null);
 
     var nodes = new _TarjanList(graph);
@@ -73,20 +73,20 @@ class _TarjanNode<TNode> {
 }
 
 class _TarjanList<TNode> {
-  final HashMap<_TarjanNode<TNode>, HashSet<_TarjanNode<TNode>>> _nodes;
+  final Map<_TarjanNode<TNode>, Set<_TarjanNode<TNode>>> _nodes;
 
   _TarjanList._internal(this._nodes);
 
-  factory _TarjanList(HashMap<TNode, HashSet<TNode>> source) {
+  factory _TarjanList(Map<TNode, Set<TNode>> source) {
     assert(source != null);
 
-    var map = new HashMap<TNode, _TarjanNode<TNode>>();
+    var map = new Map<TNode, _TarjanNode<TNode>>();
 
-    var nodes = new HashMap<_TarjanNode<TNode>, HashSet<_TarjanNode<TNode>>>();
+    var nodes = new Map<_TarjanNode<TNode>, Set<_TarjanNode<TNode>>>();
 
     source.forEach((k,v) {
       final tKey = map.putIfAbsent(k, () => new _TarjanNode(k));
-      var edges = nodes[tKey] = new HashSet<_TarjanNode<TNode>>();
+      var edges = nodes[tKey] = new Set<_TarjanNode<TNode>>();
 
       if(v != null) {
         for(final edge in v) {

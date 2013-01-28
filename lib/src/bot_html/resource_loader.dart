@@ -92,16 +92,16 @@ abstract class ResourceLoader<T> {
 
     final e = _getByUrl(url);
 
-    request.on.abort.add((args) => _onError(e, args));
-    request.on.error.add((args) => _onError(e, args));
+    request.onAbort.listen((args) => _onError(e, args));
+    request.onError.listen((args) => _onError(e, args));
 
     // use loadEnd instead
     //request.on.load.add(_onHttpEvent);
-    request.on.loadEnd.add((args) => _onLoadEnd(e, args));
+    request.onLoadEnd.listen((args) => _onLoadEnd(e, args));
 
     // loadStart is not that interesting
     //request.on.loadStart.add(_onHttpEvent);
-    request.on.progress.add((args) => _onProgress(e, args));
+    request.onProgress.listen((args) => _onProgress(e, args));
 
     // doesn't seem to add anything over other methods
     // request.on.readyStateChange.add(_onHttpEvent);

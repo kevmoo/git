@@ -58,7 +58,7 @@ class TestRgbColor {
   }
 
   static void _testFromHex() {
-    var knownSet = new HashMap<String, RgbColor>();
+    var knownSet = new Map<String, RgbColor>();
     knownSet['#ffffff'] = new RgbColor(255,255,255);
     knownSet['#FFFFFF'] = new RgbColor(255,255,255);
     knownSet['#000000'] = new RgbColor(0,0,0);

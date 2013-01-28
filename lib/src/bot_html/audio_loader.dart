@@ -12,7 +12,7 @@ class AudioLoader extends ResourceLoader<AudioBuffer> {
     arrayBufferRequest.open("GET", blobUrl, true);
     arrayBufferRequest.responseType = "arraybuffer";
 
-    arrayBufferRequest.on.load.add((args) {
+    arrayBufferRequest.onLoad.listen((args) {
       // Asynchronously decode the audio file data in request.response
       context.decodeAudioData(
         arrayBufferRequest.response,
@@ -20,7 +20,7 @@ class AudioLoader extends ResourceLoader<AudioBuffer> {
         (buffer) => _onAudioLoadError(blobUrl, 'decode error', buffer));
     });
 
-    arrayBufferRequest.on.error.add((args) {
+    arrayBufferRequest.onError.listen((args) {
       _onAudioLoadError(blobUrl, 'BufferLoader: XHR error', args);
     });
 

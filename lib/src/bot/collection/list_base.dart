@@ -98,6 +98,8 @@ abstract class ListBase<E> extends Enumerable<E> implements List<E> {
         "Cannot remove from an unmodifiable list");
   }
 
+  List<E> get reversed => new ReversedListView(this, 0, null);
+
   void setRange(int start, int length, List<E> from, [int startFrom]) {
     throw new UnsupportedError(
         "Cannot modify an unmodifiable list");

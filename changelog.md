@@ -1,6 +1,9 @@
 # Changelog - Dart Bag of Tricks
 
-## 0.11.2-dev *pre-release*
+## 0.11.2 - 28 Jan 2013 (SDK 0.3.2.0 r17657)
+
+* A number of changes to support SDK 0.3.2.0. Although no breaking changes directly
+affecting users.
 
 ### hop
 
