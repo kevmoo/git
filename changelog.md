@@ -1,5 +1,15 @@
 # Changelog - Dart Bag of Tricks
 
+## 0.11.3 - 29 Jan 2013 (SDK 0.3.2.0 r17657)
+
+* Bumped `logging` dependency to `>=v0.3.2`
+
+### bot
+
+* More tests for colors. Tiny tweak to improve error report for bad ctor values in `HslColor`
+* Better exceptions when `DetailedArgumentError` is used incorrectly
+* `requireArgument` uses `DetailedArgumentError` correctly
+
 ## 0.11.2 - 28 Jan 2013 (SDK 0.3.2.0 r17657)
 
 * A number of changes to support SDK 0.3.2.0. Although no breaking changes directly
