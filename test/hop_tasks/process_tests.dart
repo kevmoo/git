@@ -40,19 +40,6 @@ class ProcessTests {
     });
   }
 
-  static Action0 _testSimpleAsyncTask(Task task, Action1<RunResult> completeHandler) {
-    final name = 'task_name';
-    final tasks = new BaseConfig();
-    tasks.addTask(name, task);
-    tasks.freeze();
-
-    final runner = new TestRunner(tasks, [name]);
-    final future = runner.run();
-    expect(future, isNotNull);
-
-    expectFutureComplete(future, completeHandler);
-  }
-
   static String _getTestScriptPath(String name) {
     // Since there is no way to figure out where 'this' file is, we have to
     // assume that script was run from the root of the project
