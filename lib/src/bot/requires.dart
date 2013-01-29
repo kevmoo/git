@@ -9,6 +9,9 @@ void require(bool truth, [String message]) {
 void requireArgument(bool truth, String argName, [String message]) {
   _metaRequireArgumentNotNullOrEmpty(argName);
   if(!truth) {
+    if(message == null || message.isEmpty) {
+      message = 'value was invalid';
+    }
     throw new DetailedArgumentError(argName, message);
   }
 }
