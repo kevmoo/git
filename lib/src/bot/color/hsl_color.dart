@@ -9,7 +9,7 @@ class HslColor {
   const HslColor._internal(this.h, this.s, this.l);
 
   factory HslColor(num h, num s, num l) {
-    requireArgument(isValidNumber(h), 'h');
+    requireArgument(isValidNumber(h), 'h', 'hue value was not valid');
     h = (h % 360);
 
     requireArgument(isValidNumber(s), 's', 'must be a valid number');

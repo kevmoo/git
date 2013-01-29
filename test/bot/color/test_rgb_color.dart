@@ -40,6 +40,11 @@ class TestRgbColor {
       _expectHslRoundTrip(rgb);
     }
 
+    final hslColors = _getCoreHslColors();
+    for(final hsl in hslColors) {
+      _expectRgbRoundTrip(hsl);
+    }
+
     for(int i = 0; i < 100; i++) {
       _expectHslRoundTrip(_getRandom());
     }
@@ -94,6 +99,12 @@ class TestRgbColor {
             ];
   }
 
+  static List<HslColor> _getCoreHslColors() {
+    return [
+            new HslColor(0.0, 1.0, 0.75)
+             ];
+  }
+
   static RgbColor _getRandom() {
     return new RgbColor(
       _randomIntComponent(),
@@ -102,6 +113,14 @@ class TestRgbColor {
   }
 
   static int _randomIntComponent() => rnd.nextInt(256);
+
+  static void _expectRgbRoundTrip(HslColor hsl) {
+    final rgb = hsl.toRgb();
+    final hsl2 = rgb.toHsl();
+    expect(hsl2.h, closeTo(hsl.h, 0.001));
+    expect(hsl2.s, closeTo(hsl.s, 0.001));
+    expect(hsl2.l, closeTo(hsl.l, 0.001));
+  }
 
   static void _expectHslRoundTrip(RgbColor rgb) {
     final hsl = rgb.toHsl();
