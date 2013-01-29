@@ -1,5 +1,7 @@
 part of bot_git;
 
+// TODO: Future<bool> isGitDir
+
 class GitDir {
   static final RegExp _shaRegExp = new RegExp(r'^[a-f0-9]{40}$');
 
@@ -51,10 +53,18 @@ class GitDir {
 
   String get _gitDirPath => _path.append('.git').toNativePath();
 
-  static Future<GitDir> init(Directory source) {
+  /**
+   * [allowContent] if true, doesn't check to see if the directory is empty
+   * init will still succeed, even if the directory already has a git repository.
+   */
+  static Future<GitDir> init(Directory source, {bool allowContent: false}) {
     assert(source.existsSync());
 
-    // first, verify it's empty
+    if(allowContent == true) {
+      return _init(source);
+    }
+
+    // else, verify it's empty
     return IoHelpers.isEmpty(source)
         .then((bool isEmpty) {
           if(!isEmpty) {
