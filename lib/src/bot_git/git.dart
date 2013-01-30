@@ -49,9 +49,10 @@ class Git {
     if(pr.exitCode != 0) {
 
       final message =
-'''stdout:
-${pr.stdout}
+'''
 
+stdout:
+${pr.stdout}
 stderr:
 ${pr.stderr}''';
 
