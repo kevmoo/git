@@ -31,7 +31,7 @@ class GitDir {
   Future<Map<String, String>> writeObject(List<String> paths) {
     final args = ['hash-object', '-t', 'blob', '-w', '--no-filters', '--'];
     args.addAll(paths);
-    return _doGit(args)
+    return runCommand(args)
         .then((ProcessResult pr) {
           final val = pr.stdout.trim();
           final shas = val.split(new RegExp(r'\s+'));
@@ -45,7 +45,7 @@ class GitDir {
         });
   }
 
-  Future<ProcessResult> _doGit(List<String> args, [bool throwOnError = true]) {
+  Future<ProcessResult> runCommand(List<String> args, [bool throwOnError = true]) {
     var allArgs = ['--git-dir', _gitDirPath]
       ..addAll(args);
     return Git.runGit(allArgs, throwOnError);
