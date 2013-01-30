@@ -78,6 +78,9 @@ class GitReference {
 
   BranchReference toBranchReference() =>
       new BranchReference(this.sha, this.reference);
+
+  String toString() =>
+      'GitReference: $reference  $sha';
 }
 
 class BranchReference extends GitReference {
@@ -95,6 +98,9 @@ class BranchReference extends GitReference {
 
   BranchReference._internal(String sha, String reference, this.branchName) :
     super(sha, reference);
+
+  String toString() =>
+      'BranchReference: $branchName  $sha  ($reference)';
 }
 
 class TreeEntry {
