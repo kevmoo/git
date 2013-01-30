@@ -37,6 +37,27 @@ class GitDir {
         });
   }
 
+  Future<List<TreeEntry>> lsTree(String treeish,
+      {bool subTreesOnly: false, String path: null}) {
+    assert(treeish != null);
+    final args = ['ls-tree'];
+
+    if(subTreesOnly == true) {
+      args.add('-d');
+    }
+
+    args.add(treeish);
+
+    if(path != null) {
+      args.add(path);
+    }
+
+    return runCommand(args)
+        .then((ProcessResult pr) {
+          return TreeEntry.fromLsTreeOutput(pr.stdout);
+        });
+  }
+
   Future<Map<String, String>> writeObject(List<String> paths) {
     final args = ['hash-object', '-t', 'blob', '-w', '--no-filters', '--'];
     args.addAll(paths);

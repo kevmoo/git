@@ -3,23 +3,25 @@ part of hop_tasks;
 Future<bool> branchForDir(TaskContext ctx, String sourceBranch, String sourceDir,
     String targetBranch, {String workingDir}) {
 
-  return _runGit(['ls-tree', '-d', sourceBranch, sourceDir], workingDir)
-      .then(_getTreeFromLsTree)
-      .then((String tree) =>
-          _fromSourceDirTree(ctx, tree, targetBranch, sourceDir, sourceBranch, workingDir));
-}
-
-String _getTreeFromLsTree(ProcessResult pr) {
-  if(pr.stdout.isEmpty) {
-    throw 'No output. Does the provided dir exist? Provided source Branch? Git error: ${pr.stderr}';
+  if(workingDir == null) {
+    workingDir = new Directory.current().path;
   }
-  return pr.stdout;
+
+  final gitDir = new GitDir(workingDir);
+
+  return gitDir.lsTree(sourceBranch, subTreesOnly: true, path: sourceDir)
+      .then((List<TreeEntry> entries) {
+        assert(entries.length <= 1);
+        if(entries.isEmpty) {
+          throw 'Could not find a matching dir on the provided branch';
+        }
+        return _fromSourceDirTree(ctx, entries.single, targetBranch, sourceDir, sourceBranch, workingDir);
+      });
 }
 
-Future<bool> _fromSourceDirTree(TaskContext ctx, String tree,
+Future<bool> _fromSourceDirTree(TaskContext ctx, TreeEntry tree,
     String targetBranch, String sourceDir, String sourceBranch, String workingDir) {
-  final split = tree.split(_whiteSpaceExp);
-  final sha = split[2];
+  final sha = tree.sha;
 
   final gitArgs = new List<String>.from(['commit-tree', sha]);
   final branchNameRef = 'refs/heads/$targetBranch';
