@@ -103,7 +103,7 @@ void _testGit() {
       //logMessage('git dir at ${gitDir.path}');
 
       // verify the new _gitDir has no branches
-      return gitDir.getBranches();
+      return gitDir.getBranchNames();
     })
     .then((List<String> branches) {
 

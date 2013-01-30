@@ -64,7 +64,7 @@ class GitTests {
               expect(rr, RunResult.EXCEPTION);
 
               // local branch count should be 0
-              return gitDir.getBranches();
+              return gitDir.getBranchNames();
             })
             .then((List<String> branches) {
               expect(branches, isEmpty);
@@ -78,7 +78,7 @@ class GitTests {
             })
             .then((ProcessResult pr) {
               // local branch count should be 1
-              return gitDir.getBranches();
+              return gitDir.getBranchNames();
             })
             .then((List<String> branches) {
               expect(branches, hasLength(1));
@@ -94,7 +94,7 @@ class GitTests {
               expect(rr, RunResult.SUCCESS);
 
               // local branch count should be 2
-              return gitDir.getBranches();
+              return gitDir.getBranchNames();
             })
             .then((List<String> branches) {
               expect(branches, hasLength(2));

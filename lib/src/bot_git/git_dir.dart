@@ -25,7 +25,7 @@ class GitDir {
         });
   }
 
-  Future<List<String>> getBranches() {
+  Future<List<String>> getBranchNames() {
     return Git.runGit(['ls-remote', '--heads', _path.toNativePath()])
         .then((ProcessResult pr) {
           assert(pr.exitCode == 0);
