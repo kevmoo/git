@@ -46,12 +46,9 @@ class GitDir {
   }
 
   Future<ProcessResult> runCommand(List<String> args, [bool throwOnError = true]) {
-    var allArgs = ['--git-dir', _gitDirPath]
-      ..addAll(args);
-    return Git.runGit(allArgs, throwOnError);
+    final workingDir = _path.toString();
+    return Git.runGit(args, throwOnError: throwOnError, processWorkingDir: workingDir);
   }
-
-  String get _gitDirPath => _path.append('.git').toNativePath();
 
   /**
    * [allowContent] if true, doesn't check to see if the directory is empty
