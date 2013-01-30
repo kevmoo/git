@@ -4,9 +4,7 @@ class Git {
   static const _shaRegexPattern = '[a-f0-9]{40}';
   static final _shaRegEx = new RegExp(r'^'.concat(_shaRegexPattern).concat(r'$'));
 
-  static final RegExp _lsRemoteRegExp = new RegExp(r'^('
-      .concat(_shaRegexPattern)
-      .concat(r'\s+(.+)$'));
+  static final RegExp _lsRemoteRegExp = new RegExp('^($_shaRegexPattern)\t(.+)\$');
 
   static bool isValidSha(String value) {
     return _shaRegEx.hasMatch(value);
