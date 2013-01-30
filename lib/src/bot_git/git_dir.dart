@@ -19,6 +19,13 @@ class GitDir {
 
   Path get path => _path;
 
+  Future<int> getCommitCount([String branchName = 'HEAD']) {
+    return Git.runGit(['rev-list', '--count', branchName], processWorkingDir: _workingDir)
+        .then((ProcessResult pr) {
+          return int.parse(pr.stdout);
+        });
+  }
+
   Future<List<String>> getBranches() {
     return Git.runGit(['ls-remote', '--heads', _path.toNativePath()])
         .then((ProcessResult pr) {
@@ -50,9 +57,10 @@ class GitDir {
   }
 
   Future<ProcessResult> runCommand(List<String> args, [bool throwOnError = true]) {
-    final workingDir = _path.toString();
-    return Git.runGit(args, throwOnError: throwOnError, processWorkingDir: workingDir);
+    return Git.runGit(args, throwOnError: throwOnError, processWorkingDir: _workingDir);
   }
+
+  String get _workingDir => _path.toString();
 
   /**
    * [allowContent] if true, doesn't check to see if the directory is empty

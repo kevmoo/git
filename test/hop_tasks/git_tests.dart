@@ -83,6 +83,18 @@ class GitTests {
             .then((List<String> branches) {
               expect(branches, hasLength(2));
               expect(branches, unorderedEquals([_masterBranch, _testBranch]));
+
+              // each branch should have 1 commit now
+              return Future.wait([
+                                  gitDir.getCommitCount(_masterBranch),
+                                  gitDir.getCommitCount(_testBranch)
+                                  ]);
+
+            })
+            .then((List<int> counts) {
+              expect(counts, hasLength(2));
+              expect(counts[0], 1);
+              expect(counts[1], 1);
             });
 
         expectFutureComplete(future);
