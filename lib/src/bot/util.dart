@@ -16,6 +16,7 @@ class Util {
     return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
   }
 
+  // TODO: handles windows new lines? Should test...
   static List<String> splitLines(String input) {
     requireArgumentNotNull(input, 'input');
     final split = '\n';
