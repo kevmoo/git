@@ -103,6 +103,26 @@ class BranchReference extends GitReference {
       'BranchReference: $branchName  $sha  ($reference)';
 }
 
+class Commit {
+  static const _commitContentRegExpVal = '^tree (${Git._shaRegexPattern})\\s.*';
+  static final _commitContentRegExp = new RegExp(_commitContentRegExpVal);
+
+  final String treeSha;
+  final String content;
+
+  Commit._internal(this.treeSha, this.content) {
+    assert(Git.isValidSha(this.treeSha));
+  }
+
+  static Commit parse(String content) {
+    // TODO: should catch and re-throw a descriptive error
+    final match = _commitContentRegExp.allMatches(content).single;
+
+    assert(match.groupCount == 1);
+    return new Commit._internal(match[1], content);
+  }
+}
+
 class TreeEntry {
   static final _lsTreeLine = r'^([0-9]{6}) (blob|tree) ('
       .concat(Git._shaRegexPattern)
