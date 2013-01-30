@@ -1,9 +1,9 @@
 part of bot_git;
 
 class Git {
-  static final RegExp _lsRemoteRegExp = new RegExp(r'^([a-f0-9]{40})\s(.+)$');
+  static final RegExp _lsRemoteRegExp = new RegExp(r'^([a-f0-9]{40})\s+(.+)$');
 
-  static List<Tuple<String, String>> parseLsRemoteOutput(String input) {
+  static List<GitReference> parseLsRemoteOutput(String input) {
     assert(input != null);
     final lines = Util.splitLines(input);
 
@@ -15,7 +15,7 @@ class Git {
           final match = _lsRemoteRegExp.allMatches(line).single;
           assert(match.groupCount == 2);
 
-          return new Tuple<String, String>(match[1], match[2]);
+          return new GitReference(match[1], match[2]);
 
         }).toList();
   }
@@ -51,4 +51,40 @@ ${pr.stderr}''';
       throw new ProcessException('git', args, message, pr.exitCode);
     }
   }
+}
+
+class GitReference {
+  final String sha;
+  final String reference;
+
+  GitReference(this.sha, this.reference) {
+    assert(sha != null);
+    assert(sha.length == 40);
+    assert(sha.trim().toLowerCase() == sha);
+    // TODO: put in a regex verify here, right?
+
+    assert(reference != null);
+    // TODO: probably a better way to verify...but this is fine for now
+    assert(reference.startsWith(r'refs/') || reference == 'HEAD');
+  }
+
+  BranchReference toBranchReference() =>
+      new BranchReference(this.sha, this.reference);
+}
+
+class BranchReference extends GitReference {
+  static const _localBranchPrefix = r'refs/heads/';
+
+  final String branchName;
+
+  factory BranchReference(String sha, String reference) {
+    assert(reference.startsWith(_localBranchPrefix));
+
+    final branchName = reference.substring(_localBranchPrefix.length);
+
+    return new BranchReference._internal(sha, reference, branchName);
+  }
+
+  BranchReference._internal(String sha, String reference, this.branchName) :
+    super(sha, reference);
 }

@@ -4,7 +4,6 @@ part of bot_git;
 
 class GitDir {
   static final RegExp _shaRegExp = new RegExp(r'^[a-f0-9]{40}$');
-  static const _localBranchPrefix = r'refs/heads/';
 
   final Path _path;
 
@@ -31,11 +30,10 @@ class GitDir {
         .then((ProcessResult pr) {
           assert(pr.exitCode == 0);
 
-          final tuples = Git.parseLsRemoteOutput(pr.stdout);
-          return tuples.mappedBy((Tuple<String, String> t) {
-            assert(t.item2.startsWith(_localBranchPrefix));
-            return t.item2.substring(_localBranchPrefix.length);
-          }).toList();
+          return Git.parseLsRemoteOutput(pr.stdout)
+              .mappedBy((gr) => gr.toBranchReference())
+              .mappedBy((br) => br.branchName)
+              .toList();
         });
   }
 

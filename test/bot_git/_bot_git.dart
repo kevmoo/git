@@ -18,8 +18,8 @@ void main() {
 
       expect(parsed.length, 6);
       parsed.forEach((t) {
-        expect(t.item1, hasLength(40));
-        expect(t.item2.length, isNot(isEmpty));
+        expect(t.sha, hasLength(40));
+        expect(t.reference.length, isNot(isEmpty));
       });
     });
   });
