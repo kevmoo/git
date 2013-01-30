@@ -18,6 +18,22 @@ class GitTests {
           }
         };
 
+        final testContent2 = const {
+          'file2.txt': 'file 2 contents',
+          'file3.txt': 'file 3 contents'
+        };
+
+        final testContent3 = const {
+          'file4.txt': 'file 4 contents',
+          'file5.txt': 'file 5 contents',
+          'docs_dir' : const {
+            'doc2.txt' : 'the other doc'
+          },
+          'foo-dir': const {
+            'foo_file.txt': 'full of foo'
+          }
+        };
+
         TempDir tempDir;
         GitDir gitDir;
 
@@ -95,6 +111,78 @@ class GitTests {
               expect(counts, hasLength(2));
               expect(counts[0], 1);
               expect(counts[1], 1);
+
+              // populate the temp dir.
+              final populater = new MapDirectoryPopulater(testContent2, checkEmpty: false);
+              return tempDir.populate(populater);
+            })
+            .then((_) {
+              // now add all files to staging
+              return gitDir.runCommand(['add', '.', '--verbose']);
+            })
+            .then((_) {
+              // now commit 'em!
+              return gitDir.runCommand(['commit', '--verbose', '-am', '2nd commit!']);
+            })
+            .then((_) {
+
+              // now, create branch should work great
+              // running now should still fail...no branch created
+              final task = _createBranchTask(gitDir.path.toString());
+              return _runTask(task);
+            })
+            .then((RunResult rr) {
+              // yup, running here should work great
+              expect(rr, RunResult.SUCCESS);
+
+
+              // each branch should have 2 and 1 commits now
+              return Future.wait([
+                                  gitDir.getCommitCount(_masterBranch),
+                                  gitDir.getCommitCount(_testBranch)
+                                  ]);
+
+            })
+            .then((List<int> counts) {
+              expect(counts, hasLength(2));
+              expect(counts[0], 2);
+              expect(counts[1], 1, reason: 'should only have 1 commit here still');
+            })
+            .then((_) {
+              // populate the temp dir.
+              final populater = new MapDirectoryPopulater(testContent3, checkEmpty: false);
+              return tempDir.populate(populater);
+            })
+            .then((_) {
+              // now add all files to staging
+              return gitDir.runCommand(['add', '.', '--verbose']);
+            })
+            .then((_) {
+              // now commit 'em!
+              return gitDir.runCommand(['commit', '--verbose', '-am', '3rd commit!']);
+            })
+            .then((_) {
+
+              // now, create branch should work great
+              // running now should still fail...no branch created
+              final task = _createBranchTask(gitDir.path.toString());
+              return _runTask(task);
+            })
+            .then((RunResult rr) {
+              // yup, running here should work great
+              expect(rr, RunResult.SUCCESS);
+
+              // each branch should have 3 and 1 commits now
+              return Future.wait([
+                                  gitDir.getCommitCount(_masterBranch),
+                                  gitDir.getCommitCount(_testBranch)
+                                  ]);
+
+            })
+            .then((List<int> counts) {
+              expect(counts, hasLength(2));
+              expect(counts[0], 3);
+              expect(counts[1], 2, reason: 'content in docs changed. We have 2 commits now');
             });
 
         expectFutureComplete(future);
