@@ -26,13 +26,21 @@ class GitDir {
   }
 
   Future<List<String>> getBranchNames() {
+    return getBranchReferences()
+        .then((list) {
+          return list
+              .mappedBy((br) => br.branchName)
+              .toList();
+        });
+  }
+
+  Future<List<BranchReference>> getBranchReferences() {
     return Git.runGit(['ls-remote', '--heads', _path.toNativePath()])
         .then((ProcessResult pr) {
           assert(pr.exitCode == 0);
 
           return Git.parseLsRemoteOutput(pr.stdout)
               .mappedBy((gr) => gr.toBranchReference())
-              .mappedBy((br) => br.branchName)
               .toList();
         });
   }

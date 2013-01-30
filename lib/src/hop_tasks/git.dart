@@ -15,28 +15,34 @@ Future<bool> branchForDir(TaskContext ctx, String sourceBranch, String sourceDir
         if(entries.isEmpty) {
           throw 'Could not find a matching dir on the provided branch';
         }
-        return _fromSourceDirTree(ctx, entries.single, targetBranch, sourceDir, sourceBranch, workingDir);
+        return _fromSourceDirTree(ctx, entries.single, targetBranch, sourceDir, sourceBranch, gitDir);
       });
 }
 
 Future<bool> _fromSourceDirTree(TaskContext ctx, TreeEntry tree,
-    String targetBranch, String sourceDir, String sourceBranch, String workingDir) {
+    String targetBranch, String sourceDir, String sourceBranch, GitDir gitDir) {
   final sha = tree.sha;
 
   final gitArgs = new List<String>.from(['commit-tree', sha]);
   final branchNameRef = 'refs/heads/$targetBranch';
 
-  return _runGit(['rev-parse', '--verify', '-p', branchNameRef], workingDir)
-      .then((ProcessResult rppr) {
-        if(rppr.exitCode == 0) {
-          // existing branch
-          final parent = rppr.stdout.trim();
-          return _withExistingBranch(ctx, parent, sha, sourceDir, gitArgs,
-              sourceBranch, branchNameRef, targetBranch, workingDir);
-        } else {
-          // new branch
+  final workingDir = gitDir.path.toString();
+
+  return gitDir.getBranchReferences()
+      .then((List<BranchReference> refs) {
+
+        refs = refs.where((br) => br.branchName == targetBranch).toList();
+
+        assert(refs.length <= 1);
+        if(refs.isEmpty) {
+          // branch does not exist. New branch!
           return _getMasterCommit(ctx, 'created', gitArgs, sourceBranch,
               sourceDir, branchNameRef, targetBranch, workingDir);
+        } else {
+          // existing branch
+          final ref = refs.single;
+          return _withExistingBranch(ctx, ref.sha, sha, sourceDir, gitArgs,
+              sourceBranch, branchNameRef, targetBranch, workingDir);
         }
       });
 }
