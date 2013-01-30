@@ -5,19 +5,25 @@ abstract class DirectoryPopulater {
 }
 
 class MapDirectoryPopulater extends DirectoryPopulater {
+  final bool checkEmpty;
   final Map<String, dynamic> _contents;
 
-  MapDirectoryPopulater(this._contents);
+  MapDirectoryPopulater(this._contents, {this.checkEmpty: false});
 
   Future<Directory> populate(Directory dir) {
     assert(dir != null);
-    return IoHelpers.isEmpty(dir)
-        .then((bool isEmpty) {
-          if(!isEmpty) {
-            throw 'target directory must be empty';
-          }
-          return _populate(dir, _contents);
-        });
+
+    if(checkEmpty) {
+      return IoHelpers.isEmpty(dir)
+          .then((bool isEmpty) {
+            if(!isEmpty && !checkEmpty) {
+              throw 'target directory must be empty';
+            }
+            return _populate(dir, _contents);
+          });
+    } else {
+      return _populate(dir, _contents);
+    }
   }
 
   static Future<Directory> _populate(Directory dir, Map<String, dynamic> content) {
@@ -49,10 +55,10 @@ class MapDirectoryPopulater extends DirectoryPopulater {
     return file.writeAsString(content);
   }
 
+  // TODO: should pass in a flag to check for directory existing...and what to do
   static Future<Directory> _createDirAndPopulate(Directory parent, String name, Map<String, dynamic> content) {
     final subDirPath = new Path(parent.path).append(name);
     final subDir = new Directory.fromPath(subDirPath);
-    assert(!subDir.existsSync());
     return subDir.create()
         .then((theNewDir) {
           assert(theNewDir == subDir);
