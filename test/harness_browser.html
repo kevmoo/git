@@ -7,5 +7,21 @@
   <body>
     <script type="application/dart" src="harness_browser.dart"></script>
     <script src="../vendor/dart.js"></script>
+    <script>
+      if (window.testRunner) {
+        testRunner.dumpAsText();
+        testRunner.waitUntilDone();
+        window.addEventListener("message", receiveMessage, false);
+      }
+
+      function receiveMessage(event) {
+        console.log(event.data);
+        if(event.data == 'unittest-suite-done') {
+          console.log("done!");
+          testRunner.notifyDone();
+        }
+      }
+
+    </script>
   </body>
 </html>
