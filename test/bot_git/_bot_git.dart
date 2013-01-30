@@ -12,6 +12,32 @@ void main() {
   group('bot_git', () {
     test('first git test', _testGit);
 
+    test('valid sha', () {
+      final good = 'bcd1284d805951a16e765cea5b2273a464ee2d86';
+      expect(Git.isValidSha(good), true);
+
+      expect(() => Git.isValidSha(null), throwsArgumentError);
+
+      final bad = ['', ' ', '',
+                   ' bcd1284d805951a16e765cea5b2273a464ee2d86',
+                   'bbcd1284d805951a16e765cea5b2273a464ee2d86',
+                   'bbcd1284d8059 1a16e765cea5b2273a464ee2d86',
+                   'bbcd1284d8059z1a16e765cea5b2273a464ee2d86',
+                   'cd1284d805951a16e765cea5b2273a464ee2d86',
+                   // newline after
+                   '''bcd1284d805951a16e765cea5b2273a464ee2d86
+''',
+
+// newline before
+'''
+
+bcd1284d805951a16e765cea5b2273a464ee2d86'''];
+
+      bad.forEach((v) {
+        expect(Git.isValidSha(v), isFalse, reason: "'$v' should be bad");
+      });
+    });
+
     test('parseLsRemoteOutput', () {
 
       final parsed = Git.parseLsRemoteOutput(_lsRemoteOutput);

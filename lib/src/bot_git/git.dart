@@ -1,7 +1,16 @@
 part of bot_git;
 
 class Git {
-  static final RegExp _lsRemoteRegExp = new RegExp(r'^([a-f0-9]{40})\s+(.+)$');
+  static const _shaRegexPattern = '[a-f0-9]{40}';
+  static final _shaRegEx = new RegExp(r'^'.concat(_shaRegexPattern).concat(r'$'));
+
+  static final RegExp _lsRemoteRegExp = new RegExp(r'^('
+      .concat(_shaRegexPattern)
+      .concat(r'\s+(.+)$'));
+
+  static bool isValidSha(String value) {
+    return _shaRegEx.hasMatch(value);
+  }
 
   static List<GitReference> parseLsRemoteOutput(String input) {
     assert(input != null);
@@ -58,10 +67,7 @@ class GitReference {
   final String reference;
 
   GitReference(this.sha, this.reference) {
-    assert(sha != null);
-    assert(sha.length == 40);
-    assert(sha.trim().toLowerCase() == sha);
-    // TODO: put in a regex verify here, right?
+    assert(Git.isValidSha(sha));
 
     assert(reference != null);
     // TODO: probably a better way to verify...but this is fine for now
