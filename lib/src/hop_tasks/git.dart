@@ -47,13 +47,13 @@ Future<bool> _fromSourceDirTree(TaskContext ctx, TreeEntry tree,
       });
 }
 
-Future<bool> _withExistingBranch(TaskContext ctx, String parent, String dirSha,
+Future<bool> _withExistingBranch(TaskContext ctx, String lastCommitSha, String dirSha,
     String sourceDir, List<String> gitArgs, String sourceBranch,
     String branchNameRef, String targetBranch, String workingDir) {
-  return _runGit(['cat-file', '-p', parent], workingDir)
+  return _runGit(['cat-file', '-p', lastCommitSha], workingDir)
       .then(_getParentTree)
       .then((String parentTree) =>
-          _continueWithExistingBranch(ctx, parent, parentTree, dirSha, sourceDir,
+          _continueWithExistingBranch(ctx, lastCommitSha, parentTree, dirSha, sourceDir,
               gitArgs, sourceBranch, branchNameRef, targetBranch, workingDir));
 }
 
