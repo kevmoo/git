@@ -1,6 +1,25 @@
 part of bot_git;
 
 class Git {
+  static final RegExp _lsRemoteRegExp = new RegExp(r'^([a-f0-9]{40})\s(.+)$');
+
+  static List<Tuple<String, String>> parseLsRemoteOutput(String input) {
+    assert(input != null);
+    final lines = Util.splitLines(input);
+
+    // last line should be empty
+    assert(lines.last.length == 0);
+
+    return lines.getRange(0, lines.length-1)
+        .mappedBy((line) {
+          final match = _lsRemoteRegExp.allMatches(line).single;
+          assert(match.groupCount == 2);
+
+          return new Tuple<String, String>(match[1], match[2]);
+
+        }).toList();
+  }
+
   static Future<ProcessResult> runGit(List<String> args,
       {bool throwOnError: true, String processWorkingDir}) {
 

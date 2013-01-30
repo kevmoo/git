@@ -11,6 +11,17 @@ import 'package:bot/bot_test.dart';
 void main() {
   group('bot_git', () {
     test('first git test', _testGit);
+
+    test('parseLsRemoteOutput', () {
+
+      final parsed = Git.parseLsRemoteOutput(_lsRemoteOutput);
+
+      expect(parsed.length, 6);
+      parsed.forEach((t) {
+        expect(t.item1, hasLength(40));
+        expect(t.item2.length, isNot(isEmpty));
+      });
+    });
   });
 }
 
@@ -109,3 +120,11 @@ void _testGit() {
 
   // dispose of both...er something
 }
+
+const _lsRemoteOutput = '''ff1c31c454c4128a98dcd610d203820eeeb91923 HEAD
+b430c0d6dffb95a0c90ca9eb2c13bf02cbc724ce  refs/heads/fluid_demo
+35d56f63bead3019f13e7a8c48cb55f5fb88feb8  refs/remotes/origin/husl
+6dc275e3a498c0364d510b16f46fe9660eb554b0  refs/remotes/origin/master
+eecbbc64a5a23275ad7c3e6a8585df662f193b70  refs/tags/v0.1.0
+9f8592560f357a4d371bd3e77147e9f8369237c5  refs/tags/v0.1.0^{}
+''';
