@@ -40,7 +40,15 @@ class Git {
   static void _throwIfProcessFailed(ProcessResult pr, String process, List<String> args) {
     assert(pr != null);
     if(pr.exitCode != 0) {
-      throw new ProcessException('git', ['unknown'], pr.stderr.trim(), pr.exitCode);
+
+      final message =
+'''stdout:
+${pr.stdout}
+
+stderr:
+${pr.stderr}''';
+
+      throw new ProcessException('git', args, message, pr.exitCode);
     }
   }
 }
