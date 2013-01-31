@@ -41,28 +41,22 @@ Future<bool> _fromSourceDirTree(TaskContext ctx, TreeEntry tree,
         } else {
           // existing branch
           return _withExistingBranch(ctx, refs.single, sha, sourceDir, gitArgs,
-              sourceBranch, branchNameRef, targetBranch, workingDir);
+              sourceBranch, branchNameRef, targetBranch, gitDir);
         }
       });
 }
 
 Future<bool> _withExistingBranch(TaskContext ctx, BranchReference targetBranchRef, String dirSha,
     String sourceDir, List<String> gitArgs, String sourceBranch,
-    String branchNameRef, String targetBranch, String workingDir) {
+    String branchNameRef, String targetBranch, GitDir gitDir) {
 
   final lastCommitSha = targetBranchRef.sha;
+  final workingDir = gitDir.path.toString();
 
-  return _runGit(['cat-file', '-p', lastCommitSha], workingDir)
-      .then(_getParentTree)
-      .then((String parentTree) =>
-          _continueWithExistingBranch(ctx, lastCommitSha, parentTree, dirSha, sourceDir,
+  return gitDir.getCommit(lastCommitSha)
+      .then((Commit commitObj) =>
+          _continueWithExistingBranch(ctx, lastCommitSha, commitObj.treeSha, dirSha, sourceDir,
               gitArgs, sourceBranch, branchNameRef, targetBranch, workingDir));
-}
-
-String _getParentTree(ProcessResult pr) {
-  require(pr.exitCode == 0, 'cat-file returned an error');
-  final commitContent = Commit.parse(pr.stdout);
-  return commitContent.treeSha;
 }
 
 Future<bool> _continueWithExistingBranch(TaskContext ctx,
