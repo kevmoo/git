@@ -48,11 +48,17 @@ class GitDir {
   }
 
   Future<List<BranchReference>> getBranchReferences() {
-    return Git.runGit(['ls-remote', '--heads', _path.toNativePath()])
+    return runCommand(['show-ref', '--heads'], false)
         .then((ProcessResult pr) {
+          if(pr.exitCode == 1) {
+            // no heads present, return empty collection
+            return [];
+          }
+
+          // otherwise, it should have worked fine...
           assert(pr.exitCode == 0);
 
-          return CommitReference.fromLsRemoteOutput(pr.stdout)
+          return CommitReference.fromShowRefOutput(pr.stdout)
               .mappedBy((gr) => gr.toBranchReference())
               .toList();
         });

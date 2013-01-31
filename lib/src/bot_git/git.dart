@@ -43,10 +43,10 @@ ${pr.stderr}''';
 }
 
 /**
- * Represents the output from `git ls-remote`
+ * Represents the output from `git show-ref`
  */
 class CommitReference {
-  static final RegExp _lsRemoteRegExp = new RegExp('^(${Git._shaRegexPattern})\t(.+)\$');
+  static final RegExp _lsRemoteRegExp = new RegExp('^(${Git._shaRegexPattern}) (.+)\$');
 
   final String sha;
   final String reference;
@@ -59,7 +59,7 @@ class CommitReference {
     assert(reference.startsWith(r'refs/') || reference == 'HEAD');
   }
 
-  static List<CommitReference> fromLsRemoteOutput(String input) {
+  static List<CommitReference> fromShowRefOutput(String input) {
     assert(input != null);
     final lines = Util.splitLines(input);
 
