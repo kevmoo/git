@@ -26,15 +26,13 @@ Future<bool> _fromSourceDirTree(TaskContext ctx, TreeEntry tree,
   final gitArgs = new List<String>.from(['commit-tree', sha]);
   final branchNameRef = 'refs/heads/$targetBranch';
 
-  final workingDir = gitDir.path.toString();
-
   return gitDir.getBranchReference(targetBranch)
       .then((BranchReference branchRef) {
 
         if(branchRef == null) {
           // branch does not exist. New branch!
           return _getMasterCommit(ctx, 'created', gitArgs, sourceBranch,
-              sourceDir, branchNameRef, targetBranch, workingDir);
+              sourceDir, branchNameRef, targetBranch, gitDir);
         } else {
           // existing branch
           return _withExistingBranch(ctx, branchRef, sha, sourceDir, gitArgs,
@@ -48,41 +46,36 @@ Future<bool> _withExistingBranch(TaskContext ctx, BranchReference targetBranchRe
     String branchNameRef, String targetBranch, GitDir gitDir) {
 
   final lastCommitSha = targetBranchRef.sha;
-  final workingDir = gitDir.path.toString();
 
   return gitDir.getCommit(lastCommitSha)
       .then((Commit commitObj) =>
           _continueWithExistingBranch(ctx, lastCommitSha, commitObj.treeSha, dirSha, sourceDir,
-              gitArgs, sourceBranch, branchNameRef, targetBranch, workingDir));
+              gitArgs, sourceBranch, branchNameRef, targetBranch, gitDir));
 }
 
 Future<bool> _continueWithExistingBranch(TaskContext ctx,
     String parent, String parentTree, String dirSha, String sourceDir,
     List<String> gitArgs, String sourceBranch, String branchNameRef,
-    String targetBranch, workingDir) {
+    String targetBranch, GitDir gitDir) {
   if(parentTree == dirSha) {
     ctx.fine('There have been no changes to "$sourceDir" since the last commit');
     return new Future.immediate(true);
   } else {
     gitArgs.addAll(['-p', parent]);
     return _getMasterCommit(ctx, 'updated', gitArgs, sourceBranch, sourceDir,
-        branchNameRef, targetBranch, workingDir);
+        branchNameRef, targetBranch, gitDir);
   }
 }
 
 Future<bool> _getMasterCommit(TaskContext ctx, String verb, List<String> gitArgs,
     String sourceBranch, String sourceDir, String branchNameRef, String targetBranch,
-    String workingDir) {
+    GitDir gitDir) {
 
-  return _runGit(['rev-parse', sourceBranch], workingDir)
-      .then(_transformRevParse)
-      .then((masterCommit) => _doCommitSimple(ctx, verb, gitArgs, sourceDir,
-          masterCommit, branchNameRef, targetBranch, workingDir));
-}
+  final workingDir = gitDir.path.toString();
 
-String _transformRevParse(ProcessResult pr) {
-  require(pr.exitCode == 0);
-  return pr.stdout.trim();
+  return gitDir.getBranchReference(sourceBranch)
+      .then((BranchReference branchRef) =>
+          _doCommitSimple(ctx, verb, gitArgs, sourceDir, branchRef.sha, branchNameRef, targetBranch, workingDir));
 }
 
 Future<bool> _doCommitSimple(TaskContext ctx, String verb, List<String> gitArgs,
