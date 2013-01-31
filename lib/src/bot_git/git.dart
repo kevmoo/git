@@ -10,7 +10,7 @@ class Git {
     return _shaRegEx.hasMatch(value);
   }
 
-  static List<GitReference> parseLsRemoteOutput(String input) {
+  static List<CommitReference> parseLsRemoteOutput(String input) {
     assert(input != null);
     final lines = Util.splitLines(input);
 
@@ -22,7 +22,7 @@ class Git {
           final match = _lsRemoteRegExp.allMatches(line).single;
           assert(match.groupCount == 2);
 
-          return new GitReference(match[1], match[2]);
+          return new CommitReference(match[1], match[2]);
 
         }).toList();
   }
@@ -64,11 +64,11 @@ ${pr.stderr}''';
 /**
  * Represents the output from `git ls-remote`
  */
-class GitReference {
+class CommitReference {
   final String sha;
   final String reference;
 
-  GitReference(this.sha, this.reference) {
+  CommitReference(this.sha, this.reference) {
     assert(Git.isValidSha(sha));
 
     assert(reference != null);
@@ -83,7 +83,7 @@ class GitReference {
       'GitReference: $reference  $sha';
 }
 
-class BranchReference extends GitReference {
+class BranchReference extends CommitReference {
   static const _localBranchPrefix = r'refs/heads/';
 
   final String branchName;
