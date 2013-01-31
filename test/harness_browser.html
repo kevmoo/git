@@ -12,12 +12,15 @@
         testRunner.dumpAsText();
         testRunner.waitUntilDone();
         window.addEventListener("message", receiveMessage, false);
+        window.addEventListener('error', onError);
+      }
+
+      function onError(event) {
+        testRunner.notifyDone();
       }
 
       function receiveMessage(event) {
-        console.log(event.data);
         if(event.data == 'unittest-suite-done') {
-          console.log("done!");
           testRunner.notifyDone();
         }
       }
