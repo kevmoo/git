@@ -55,9 +55,8 @@ Future<bool> _compileDocs(TaskContext ctx, TempDir gitDir, TempDir outputDir,
         // yeah, silly. ctx.fail should blow up. Should not get heer
         assert(dartDocSuccess);
 
-        return _doCommitComplex(ctx, outputDir, gitDir, commitMessage);
+        return _doCommitComplex(ctx, outputDir, gitDir, commitMessage, targetBranch);
       })
-      .then((_) => _doPush(ctx, outputDir, gitDir, targetBranch))
       .then((_) {
         return true;
       }).whenComplete(() {
@@ -153,7 +152,7 @@ Future _checkoutBare(TaskContext ctx, TempDir gitDir, TempDir workTree,
 }
 
 Future _doCommitComplex(TaskContext ctx, TempDir workTree, TempDir gitDir,
-                        String commitMessage) {
+                        String commitMessage, String targetBranch) {
   requireArgumentNotNullOrEmpty(commitMessage, 'commitMessage');
 
   final args = _getGitArgs(gitDir, workTree, ['add', '--all']);
@@ -177,13 +176,11 @@ Future _doCommitComplex(TaskContext ctx, TempDir workTree, TempDir gitDir,
           }
         }
         _throwIfProcessFailed(ctx, pr);
-        return null;
-      });
-}
-
-Future _doPush(TaskContext ctx, TempDir workTree, TempDir gitDir, String branchName) {
-  final args = _getGitArgs(gitDir, workTree, ['push', 'origin', branchName]);
-  return Process.run('git', args)
+      })
+      .then((_) {
+        final args = _getGitArgs(gitDir, workTree, ['push', 'origin', targetBranch]);
+        return Process.run('git', args);
+      })
       .then((ProcessResult pr) {
         _throwIfProcessFailed(ctx, pr);
         return null;
