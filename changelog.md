@@ -1,5 +1,18 @@
 # Changelog - Dart Bag of Tricks
 
+## 0.11.4-beta - 31 Jan 2013 (SDK 0.3.2.0 r17657)
+
+### bot_git
+
+* A lot of updates and additions
+* __NEW!__ `CommitReference`, `BranchReference`, `Commit`, `TreeEntry`
+* __NEW!__ `GitDir` learned `getCommitCount`, `getBranchNames`, `getBranchReferences`, `getCommit`, `lsTree`
+* __BREAKING__ `GitDir.writeObject` renamed to `writeObjects`
+
+### hop_tasks
+
+* `branchForDir` added an optional `workingDir` argument
+
 ## 0.11.3 - 29 Jan 2013 (SDK 0.3.2.0 r17657)
 
 * Bumped `logging` dependency to `>=v0.3.2`
