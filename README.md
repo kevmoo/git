@@ -21,8 +21,10 @@ Add the __BOT__ package to your `pubspec.yaml` file, selecting a version range t
 
 ```yaml
 dependencies:
-  bot: ">=0.9.0 <0.10.0"    # works with M2 SDK (r16251)
+  bot: ">=0.11.3"    # works with SDK v0.3.2.0 r17657
 ```
+
+_Always check the [BOT page](http://pub.dartlang.org/packages/bot) on pub to find the latest release._
 
 Versions change within the range when we release small bug fixes, but it changes outside of the range on any breaking change. See the [changelog](https://github.com/kevmoo/bot.dart/blob/master/changelog.md) to find the version that works best for you.
 
