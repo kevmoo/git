@@ -30,7 +30,7 @@ Future<bool> _fromSourceDirTree(TaskContext ctx, TreeEntry tree,
 
         if(branchRef == null) {
           // branch does not exist. New branch!
-          return _getMasterCommit(ctx, 'created', gitArgs, sourceBranch,
+          return _goCommit(ctx, 'created', gitArgs, sourceBranch,
               sourceDir, targetBranch, gitDir);
         } else {
           // existing branch
@@ -59,53 +59,36 @@ Future<bool> _continueWithExistingBranch(TaskContext ctx,
     return new Future.immediate(true);
   } else {
     gitArgs.addAll(['-p', parent]);
-    return _getMasterCommit(ctx, 'updated', gitArgs, sourceBranch, sourceDir,
+    return _goCommit(ctx, 'updated', gitArgs, sourceBranch, sourceDir,
         targetBranch, gitDir);
   }
 }
 
-Future<bool> _getMasterCommit(TaskContext ctx, String verb, List<String> gitArgs,
+Future<bool> _goCommit(TaskContext ctx, String verb, List<String> gitArgs,
     String sourceBranch, String sourceDir, String targetBranch, GitDir gitDir) {
-
-  final workingDir = gitDir.path.toString();
-
-  return gitDir.getBranchReference(sourceBranch)
-      .then((BranchReference branchRef) =>
-          _doCommitSimple(ctx, verb, gitArgs, sourceDir, branchRef.sha, targetBranch, workingDir));
-}
-
-Future<bool> _doCommitSimple(TaskContext ctx, String verb, List<String> gitArgs,
-    String sourceDir, String masterCommit, String targetBranch, String workingDir) {
 
   final branchNameRef = 'refs/heads/$targetBranch';
 
-  masterCommit = masterCommit.substring(0, 8);
+  return gitDir.getBranchReference(sourceBranch)
+      .then((BranchReference branchRef) {
 
-  gitArgs.addAll(['-m', 'Contents of $sourceDir from commit $masterCommit']);
+        final masterCommit = branchRef.sha.substring(0, 8);
 
-  return _runGit(gitArgs, workingDir)
+        gitArgs.addAll(['-m', 'Contents of $sourceDir from commit $masterCommit']);
+
+        return gitDir.runCommand(gitArgs);
+      })
       .then((ProcessResult pr) {
-        require(pr.exitCode == 0, pr.stderr);
+        assert(pr.exitCode == 0);
 
         final newCommitSha = pr.stdout.trim();
         ctx.info('Create new commit: $newCommitSha');
 
-        return _runGit(['update-ref', branchNameRef, newCommitSha], workingDir)
-            .then((ProcessResult updateRefPr) {
-              require(updateRefPr.exitCode == 0);
-              ctx.info("Branch '$targetBranch' $verb");
-              return true;
-              });
+        return gitDir.runCommand(['update-ref', branchNameRef, newCommitSha]);
+      })
+      .then((ProcessResult pr) {
+        assert(pr.exitCode == 0);
+        ctx.info("Branch '$targetBranch' $verb");
+        return true;
       });
 }
-
-Future<ProcessResult> _runGit(List<String> args, String workingDir) {
-  final options = new ProcessOptions();
-  if(workingDir != null) {
-    options.workingDirectory = workingDir;
-  }
-
-  return Process.run('git', args, options);
-}
-
-final _whiteSpaceExp = new RegExp(r'\s+', multiLine: true);
