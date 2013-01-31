@@ -20,10 +20,27 @@ final _sharedConfig = new BaseConfig();
 
 typedef Future<bool> TaskDefinition(TaskContext ctx);
 
+/**
+ * [runHopCore] should be the last method you call in an application.
+ *
+ * NOTE: [runHopCore] calls [io.exit] which terminates the application.
+ */
 void runHopCore() {
   _sharedConfig.freeze();
   final options = new Options();
-  final runner = new Runner(_sharedConfig, options.arguments);
+
+  ArgResults args;
+  try {
+    args = Runner.parseArgs(options.arguments);
+  } on FormatException catch(ex, stack) {
+    print("Bad argument");
+    print(ex.message);
+    print(Runner.getUsage());
+
+    io.exit(RunResult.BAD_USAGE.exitCode);
+  }
+
+  final runner = new Runner(_sharedConfig, args);
   final future = runner.run();
 
   future.then((RunResult rr) {

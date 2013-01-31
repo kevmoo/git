@@ -7,9 +7,8 @@ class Runner {
   final ArgResults _args;
   final BaseConfig _state;
 
-  Runner(this._state, List<String> arguments) :
-    // TODO: better error or output for invalid arguments
-    _args = _parser.parse(arguments) {
+  Runner(this._state, this._args) {
+    assert(_args != null);
     _state.requireFrozen();
   }
 
@@ -89,7 +88,7 @@ class Runner {
     ctx.log('Tasks:', AnsiColor.BLUE);
     _printTaskTable(ctx);
     ctx.log('');
-    ctx.log(_parser.getUsage());
+    ctx.log(getUsage());
   }
 
   void _printRawTasks(RootTaskContext ctx) {
@@ -111,6 +110,11 @@ class Runner {
       ctx.log(r);
     }
   }
+
+  static ArgResults parseArgs(List<String> args) =>
+      _parser.parse(args);
+
+  static String getUsage() => _parser.getUsage();
 
   static RunResult _logExitCode(RootTaskContext ctx, RunResult result) {
     if(result.success) {

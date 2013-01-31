@@ -12,8 +12,8 @@ Future<bool> compileDocs(TaskContext ctx, String targetBranch,
     Func<Future<List<String>>> libGetter, String packageDir) {
 
   final parser = _getDartDocParser();
-  final parseResult = parser.parse(ctx.arguments);
-  final allowDirty = parseResult['allow-dirty'];
+  final parseResult = _helpfulParseArgs(ctx, parser, ctx.arguments);
+  final bool allowDirty = parseResult['allow-dirty'];
 
   final dir = new Directory('');
   final tempDocsDirFuture = dir.createTemp()

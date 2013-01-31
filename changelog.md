@@ -1,5 +1,17 @@
 # Changelog - Dart Bag of Tricks
 
+## 0.12.0-dev - *pre-release* (SDK 0.3.2.0 r17657)
+
+### hop
+
+* __BREAKING__ ctor for `Runner` now takes param of `ArgResults`
+* `Runner` exposes helpers for parsing defaults args and getting usage.
+* `runHopcore` prints out nice error info and exits cleanly with bad default args
+
+### hop_tasks
+
+* `compileDocs` provides useful error info if used with bad args
+
 ## 0.11.4-beta - 31 Jan 2013 (SDK 0.3.2.0 r17657)
 
 ### bot_git
