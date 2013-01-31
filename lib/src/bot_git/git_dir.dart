@@ -34,6 +34,21 @@ class GitDir {
         });
   }
 
+  Future<BranchReference> getBranchReference(String branchName) {
+    return getBranchReferences()
+        .then((list) {
+          final matches = list.where((b) => b.branchName == branchName)
+              .toList();
+
+          assert(matches.length <= 1);
+          if(matches.isEmpty) {
+            return null;
+          } else {
+            return matches.single;
+          }
+        });
+  }
+
   Future<List<BranchReference>> getBranchReferences() {
     return Git.runGit(['ls-remote', '--heads', _path.toNativePath()])
         .then((ProcessResult pr) {

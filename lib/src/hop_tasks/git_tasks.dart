@@ -28,19 +28,16 @@ Future<bool> _fromSourceDirTree(TaskContext ctx, TreeEntry tree,
 
   final workingDir = gitDir.path.toString();
 
-  return gitDir.getBranchReferences()
-      .then((List<BranchReference> refs) {
+  return gitDir.getBranchReference(targetBranch)
+      .then((BranchReference branchRef) {
 
-        refs = refs.where((br) => br.branchName == targetBranch).toList();
-
-        assert(refs.length <= 1);
-        if(refs.isEmpty) {
+        if(branchRef == null) {
           // branch does not exist. New branch!
           return _getMasterCommit(ctx, 'created', gitArgs, sourceBranch,
               sourceDir, branchNameRef, targetBranch, workingDir);
         } else {
           // existing branch
-          return _withExistingBranch(ctx, refs.single, sha, sourceDir, gitArgs,
+          return _withExistingBranch(ctx, branchRef, sha, sourceDir, gitArgs,
               sourceBranch, branchNameRef, targetBranch, gitDir);
         }
       });
