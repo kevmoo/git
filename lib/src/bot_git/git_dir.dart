@@ -117,6 +117,11 @@ class GitDir {
     return Git.runGit(args, throwOnError: throwOnError, processWorkingDir: _workingDir);
   }
 
+  Future<bool> isWorkingTreeClean() {
+    return runCommand(['status', '--porcelain'])
+        .then((ProcessResult pr) => pr.stdout.isEmpty);
+  }
+
   String get _workingDir => _path.toString();
 
   static Future<bool> isGitDir(String path) {

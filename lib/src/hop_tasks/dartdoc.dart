@@ -62,15 +62,13 @@ Future<bool> _compileDocs(TaskContext ctx, String gitDir, String outputDir,
 }
 
 Future<String> _getCommitMessageFuture(TaskContext ctx, bool allowDirty) {
-  return Process.run('git', ['status', '--porcelain'])
-      .then((ProcessResult pr) {
-        _throwIfProcessFailed(ctx, pr);
-        if(pr.stdout.length > 0 && !allowDirty) {
+  final gitDir = new GitDir('');
+
+  return gitDir.isWorkingTreeClean()
+      .then((bool isClean) {
+        if(!isClean && !allowDirty) {
           ctx.fail('Working tree is dirty. Cannot generate docs.');
         }
-
-        // not really needed, but nice
-        return null;
       })
       .then((_) => _getCurrentBranchName(ctx))
       .then((String refName) => _getCommitMessageFromRefName(ctx, refName));

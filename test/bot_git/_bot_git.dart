@@ -62,17 +62,37 @@ bcd1284d805951a16e765cea5b2273a464ee2d86'''];
 
 Future<Tuple<TempDir, GitDir>> _getTempGit() {
   TempDir _tempGitDir;
+  GitDir gitDir;
 
   return TempDir.create()
     .then((TempDir tempDir) {
       expect(_tempGitDir , isNull);
       _tempGitDir = tempDir;
 
+      // is not git dir
+      return GitDir.isGitDir(_tempGitDir.path);
+    })
+    .then((bool isGitDir) {
+      expect(isGitDir, false);
+
       // initialize a new git dir
       return GitDir.init(_tempGitDir.dir);
     })
-    .then((GitDir gitDir) {
-      expect(gitDir, isNotNull);
+    .then((GitDir gd) {
+      expect(gd, isNotNull);
+      gitDir = gd;
+
+      // is a git dir now
+      return GitDir.isGitDir(_tempGitDir.path);
+    })
+    .then((bool isGitDir) {
+      expect(isGitDir, true);
+
+      // is clean
+      return gitDir.isWorkingTreeClean();
+    })
+    .then((bool isWorkingTreeClean) {
+      expect(isWorkingTreeClean, true);
 
       return new Tuple<TempDir, GitDir>(_tempGitDir, gitDir);
     });
@@ -98,9 +118,6 @@ void _testGit() {
 
       tempGitDir = items.item1;
       gitDir = items.item2;
-
-      // remove me
-      //logMessage('git dir at ${gitDir.path}');
 
       // verify the new _gitDir has no branches
       return gitDir.getBranchNames();
