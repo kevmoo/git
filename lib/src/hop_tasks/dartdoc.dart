@@ -15,11 +15,9 @@ Future<bool> compileDocs(TaskContext ctx, String targetBranch,
   final parseResult = _helpfulParseArgs(ctx, parser, ctx.arguments);
   final bool allowDirty = parseResult['allow-dirty'];
 
-  final dir = new Directory('');
-  final tempDocsDirFuture = dir.createTemp()
-      .then((Directory dir) => dir.path);
-  final tempGitDirFuture = dir.createTemp()
-      .then((Directory dir) => _doGitCheckout(ctx, '.', dir.path, targetBranch));
+  final tempDocsDirFuture = TempDir.create();
+  final tempGitDirFuture = TempDir.create()
+      .then((TempDir dir) => _doGitCheckout(ctx, '.', dir, targetBranch));
   final getLibsFuture = libGetter();
   final commitMessageFuture = _getCommitMessageFuture(ctx, allowDirty);
 
@@ -44,21 +42,28 @@ ArgParser _getDartDocParser() {
   return parser;
 }
 
-Future<bool> _compileDocs(TaskContext ctx, String gitDir, String outputDir,
+Future<bool> _compileDocs(TaskContext ctx, TempDir gitDir, TempDir outputDir,
     String targetBranch, String commitMessage, List<String> libs, String packageDir) {
 
   return _ensureProperBranch(ctx, gitDir, outputDir, targetBranch)
       .then((_) => _dartDoc(ctx, outputDir, libs, packageDir))
       .then((bool dartDocSuccess) {
-        if(dartDocSuccess) {
-          return _doCommitComplex(ctx, outputDir, gitDir, commitMessage);
-        } else {
-          throw 'boo! docs failed...clean up';
+        if(!dartDocSuccess) {
+          ctx.fail('The dartdoc process failed.');
         }
+
+        // yeah, silly. ctx.fail should blow up. Should not get heer
+        assert(dartDocSuccess);
+
+        return _doCommitComplex(ctx, outputDir, gitDir, commitMessage);
       })
       .then((_) => _doPush(ctx, outputDir, gitDir, targetBranch))
-      .then((_) => _deleteTempDirs([outputDir, gitDir]))
-      .then((_) => true);
+      .then((_) {
+        return true;
+      }).whenComplete(() {
+        gitDir.dispose();
+        outputDir.dispose();
+      });
 }
 
 Future<String> _getCommitMessageFuture(TaskContext ctx, bool allowDirty) {
@@ -80,27 +85,9 @@ Future<String> _getCommitMessageFuture(TaskContext ctx, bool allowDirty) {
       });
 }
 
-Future _deleteTempDirs(Collection<String> dirPaths) {
-  final tmpDirPrefix = 'temp_dir';
-  final delDirs = dirPaths
-      .mappedBy((p) => new Path(p));
-
-  delDirs.forEach((Path p) {
-    if(!p.segments().last.startsWith(tmpDirPrefix)) {
-      throw 'not a safe temp path!';
-    }
-  });
-
-  final delDirFutures = delDirs
-      .mappedBy((Path p) => new Directory.fromPath(p))
-      .mappedBy((dir) => dir.delete(recursive: true));
-
-  return Future.wait(new List.from(delDirFutures));
-}
-
-Future<bool> _dartDoc(TaskContext ctx, String outputDir, Collection<String> libs,
+Future<bool> _dartDoc(TaskContext ctx, TempDir outputDir, Collection<String> libs,
     String packageDir) {
-  final args = ['--pkg', packageDir, '--omit-generation-time', '--out', outputDir, '--verbose'];
+  final args = ['--pkg', packageDir, '--omit-generation-time', '--out', outputDir.path, '--verbose'];
 
   args.addAll(libs);
   ctx.fine("Generating docs into: $outputDir");
@@ -108,7 +95,7 @@ Future<bool> _dartDoc(TaskContext ctx, String outputDir, Collection<String> libs
 }
 
 Future<String> _doGitCheckout(TaskContext ctx, String sourceGitPath,
-    String targetGitPath, String sourceGitBranch) {
+    TempDir targetGitPath, String sourceGitBranch) {
 
   return _gitRemoteHasHead(sourceGitPath, 'refs/heads/$sourceGitBranch')
       .then((bool branchExists) => _doGitClone(ctx, sourceGitPath,
@@ -117,8 +104,8 @@ Future<String> _doGitCheckout(TaskContext ctx, String sourceGitPath,
 }
 
 Future _doGitClone(TaskContext ctx, String sourceGitPath,
-    String targetGitPath, String sourceGitBranch, bool doCheckout) {
-  final args = ['clone', '--bare', '--shared', sourceGitPath, targetGitPath];
+    TempDir targetGitPath, String sourceGitBranch, bool doCheckout) {
+  final args = ['clone', '--bare', '--shared', sourceGitPath, targetGitPath.path];
   if(doCheckout) {
     args.addAll(['--single-branch', '--branch', sourceGitBranch]);
   } else {
@@ -131,7 +118,7 @@ Future _doGitClone(TaskContext ctx, String sourceGitPath,
       });
 }
 
-Future _ensureProperBranch(TaskContext ctx, String gitDir, String workTree,
+Future _ensureProperBranch(TaskContext ctx, TempDir gitDir, TempDir workTree,
                            String desiredBranch) {
   final args = _getGitArgs(gitDir, workTree, ['rev-parse', '--abbrev-ref', 'HEAD']);
 
@@ -151,7 +138,7 @@ Future _ensureProperBranch(TaskContext ctx, String gitDir, String workTree,
       });
 }
 
-Future _checkoutBare(TaskContext ctx, String gitDir, String workTree,
+Future _checkoutBare(TaskContext ctx, TempDir gitDir, TempDir workTree,
                      String desiredBranch) {
   final args = _getGitArgs(gitDir, workTree, ['checkout', '--orphan', desiredBranch]);
   return Process.run('git', args)
@@ -165,7 +152,7 @@ Future _checkoutBare(TaskContext ctx, String gitDir, String workTree,
       });
 }
 
-Future _doCommitComplex(TaskContext ctx, String workTree, String gitDir,
+Future _doCommitComplex(TaskContext ctx, TempDir workTree, TempDir gitDir,
                         String commitMessage) {
   requireArgumentNotNullOrEmpty(commitMessage, 'commitMessage');
 
@@ -194,7 +181,7 @@ Future _doCommitComplex(TaskContext ctx, String workTree, String gitDir,
       });
 }
 
-Future _doPush(TaskContext ctx, String workTree, String gitDir, String branchName) {
+Future _doPush(TaskContext ctx, TempDir workTree, TempDir gitDir, String branchName) {
   final args = _getGitArgs(gitDir, workTree, ['push', 'origin', branchName]);
   return Process.run('git', args)
       .then((ProcessResult pr) {
@@ -203,9 +190,9 @@ Future _doPush(TaskContext ctx, String workTree, String gitDir, String branchNam
       });
 }
 
-List<String> _getGitArgs(String gitDir, String workTree,
+List<String> _getGitArgs(TempDir gitDir, TempDir workTree,
     Collection<String> rest) {
-  final args = ['--git-dir=$gitDir', '--work-tree=$workTree'];
+  final args = ['--git-dir=${gitDir.path}', '--work-tree=${workTree.path}'];
   args.addAll(rest);
   return args;
 }
