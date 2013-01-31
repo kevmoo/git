@@ -40,7 +40,7 @@ bcd1284d805951a16e765cea5b2273a464ee2d86'''];
 
     test('parseLsRemoteOutput', () {
 
-      final parsed = Git.parseLsRemoteOutput(_lsRemoteOutput);
+      final parsed = CommitReference.fromLsRemoteOutput(_lsRemoteOutput);
 
       expect(parsed.length, 6);
       parsed.forEach((t) {

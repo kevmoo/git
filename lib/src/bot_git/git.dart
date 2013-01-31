@@ -4,27 +4,8 @@ class Git {
   static const _shaRegexPattern = '[a-f0-9]{40}';
   static final _shaRegEx = new RegExp(r'^'.concat(_shaRegexPattern).concat(r'$'));
 
-  static final RegExp _lsRemoteRegExp = new RegExp('^($_shaRegexPattern)\t(.+)\$');
-
   static bool isValidSha(String value) {
     return _shaRegEx.hasMatch(value);
-  }
-
-  static List<CommitReference> parseLsRemoteOutput(String input) {
-    assert(input != null);
-    final lines = Util.splitLines(input);
-
-    // last line should be empty
-    assert(lines.last.length == 0);
-
-    return lines.getRange(0, lines.length-1)
-        .mappedBy((line) {
-          final match = _lsRemoteRegExp.allMatches(line).single;
-          assert(match.groupCount == 2);
-
-          return new CommitReference(match[1], match[2]);
-
-        }).toList();
   }
 
   static Future<ProcessResult> runGit(List<String> args,
@@ -65,6 +46,8 @@ ${pr.stderr}''';
  * Represents the output from `git ls-remote`
  */
 class CommitReference {
+  static final RegExp _lsRemoteRegExp = new RegExp('^(${Git._shaRegexPattern})\t(.+)\$');
+
   final String sha;
   final String reference;
 
@@ -74,6 +57,23 @@ class CommitReference {
     assert(reference != null);
     // TODO: probably a better way to verify...but this is fine for now
     assert(reference.startsWith(r'refs/') || reference == 'HEAD');
+  }
+
+  static List<CommitReference> fromLsRemoteOutput(String input) {
+    assert(input != null);
+    final lines = Util.splitLines(input);
+
+    // last line should be empty
+    assert(lines.last.length == 0);
+
+    return lines.getRange(0, lines.length-1)
+        .mappedBy((line) {
+          final match = _lsRemoteRegExp.allMatches(line).single;
+          assert(match.groupCount == 2);
+
+          return new CommitReference(match[1], match[2]);
+
+        }).toList();
   }
 
   BranchReference toBranchReference() =>

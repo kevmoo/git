@@ -39,7 +39,7 @@ class GitDir {
         .then((ProcessResult pr) {
           assert(pr.exitCode == 0);
 
-          return Git.parseLsRemoteOutput(pr.stdout)
+          return CommitReference.fromLsRemoteOutput(pr.stdout)
               .mappedBy((gr) => gr.toBranchReference())
               .toList();
         });
