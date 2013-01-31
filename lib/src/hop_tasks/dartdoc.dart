@@ -69,43 +69,14 @@ Future<String> _getCommitMessageFuture(TaskContext ctx, bool allowDirty) {
         if(!isClean && !allowDirty) {
           ctx.fail('Working tree is dirty. Cannot generate docs.');
         }
+
+        return gitDir.getCurrentBranch();
       })
-      .then((_) => _getCurrentBranchName(ctx))
-      .then((String refName) => _getCommitMessageFromRefName(ctx, refName));
-}
+      .then((BranchReference currentBranchRef) {
 
-Future<String> _getCommitMessageFromRefName(TaskContext ctx, String refName) {
-  return Process.run('git', ['show-ref', '--abbrev', refName])
-      .then((ProcessResult pr) {
-        _throwIfProcessFailed(ctx, pr);
-        var split = new List<String>.from(
-            pr.stdout.split(' ').mappedBy((e) => e.trim()));
-        assert(split.length == 2);
-        assert(split[1] == refName);
+        final abbrevSha = currentBranchRef.sha.substring(0, 7);
 
-        final sha = split[0];
-
-        return "Docs generated for $refName at $sha";
-      });
-}
-
-Future<String> _getCurrentBranchName(TaskContext ctx) {
-  return Process.run('git', ['rev-parse', '--verify',
-                                   '--symbolic-full-name', 'HEAD'])
-      .then((ProcessResult pr) {
-        _throwIfProcessFailed(ctx, pr);
-
-        final refParseRegEx = new RegExp(r'^refs\/heads\/(.+)$', multiLine: true);
-        final match = refParseRegEx.firstMatch(pr.stdout.trim());
-
-        if(match == null) {
-          throw 'Could not determine current branch: ${pr.stdout}';
-        }
-
-        assert(match.groupCount == 1);
-
-        final branchName = match[0];
-        return branchName;
+        return "Docs generated for ${currentBranchRef.branchName} at ${abbrevSha}";
       });
 }
 

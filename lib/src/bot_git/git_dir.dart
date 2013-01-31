@@ -64,6 +64,16 @@ class GitDir {
         });
   }
 
+  Future<BranchReference> getCurrentBranch() {
+    return runCommand(['rev-parse', '--verify', '--symbolic-full-name', 'HEAD'])
+        .then((ProcessResult pr) {
+          return runCommand(['show-ref', '--verify', pr.stdout.trim()]);
+        })
+        .then((ProcessResult pr) {
+          return CommitReference.fromShowRefOutput(pr.stdout).single.toBranchReference();
+        });
+  }
+
   Future<List<TreeEntry>> lsTree(String treeish,
       {bool subTreesOnly: false, String path: null}) {
     assert(treeish != null);
