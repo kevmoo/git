@@ -129,7 +129,7 @@ void _testGit() {
         return new Path(tempContent.path).append(fileName).toNativePath();
       }).toList();
 
-      return gitDir.writeObject(paths);
+      return gitDir.writeObjects(paths);
     }).then((Map<String, String> hashes) {
 
       // the returned hash should be cool

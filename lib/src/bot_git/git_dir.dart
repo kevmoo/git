@@ -19,7 +19,7 @@ class GitDir {
   Path get path => _path;
 
   Future<int> getCommitCount([String branchName = 'HEAD']) {
-    return Git.runGit(['rev-list', '--count', branchName], processWorkingDir: _workingDir)
+    return runCommand(['rev-list', '--count', branchName])
         .then((ProcessResult pr) {
           return int.parse(pr.stdout);
         });
@@ -66,7 +66,12 @@ class GitDir {
         });
   }
 
-  Future<Map<String, String>> writeObject(List<String> paths) {
+  /**
+   * Given a list of [paths], write those files to the object store
+   * and return a [Map] where the key is the input path and the value is
+   * the SHA of the newly written object.
+   */
+  Future<Map<String, String>> writeObjects(List<String> paths) {
     final args = ['hash-object', '-t', 'blob', '-w', '--no-filters', '--'];
     args.addAll(paths);
     return runCommand(args)
