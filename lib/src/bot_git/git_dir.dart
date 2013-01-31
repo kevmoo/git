@@ -1,7 +1,5 @@
 part of bot_git;
 
-// TODO: Future<bool> isGitDir
-
 class GitDir {
   static final RegExp _shaRegExp = new RegExp(r'^[a-f0-9]{40}$');
 
@@ -121,9 +119,22 @@ class GitDir {
 
   String get _workingDir => _path.toString();
 
+  static Future<bool> isGitDir(String path) {
+    final dir = new Directory(path);
+    return dir.exists()
+        .then((bool exists) {
+          if(exists) {
+            return _isGitDir(dir);
+          } else {
+            return false;
+          }
+        });
+  }
+
   /**
    * [allowContent] if true, doesn't check to see if the directory is empty
-   * init will still succeed, even if the directory already has a git repository.
+   *
+   * Will fail if the source is a git directory (either at the root or a sub directory)
    */
   static Future<GitDir> init(Directory source, {bool allowContent: false}) {
     assert(source.existsSync());
@@ -143,9 +154,27 @@ class GitDir {
   }
 
   static Future<GitDir> _init(Directory source) {
-    return Git.runGit(['init', source.path])
+    return _isGitDir(source)
+        .then((bool isGitDir) {
+          if(isGitDir) {
+            throw 'Cannot init a directory that is already a git directory';
+          }
+
+          return Git.runGit(['init', source.path]);
+        })
         .then((ProcessResult pr) {
           return new GitDir(source.path);
+        });
+  }
+
+  static Future<bool> _isGitDir(Directory dir) {
+    assert(dir.existsSync());
+
+    return Git.runGit(['status', '--porcelain'],
+        throwOnError: false, processWorkingDir: dir.path)
+        .then((ProcessResult pr) {
+          // if exitCode is 0, status worked...which means this is a git dir
+          return pr.exitCode == 0;
         });
   }
 }
