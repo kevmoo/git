@@ -5,7 +5,7 @@ import 'package:unittest/unittest.dart';
 import 'package:bot/bot_io.dart';
 import 'package:bot/bot_test.dart';
 
-void register() {
+void main() {
   group('bot_io', () {
     test('temp dir populate', _testTempDirPopulate);
   });

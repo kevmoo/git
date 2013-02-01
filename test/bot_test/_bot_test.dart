@@ -8,7 +8,7 @@ import 'package:bot/bot_test.dart';
 const _failMessage = 'failing, per request';
 const _successValue = 42;
 
-void register() {
+void main() {
   group('bot_test', () {
     test('expectFutureComplete', _testExpectFutureComplete);
     test('expectFutureComplete with complete', _testExpectFutureCompleteWithComplete);

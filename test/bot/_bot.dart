@@ -31,7 +31,7 @@ part 'attached/test_properties.dart';
 
 part 'attached/test_attached_events.dart';
 
-void register() {
+void main() {
   group('bot', (){
     TestTuple.run();
     TestEnumerable.run();

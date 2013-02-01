@@ -14,7 +14,7 @@ import '../hop/_hop.dart';
 part 'process_tests.dart';
 part 'git_tests.dart';
 
-void register() {
+void main() {
   group('hop_tasks', () {
     ProcessTests.run();
     GitTests.register();

@@ -15,7 +15,7 @@ part 'sync_tests.dart';
 part 'task_list_tests.dart';
 part 'test_runner.dart';
 
-void register() {
+void main() {
   group('hop', () {
     group('async tasks', AsyncTests.run);
     group('sync tasks', SyncTests.run);
