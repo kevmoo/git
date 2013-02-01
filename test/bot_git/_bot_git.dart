@@ -162,7 +162,7 @@ void _testGit() {
 
     });
 
-  expectFutureComplete(future);
+  expect(future, completes);
 
   // create another temp dir, populate it w/ stuff
 
