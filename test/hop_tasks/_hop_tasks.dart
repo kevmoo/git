@@ -19,6 +19,7 @@ void main() {
   group('hop_tasks', () {
     ProcessTests.run();
     GitTests.register();
+    DartAnalyzerTests.register();
   });
 }
 

@@ -1,3 +1,8 @@
+// TODO(adam): dispose temp dirs
+// TODO(adam): handle future errors
+// TODO(adam): document methods and class
+// TODO(adam): use verbose
+
 part of hop_tasks;
 
 class AnalyzerResult {
