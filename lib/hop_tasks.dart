@@ -2,6 +2,7 @@ library hop_tasks;
 
 import 'dart:async';
 import 'dart:io';
+import 'dart:collection';
 import 'package:args/args.dart';
 import 'package:bot/bot.dart';
 import 'package:bot/bot_git.dart';
@@ -14,6 +15,7 @@ part 'src/hop_tasks/process.dart';
 part 'src/hop_tasks/dart2js.dart';
 part 'src/hop_tasks/git_tasks.dart';
 part 'src/hop_tasks/dartdoc.dart';
+part 'src/hop_tasks/dart_analyzer.dart';
 
 ArgResults _helpfulParseArgs(TaskContext ctx, ArgParser parser, List<String> args) {
   try {

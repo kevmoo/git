@@ -17,7 +17,7 @@ void main() {
 
   addTask('test', createUnitTestTask(test_console.testCore));
   addTask('docs', getCompileDocsFunc('gh-pages', 'packages/', _getLibs));
-
+  addTask('analyzer', createDartAnalyzerTask(['tool/hop_runner.dart']));
   //
   // Dart2js
   //
