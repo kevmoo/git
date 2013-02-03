@@ -1,4 +1,3 @@
-// TODO(adam): dispose temp dirs
 // TODO(adam): handle future errors
 // TODO(adam): document methods and class
 // TODO(adam): use verbose
@@ -15,6 +14,7 @@ class AnalyzerResult {
 
 Task createDartAnalyzerTask(List<String> files) {
   return new Task.async((context) {
+    context.fine("Running dart analyzer task");
     final List<AnalyzerResult> analyzerResults = new List<AnalyzerResult>();
     final Queue<Path> analyzerFilePaths = new Queue<Path>();
     files.forEach((f) => analyzerFilePaths.add(new Path(f)));
@@ -32,18 +32,21 @@ ArgParser _getDartAnalyzerParser() {
 Future<bool> _processAnalyzerFile(Queue<Path> analyzerFilePaths, List<AnalyzerResult> analyzerResults, TaskContext context) {
   var completer = new Completer();
 
-  if (analyzerFilePaths.isEmpty) {
-    var result = _processResults(analyzerResults, context);
-    completer.complete(result);
-  } else {
-    var path = analyzerFilePaths.removeFirst();
-    _analyzer(path, context)
-    ..then((result) {
-      analyzerResults.add(result);
-      _processAnalyzerFile(analyzerFilePaths, analyzerResults, context);
-    });
-  }
+  void _local(Queue<Path> analyzerFilePaths, List<AnalyzerResult> analyzerResults, TaskContext context) {
+    if (analyzerFilePaths.isEmpty) {
+      var result = _processResults(analyzerResults, context);
+      completer.complete(result);
+    } else {
+      var path = analyzerFilePaths.removeFirst();
+      _analyzer(path, context)
+      ..then((result) {
+        analyzerResults.add(result);
+        _local(analyzerFilePaths, analyzerResults, context);
+      });
+    }
+  };
 
+  _local(analyzerFilePaths, analyzerResults, context);
   return completer.future;
 }
 
@@ -54,6 +57,7 @@ Future<AnalyzerResult> _analyzer(Path filePath, TaskContext context) {
 
   workLocation
   ..catchError((AsyncError error) {
+    throw "FAILED ON workLocation";
     // TODO(adam): fill out exception handling
   })
   ..then((TempDir tmpDir) {
@@ -68,13 +72,23 @@ Future<AnalyzerResult> _analyzer(Path filePath, TaskContext context) {
     Process.run('dart_analyzer', processArgs)
     ..catchError((AsyncError error) {
       // TODO(adam): fill out exception handling
+      throw "FAILED ON Process.run('dart_analyzer', processArgs)";
     })
     ..then((ProcessResult processResult) {
-      var analyzerResult = new AnalyzerResult(filePath.filename, filePath, processResult: processResult);
-      completer.complete(analyzerResult);
+      if (processResult.exitCode == 127) {
+        // Check for exit code, something went wrong here.
+        var sb = new StringBuffer();
+        sb.add(processResult.stderr);
+        sb.add(processResult.stdout);
+        sb.add("Exit Code 127");
+        completer.completeError(sb.toString());
+      } else {
+        var analyzerResult = new AnalyzerResult(filePath.filename, filePath, processResult: processResult);
+        tmpDir.dispose();
+        completer.complete(analyzerResult);
+      }
     });
   });
-
 
   return completer.future;
 }
@@ -110,19 +124,21 @@ bool _processResults(List<AnalyzerResult> analyzerResults, TaskContext context) 
     finalResults.add(exitCodeLabels.toString());
     finalResults.add("${result.path.directoryPath.toString()}/${result.fileName}\n");
 
-    verboseOutput.add(exitCodeLabels.toString());
-    verboseOutput.add("${result.path.directoryPath.toString()}/${result.fileName}\n");
-    verboseOutput.add("${result.processResult.stdout}\n");
-    verboseOutput.add("${result.processResult.stderr}\n\n");
-    context.fine(verboseOutput.toString());
-    verboseOutput.clear();
+    if (verbose) {
+      verboseOutput.add(exitCodeLabels.toString());
+      verboseOutput.add("${result.path.directoryPath.toString()}/${result.fileName}\n");
+      verboseOutput.add("${result.processResult.stdout}\n");
+      verboseOutput.add("${result.processResult.stderr}\n\n");
+      context.info(verboseOutput.toString());
+      verboseOutput.clear();
+    }
   });
 
   finalResults.add("PASSED: ${passedCount}, WARNING: ${warningCount}, ERROR: ${errorsCount}\n");
   context.info(finalResults.toString());
 
   if (errorsCount > 0) {
-    context.fail("$errorsCount Errors");
+    context.info("$errorsCount Errors");
     return false;
   } else {
     context.info("Passed");
