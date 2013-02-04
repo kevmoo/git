@@ -5,11 +5,9 @@ part of hop_tasks;
 
 class AnalyzerResult {
   final ProcessResult processResult;
-  final String fileName;
   final Path path;
-  final AsyncError error;
 
-  AnalyzerResult(this.fileName, this.path, {this.processResult, this.error});
+  AnalyzerResult(this.path, this.processResult);
 }
 
 Task createDartAnalyzerTask(Iterable<String> files) {
@@ -72,7 +70,7 @@ Future<AnalyzerResult> _analyzer(TaskContext context, Path filePath, bool enable
           sb.add("Exit Code 127");
           throw sb.toString();
         } else {
-          var analyzerResult = new AnalyzerResult(filePath.filename, filePath, processResult: processResult);
+          var analyzerResult = new AnalyzerResult(filePath, processResult);
           return analyzerResult;
         }
       })
@@ -117,11 +115,11 @@ bool _processResults(TaskContext context, List<AnalyzerResult> analyzerResults, 
     }
 
     finalResults.add(exitCodeLabels);
-    finalResults.add("${result.path.directoryPath}/${result.fileName}\n");
+    finalResults.add("${result.path.directoryPath}/${result.path}\n");
 
     if (verbose) {
       verboseOutput.add(exitCodeLabels);
-      verboseOutput.add("${result.path.directoryPath}/${result.fileName}\n");
+      verboseOutput.add("${result.path.directoryPath}/${result.path}\n");
       verboseOutput.add("${result.processResult.stdout}\n");
       verboseOutput.add("${result.processResult.stderr}\n\n");
       context.info(verboseOutput.toString());
