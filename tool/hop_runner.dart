@@ -17,8 +17,11 @@ void main() {
 
   addTask('test', createUnitTestTask(test_console.testCore));
   addTask('docs', getCompileDocsFunc('gh-pages', 'packages/', _getLibs));
-  addTask('tool_analyzer', createDartAnalyzerTask(['tool/hop_runner.dart']));
-  addTask('lib_analyzer', createDartAnalyzerTask(['lib/bot.dart',
+
+  //
+  // Analyzer
+  //
+  addTask('analyze_libs', createDartAnalyzerTask(['lib/bot.dart',
                                                   'lib/bot_html.dart',
                                                   'lib/bot_test.dart',
                                                   'lib/hop_tasks.dart',
@@ -28,12 +31,13 @@ void main() {
                                                   'lib/bot_git.dart',
                                                   'lib/bot_retained.dart',
                                                   'lib/hop.dart']));
-  addTask('test_analyzer', createDartAnalyzerTask(['test/harness_browser.dart',
-                                                   'test/test_console.dart',
-                                                   'test/harness_console.dart',
-                                                   'test/test_dump_render_tree.dart',
-                                                   'test/test_browser.dart',
-                                                   'test/test_shared.dart']));
+
+  addTask('analyze_test_libs', createDartAnalyzerTask(['test/harness_browser.dart',
+                                                       'test/test_console.dart',
+                                                       'test/harness_console.dart',
+                                                       'test/test_dump_render_tree.dart',
+                                                       'test/test_browser.dart',
+                                                       'test/test_shared.dart']));
 
   //
   // Dart2js
