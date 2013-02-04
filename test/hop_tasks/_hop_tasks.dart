@@ -13,11 +13,13 @@ import '../hop/_hop.dart';
 
 part 'process_tests.dart';
 part 'git_tests.dart';
+part 'dart_analyzer_tests.dart';
 
 void main() {
   group('hop_tasks', () {
     ProcessTests.run();
     GitTests.register();
+    DartAnalyzerTests.register();
   });
 }
 
