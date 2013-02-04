@@ -108,4 +108,5 @@ The Bag-of-Tricks is two sets of libraries: __bot__ and __hop__.
 # Authors
  * [Kevin Moore](https://github.com/kevmoo) ([@kevmoo](http://twitter.com/kevmoo))
  * [Andreas Köberle](https://github.com/eskimoblood) ([@eskimobloood](https://twitter.com/eskimobloood))
+ * [Adam Singer](https://github.com/financeCoding) ([+Adam Singer](https://plus.google.com/104569492481999771226))
  * _You? File bugs. Fork and Fix bugs. Let's build this community._
