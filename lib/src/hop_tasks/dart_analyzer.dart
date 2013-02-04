@@ -8,6 +8,29 @@ class AnalyzerResult {
   final Path path;
 
   AnalyzerResult(this.path, this.processResult);
+
+  String toString() {
+    return "${_getPrefix(processResult.exitCode)}: $path";
+  }
+
+  String toVerboseString() {
+    return '''${toString()}
+${processResult.stdout}
+${processResult.stderr}''';
+  }
+
+  static String _getPrefix(int exitCode) {
+    switch(exitCode) {
+      case 0:
+        return "PASSED";
+      case 1:
+        return "WARNING";
+      case 2:
+        return "ERROR";
+      default:
+        return "Unknown exit code $exitCode";
+    }
+  }
 }
 
 Task createDartAnalyzerTask(Iterable<String> files) {
@@ -38,6 +61,11 @@ Future<bool> _processAnalyzerFile(TaskContext context, List<Path> analyzerFilePa
   return Future.forEach(analyzerFilePaths, (Path path) {
     return _analyzer(context, path, enableTypeChecks)
         .then((AnalyzerResult ar) {
+          if(verbose) {
+            context.info(ar.toVerboseString());
+          } else {
+            context.info(ar.toString());
+          }
           results.add(ar);
         });
     }).
@@ -88,9 +116,6 @@ bool _processResults(TaskContext context, List<AnalyzerResult> analyzerResults, 
   int warningCount = 0;
 
   analyzerResults.forEach((AnalyzerResult result) {
-    final verboseOutput = new StringBuffer();
-    final exitCodeLabels = new StringBuffer();
-
     /*
      *  --extended-exit-code : 0 - clean; 1 - has warnings; 2 - has errors
      */
@@ -98,42 +123,18 @@ bool _processResults(TaskContext context, List<AnalyzerResult> analyzerResults, 
     switch(result.processResult.exitCode) {
       case 0:
         passedCount++;
-        exitCodeLabels.add("PASSED: ");
         break;
       case 1:
         warningCount++;
-        exitCodeLabels.add("WARNING: ");
         break;
       case 2:
-        errorsCount++;
-        exitCodeLabels.add("ERROR: ");
-        break;
       default:
         errorsCount++;
-        exitCodeLabels.add("Unknown exit code ${result.processResult.exitCode}: ");
         break;
-    }
-
-    finalResults.add(exitCodeLabels);
-    finalResults.add("${result.path.directoryPath}/${result.path}\n");
-
-    if (verbose) {
-      verboseOutput.add(exitCodeLabels);
-      verboseOutput.add("${result.path.directoryPath}/${result.path}\n");
-      verboseOutput.add("${result.processResult.stdout}\n");
-      verboseOutput.add("${result.processResult.stderr}\n\n");
-      context.info(verboseOutput.toString());
     }
   });
 
-  finalResults.add("PASSED: ${passedCount}, WARNING: ${warningCount}, ERROR: ${errorsCount}");
-  context.info(finalResults.toString());
+  context.info("PASSED: ${passedCount}, WARNING: ${warningCount}, ERROR: ${errorsCount}");
 
-  if (errorsCount > 0) {
-    context.info("$errorsCount Errors");
-    return false;
-  } else {
-    context.info("Passed");
-    return true;
-  }
+  return errorsCount == 0;
 }
