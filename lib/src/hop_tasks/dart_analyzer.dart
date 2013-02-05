@@ -32,7 +32,8 @@ Future<bool> _processAnalyzerFile(TaskContext context, List<Path> analyzerFilePa
   int warningCount = 0;
 
   return Future.forEach(analyzerFilePaths, (Path path) {
-    return _analyzer(context, path, enableTypeChecks, verbose)
+    final logger = context.getSubLogger(path.toString());
+    return _analyzer(logger, path, enableTypeChecks, verbose)
         .then((int exitCode) {
 
           String prefix;
@@ -65,7 +66,7 @@ Future<bool> _processAnalyzerFile(TaskContext context, List<Path> analyzerFilePa
     });
 }
 
-Future<int> _analyzer(TaskContext context, Path filePath, bool enableTypeChecks,
+Future<int> _analyzer(TaskLogger logger, Path filePath, bool enableTypeChecks,
     bool verbose) {
   TempDir tmpDir;
 
@@ -86,8 +87,8 @@ Future<int> _analyzer(TaskContext context, Path filePath, bool enableTypeChecks,
       .then((process) {
         if(verbose) {
           return pipeProcess(process,
-              stdOutWriter: context.fine,
-              stdErrWriter: context.severe);
+              stdOutWriter: logger.fine,
+              stdErrWriter: logger.severe);
         } else {
           return pipeProcess(process);
         }
