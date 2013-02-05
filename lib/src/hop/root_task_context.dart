@@ -65,8 +65,10 @@ class RootTaskContext {
 
   static AnsiColor getLogColor(Level logLevel) {
     requireArgumentNotNull(logLevel, 'logLevel');
-    if(logLevel.value > Level.INFO.value) {
+    if(logLevel.value > Level.WARNING.value) {
       return AnsiColor.RED;
+    } else if(logLevel.value > Level.INFO.value) {
+      return AnsiColor.LIGHT_RED;
     } else {
       return AnsiColor.BLUE;
     }
@@ -81,8 +83,7 @@ class _SubTaskContext extends TaskContext {
   _SubTaskContext(this._parent, this._name, Iterable<String> args) :
     this.arguments = new ReadOnlyCollection(args);
 
-  @override
-  void _logCore(String message, Level logLevel) {
+  void log(String message, Level logLevel) {
     _parent._logCore(this, message, logLevel);
   }
 }

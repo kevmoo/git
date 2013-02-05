@@ -3,22 +3,33 @@ part of hop;
 abstract class TaskContext extends DisposableImpl {
   List<String> get arguments;
 
+  // level 500
   void fine(String message) {
-    _logCore(message, Level.FINE);
+    log(message, Level.FINE);
   }
 
-  void severe(String message) {
-    _logCore(message, Level.SEVERE);
-  }
-
+  // level 800
   void info(String message) {
-    _logCore(message, Level.INFO);
+    log(message, Level.INFO);
   }
 
+  // level 900
+  void warning(String message) {
+    log(message, Level.WARNING);
+  }
+
+  // level 1000
+  void severe(String message) {
+    log(message, Level.SEVERE);
+  }
+
+  void log(String message, Level logLevel);
+
+  /**
+   * Terminates the current [Task] with a [TaskFailError] including the provided
+   * [message].
+   */
   void fail(String message) {
     throw new TaskFailError(message);
   }
-
-  @protected
-  void _logCore(String message, Level logLevel);
 }
