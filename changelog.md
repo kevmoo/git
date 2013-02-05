@@ -1,6 +1,6 @@
 # Changelog - Dart Bag of Tricks
 
-## 0.12.0-dev - *pre-release* (SDK 0.3.3.0 r18016)
+## 0.12.0-dev - *pre-release* (SDK 0.3.4.0 r18115)
 
 ### hop
 
