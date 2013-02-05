@@ -1,7 +1,6 @@
 part of hop;
 
-abstract class TaskContext extends DisposableImpl {
-  List<String> get arguments;
+abstract class TaskLogger {
 
   // level 500
   void fine(String message) {
@@ -24,6 +23,14 @@ abstract class TaskContext extends DisposableImpl {
   }
 
   void log(String message, Level logLevel);
+}
+
+abstract class TaskContext extends TaskLogger implements Disposable {
+  List<String> get arguments;
+
+  void log(String message, Level logLevel);
+
+  TaskLogger getSubLogger(String name);
 
   /**
    * Terminates the current [Task] with a [TaskFailError] including the provided
