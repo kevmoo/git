@@ -3,11 +3,11 @@
 
 part of hop_tasks;
 
-class AnalyzerResult {
+class _AnalyzerResult {
   final ProcessResult processResult;
   final Path path;
 
-  AnalyzerResult(this.path, this.processResult);
+  _AnalyzerResult(this.path, this.processResult);
 
   String toString() {
     return "${_getPrefix(processResult.exitCode)}: $path";
@@ -56,11 +56,11 @@ ArgParser _getDartAnalyzerParser() {
 
 Future<bool> _processAnalyzerFile(TaskContext context, List<Path> analyzerFilePaths,
     bool enableTypeChecks, bool verbose) {
-  final results = new List<AnalyzerResult>();
+  final results = new List<_AnalyzerResult>();
 
   return Future.forEach(analyzerFilePaths, (Path path) {
     return _analyzer(context, path, enableTypeChecks)
-        .then((AnalyzerResult ar) {
+        .then((_AnalyzerResult ar) {
           if(verbose) {
             context.info(ar.toVerboseString());
           } else {
@@ -72,7 +72,7 @@ Future<bool> _processAnalyzerFile(TaskContext context, List<Path> analyzerFilePa
     then((_) => _processResults(context, results, verbose));
 }
 
-Future<AnalyzerResult> _analyzer(TaskContext context, Path filePath, bool enableTypeChecks) {
+Future<_AnalyzerResult> _analyzer(TaskContext context, Path filePath, bool enableTypeChecks) {
   TempDir tmpDir;
 
   return TempDir.create()
@@ -98,7 +98,7 @@ Future<AnalyzerResult> _analyzer(TaskContext context, Path filePath, bool enable
           sb.add("Exit Code 127");
           throw sb.toString();
         } else {
-          var analyzerResult = new AnalyzerResult(filePath, processResult);
+          var analyzerResult = new _AnalyzerResult(filePath, processResult);
           return analyzerResult;
         }
       })
@@ -109,13 +109,13 @@ Future<AnalyzerResult> _analyzer(TaskContext context, Path filePath, bool enable
       });
 }
 
-bool _processResults(TaskContext context, List<AnalyzerResult> analyzerResults, bool verbose) {
+bool _processResults(TaskContext context, List<_AnalyzerResult> analyzerResults, bool verbose) {
   final finalResults = new StringBuffer();
   int errorsCount = 0;
   int passedCount = 0;
   int warningCount = 0;
 
-  analyzerResults.forEach((AnalyzerResult result) {
+  analyzerResults.forEach((_AnalyzerResult result) {
     /*
      *  --extended-exit-code : 0 - clean; 1 - has warnings; 2 - has errors
      */
