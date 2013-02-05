@@ -16,7 +16,7 @@ Starting by porting bits of the [PL javascript library](https://github.com/think
 
 # Try It Now
 
-The __Dart Bag-of-Tricks__ (__BOT__) is hosted on [pub.dartlang.org](http://pub.dartlang.org/packages/bot).
+The __Dart Bag-of-Tricks__ ( __BOT__ ) is hosted on [pub.dartlang.org](http://pub.dartlang.org/packages/bot).
 Add the __BOT__ package to your `pubspec.yaml` file, selecting a version range that works with your version of the SDK. For example:
 
 ```yaml
