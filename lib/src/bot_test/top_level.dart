@@ -7,9 +7,6 @@ void pending() {
 final Matcher throwsInvalidOperationError =
   const Throws(const _InvalidOperationError());
 
-final Matcher throwsStateError =
-  const Throws(const _StateErrorMatcher());
-
 final Matcher throwsNullArgumentError =
   const Throws(const _NullArgumentError());
 
