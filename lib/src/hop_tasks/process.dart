@@ -18,31 +18,41 @@ Future<bool> startProcess(TaskContext ctx,
 
   ctx.fine("Starting process:");
   ctx.fine("$command ${Strings.join(args, ' ')}");
-  final processFuture = Process.start(command, args);
-  return processFuture.then((process) {
-    return _startProcess(process, ctx);
-  });
+  return Process.start(command, args)
+      .then((process) {
+        return pipeProcess(process,
+            stdOutWriter: ctx.fine,
+            stdErrWriter: ctx.severe);
+      })
+      .then((int exitCode) {
+        return exitCode == 0;
+      });
 }
 
-Future<bool> _startProcess(Process process, TaskContext ctx) {
-  final completer = new Completer<bool>();
+Future<int> pipeProcess(Process process,
+    {Action1<String> stdOutWriter, Action1<String> stdErrWriter}) {
+  final completer = new Completer<int>();
 
-  process.stdout.onData = () {
-    final data = process.stdout.read();
-    assert(data != null);
-    final str = new String.fromCharCodes(data).trim();
-    ctx.fine(str);
-  };
+  if(stdOutWriter != null) {
+    process.stdout.onData = () {
+      final data = process.stdout.read();
+      assert(data != null);
+      final str = new String.fromCharCodes(data).trim();
+      stdOutWriter(str);
+    };
+  }
 
-  process.stderr.onData = () {
-    final data = process.stderr.read();
-    assert(data != null);
-    final str = new String.fromCharCodes(data).trim();
-    ctx.severe(str);
-  };
+  if(stdErrWriter != null) {
+    process.stderr.onData = () {
+      final data = process.stderr.read();
+      assert(data != null);
+      final str = new String.fromCharCodes(data).trim();
+      stdErrWriter(str);
+    };
+  }
 
   process.onExit = (int exitCode){
-    completer.complete(exitCode == RunResult.SUCCESS.exitCode);
+    completer.complete(exitCode);
   };
 
   return completer.future;
