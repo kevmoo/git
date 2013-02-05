@@ -1,16 +1,25 @@
 # Changelog - Dart Bag of Tricks
 
-## 0.12.0-dev - *pre-release* (SDK 0.3.4.0 r18115)
+## 0.12.0 - (SDK 0.3.4.0 r18115)
+
+* Now testing `harness_browser.html` via `DumpRenderTree`
+
+### bot_git
+
+* `GitDir` learned `getCurrentBranch`
 
 ### hop
 
 * __BREAKING__ ctor for `Runner` now takes param of `ArgResults`
 * `Runner` exposes helpers for parsing defaults args and getting usage.
 * `runHopcore` prints out nice error info and exits cleanly with bad default args
+* __NEW!__ added `TaskContext.getSubLogger`
 
 ### hop_tasks
 
 * `compileDocs` provides useful error info if used with bad args
+* __NEW!__ `createDartAnalyzerTask` - thanks, [Adam](https://github.com/financeCoding)!
+* Exposed `pipeProcess` method for logging `Process` output in real time
 
 ## 0.11.4 - 31 Jan 2013 (SDK 0.3.2.0 r17657)
 
