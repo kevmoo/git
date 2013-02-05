@@ -71,7 +71,7 @@ Future<List<String>> _getLibs() {
     // DARTBUG: http://code.google.com/p/dart/issues/detail?id=8335
     // excluding html_enhanced_config
     final forbidden = ['html_enhanced_config'].mappedBy((n) => '$n.dart');
-    if(forbidden.every((f) => !file.endsWith(f))) {
+    if(file.endsWith('.dart') && forbidden.every((f) => !file.endsWith(f))) {
       libs.add(file);
     }
   };
