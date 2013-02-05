@@ -24,21 +24,21 @@ Future<bool> startProcess(TaskContext ctx,
   });
 }
 
-Future<bool> _startProcess(process, state) {
+Future<bool> _startProcess(Process process, TaskContext ctx) {
   final completer = new Completer<bool>();
 
   process.stdout.onData = () {
     final data = process.stdout.read();
     assert(data != null);
     final str = new String.fromCharCodes(data).trim();
-    state.fine(str);
+    ctx.fine(str);
   };
 
   process.stderr.onData = () {
     final data = process.stderr.read();
     assert(data != null);
     final str = new String.fromCharCodes(data).trim();
-    state.severe(str);
+    ctx.severe(str);
   };
 
   process.onExit = (int exitCode){
