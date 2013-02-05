@@ -12,7 +12,7 @@
 
 * `compileDocs` provides useful error info if used with bad args
 
-## 0.11.4-beta - 31 Jan 2013 (SDK 0.3.2.0 r17657)
+## 0.11.4 - 31 Jan 2013 (SDK 0.3.2.0 r17657)
 
 ### bot_git
 
