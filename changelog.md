@@ -1,6 +1,20 @@
 # Changelog - Dart Bag of Tricks
 
-## 0.12.0 - (SDK 0.3.4.0 r18115)
+## 0.12.1 - 5 Feb 2013 (SDK 0.3.4.0 r18115)
+
+### bot_html
+
+* `getImmediateFuture` added
+
+### hop
+
+* Fixed `hop-completion.bash` when hop is run outside of a "hop" directory
+
+### hop_tasks
+
+* __NEW!__ `createBenchTask` added
+
+## 0.12.0 - 5 Feb 2013 (SDK 0.3.4.0 r18115)
 
 * Now testing `harness_browser.html` via `DumpRenderTree`
 
