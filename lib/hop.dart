@@ -15,6 +15,7 @@ part 'src/hop/run_result.dart';
 part 'src/hop/task.dart';
 part 'src/hop/task_context.dart';
 part 'src/hop/task_fail_error.dart';
+part 'src/hop/task_logger.dart';
 
 final _sharedConfig = new BaseConfig();
 
