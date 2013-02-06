@@ -50,6 +50,8 @@ void main() {
   addTask('dart2js', createDart2JsTask(paths,
       liveTypeAnalysis: true, rejectDeprecatedFeatures: true));
 
+  addTask('bench', createBenchTask());
+
   runHopCore();
 }
 
