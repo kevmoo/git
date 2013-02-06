@@ -2,6 +2,10 @@ part of hop_tasks;
 
 const _defaultRunCount = 20;
 
+// TODO: options for handling failed processes?
+// TODO: move some of the stat-related code to NumebrEnumerable?
+// TODO: tests?
+
 Task createBenchTask() {
   return new Task.async((ctx) {
 
