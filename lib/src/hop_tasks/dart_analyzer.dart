@@ -1,5 +1,7 @@
 // TODO(adam): document methods and class
 // TODO(adam): use verbose
+// TODO: add an async version that takes Func<Future<Iterable<String>>>
+//       see getCompileDocsFunc
 
 part of hop_tasks;
 
