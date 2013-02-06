@@ -21,12 +21,12 @@ class RootTaskContext {
     printCore(message);
   }
 
-  void _subTaskLog(_SubTaskContext subTask, String message, Level logLevel) {
+  void _subTaskLog(_SubTaskContext subTask, Level logLevel, String message) {
     assert(subTask._parent == this);
-    _logCore([subTask._name], message, logLevel);
+    _logCore([subTask._name], logLevel, message);
   }
 
-  void _logCore(List<String> titleSections, String message, Level logLevel) {
+  void _logCore(List<String> titleSections, Level logLevel, String message) {
     requireArgumentNotNull(message, 'message');
     assert(!titleSections.isEmpty);
     assert(titleSections.every((s) => s != null && !s.isEmpty));
@@ -93,9 +93,9 @@ class _SubTaskContext extends TaskContext {
 
   bool get isDisposed => _isDisposed;
 
-  void log(String message, Level logLevel) {
+  void log(Level logLevel, String message) {
     _assertNotDisposed();
-    _parent._subTaskLog(this, message, logLevel);
+    _parent._subTaskLog(this, logLevel, message);
   }
 
   TaskLogger getSubLogger(String name) {
@@ -108,9 +108,9 @@ class _SubTaskContext extends TaskContext {
     _isDisposed = true;
   }
 
-  void _subLoggerLog(_SubLogger logger, String message, Level logLevel) {
+  void _subLoggerLog(_SubLogger logger, Level logLevel, String message) {
     _assertNotDisposed();
-    _parent._logCore([_name, logger._name], message, logLevel);
+    _parent._logCore([_name, logger._name], logLevel, message);
   }
 
   void _assertNotDisposed() {
@@ -126,7 +126,7 @@ class _SubLogger extends TaskLogger {
 
   _SubLogger(this._name, this._parent);
 
-  void log(String message, Level logLevel) {
-    _parent._subLoggerLog(this, message, logLevel);
+  void log(Level logLevel, String message) {
+    _parent._subLoggerLog(this, logLevel, message);
   }
 }

@@ -4,23 +4,23 @@ abstract class TaskLogger {
 
   // level 500
   void fine(String message) {
-    log(message, Level.FINE);
+    log(Level.FINE, message);
   }
 
   // level 800
   void info(String message) {
-    log(message, Level.INFO);
+    log(Level.INFO, message);
   }
 
   // level 900
   void warning(String message) {
-    log(message, Level.WARNING);
+    log(Level.WARNING, message);
   }
 
   // level 1000
   void severe(String message) {
-    log(message, Level.SEVERE);
+    log(Level.SEVERE, message);
   }
 
-  void log(String message, Level logLevel);
+  void log(Level logLevel, String message);
 }
