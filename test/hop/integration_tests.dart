@@ -21,7 +21,7 @@ class IntegrationTests {
     final onComplete = expectAsync1((ProcessResult pr) {
       expect(pr.exitCode, equals(RunResult.SUCCESS.exitCode));
       final lines = pr.stdout.trim().split('\n');
-      expect(lines, orderedEquals(['analyze_libs', 'analyze_test_libs', 'dart2js', 'docs', 'hello', 'test']));
+      expect(lines, orderedEquals(['analyze_libs', 'analyze_test_libs', 'bench', 'dart2js', 'docs', 'hello', 'test']));
     });
 
     final f = Process.run(hopPath, [Runner.RAW_TASK_LIST_CMD]);
