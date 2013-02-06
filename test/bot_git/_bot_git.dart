@@ -60,44 +60,6 @@ bcd1284d805951a16e765cea5b2273a464ee2d86'''];
   });
 }
 
-Future<Tuple<TempDir, GitDir>> _getTempGit() {
-  TempDir _tempGitDir;
-  GitDir gitDir;
-
-  return TempDir.create()
-    .then((TempDir tempDir) {
-      expect(_tempGitDir , isNull);
-      _tempGitDir = tempDir;
-
-      // is not git dir
-      return GitDir.isGitDir(_tempGitDir.path);
-    })
-    .then((bool isGitDir) {
-      expect(isGitDir, false);
-
-      // initialize a new git dir
-      return GitDir.init(_tempGitDir.dir);
-    })
-    .then((GitDir gd) {
-      expect(gd, isNotNull);
-      gitDir = gd;
-
-      // is a git dir now
-      return GitDir.isGitDir(_tempGitDir.path);
-    })
-    .then((bool isGitDir) {
-      expect(isGitDir, true);
-
-      // is clean
-      return gitDir.isWorkingTreeClean();
-    })
-    .then((bool isWorkingTreeClean) {
-      expect(isWorkingTreeClean, true);
-
-      return new Tuple<TempDir, GitDir>(_tempGitDir, gitDir);
-    });
-}
-
 void _testGit() {
   final file1Name = 'file1.txt';
   final file2Name = 'file2.txt';
@@ -171,6 +133,44 @@ void _testGit() {
   // verify branch exists
 
   // dispose of both...er something
+}
+
+Future<Tuple<TempDir, GitDir>> _getTempGit() {
+  TempDir _tempGitDir;
+  GitDir gitDir;
+
+  return TempDir.create()
+    .then((TempDir tempDir) {
+      expect(_tempGitDir , isNull);
+      _tempGitDir = tempDir;
+
+      // is not git dir
+      return GitDir.isGitDir(_tempGitDir.path);
+    })
+    .then((bool isGitDir) {
+      expect(isGitDir, false);
+
+      // initialize a new git dir
+      return GitDir.init(_tempGitDir.dir);
+    })
+    .then((GitDir gd) {
+      expect(gd, isNotNull);
+      gitDir = gd;
+
+      // is a git dir now
+      return GitDir.isGitDir(_tempGitDir.path);
+    })
+    .then((bool isGitDir) {
+      expect(isGitDir, true);
+
+      // is clean
+      return gitDir.isWorkingTreeClean();
+    })
+    .then((bool isWorkingTreeClean) {
+      expect(isWorkingTreeClean, true);
+
+      return new Tuple<TempDir, GitDir>(_tempGitDir, gitDir);
+    });
 }
 
 const _showRefOutput = '''ff1c31c454c4128a98dcd610d203820eeeb91923 HEAD
