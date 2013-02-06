@@ -128,6 +128,8 @@ class _Stats {
     });
 
     final variance = sumOfSquaredDiffFromMean / list.length;
+
+    // standardDeviation: sqrt of the variance
     final standardDeviation = math.sqrt(variance);
 
     num median = null;
