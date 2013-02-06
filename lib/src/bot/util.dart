@@ -22,4 +22,17 @@ class Util {
     final split = '\n';
     return input.split(split);
   }
+
+  /**
+   * Returns a [String] with a length that is at least [minWidth].
+   * If [text] has a length less than [minWidth], the return value
+   * will be a string with spaces inserted before [text].
+   */
+  static String padLeft(String text, int minWidth) {
+    requireArgumentNotNull(text, 'text');
+    while(text.length < minWidth) {
+      text = ' '.concat(text);
+    }
+    return text;
+  }
 }
