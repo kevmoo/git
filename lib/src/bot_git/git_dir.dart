@@ -27,7 +27,7 @@ class GitDir {
     return getBranchReferences()
         .then((list) {
           return list
-              .mappedBy((br) => br.branchName)
+              .map((br) => br.branchName)
               .toList();
         });
   }
@@ -59,7 +59,7 @@ class GitDir {
           assert(pr.exitCode == 0);
 
           return CommitReference.fromShowRefOutput(pr.stdout)
-              .mappedBy((gr) => gr.toBranchReference())
+              .map((gr) => gr.toBranchReference())
               .toList();
         });
   }

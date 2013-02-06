@@ -16,7 +16,7 @@ abstract class ResourceLoader<T> {
   String _state = StateUnloaded;
 
   ResourceLoader(Iterable<String> urlList) :
-    _entries = new ReadOnlyCollection(urlList.mappedBy((url) => new _ResourceEntry(url)));
+    _entries = new ReadOnlyCollection(urlList.map((url) => new _ResourceEntry(url)));
 
   int get completedCount => _entries.count((e) => e.completed);
 

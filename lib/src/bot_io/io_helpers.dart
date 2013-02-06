@@ -80,7 +80,7 @@ class IoHelpers {
             return new Future.immediate(false);
           }
 
-          final futures = content.keys.mappedBy((name) {
+          final futures = content.keys.map((name) {
             return _verifyChildContent(dir, name, content[name], map[name]);
           });
 

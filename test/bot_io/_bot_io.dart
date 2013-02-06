@@ -71,7 +71,7 @@ void _testTempDirPopulate3(bool expectTrue, Map fileMap) {
   final mapEmpty = {};
 
   final maps = [mapFewer, mapMore, mapDiff, mapEmpty];
-  final futures = maps.mappedBy(_tempDir.verifyContents);
+  final futures = maps.map(_tempDir.verifyContents);
 
   // every one should return false
   final aggregateFuture = Future.wait(futures).then((list) => list.every((match) => !match));

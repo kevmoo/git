@@ -67,7 +67,7 @@ class CommitReference {
     assert(lines.last.length == 0);
 
     return lines.getRange(0, lines.length-1)
-        .mappedBy((line) {
+        .map((line) {
           final match = _lsRemoteRegExp.allMatches(line).single;
           assert(match.groupCount == 2);
 
@@ -155,7 +155,7 @@ class TreeEntry {
     assert(lines.last.length == 0);
 
     return lines.getRange(0, lines.length-1)
-        .mappedBy((line) => new TreeEntry.fromLsTree(line))
+        .map((line) => new TreeEntry.fromLsTree(line))
         .toList();
   }
 }

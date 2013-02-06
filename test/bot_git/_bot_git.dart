@@ -104,7 +104,7 @@ void _testGit() {
       expect(dir, equals(tempContent));
 
       // now we'll write files to the object store
-      final paths = _initialContentMap.keys.mappedBy((String fileName) {
+      final paths = _initialContentMap.keys.map((String fileName) {
         return new Path(tempContent.path).append(fileName).toNativePath();
       }).toList();
 

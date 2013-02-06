@@ -60,7 +60,7 @@ class TestListBase extends ListBase<int> {
   static void _testMap() {
     Func1<int, int> dub = (i) => i * 2;
 
-    var list = instance.mappedBy(dub);
+    var list = instance.map(dub);
     expect(list.length, equals(_length));
     expect(list, orderedEquals([10, 8, 6, 4, 2]));
   }

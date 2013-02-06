@@ -89,7 +89,7 @@ class RetainedUtil {
   static List<Coordinate> getCorners(Thing thing) {
     final rect = new Box(0,0,thing.width, thing.height);
     final points = rect.getCorners();
-    return points.mappedBy((p) {
+    return points.map((p) {
       return transformPointLocalToGlobal(thing, p);
     }).toList();
   }

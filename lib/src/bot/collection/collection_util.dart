@@ -68,7 +68,7 @@ class CollectionUtil {
     if(f == null) {
       return new HashSet.from(source);
     } else {
-      return new HashSet.from(source.mappedBy(f));
+      return new HashSet.from(source.map(f));
     }
   }
 

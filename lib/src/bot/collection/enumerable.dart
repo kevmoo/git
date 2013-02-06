@@ -77,8 +77,8 @@ abstract class Enumerable<T> extends Iterable<T> {
    * type and consequently the returned collection's
    * typeis Collection.
    */
-  Enumerable mappedBy(Func1<T, Object> f) =>
-      $(super.mappedBy(f));
+  Enumerable map(Func1<T, Object> f) =>
+      $(super.map(f));
 
   Enumerable<T> where(Func1<T, bool> f) =>
       $(super.where(f));
@@ -120,7 +120,7 @@ abstract class Enumerable<T> extends Iterable<T> {
       CollectionUtil.toHashMap(this, valueFunc, keyFunc);
 
   NumberEnumerable selectNumbers(Func1<T, num> f) =>
-      new NumberEnumerable.from(this.mappedBy(f));
+      new NumberEnumerable.from(this.map(f));
 
   String toString() => "[${this.join()}]";
 }

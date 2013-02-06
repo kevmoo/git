@@ -3,7 +3,7 @@ part of bot_io;
 class Console {
 
   static Iterable<String> getTable(List source,
-      List<ColumnDefinition> columns, {includeHeader: false}) {
+      List<ColumnDefinition> columns, {bool includeHeader: false}) {
     requireArgumentNotNull(source, 'source');
     requireArgumentNotNull(columns, 'columns');
     requireArgument(columns.length > 0, 'columns',
@@ -39,7 +39,7 @@ class Console {
       }
     }
 
-    return cells.rows.mappedBy((r) => _getRow(r, maxWidths));
+    return cells.rows.map((r) => _getRow(r, maxWidths));
   }
 
   static String _getRow(List<String> row, List<int> columnWidths) {

@@ -81,7 +81,7 @@ class Array2d<T> extends ListBase<T> {
   }
 
   List<T> getAdjacent(int x, int y) {
-    final m = getAdjacentIndices(x, y).mappedBy((i) => this[i]);
+    final m = getAdjacentIndices(x, y).map((i) => this[i]);
     return new List<T>.from(m);
   }
 

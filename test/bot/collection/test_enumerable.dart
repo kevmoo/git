@@ -171,7 +171,7 @@ class TestEnumerable {
   }
 
   static void _testMap() {
-    final e = $([1,2,3,4,5,6]).mappedBy((x) => x * 2);
+    final e = $([1,2,3,4,5,6]).map((x) => x * 2);
     expect(e, orderedEquals([2,4,6,8,10,12]));
   }
 
