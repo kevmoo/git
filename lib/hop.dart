@@ -10,6 +10,7 @@ import 'package:meta/meta.dart';
 
 part 'src/hop/runner.dart';
 part 'src/hop/base_config.dart';
+part 'src/hop/console_context.dart';
 part 'src/hop/root_task_context.dart';
 part 'src/hop/run_result.dart';
 part 'src/hop/task.dart';
