@@ -38,13 +38,17 @@ ArgParser _getBenchParser() =>
 
 Future<List<_BenchRunResult>> _runMany(TaskLogger logger, int count, String processName, List<String> args) {
 
+  assert(count > 1);
+  final countStrLength = count.toString().length;
+
   final range = new Iterable.generate(count, (i) => i);
   final results = new List<_BenchRunResult>();
 
   return Future.forEach(range, (i) {
     return _runOnce(i+1, processName, args)
         .then((result) {
-          logger.fine("Test ${result.runNumber} of $count - ${result.executionDuration}");
+          final paddedNumber = Util.padLeft(result.runNumber.toString(), countStrLength);
+          logger.fine("Test $paddedNumber of $count - ${result.executionDuration}");
           results.add(result);
         });
     })
@@ -141,9 +145,9 @@ class _Stats {
   }
 
   String toString() => '''
-Mean:   $mean
-Median: $median
-Max:    $max
 Min:    $min
+Max:    $max
+Median: $median
+Mean:   $mean
 StdDev: $standardDeviation''';
 }
