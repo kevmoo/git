@@ -160,7 +160,6 @@ Future _doCommitComplex(TaskContext ctx, TempDir workTree, TempDir gitDir,
       .then((ProcessResult pr) {
         _throwIfProcessFailed(ctx, pr);
 
-        // TODO: need more info for commit message
         final args = _getGitArgs(gitDir, workTree,
             ['commit', '-m', commitMessage, '.']);
 
