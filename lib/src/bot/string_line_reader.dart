@@ -44,3 +44,18 @@ class StringLineReader {
     return value;
   }
 }
+
+class _StringLineIterator extends Iterator<String> {
+  final StringLineReader _reader;
+
+  String _current;
+
+  _StringLineIterator(String source) : _reader = new StringLineReader(source);
+
+  String get current => _current;
+
+  bool moveNext() {
+    _current = _reader.readNextLine();
+    return _current != null;
+  }
+}

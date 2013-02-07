@@ -17,10 +17,10 @@ class Util {
   }
 
   // TODO: handles windows new lines? Should test...
-  static List<String> splitLines(String input) {
+  static Iterable<String> splitLines(String input) {
     requireArgumentNotNull(input, 'input');
-    final split = '\n';
-    return input.split(split);
+
+    return new _FuncEnumerable(input, (v) => new _StringLineIterator(v));
   }
 
   /**

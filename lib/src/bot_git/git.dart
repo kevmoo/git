@@ -61,7 +61,7 @@ class CommitReference {
 
   static List<CommitReference> fromShowRefOutput(String input) {
     assert(input != null);
-    final lines = Util.splitLines(input);
+    final lines = Util.splitLines(input).toList();
 
     // last line should be empty
     assert(lines.last.length == 0);
@@ -149,7 +149,7 @@ class TreeEntry {
   }
 
   static List<TreeEntry> fromLsTreeOutput(String output) {
-    final lines = Util.splitLines(output);
+    final lines = Util.splitLines(output).toList();
 
     // last line should be empty
     assert(lines.last.length == 0);
