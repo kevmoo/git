@@ -5,14 +5,7 @@ class GitDir {
 
   final Path _path;
 
-  factory GitDir(String path) {
-    return new GitDir.fromPath(new Path(path));
-  }
-
-  GitDir.fromPath(Path path) :
-    this._path = path.canonicalize() {
-    assert(new Directory.fromPath(_path).existsSync());
-  }
+  GitDir._raw(this._path);
 
   Path get path => _path;
 
@@ -174,6 +167,22 @@ class GitDir {
         });
   }
 
+  static Future<GitDir> fromExisting(String gitDirRoot) {
+    final path = new Path(gitDirRoot);
+
+    requireArgument(path.isCanonical, 'gitDirRoot', 'provided dir must be canonical - $gitDirRoot');
+    requireArgument(path.isAbsolute, 'gitDirRoot', 'provided dir must be absolute - $gitDirRoot');
+
+    return Git.runGit(['rev-parse', '--git-dir'], processWorkingDir: path.toString())
+        .then((ProcessResult pr) {
+          if(pr.stdout.trim() == '.git') {
+            return new GitDir._raw(path);
+          } else {
+            throw 'The provided value "$gitDirRoot" is not the root of a git directory';
+          }
+        });
+  }
+
   static Future<GitDir> _init(Directory source) {
     return _isGitDir(source)
         .then((bool isGitDir) {
@@ -184,7 +193,10 @@ class GitDir {
           return Git.runGit(['init', source.path]);
         })
         .then((ProcessResult pr) {
-          return new GitDir(source.path);
+
+          // does a bit more work than strictly nessesary
+          // but at least it ensures consistency
+          return fromExisting(source.path);
         });
   }
 

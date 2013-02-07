@@ -9,12 +9,17 @@ Future<bool> branchForDir(TaskContext ctx, String sourceBranch, String sourceDir
     workingDir = new Directory.current().path;
   }
 
-  final gitDir = new GitDir(workingDir);
+  GitDir gitDir;
 
   List<String> gitArgs;
   String sourceDirTreeSha;
 
-  return gitDir.lsTree(sourceBranch, subTreesOnly: true, path: sourceDir)
+  return GitDir.fromExisting(workingDir)
+      .then((GitDir value) {
+        gitDir = value;
+
+        return gitDir.lsTree(sourceBranch, subTreesOnly: true, path: sourceDir);
+      })
       .then((List<TreeEntry> entries) {
         assert(entries.length <= 1);
         if(entries.isEmpty) {
