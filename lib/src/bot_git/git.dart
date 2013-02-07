@@ -104,22 +104,64 @@ class BranchReference extends CommitReference {
 }
 
 class Commit {
-  static const _commitContentRegExpVal = '^tree (${Git._shaRegexPattern})\\s.*';
-  static final _commitContentRegExp = new RegExp(_commitContentRegExpVal);
+  static final _headerRegExp = new RegExp(r'^([a-z]+) (.+)$');
 
   final String treeSha;
+  final String author;
+  final String committer;
+  final String message;
   final String content;
+  final ReadOnlyCollection<String> parents;
 
-  Commit._internal(this.treeSha, this.content) {
-    assert(Git.isValidSha(this.treeSha));
+  Commit._internal(this.treeSha, this.author, this.committer, this.message,
+      this.content, Iterable<String> parents) :
+      this.parents = new ReadOnlyCollection<String>(parents) {
+
+    requireArgument(Git.isValidSha(this.treeSha), 'treeSha');
+    for(final parent in parents) {
+      requireArgument(Git.isValidSha(parent), 'parents', 'Every entry must be a valid sha');
+    }
+
+    // null checks on many things
+    // unique checks on parents
   }
 
   static Commit parse(String content) {
-    // TODO: should catch and re-throw a descriptive error
-    final match = _commitContentRegExp.allMatches(content).single;
+    final slr = new StringLineReader(content);
 
-    assert(match.groupCount == 1);
-    return new Commit._internal(match[1], content);
+    String lastLine = slr.readNextLine();
+
+    final headers = new Map<String, List<String>>();
+    while(!lastLine.isEmpty) {
+      final match = _headerRegExp.allMatches(lastLine).single;
+      assert(match.groupCount == 2);
+      final header = match.group(1);
+      final value = match.group(2);
+
+      final list = headers.putIfAbsent(header, () => new List<String>());
+      list.add(value);
+
+      lastLine = slr.readNextLine();
+    }
+
+    var message = slr.readToEnd();
+    assert(message.endsWith('\n'));
+    final originalMessageLength = message.length;
+    message = message.trim();
+    // message should be trimmed by git, so the only diff after trim
+    // should be 1 character - the removed new line
+    assert(message.length + 1 == originalMessageLength);
+
+    final treeSha = headers['tree'].single;
+    final author = headers['author'].single;
+    final committer = headers['committer'].single;
+
+    var parents = headers['parent'];
+    if(parents == null) {
+      parents = [];
+    }
+
+    return new Commit._internal(treeSha, author, committer, message, content, parents);
   }
 }
 
