@@ -1,6 +1,8 @@
 part of bot_git;
 
 class GitDir {
+  static const _workTreeArg = '--work-tree=';
+  static const _gitDirArg = '--git-dir=';
   static final RegExp _shaRegExp = new RegExp(r'^[a-f0-9]{40}$');
 
   final Path _path;
@@ -123,7 +125,14 @@ class GitDir {
   }
 
   Future<ProcessResult> runCommand(List<String> args, [bool throwOnError = true]) {
-    return Git.runGit(args, throwOnError: throwOnError, processWorkingDir: _workingDir);
+    requireArgumentNotNull(args, 'args');
+    for(final arg in args) {
+      requireArgumentNotNullOrEmpty(arg, 'args');
+      requireArgument(!arg.contains(_workTreeArg), 'args', 'Cannot contain $_workTreeArg');
+      requireArgument(!arg.contains(_gitDirArg), 'args', 'Cannot contain $_gitDirArg');
+    }
+
+    return Git.runGit(args, throwOnError: throwOnError, processWorkingDir: _processWorkingDir);
   }
 
   Future<bool> isWorkingTreeClean() {
@@ -131,7 +140,7 @@ class GitDir {
         .then((ProcessResult pr) => pr.stdout.isEmpty);
   }
 
-  String get _workingDir => _path.toString();
+  String get _processWorkingDir => _path.toString();
 
   static Future<bool> isGitDir(String path) {
     final dir = new Directory(path);
