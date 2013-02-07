@@ -4,12 +4,13 @@ import 'dart:collection';
 import 'dart:collection-dev';
 import 'dart:math' as math;
 
+part 'src/bot/annotations.dart';
 part 'src/bot/requires.dart';
+part 'src/bot/string_line_reader.dart';
 part 'src/bot/tuple.dart';
 part 'src/bot/tuple3.dart';
 part 'src/bot/typedefs.dart';
 part 'src/bot/util.dart';
-part 'src/bot/annotations.dart';
 
 part 'src/bot/attached/attachable.dart';
 part 'src/bot/attached/attachable_object.dart';
