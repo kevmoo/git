@@ -191,7 +191,9 @@ class GitDir {
   static Future<bool> _isGitDir(Directory dir) {
     assert(dir.existsSync());
 
-    return Git.runGit(['status', '--porcelain'],
+    // using rev-parse because it will fail in many scenarios
+    // including if the directory provided is a bare repository
+    return Git.runGit(['rev-parse'],
         throwOnError: false, processWorkingDir: dir.path)
         .then((ProcessResult pr) {
           // if exitCode is 0, status worked...which means this is a git dir
