@@ -15,7 +15,8 @@ class CollectionUtil {
   }
 
   static Iterable selectMany(Iterable source, Func1<dynamic, Iterable> func) {
-    return new _FuncEnumerable(source, (s) => new _SelectManyIterator(s, func));
+    return new _FuncEnumerable(source, (Iterable s) =>
+        new _SelectManyIterator(s.iterator, func));
   }
 
   static int count(Iterable source, Func1<dynamic, bool> test) {
@@ -38,7 +39,8 @@ class CollectionUtil {
     if(comparer == null) {
       comparer = (a,b) => a == b;
     }
-    return new _FuncEnumerable(source, (s) => new _DistinctIterator(s, comparer));
+    return new _FuncEnumerable(source, (Iterable s) =>
+        new _DistinctIterator(s.iterator, comparer));
   }
 
   static void forEachWithIndex(Iterable source, Action2<dynamic, int> f) {

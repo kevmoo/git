@@ -134,10 +134,10 @@ class _SimpleEnumerable<T> extends Enumerable<T> {
 }
 
 class _FuncEnumerable<TSource, TOutput> extends Enumerable<TOutput> {
-  final Iterable<TSource> _source;
-  final Func1<Iterator<TSource>, Iterator<TOutput>> _func;
+  final TSource _source;
+  final Func1<TSource, Iterator<TOutput>> _func;
 
   const _FuncEnumerable(this._source, this._func) : super();
 
-  Iterator<TOutput> get iterator => _func(_source.iterator);
+  Iterator<TOutput> get iterator => _func(_source);
 }
