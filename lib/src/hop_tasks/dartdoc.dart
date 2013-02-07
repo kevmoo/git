@@ -134,7 +134,7 @@ Future _ensureProperBranch(TaskContext ctx, TempDir gitDir, TempDir workTree,
       .then((String currentBranch) {
         if(currentBranch == desiredBranch) {
           // we have the right branch, cool
-          return new Future.immediate(null);
+          return null;
         } else {
           // do the actual checkout
           return _checkoutBare(ctx, gitDir, workTree, desiredBranch);
