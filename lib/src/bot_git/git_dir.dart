@@ -137,7 +137,7 @@ class GitDir {
     }
 
     if(_gitWorkTree != null) {
-      list.insertRange(0, 1, '$_workTreeArg${_gitWorkTree}');
+      list.insertRange(0, 1, '$_workTreeArg${_gitWorkTree.toNativePath()}');
     }
 
     return Git.runGit(list, throwOnError: throwOnError, processWorkingDir: _processWorkingDir);
@@ -210,7 +210,7 @@ class GitDir {
                 // now...uh...just push gd to 'this'? I'm scared, but we'll try
 
                 // --verbose is not strictly needed, but nice for debugging
-                return tempDirs.gitDir.runCommand(['push', '--verbose', '--progress', this.path.toString(), branchName]);
+                return tempDirs.gitDir.runCommand(['push', '--verbose', '--progress', path.toNativePath(), branchName]);
               })
               .then((ProcessResult pr) {
                 // pr.stderr will have all of the info
@@ -243,7 +243,7 @@ class GitDir {
           tempWorkDir = value;
 
           // time for crazy clone tricks
-          final args = ['clone', '--shared', '--no-checkout', '--bare', _processWorkingDir, '.'];
+          final args = ['clone', '--shared', '--no-checkout', '--bare', path.toNativePath(), '.'];
 
           return Git.runGit(args, processWorkingDir: tempGitHost.path);
       })
@@ -284,7 +284,7 @@ class GitDir {
           tempWorkDir = value;
 
           // time for crazy clone tricks
-          final args = ['clone', '--shared', '--branch', existingBranchName, '--bare', _processWorkingDir, '.'];
+          final args = ['clone', '--shared', '--branch', existingBranchName, '--bare', path.toNativePath(), '.'];
 
           return Git.runGit(args, processWorkingDir: tempGitHost.path);
       })

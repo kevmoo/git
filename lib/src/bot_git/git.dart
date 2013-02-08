@@ -13,7 +13,8 @@ class Git {
 
     final processOptions = new ProcessOptions();
     if(processWorkingDir != null) {
-      processOptions.workingDirectory = processWorkingDir;
+      final nativeDir = new Path(processWorkingDir).toNativePath();
+      processOptions.workingDirectory = nativeDir;
     }
 
     return Process.run('git', args, processOptions)
