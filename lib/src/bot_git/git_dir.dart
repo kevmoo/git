@@ -268,7 +268,7 @@ class GitDir {
       });
   }
 
-  // if branch exists, then do single-branch dance, and clear it out
+  // if branch exists, then clone to that branch, clear it out
   Future<_TempDirs> _getTempDirPair(String existingBranchName) {
     TempDir tempGitHost;
     TempDir tempWorkDir;
@@ -284,7 +284,7 @@ class GitDir {
           tempWorkDir = value;
 
           // time for crazy clone tricks
-          final args = ['clone', '--shared', '--single-branch', '--branch', existingBranchName, '--bare', _processWorkingDir, '.'];
+          final args = ['clone', '--shared', '--branch', existingBranchName, '--bare', _processWorkingDir, '.'];
 
           return Git.runGit(args, processWorkingDir: tempGitHost.path);
       })
