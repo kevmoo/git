@@ -35,30 +35,37 @@ Future<int> pipeProcess(Process process,
 
   bool finished = false;
 
+  void validateNotFinished() {
+    if(finished) {
+      throw "Received signal from $process after exit signal";
+    }
+  }
+
   if(stdOutWriter != null) {
     process.stdout.onData = () {
+      validateNotFinished();
+
       final data = process.stdout.read();
-      assert(data != null);
       final str = new String.fromCharCodes(data).trim();
 
-      assert(!finished);
       stdOutWriter(str);
     };
   }
 
   if(stdErrWriter != null) {
     process.stderr.onData = () {
+      validateNotFinished();
+
       final data = process.stderr.read();
       assert(data != null);
       final str = new String.fromCharCodes(data).trim();
 
-      assert(!finished);
       stdErrWriter(str);
     };
   }
 
   process.onExit = (int exitCode){
-    assert(!finished);
+    validateNotFinished();
     finished = true;
     completer.complete(exitCode);
   };
