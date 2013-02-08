@@ -73,7 +73,9 @@ void _testPopulateBranch() {
         return _testPopulateBranchEmpty(gd1, testBranchName);
       })
       .whenComplete(() {
-        td1.dispose();
+        if(td1 != null) {
+          td1.dispose();
+        }
       });
 
   expect(future, finishes);
