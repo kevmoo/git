@@ -47,6 +47,67 @@ void expectFutureComplete(Future future, [Action1 onComplete]) {
   future.then((value) => testWait(false, value), onError: (error) => testWait(true, error));
 }
 
+/**
+ * Matches a [Future] that completes successfully with a value. Note that this
+ * creates an asynchronous expectation. The call to `expect()` that includes
+ * this will return immediately and execution will continue. Later, when the
+ * future completes, the actual expectation will run.
+ *
+ * To test that a Future completes with an exception, you can use [throws] and
+ * [throwsA].
+ */
+Matcher finishes = const _Finishes(null);
+
+/**
+ * Matches a [Future] that completes succesfully with a value that matches
+ * [matcher]. Note that this creates an asynchronous expectation. The call to
+ * `expect()` that includes this will return immediately and execution will
+ * continue. Later, when the future completes, the actual expectation will run.
+ *
+ * To test that a Future completes with an exception, you can use [throws] and
+ * [throwsA].
+ */
+Matcher finishesWith(matcher) => new _Finishes(wrapMatcher(matcher));
+
+class _Finishes extends BaseMatcher {
+  final Matcher _matcher;
+
+  const _Finishes(this._matcher);
+
+  bool matches(item, MatchState matchState) {
+    if (item is! Future) return false;
+    var done = wrapAsync((fn) => fn());
+
+    item.then((value) {
+      done(() { if (_matcher != null) expect(value, _matcher); });
+    }, onError: (e) {
+      if(e.error != null && e.error is ExpectException) {
+        done(() => registerException(e.error, e.stackTrace));
+      } else {
+        var reason = 'Expected future to complete successfully, but it failed '
+                     'with ${e.error}';
+        if (e.stackTrace != null) {
+          var stackTrace = e.stackTrace.toString();
+          stackTrace = '  ${stackTrace.replaceAll('\n', '\n  ')}';
+          reason = '$reason\nStack trace:\n$stackTrace';
+        }
+        done(() => expect(false, isTrue, reason: reason));
+      }
+    });
+
+    return true;
+  }
+
+  Description describe(Description description) {
+    if (_matcher == null) {
+      description.add('completes successfully');
+    } else {
+      description.add('completes to a value that ').addDescriptionOf(_matcher);
+    }
+    return description;
+  }
+}
+
 class _AssertionErrorMatcher extends TypeMatcher {
   const _AssertionErrorMatcher() : super("AssertMatcher");
   bool matches(item, MatchState matchState) => item is AssertionError;
