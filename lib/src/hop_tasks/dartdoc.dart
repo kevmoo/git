@@ -15,21 +15,57 @@ Future<bool> compileDocs(TaskContext ctx, String targetBranch,
   final parseResult = _helpfulParseArgs(ctx, parser, ctx.arguments);
   final bool allowDirty = parseResult['allow-dirty'];
 
-  final tempDocsDirFuture = TempDir.create();
-  final tempGitDirFuture = TempDir.create()
-      .then((TempDir dir) => _doGitCheckout(ctx, '.', dir, targetBranch));
-  final getLibsFuture = libGetter();
-  final commitMessageFuture = _getCommitMessageFuture(ctx, allowDirty);
+  final currentWorkingDir = new Directory.current().path;
 
-  return Future.wait([tempDocsDirFuture, getLibsFuture, tempGitDirFuture,
-                       commitMessageFuture])
-      .then((values) {
-        final outputDir = values[0];
-        final libs = values[1];
-        final gitDir = values[2];
-        final commitMessage = values[3];
-        return _compileDocs(ctx, gitDir, outputDir, targetBranch, commitMessage,
-            libs, packageDir);
+  GitDir gitDir;
+  List<String> libs;
+
+  return GitDir.fromExisting(currentWorkingDir)
+      .then((GitDir value) {
+        gitDir = value;
+
+        return gitDir.isWorkingTreeClean();
+      })
+      .then((bool isClean) {
+        if(!allowDirty && !isClean) {
+          ctx.fail('Working tree is dirty. Cannot generate docs.');
+        }
+
+        return libGetter();
+      })
+      .then((List<String> value) {
+        assert(value != null);
+        libs = value;
+
+        return _getCommitMessageFuture(gitDir);
+      })
+      .then((String commitMessage) {
+
+        return gitDir.populateBranch(targetBranch,
+            (TempDir td) => _doDocsPopulate(ctx, td, libs, packageDir),
+            commitMessage);
+      })
+      .then((Commit value) {
+        if(value == null) {
+          ctx.info('No commit. Nothing changed.');
+        } else {
+          ctx.info('New commit created at branch $targetBranch');
+          ctx.info('Message: ${value.message}');
+        }
+
+        return true;
+      });
+}
+
+Future _doDocsPopulate(TaskContext ctx, TempDir dir, Collection<String> libs, String packageDir) {
+  return _dartDoc(ctx, dir, libs, packageDir)
+      .then((bool dartDocSuccess) {
+        if(!dartDocSuccess) {
+          ctx.fail('The dartdoc process failed.');
+        }
+
+        // yeah, silly. ctx.fail should blow up. Should not get heer
+        assert(dartDocSuccess);
       });
 }
 
@@ -42,51 +78,14 @@ ArgParser _getDartDocParser() {
   return parser;
 }
 
-Future<bool> _compileDocs(TaskContext ctx, TempDir gitDir, TempDir outputDir,
-    String targetBranch, String commitMessage, List<String> libs, String packageDir) {
+Future<String> _getCommitMessageFuture(GitDir gitDir) {
+  return gitDir.getCurrentBranch()
+    .then((BranchReference currentBranchRef) {
 
-  return _ensureProperBranch(ctx, gitDir, outputDir, targetBranch)
-      .then((_) => _dartDoc(ctx, outputDir, libs, packageDir))
-      .then((bool dartDocSuccess) {
-        if(!dartDocSuccess) {
-          ctx.fail('The dartdoc process failed.');
-        }
+      final abbrevSha = currentBranchRef.sha.substring(0, 7);
 
-        // yeah, silly. ctx.fail should blow up. Should not get heer
-        assert(dartDocSuccess);
-
-        return _doCommitComplex(ctx, outputDir, gitDir, commitMessage, targetBranch);
-      })
-      .then((_) {
-        return true;
-      }).whenComplete(() {
-        gitDir.dispose();
-        outputDir.dispose();
-      });
-}
-
-Future<String> _getCommitMessageFuture(TaskContext ctx, bool allowDirty) {
-  GitDir gitDir;
-
-  return GitDir.fromExisting(new Directory.current().path)
-      .then((GitDir value) {
-        gitDir = value;
-
-        return gitDir.isWorkingTreeClean();
-      })
-      .then((bool isClean) {
-        if(!isClean && !allowDirty) {
-          ctx.fail('Working tree is dirty. Cannot generate docs.');
-        }
-
-        return gitDir.getCurrentBranch();
-      })
-      .then((BranchReference currentBranchRef) {
-
-        final abbrevSha = currentBranchRef.sha.substring(0, 7);
-
-        return "Docs generated for ${currentBranchRef.branchName} at ${abbrevSha}";
-      });
+      return "Docs generated for ${currentBranchRef.branchName} at ${abbrevSha}";
+    });
 }
 
 Future<bool> _dartDoc(TaskContext ctx, TempDir outputDir, Collection<String> libs,
@@ -95,134 +94,8 @@ Future<bool> _dartDoc(TaskContext ctx, TempDir outputDir, Collection<String> lib
 
   args.addAll(libs);
   ctx.fine("Generating docs into: $outputDir");
-  return startProcess(ctx, "dartdoc", args);
-}
 
-Future<String> _doGitCheckout(TaskContext ctx, String sourceGitPath,
-    TempDir targetGitPath, String sourceGitBranch) {
+  final sublogger = ctx.getSubLogger('dartdoc');
 
-  return _gitRemoteHasHead(sourceGitPath, 'refs/heads/$sourceGitBranch')
-      .then((bool branchExists) => _doGitClone(ctx, sourceGitPath,
-          targetGitPath, sourceGitBranch, branchExists))
-      .then((obj) => targetGitPath);
-}
-
-Future _doGitClone(TaskContext ctx, String sourceGitPath,
-    TempDir targetGitPath, String sourceGitBranch, bool doCheckout) {
-  final args = ['clone', '--bare', '--shared', sourceGitPath, targetGitPath.path];
-  if(doCheckout) {
-    args.addAll(['--single-branch', '--branch', sourceGitBranch]);
-  } else {
-    args.addAll(['--no-checkout']);
-  }
-  return Process.run('git', args)
-      .then((ProcessResult pr) {
-        _throwIfProcessFailed(ctx, pr);
-        ctx.info("Created temp git repo at $targetGitPath");
-      });
-}
-
-Future _ensureProperBranch(TaskContext ctx, TempDir gitDir, TempDir workTree,
-                           String desiredBranch) {
-  final args = _getGitArgs(gitDir, workTree, ['rev-parse', '--abbrev-ref', 'HEAD']);
-
-  return Process.run('git', args)
-      .then((ProcessResult pr) {
-        _throwIfProcessFailed(ctx, pr);
-        return pr.stdout.trim();
-      })
-      .then((String currentBranch) {
-        if(currentBranch == desiredBranch) {
-          // we have the right branch, cool
-          return null;
-        } else {
-          // do the actual checkout
-          return _checkoutBare(ctx, gitDir, workTree, desiredBranch);
-        }
-      });
-}
-
-Future _checkoutBare(TaskContext ctx, TempDir gitDir, TempDir workTree,
-                     String desiredBranch) {
-  final args = _getGitArgs(gitDir, workTree, ['checkout', '--orphan', desiredBranch]);
-  return Process.run('git', args)
-      .then((ProcessResult pr) {
-        _throwIfProcessFailed(ctx, pr);
-        final args = _getGitArgs(gitDir, workTree, ['rm', '-rf', '.']);
-        return Process.run('git', args);
-      })
-      .then((ProcessResult pr) {
-        _throwIfProcessFailed(ctx, pr);
-      });
-}
-
-Future _doCommitComplex(TaskContext ctx, TempDir workTree, TempDir gitDir,
-                        String commitMessage, String targetBranch) {
-  requireArgumentNotNullOrEmpty(commitMessage, 'commitMessage');
-
-  final args = _getGitArgs(gitDir, workTree, ['add', '--all']);
-  return Process.run('git', args)
-      .then((ProcessResult pr) {
-        _throwIfProcessFailed(ctx, pr);
-
-        final args = _getGitArgs(gitDir, workTree,
-            ['commit', '-m', commitMessage, '.']);
-
-        return Process.run('git', args);
-      })
-      .then((ProcessResult pr) {
-        if(pr.exitCode == 1) {
-          // could be okay if nothing to commit. should check
-          if(pr.stdout.contains("nothing to commit, working directory clean")) {
-            // all good
-            ctx.info("Nothing seems to have changed");
-            return null;
-          }
-        }
-        _throwIfProcessFailed(ctx, pr);
-      })
-      .then((_) {
-        final args = _getGitArgs(gitDir, workTree, ['push', 'origin', targetBranch]);
-        return Process.run('git', args);
-      })
-      .then((ProcessResult pr) {
-        _throwIfProcessFailed(ctx, pr);
-        return null;
-      });
-}
-
-List<String> _getGitArgs(TempDir gitDir, TempDir workTree,
-    Collection<String> rest) {
-  final args = ['--git-dir=${gitDir.path}', '--work-tree=${workTree.path}'];
-  args.addAll(rest);
-  return args;
-}
-
-// See http://git-scm.com/docs/git-ls-remote
-Future<bool> _gitRemoteHasHead(String remote, String head) {
-  requireArgumentNotNull(remote, 'remote');
-  requireArgumentNotNull(head, 'head');
-  final args = ['ls-remote', '--exit-code', '--heads', remote, head];
-  return Process.run('git', args)
-      .then((ProcessResult pr) {
-        if(pr.exitCode == 0) {
-          return true;
-        } else if(pr.exitCode == 2) {
-          // per --exit-code, this implies head does not exist
-          return false;
-        } else {
-          throw "git command error. Exit code: ${pr.exitCode}, Error: ${pr.stderr}";
-        }
-      });
-}
-
-void _throwIfProcessFailed(TaskContext ctx, ProcessResult pr) {
-  assert(pr != null);
-  if(pr.exitCode != 0) {
-    ctx.severe('Process returned a non-zero exit code');
-    ctx.fine(pr.stdout.trim());
-    ctx.severe(pr.stderr.trim());
-    ctx.severe('Exit code: ${pr.exitCode}');
-    throw 'Task failed';
-  }
+  return startProcess(sublogger, "dartdoc", args);
 }
