@@ -9,22 +9,22 @@ class IntegrationTests {
   }
 
   static void _testBadHopCommand() {
-    final onComplete = expectAsync1((ProcessResult pr) {
-      expect(pr.exitCode, equals(RunResult.BAD_USAGE.exitCode));
-    });
+    final future = Process.run(hopPath, ['bad_command_name'])
+        .then((ProcessResult pr) {
+          expect(pr.exitCode, equals(RunResult.BAD_USAGE.exitCode));
+        });
 
-    final f = Process.run(hopPath, ['bad_command_name']);
-    f.then(onComplete);
+    expect(future, completes);
   }
 
   static void _testOutputSorted() {
-    final onComplete = expectAsync1((ProcessResult pr) {
-      expect(pr.exitCode, equals(RunResult.SUCCESS.exitCode));
-      final lines = pr.stdout.trim().split('\n');
-      expect(lines, orderedEquals(['analyze_libs', 'analyze_test_libs', 'bench', 'dart2js', 'docs', 'hello', 'test']));
-    });
+    final future = Process.run(hopPath, [Runner.RAW_TASK_LIST_CMD])
+        .then((ProcessResult pr) {
+          expect(pr.exitCode, equals(RunResult.SUCCESS.exitCode));
+          final lines = pr.stdout.trim().split('\n');
+          expect(lines, orderedEquals(['analyze_libs', 'analyze_test_libs', 'bench', 'dart2js', 'docs', 'hello', 'test']));
+        });
 
-    final f = Process.run(hopPath, [Runner.RAW_TASK_LIST_CMD]);
-    f.then(onComplete);
+    expect(future, completes);
   }
 }
