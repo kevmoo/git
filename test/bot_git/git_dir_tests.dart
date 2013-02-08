@@ -123,9 +123,10 @@ Future<Tuple<Commit, int>> _testPopulateBranchCore(GitDir gitDir, String branchN
       return new Tuple(commit, originalCommitCount);
     })
     .whenComplete(() {
-      expect(implTempDir, isNotNull);
-      expect(implTempDir.isDisposed, true);
-      expect(implTempDir.dir.existsSync(), false);
+      if(implTempDir != null) {
+        expect(implTempDir.isDisposed, true);
+        expect(implTempDir.dir.existsSync(), false);
+      }
     });
 }
 
