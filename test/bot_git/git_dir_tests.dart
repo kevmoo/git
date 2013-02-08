@@ -262,8 +262,12 @@ void _testWriteObjects() {
 
 
     }).whenComplete(() {
-      tempGitDir.dispose();
-      tempContent.dispose();
+      if(tempGitDir != null) {
+        tempGitDir.dispose();
+      }
+      if(tempContent != null) {
+        tempContent.dispose();
+      }
     });
 
   expect(future, finishes);
