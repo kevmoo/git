@@ -166,21 +166,10 @@ class GitDir {
 
     _TempDirs tempDirs;
 
-    // the branch ref for content in the temp dir
-    BranchReference tempBranchRef;
-
-    // the commit in the temp dir we've created
-    Commit tempCommit;
-
-    BranchReference existingBranchRef;
-
-    // TODO: do this earlier...because it'll effect how we create our temp
-    // git world...
     return getBranchReference(branchName)
         .then((BranchReference value) {
-          existingBranchRef = value;
 
-          if(existingBranchRef == null) {
+          if(value == null) {
             return _getTempDirPairForNewBranch(branchName);
           } else {
             return _getTempDirPair(branchName);
@@ -232,7 +221,9 @@ class GitDir {
               });
         })
         .whenComplete(() {
-          tempDirs.dispose();
+          if(tempDirs != null) {
+            tempDirs.dispose();
+          }
         });
   }
 
