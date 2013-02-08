@@ -7,9 +7,9 @@ Task createProcessTask(String command, {List<String> args: null, String descript
 // TODO: document that start does an 'interactive' process
 //       stderr and stdout are piped to context, etc
 //       This aligns with io.Process.start
-Future<bool> startProcess(TaskContext ctx,
-    String command,
+Future<bool> startProcess(TaskLogger ctx, String command,
     [List<String> args = null]) {
+
   requireArgumentNotNull(ctx, 'ctx');
   requireArgumentNotNull(command, 'command');
   if(args == null) {
