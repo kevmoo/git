@@ -29,6 +29,6 @@ class IntegrationTests {
     final future = Process.run('dart', list)
         .then(handler);
 
-    expect(future, completes);
+    expect(future, finishes);
   }
 }

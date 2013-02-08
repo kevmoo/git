@@ -84,5 +84,5 @@ void _testAnalyzerTask(Map<String, String> inputs, RunResult expectedResult) {
         }
       });
 
-  expect(future, completes);
+  expect(future, finishes);
 }

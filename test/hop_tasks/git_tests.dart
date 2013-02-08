@@ -183,14 +183,14 @@ class GitTests {
               expect(counts, hasLength(2));
               expect(counts[0], 3);
               expect(counts[1], 2, reason: 'content in docs changed. We have 2 commits now');
+            })
+            .whenComplete(() {
+              if(tempDir != null) {
+                tempDir.dispose();
+              }
             });
 
-        expectFutureComplete(future, (_) {
-          if(tempDir != null) {
-            tempDir.dispose();
-          }
-        });
-
+        expect(future, finishes);
       });
 
     });

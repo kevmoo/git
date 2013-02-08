@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:bot/bot.dart';
 import 'package:bot/bot_io.dart';
+import 'package:bot/bot_test.dart';
 import 'package:bot/hop.dart';
 import 'package:meta/meta.dart';
 import 'package:unittest/unittest.dart';

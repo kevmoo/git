@@ -2,6 +2,7 @@ library test_dump_render_tree;
 
 import 'dart:io';
 import 'package:unittest/unittest.dart';
+import 'package:bot/bot_test.dart';
 
 void main() {
   final browserTests = ['test/harness_browser.html'];
@@ -24,5 +25,5 @@ void _runDrt(String htmlFile) {
       expect(pr.stdout, matches(allPassedRegExp));
     });
 
-  expect(future, completes);
+  expect(future, finishes);
 }

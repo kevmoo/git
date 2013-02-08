@@ -76,7 +76,7 @@ void _testPopulateBranch() {
         td1.dispose();
       });
 
-  expect(future, completes);
+  expect(future, finishes);
 }
 
 Future _testPopulateBranchEmpty(GitDir gitDir, String branchName) {
@@ -266,7 +266,7 @@ void _testWriteObjects() {
       tempContent.dispose();
     });
 
-  expect(future, completes);
+  expect(future, finishes);
 }
 
 Future<Tuple<TempDir, GitDir>> _getTempGit() {
