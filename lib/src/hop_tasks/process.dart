@@ -33,11 +33,15 @@ Future<int> pipeProcess(Process process,
     {Action1<String> stdOutWriter, Action1<String> stdErrWriter}) {
   final completer = new Completer<int>();
 
+  bool finished = false;
+
   if(stdOutWriter != null) {
     process.stdout.onData = () {
       final data = process.stdout.read();
       assert(data != null);
       final str = new String.fromCharCodes(data).trim();
+
+      assert(!finished);
       stdOutWriter(str);
     };
   }
@@ -47,11 +51,15 @@ Future<int> pipeProcess(Process process,
       final data = process.stderr.read();
       assert(data != null);
       final str = new String.fromCharCodes(data).trim();
+
+      assert(!finished);
       stdErrWriter(str);
     };
   }
 
   process.onExit = (int exitCode){
+    assert(!finished);
+    finished = true;
     completer.complete(exitCode);
   };
 
