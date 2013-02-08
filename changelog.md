@@ -1,5 +1,43 @@
 # Changelog - Dart Bag of Tricks
 
+## 0.13.0-dev *pre-release* (SDK 0.3.4.0 r18115)
+
+### bot
+
+* `CollectionUtil`: `toHashMap` and `toHashSet` deprecated.
+* `CollectionUtil`: added `toMap`
+* __BREAKING__ `Enumerable` now uses `join` from `Iterable` so the default separator is now empty string
+instead of `, `
+* `Enumerable`: `toHashMap` and `toHashSet` deprecated.
+* `Enumerable`: added `toMap`
+* __NEW!__ `StringLineReader` - Lazily read lines from a `String`. Supports Windows line breaks, too.
+* __BREAKING__ `Util.splitLines` returns `Iterable<String>` instead of `List<String>`
+* `Util` learned `padLeft`
+
+### bot_git
+
+* `Commit` parses out a lot more information now.
+* `Git.runGit` argument `processWorkingDir` is converted to a native path.
+Works on Windows now.
+* __BREAKING__ `GitDir` can only be created via "safe", async methods: `init` and __NEW!__ `fromExisting`
+* __NEW!__ `GitDir` learned `populateBranch`
+
+### bot_test
+
+* Added `Matcher` `finishes` and `finishesWith`. These correspond to `completes`
+and `completion` in `dart:matcher` __except__ instances of `ExpectException` are 
+thrown directly without being wrapped
+
+### hop
+
+* __NEW!__ `ConsoleContext` makes it easy to run hop tasks directly from a console app.
+* __BREAKING__ many log methods had their args switched around so `LogLevel` comes before `message`.
+More consistent with `logging`
+
+### hop_tasks
+
+* `compileDocs` now uses new fancy `GitDir.populateBranch`.
+
 ## 0.12.1 - 5 Feb 2013 (SDK 0.3.4.0 r18115)
 
 ### bot_html
