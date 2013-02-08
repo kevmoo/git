@@ -2,6 +2,8 @@
 // TODO(adam): use verbose
 // TODO: add an async version that takes Func<Future<Iterable<String>>>
 //       see getCompileDocsFunc
+// TODO(adam?): optional out directory param. Used so that repeat runs
+//              are faster
 
 part of hop_tasks;
 
