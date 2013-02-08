@@ -6,8 +6,9 @@ class GitDir {
   static final RegExp _shaRegExp = new RegExp(r'^[a-f0-9]{40}$');
 
   final Path _path;
+  final Path _gitWorkTree;
 
-  GitDir._raw(this._path);
+  GitDir._raw(this._path, [this._gitWorkTree = null]);
 
   Path get path => _path;
 
@@ -124,20 +125,197 @@ class GitDir {
         });
   }
 
-  Future<ProcessResult> runCommand(List<String> args, [bool throwOnError = true]) {
+  Future<ProcessResult> runCommand(Iterable<String> args, [bool throwOnError = true]) {
     requireArgumentNotNull(args, 'args');
-    for(final arg in args) {
+
+    final list = args.toList();
+
+    for(final arg in list) {
       requireArgumentNotNullOrEmpty(arg, 'args');
       requireArgument(!arg.contains(_workTreeArg), 'args', 'Cannot contain $_workTreeArg');
       requireArgument(!arg.contains(_gitDirArg), 'args', 'Cannot contain $_gitDirArg');
     }
 
-    return Git.runGit(args, throwOnError: throwOnError, processWorkingDir: _processWorkingDir);
+    if(_gitWorkTree != null) {
+      list.insertRange(0, 1, '$_workTreeArg${_gitWorkTree}');
+    }
+
+    return Git.runGit(list, throwOnError: throwOnError, processWorkingDir: _processWorkingDir);
   }
 
   Future<bool> isWorkingTreeClean() {
     return runCommand(['status', '--porcelain'])
         .then((ProcessResult pr) => pr.stdout.isEmpty);
+  }
+
+  // TODO: TEST: someone puts a git dir when populated
+  // TODO: TEST: someone puts in no content at all
+
+  /**
+   * If the content provided matches the content in the specificed [branchName], then
+   * `null` is returned.
+   *
+   * If no content is added to the directory, an [Error] is thrown.
+   */
+  Future<Commit> populateBranch(String branchName, PopulateTempDir populator, String commitMessage) {
+    // TODO: ponder restricting branch names
+    // see http://stackoverflow.com/questions/12093748/how-do-i-check-for-valid-git-branch-names/12093994#12093994
+
+    requireArgumentNotNullOrEmpty(branchName, 'branchName');
+    requireArgumentNotNullOrEmpty(commitMessage, 'commitMessage');
+
+    _TempDirs tempDirs;
+
+    // the branch ref for content in the temp dir
+    BranchReference tempBranchRef;
+
+    // the commit in the temp dir we've created
+    Commit tempCommit;
+
+    BranchReference existingBranchRef;
+
+    // TODO: do this earlier...because it'll effect how we create our temp
+    // git world...
+    return getBranchReference(branchName)
+        .then((BranchReference value) {
+          existingBranchRef = value;
+
+          if(existingBranchRef == null) {
+            return _getTempDirPairForNewBranch(branchName);
+          } else {
+            return _getTempDirPair(branchName);
+          }
+        })
+        .then((_TempDirs value) {
+          tempDirs = value;
+
+          return populator(tempDirs.gitWorkTreeDir);
+        })
+        .then((_) {
+
+          // make sure there is something in the working three
+          return tempDirs.gitDir.runCommand(['ls-files', '--others']);
+        })
+        .then((ProcessResult pr) {
+          if(pr.stdout.isEmpty) {
+            throw 'No files were added';
+          }
+          // add new files to index
+
+          // --verbose is not strictly needed, but nice for debugging
+          return tempDirs.gitDir.runCommand(['add', '--all', '--verbose']);
+        })
+        .then((ProcessResult pr) {
+          // now to see if we have any changes here
+          return tempDirs.gitDir.runCommand(['status', '--porcelain']);
+        })
+        .then((ProcessResult pr) {
+          if(pr.stdout.isEmpty) {
+            // no change in files! we should return a null result
+            return null;
+          }
+
+          // Time to commit.
+          return tempDirs.gitDir.runCommand(['commit', '--verbose', '-m', commitMessage])
+              .then((ProcessResult pr) {
+                // now...uh...just push gd to 'this'? I'm scared, but we'll try
+
+                // --verbose is not strictly needed, but nice for debugging
+                return tempDirs.gitDir.runCommand(['push', '--verbose', '--progress', this.path.toString(), branchName]);
+              })
+              .then((ProcessResult pr) {
+                // pr.stderr will have all of the info
+
+                // so we have this wonderful new commit, right?
+                // need to crack out the commit and return the value
+                return getCommit('refs/heads/$branchName');
+              });
+        })
+        .whenComplete(() {
+          tempDirs.dispose();
+        });
+  }
+
+  // if branch does not exist, do simple clone, then checkout
+  Future<_TempDirs> _getTempDirPairForNewBranch(String newBranchName) {
+    TempDir tempGitHost;
+    TempDir tempWorkDir;
+    GitDir gd;
+
+    return TempDir.create()
+        .then((TempDir value) {
+          tempGitHost = value;
+
+          return TempDir.create();
+        })
+        .then((TempDir value) {
+          tempWorkDir = value;
+
+          // time for crazy clone tricks
+          final args = ['clone', '--shared', '--no-checkout', '--bare', _processWorkingDir, '.'];
+
+          return Git.runGit(args, processWorkingDir: tempGitHost.path);
+      })
+      .then((ProcessResult pr) {
+        final gitPath = new Path(tempGitHost.path);
+        final gitWorkingPath = new Path(tempWorkDir.path);
+
+        // git init
+        return new GitDir._raw(gitPath, gitWorkingPath);
+      })
+      .then((GitDir value) {
+        gd = value;
+        return gd.runCommand(['checkout', '--orphan', newBranchName]);
+      })
+      .then((ProcessResult pr) {
+
+        // since we're checked out, need to clear out local content
+        return gd.runCommand(['rm', '-r', '-f', '.']);
+      })
+      .then((ProcessResult pr) {
+        return new _TempDirs(gd, tempGitHost, tempWorkDir);
+      });
+  }
+
+  // if branch exists, then do single-branch dance, and clear it out
+  Future<_TempDirs> _getTempDirPair(String existingBranchName) {
+    TempDir tempGitHost;
+    TempDir tempWorkDir;
+    GitDir gd;
+
+    return TempDir.create()
+        .then((TempDir value) {
+          tempGitHost = value;
+
+          return TempDir.create();
+        })
+        .then((TempDir value) {
+          tempWorkDir = value;
+
+          // time for crazy clone tricks
+          final args = ['clone', '--shared', '--single-branch', '--branch', existingBranchName, '--bare', _processWorkingDir, '.'];
+
+          return Git.runGit(args, processWorkingDir: tempGitHost.path);
+      })
+      .then((ProcessResult pr) {
+        final gitPath = new Path(tempGitHost.path);
+        final gitWorkingPath = new Path(tempWorkDir.path);
+
+        // git init
+        return new GitDir._raw(gitPath, gitWorkingPath);
+      })
+      .then((GitDir value) {
+        gd = value;
+        return gd.runCommand(['checkout']);
+      })
+      .then((ProcessResult pr) {
+
+        // since we're checked out, need to clear out local content
+        return gd.runCommand(['rm', '-r', '.']);
+      })
+      .then((ProcessResult pr) {
+        return new _TempDirs(gd, tempGitHost, tempWorkDir);
+      });
   }
 
   String get _processWorkingDir => _path.toString();
@@ -222,3 +400,23 @@ class GitDir {
         });
   }
 }
+
+class _TempDirs {
+  final GitDir gitDir;
+  final TempDir gitHostDir;
+  final TempDir gitWorkTreeDir;
+
+  _TempDirs(this.gitDir, this.gitHostDir, this.gitWorkTreeDir);
+
+  String toString() => [gitHostDir, gitWorkTreeDir].toString();
+
+  void dispose() {
+    gitHostDir.dispose();
+    gitWorkTreeDir.dispose();
+  }
+}
+
+/**
+ * A method that populates a [TempDir] asynchronously.
+ */
+typedef Future PopulateTempDir(TempDir dir);

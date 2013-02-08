@@ -8,9 +8,12 @@ import 'package:bot/bot_io.dart';
 import 'package:bot/bot_git.dart';
 import 'package:bot/bot_test.dart';
 
+part 'git_dir_tests.dart';
+
 void main() {
   group('bot_git', () {
-    test('first git test', _testGit);
+
+    registerGitDirTests();
 
     test('valid sha', () {
       final good = 'bcd1284d805951a16e765cea5b2273a464ee2d86';
@@ -58,119 +61,6 @@ bcd1284d805951a16e765cea5b2273a464ee2d86'''];
       });
     });
   });
-}
-
-void _testGit() {
-  final file1Name = 'file1.txt';
-  final file2Name = 'file2.txt';
-
-  final Map<String, dynamic> _initialContentMap = new Map<String, dynamic>();
-  _initialContentMap[file1Name] = 'content1';
-  _initialContentMap[file2Name] = 'content2';
-
-  final Map<String, String> fileHashes = new Map<String, String>();
-
-  TempDir tempContent;
-
-  GitDir gitDir;
-  TempDir tempGitDir;
-
-  final future = _getTempGit()
-    .then((Tuple items) {
-
-      tempGitDir = items.item1;
-      gitDir = items.item2;
-
-      // verify the new _gitDir has no branches
-      return gitDir.getBranchNames();
-    })
-    .then((List<String> branches) {
-
-      // branches should be an empty list
-      expect(branches, isNotNull);
-      expect(branches, isEmpty);
-
-      // now create a new temp for the file contents
-      return TempDir.create();
-    }).then((TempDir td) {
-      expect(tempContent, isNull);
-      expect(td, isNotNull);
-      tempContent = td;
-
-      //logMessage('temp dir for content: $td');
-      final populater = new MapDirectoryPopulater(_initialContentMap);
-      return tempContent.populate(populater);
-    }).then((TempDir dir) {
-      expect(dir, equals(tempContent));
-
-      // now we'll write files to the object store
-      final paths = _initialContentMap.keys.map((String fileName) {
-        return new Path(tempContent.path).append(fileName).toNativePath();
-      }).toList();
-
-      return gitDir.writeObjects(paths);
-    }).then((Map<String, String> hashes) {
-
-      // the returned hash should be cool
-      expect(hashes.length, equals(_initialContentMap.length));
-
-      // TODO: capture the file paths and verify they all exist
-      // TODO: test adding the same file twice
-      // TODO: test for failure when adding a file that doesn't exist
-      // TODO: test for failure w/ a dir?
-
-      tempGitDir.dispose();
-      tempContent.dispose();
-
-    });
-
-  expect(future, completes);
-
-  // create another temp dir, populate it w/ stuff
-
-  // do a createOrUpdate branch dance w/ the temp dir
-
-  // verify branch exists
-
-  // dispose of both...er something
-}
-
-Future<Tuple<TempDir, GitDir>> _getTempGit() {
-  TempDir _tempGitDir;
-  GitDir gitDir;
-
-  return TempDir.create()
-    .then((TempDir tempDir) {
-      expect(_tempGitDir , isNull);
-      _tempGitDir = tempDir;
-
-      // is not git dir
-      return GitDir.isGitDir(_tempGitDir.path);
-    })
-    .then((bool isGitDir) {
-      expect(isGitDir, false);
-
-      // initialize a new git dir
-      return GitDir.init(_tempGitDir.dir);
-    })
-    .then((GitDir gd) {
-      expect(gd, isNotNull);
-      gitDir = gd;
-
-      // is a git dir now
-      return GitDir.isGitDir(_tempGitDir.path);
-    })
-    .then((bool isGitDir) {
-      expect(isGitDir, true);
-
-      // is clean
-      return gitDir.isWorkingTreeClean();
-    })
-    .then((bool isWorkingTreeClean) {
-      expect(isWorkingTreeClean, true);
-
-      return new Tuple<TempDir, GitDir>(_tempGitDir, gitDir);
-    });
 }
 
 const _showRefOutput = '''ff1c31c454c4128a98dcd610d203820eeeb91923 HEAD
