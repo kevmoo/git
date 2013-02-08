@@ -4,82 +4,19 @@ class TestEnumerable {
 
   static void run() {
     group('Enumerable', () {
-      test('aggregate', _testAggregate);
-      test('contains', _testContains);
       test('count', _testCount);
       test('distinct', _testDistinct);
       test('exclude', _testExclude);
-      test('filter', _testFilter);
-      test('first', _testFirst);
-      test('forEach', _testForEach);
       test('forEachWithIndex', _testForEachWithIndex);
       group('group', () {
         test('simple', _testSimpleGrouping);
         test('complex', _testComplexGrouping);
       });
-      test('isEmpty', _testIsEmpty);
-      test('join', _testJoin);
-      test('length', _testLength);
-      test('map', _testMap);
-      test('reduce', _testReduce);
       test('selectMany', _testSelectMany);
       test('selectNumbers', _testSelectNumbers);
-      test('single', _testSingle);
       test('toHashMap', _testToHashMap);
       test('toHashSet', _testToHashSet);
     });
-  }
-
-  static void _testIsEmpty() {
-    expect($([]).isEmpty, isTrue);
-    expect($([1]).isEmpty, isFalse);
-  }
-
-  static void _testReduce() {
-    final enum = $([0,1,2]);
-    expect(enum.reduce(0, (prev, element) => prev + element), 3);
-    expect(enum.reduce(1, (prev, element) => prev * element), 0);
-  }
-
-  static void _testFirst() {
-    final enum = $([0,1,2]);
-    expect(enum.first, equals(0));
-
-    expect(() => $([]).first, throwsStateError);
-
-    expect(enum.firstMatching((e) => e == 1), equals(1));
-
-    expect(() => enum.firstMatching((e) => e == 4), throwsStateError);
-
-    expect(enum.firstMatching((e) => e == 1), equals(1));
-    expect(() => enum.firstMatching((e) => e == 4), throwsStateError);
-    expect(enum.firstMatching((e) => e == 4, orElse: () => -42), equals(-42));
-  }
-
-  static void _testSingle() {
-    expect($([42]).single, equals(42));
-    expect(() => $([]).single, throwsStateError);
-    expect(() => $([1, 2]).single, throwsStateError);
-
-    expect($([3,4,5]).singleMatching((e) => e % 2 == 0), equals(4));
-    expect(() => $([3,4,5]).singleMatching((e) => e % 2 == 1), throwsStateError);
-    expect(() => $([3,5,7]).singleMatching((e) => e % 2 == 0), throwsStateError);
-
-    expect($([3,4,5]).singleMatching((e) => e % 2 == 0), equals(4));
-    expect(() => $([3,4,5]).singleMatching((e) => e == 2), throwsStateError);
-    expect(() => $([3,5,7]).singleMatching((e) => e % 2 == 1), throwsStateError);
-  }
-
-  static void _testJoin() {
-    final enum = $([0,1,2]);
-    expect(enum.join(), equals('0, 1, 2'));
-    expect(enum.join('-'), equals('0-1-2'));
-  }
-
-  static void _testContains() {
-    final enum = $([0,1,2]);
-    expect(enum.contains(1), isTrue);
-    expect(enum.contains(3), isFalse);
   }
 
   static void _testExclude() {
@@ -159,53 +96,12 @@ class TestEnumerable {
     expect(count, equals(3));
   }
 
-  static void _testLength() {
-    final e = $([1,2,3,4,5,6]);
-
-    expect(e.length, equals(6));
-  }
-
-  static void _testFilter() {
-    final e = $([1,2,3,4,5,6]).where((x) => x % 2 == 0);
-    expect(e, orderedEquals([2,4,6]));
-  }
-
-  static void _testMap() {
-    final e = $([1,2,3,4,5,6]).map((x) => x * 2);
-    expect(e, orderedEquals([2,4,6,8,10,12]));
-  }
-
   static void _testSelectNumbers() {
     final e = $(['a', 'cat', 'is', 'super']).selectNumbers((x) => x.length);
     expect(e, orderedEquals([1,3,2,5]));
 
     final sum = e.sum();
     expect(sum, equals(11));
-  }
-
-  static void _testForEach() {
-    final e = $([1,2,3,4,5,6]);
-    int sum = 0;
-    e.forEach((a) => sum += a);
-    expect(sum, equals(7 * 3));
-  }
-
-  static void _testAggregate() {
-    Func2<int, int, int> summer = (current, next) => current + next;
-
-    final valEnumerable = $([1,2,3]);
-
-    int sum = valEnumerable.reduce(0, summer);
-    expect(sum, equals(6));
-
-    Func2<String, String, String> prepender = (current, next) {
-      return next.concat(current);
-    };
-
-    final strsEnumerable = $(['first', 'second', 'third']);
-
-    String str = strsEnumerable.reduce('', prepender);
-    expect(str, equals('thirdsecondfirst'));
   }
 
   //

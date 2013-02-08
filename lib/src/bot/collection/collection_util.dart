@@ -50,12 +50,19 @@ class CollectionUtil {
     }
   }
 
-  static HashMap toHashMap(Iterable source, Func1 valueFunc, [Func1 keyFunc]) {
+  /**
+   * Use [toMap] instead.
+   */
+  @deprecated
+  static Map toHashMap(Iterable source, Func1 valueFunc, [Func1 keyFunc]) =>
+      toMap(source, valueFunc, keyFunc);
+
+  static Map toMap(Iterable source, Func1 valueFunc, [Func1 keyFunc]) {
     if(keyFunc == null) {
       keyFunc = (a) => a;
     }
 
-    final map = new HashMap();
+    final map = new Map();
     for(final e in source) {
       final k = keyFunc(e);
       if(map.containsKey(k)) {
@@ -66,14 +73,17 @@ class CollectionUtil {
     return map;
   }
 
-  static HashSet toHashSet(Iterable source, [Func1 f]) {
+  /**
+   * Use `Iterable.map(...).toSet()` instead.
+   */
+  @deprecated
+  static Set toHashSet(Iterable source, [Func1 f]) {
     if(f == null) {
-      return new HashSet.from(source);
+      return new Set.from(source);
     } else {
-      return new HashSet.from(source.map(f));
+      return new Set.from(source.map(f));
     }
   }
-
 }
 
 class _DistinctIterator<T> implements Iterator<T> {

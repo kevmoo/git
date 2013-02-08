@@ -17,31 +17,6 @@ abstract class Enumerable<T> extends Iterable<T> {
   }
 
   /**
-   * Returns true if every elements of this collection satisify the
-   * predicate [f]. Returns false otherwise.
-   */
-  bool every(Func1<T, bool> f) {
-    requireArgumentNotNull(f, 'f');
-    for (final e in this) {
-      if(!f(e)) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  bool contains(T item) {
-    for (final e in this) {
-      if(e == item) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  bool get isEmpty => !some((e) => true);
-
-  /**
    * Returns true if one element of this collection satisfies the
    * predicate [f]. Returns false otherwise.
    */
@@ -58,25 +33,10 @@ abstract class Enumerable<T> extends Iterable<T> {
   int count(Func1<T, bool> f) =>
       CollectionUtil.count(this, f);
 
-  String join([String separator = ', ']) {
-    final StringBuffer sb = new StringBuffer();
-    for(final e in this) {
-      if(sb.length > 0) {
-        sb.add(separator);
-      }
-      sb.add(e);
-    }
-    return sb.toString();
-  }
+  @deprecated @override
+  Enumerable mappedBy(Func1<T, Object> f) =>
+      this.map(f);
 
-  /**
-   * Returns a new collection with the elements [: f(e) :]
-   * for each element [:e:] of this collection.
-   *
-   * Note on typing: the return type of f() could be an arbitrary
-   * type and consequently the returned collection's
-   * typeis Collection.
-   */
   Enumerable map(Func1<T, Object> f) =>
       $(super.map(f));
 
@@ -98,12 +58,6 @@ abstract class Enumerable<T> extends Iterable<T> {
 
   ReadOnlyCollection<T> toReadOnlyCollection() => new ReadOnlyCollection<T>(this);
 
-  void forEach(Action1<T> f) {
-    for(final e in this) {
-      f(e);
-    }
-  }
-
   void forEachWithIndex(Action2<T, int> f) {
     int i = 0;
     for(final e in this) {
@@ -111,18 +65,27 @@ abstract class Enumerable<T> extends Iterable<T> {
     }
   }
 
-  List<T> toList() => new List<T>.from(this);
-
-  HashSet toHashSet([Func1<T, dynamic> f]) =>
+  /**
+   * Use the [map] method then [toSet] instead.
+   */
+  @deprecated
+  Set toHashSet([Func1<T, dynamic> f]) =>
       CollectionUtil.toHashSet(this, f);
 
-  HashMap toHashMap(Func1<T, Object> valueFunc, [Func1<T, dynamic> keyFunc]) =>
-      CollectionUtil.toHashMap(this, valueFunc, keyFunc);
+  /**
+   * Use [toMap] instead.
+   */
+  @deprecated
+  Map toHashMap(Func1<T, Object> valueFunc, [Func1<T, dynamic> keyFunc]) =>
+      this.toMap(valueFunc, keyFunc);
+
+  Map toMap(Func1<T, Object> valueFunc, [Func1<T, dynamic> keyFunc]) =>
+      CollectionUtil.toMap(this, valueFunc, keyFunc);
 
   NumberEnumerable selectNumbers(Func1<T, num> f) =>
       new NumberEnumerable.from(this.map(f));
 
-  String toString() => "[${this.join()}]";
+  String toString() => "[${join(', ')}]";
 }
 
 class _SimpleEnumerable<T> extends Enumerable<T> {

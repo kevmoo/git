@@ -3,6 +3,7 @@ library bot;
 import 'dart:collection';
 import 'dart:collection-dev';
 import 'dart:math' as math;
+import 'package:meta/meta.dart';
 
 part 'src/bot/annotations.dart';
 part 'src/bot/requires.dart';
