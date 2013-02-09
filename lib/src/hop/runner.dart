@@ -71,24 +71,24 @@ class Runner {
           }
         })
         .catchError((AsyncError asyncError) {
-        if(asyncError.error == Task._nullFutureResultEx) {
-          context.severe('The provided task returned null instead of a future');
-          return RunResult.ERROR;
-        } else if(asyncError.error is TaskFailError) {
-          final TaskFailError e = asyncError.error;
-          context.severe(e.message);
-          return RunResult.FAIL;
-        }
-        else {
-          // has as exception, need to test this
-          context.severe('Exception thrown by task');
-          context.severe(asyncError.error.toString());
-          if(asyncError.stackTrace != null) {
-            context.severe(asyncError.stackTrace.toString());
+          if(asyncError.error == Task._nullFutureResultEx) {
+            context.severe('The provided task returned null instead of a future');
+            return RunResult.ERROR;
+          } else if(asyncError.error is TaskFailError) {
+            final TaskFailError e = asyncError.error;
+            context.severe(e.message);
+            return RunResult.FAIL;
           }
-          return RunResult.EXCEPTION;
-        }
-      });
+          else {
+            // has as exception, need to test this
+            context.severe('Exception thrown by task');
+            context.severe(asyncError.error.toString());
+            if(asyncError.stackTrace != null) {
+              context.severe(asyncError.stackTrace.toString());
+            }
+            return RunResult.EXCEPTION;
+          }
+        });
   }
 
   void _printHelp(RootTaskContext ctx) {
