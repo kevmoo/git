@@ -8,5 +8,6 @@ environment:
 dependencies:
   unittest: '>=0.3.4'
   args: '>=0.3.4'
+  browser: '>=0.3.4'
   logging: '>=0.3.4'
   meta: '>=0.3.4'
