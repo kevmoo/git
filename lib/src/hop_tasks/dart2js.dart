@@ -2,7 +2,7 @@ part of hop_tasks;
 
 Task createDart2JsTask(List<String> inputs, {String output: null,
   String packageRoot: null, bool minify: false, bool allowUnsafeEval: true,
-  bool liveTypeAnalysis: false, rejectDeprecatedFeatures: false}) {
+  bool liveTypeAnalysis: true, bool rejectDeprecatedFeatures: false}) {
   return new Task.async((context) {
     final futureFuncs = inputs
         .map((p) => () => _dart2js(context, p,
@@ -19,7 +19,7 @@ Task createDart2JsTask(List<String> inputs, {String output: null,
 
 Future<bool> _dart2js(TaskContext ctx, String file, {String output: null,
   String packageRoot: null, bool minify: false, bool allowUnsafeEval: true,
-  bool liveTypeAnalysis: false, rejectDeprecatedFeatures: false}) {
+  bool liveTypeAnalysis: true, bool rejectDeprecatedFeatures: false}) {
 
   if(output == null) {
     output = "${file}.js";
@@ -34,8 +34,8 @@ Future<bool> _dart2js(TaskContext ctx, String file, {String output: null,
                 "--out=$output",
                 file];
 
-  if(liveTypeAnalysis) {
-    args.add('--enable-native-live-type-analysis');
+  if(liveTypeAnalysis == false) {
+    args.add('--disable-native-live-type-analysis');
   }
 
   if(rejectDeprecatedFeatures) {
