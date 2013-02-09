@@ -1,10 +1,17 @@
 # Changelog - Dart Bag of Tricks
 
-## 0.13.1-dev *pre-release* (SDK 0.3.5.1 r18300)
+## 0.13.1 - 9 Feb 2013 (SDK 0.3.5.1 r18300)
+
+* Cleaned up all deprecations.
+* __NO__ Breaking changes. Should still work great with SDK 0.3.4.0 r18115.
 
 ### bot
 
 * Removed references to `dart:collection-dev`
+
+### hop_tasks
+
+* `createDart2JsTask` arg `liveTypeAnalysis` defaults to `true` - matches `dart2js' impl change
 
 ## 0.13.0 - 8 Feb 2013 (SDK 0.3.4.0 r18115)
 
