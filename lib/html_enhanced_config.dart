@@ -2,10 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// TODO: This is temporary addition to BOT util
-// DARTBUG: http://code.google.com/p/dart/issues/detail?id=8335
-// is fixed.
-
 /**
  * A simple unit test library for running tests in a browser.
  *
@@ -14,41 +10,49 @@
  */
 library unittest_html_enhanced_config;
 
+import 'dart:async';
 import 'dart:collection' show LinkedHashMap;
 import 'dart:html';
 import 'package:unittest/unittest.dart';
+import 'package:meta/meta.dart';
 
-class HtmlEnhancedConfiguration extends Configuration {
+class _HtmlEnhancedConfiguration extends Configuration {
   /** Whether this is run within dartium layout tests. */
   final bool _isLayoutTest;
-  HtmlEnhancedConfiguration(this._isLayoutTest);
+  _HtmlEnhancedConfiguration(this._isLayoutTest);
 
-  // TODO(rnystrom): Get rid of this if we get canonical closures for methods.
-  EventListener _onErrorClosure;
-  EventListener _onMessageClosure;
+  var _onErrorSubscription = null;
+  var _onMessageSubscription = null;
 
-  void _installHandlers() {
-    if (_onErrorClosure == null) {
-      _onErrorClosure =
-          (e) => handleExternalError(e, '(DOM callback has errors)');
+  void _installOnErrorHandler() {
+    if (_onErrorSubscription == null) {
       // Listen for uncaught errors.
-      window.onError.listen(_onErrorClosure);
-    }
-    if (_onMessageClosure == null) {
-      _onMessageClosure = (e) => processMessage(e);
-      // Listen for errors from JS.
-      window.onMessage.listen(_onMessageClosure);
+      _onErrorSubscription = window.onError.listen(
+          (e) => handleExternalError(e, '(DOM callback has errors)'));
     }
   }
 
-  void _uninstallHandlers() {
-    if (_onErrorClosure != null) {
-      window.on.error.remove(_onErrorClosure);
-      _onErrorClosure = null;
+  void _installOnMessageHandler() {
+    if (_onMessageSubscription == null) {
+      // Listen for errors from JS.
+      _onMessageSubscription = window.onMessage.listen(
+          (e) => processMessage(e));
     }
-    if (_onMessageClosure != null) {
-      window.on.message.remove(_onMessageClosure);
-      _onMessageClosure = null;
+  }
+
+  void _installHandlers() {
+    _installOnErrorHandler();
+    _installOnMessageHandler();
+  }
+
+  void _uninstallHandlers() {
+    if (_onErrorSubscription != null) {
+      _onErrorSubscription.cancel();
+      _onErrorSubscription = null;
+    }
+    if (_onMessageSubscription != null) {
+      _onMessageSubscription.cancel();
+      _onMessageSubscription = null;
     }
   }
 
@@ -76,7 +80,7 @@ class HtmlEnhancedConfiguration extends Configuration {
 
   void onStart() {
     // Listen for uncaught errors.
-    window.onError.listen(_onErrorClosure);
+    _installOnErrorHandler();
   }
 
   void onTestResult(TestCase testCase) {}
@@ -416,7 +420,11 @@ class HtmlEnhancedConfiguration extends Configuration {
   ''';
 }
 
+/**
+ * This will be removed when the SDK that includes http://code.google.com/p/dart/source/detail?r=18294 is released.
+ */
+@deprecated
 void useHtmlEnhancedConfiguration([bool isLayoutTest = false]) {
   if (config != null) return;
-  configure(new HtmlEnhancedConfiguration(isLayoutTest));
+  configure(new _HtmlEnhancedConfiguration(isLayoutTest));
 }
