@@ -26,8 +26,10 @@ class Runner {
     final subArgs = _args.rest.getRange(1, _args.rest.length - 1);
     if(_state.hasTask(taskName)) {
       var subCtx = ctx.getSubContext(taskName, subArgs);
-      return _runTask(subCtx, taskName)
-          .then((RunResult result) => _logExitCode(ctx, result));
+      final task = _state._getTask(taskName);
+      return runTask(subCtx, task)
+          .then((RunResult result) => _logExitCode(ctx, result))
+          .whenComplete(() => subCtx.dispose());
     } else if(taskName == RAW_TASK_LIST_CMD) {
       _printRawTasks(ctx);
       return new Future.immediate(RunResult.SUCCESS);
@@ -44,9 +46,16 @@ class Runner {
     return new RootTaskContext(colorEnabled);
   }
 
-  Future<RunResult> _runTask(TaskContext context, String taskName) {
-    final task = _state._getTask(taskName);
-    assert(task != null);
+  /**
+   * Runs a [Task] with the specificed [TaskContext].
+   *
+   * [runTask] handles a number of error cases, logs appropriate messages
+   * to [context] and returns a corresponding [RunResult] when completed.
+   */
+  static Future<RunResult> runTask(TaskContext context, Task task) {
+    requireArgumentNotNull(context, 'context');
+    requireArgumentNotNull(task, 'task');
+    requireArgument(!context.isDisposed, 'context', 'cannot be disposed');
 
     return task.run(context)
         .then((bool didComplete) {
@@ -79,7 +88,7 @@ class Runner {
           }
           return RunResult.EXCEPTION;
         }
-      }).whenComplete(() => context.dispose());
+      });
   }
 
   void _printHelp(RootTaskContext ctx) {
