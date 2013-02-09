@@ -103,10 +103,10 @@ class _DemoValue extends SendPortValue<List<int>, int> {
 
 void _demoIsolate() {
   new SendValuePort<List<int>, int>((input) {
-    final start = new Date.now();
+    final start = new DateTime.now();
     Duration delta;
     do {
-      delta = (new Date.now().difference(start));
+      delta = (new DateTime.now().difference(start));
     } while(delta.inSeconds < 1);
 
     assert(input.length == 2);

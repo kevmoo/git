@@ -48,8 +48,8 @@ class TestListBase extends ListBase<int> {
   }
 
   static void _testReduce() {
-    Expect.equals(instance.reduce(0, (prev, element) => prev + element), 15);
-    Expect.equals(instance.reduce(1, (prev, element) => prev * element), 120);
+    expect(instance.reduce(0, (prev, element) => prev + element), 15);
+    expect(instance.reduce(1, (prev, element) => prev * element), 120);
   }
 
   static void _testSimple() {

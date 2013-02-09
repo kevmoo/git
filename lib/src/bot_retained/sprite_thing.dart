@@ -38,7 +38,7 @@ class SpriteThing extends ImageThing {
     // performance.now is not correctly polyfilled for Chrome 23
     // final new currentMS = window.performance.now().toInt();
 
-    final int currentMS = new Date.now().millisecondsSinceEpoch;
+    final int currentMS = new DateTime.now().millisecondsSinceEpoch;
 
     final int theFrame = (currentMS ~/ msPerFrame) % count;
 

@@ -43,7 +43,7 @@ void main() {
   // Dart2js
   //
   final paths = ['click', 'drag', 'fract', 'frames', 'nav', 'spin']
-      .mappedBy((d) => "example/$d/${d}_demo.dart")
+      .map((d) => "example/$d/${d}_demo.dart")
       .toList();
   paths.add('test/harness_browser.dart');
 
@@ -72,7 +72,7 @@ Future<List<String>> _getLibs() {
   lister.onFile = (String file) {
     // DARTBUG: http://code.google.com/p/dart/issues/detail?id=8335
     // excluding html_enhanced_config
-    final forbidden = ['html_enhanced_config'].mappedBy((n) => '$n.dart');
+    final forbidden = ['html_enhanced_config'].map((n) => '$n.dart');
     if(file.endsWith('.dart') && forbidden.every((f) => !file.endsWith(f))) {
       libs.add(file);
     }

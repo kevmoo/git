@@ -16,7 +16,7 @@ Task createDartAnalyzerTask(Iterable<String> files) {
     final bool enableTypeChecks = parseResult['enable_type_checks'];
     final bool verbose = parseResult['verbose'];
 
-    final fileList = files.mappedBy((f) => new Path(f)).toList();
+    final fileList = files.map((f) => new Path(f)).toList();
 
     return _processAnalyzerFile(context, fileList, enableTypeChecks, verbose);
   }, 'Running dart analyzer');

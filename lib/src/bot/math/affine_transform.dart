@@ -178,8 +178,6 @@ class AffineTransform implements Cloneable<AffineTransform> {
         _shY == other._shY && _scY == other._scY && _tY == other._tY;
   }
 
-  String toString() {
-    final values = [scaleX, shearY, shearX, scaleY, translateX, translateY];
-    return Strings.join(values.map((n) => n.toString()), ', ');
-  }
+  String toString() =>
+    [scaleX, shearY, shearX, scaleY, translateX, translateY].join(', ');
 }

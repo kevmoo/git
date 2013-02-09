@@ -17,7 +17,7 @@ Future<bool> startProcess(TaskLogger ctx, String command,
   }
 
   ctx.fine("Starting process:");
-  ctx.fine("$command ${Strings.join(args, ' ')}");
+  ctx.fine("$command ${args.join(' ')}");
   return Process.start(command, args)
       .then((process) {
         return pipeProcess(process,

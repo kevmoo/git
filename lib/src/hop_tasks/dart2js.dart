@@ -5,7 +5,7 @@ Task createDart2JsTask(List<String> inputs, {String output: null,
   bool liveTypeAnalysis: false, rejectDeprecatedFeatures: false}) {
   return new Task.async((context) {
     final futureFuncs = inputs
-        .mappedBy((p) => () => _dart2js(context, p,
+        .map((p) => () => _dart2js(context, p,
             output: output,
             minify: minify,
             allowUnsafeEval: allowUnsafeEval,

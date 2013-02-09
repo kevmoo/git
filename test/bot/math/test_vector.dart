@@ -5,20 +5,20 @@ class TestVector {
     group('Vector', (){
       test('should be sum with other Vector', (){
         Vector v = new Vector(1,1) + new Vector(2,1);
-        Expect.equals(3, v.x);
-        Expect.equals(2, v.y);
+        expect(3, v.x);
+        expect(2, v.y);
       });
 
       test('should be subtract by other Vector', (){
         Vector v = new Vector(5,3) - new Vector(2,1);
-        Expect.equals(3, v.x);
-        Expect.equals(2, v.y);
+        expect(3, v.x);
+        expect(2, v.y);
       });
 
       test('should scale by another number', (){
         var v = new Vector(2,3) * 5;
-        Expect.equals(10, v.x);
-        Expect.equals(15, v.y);
+        expect(10, v.x);
+        expect(15, v.y);
       });
 
       test('should be compared by other Vector', (){
@@ -32,15 +32,15 @@ class TestVector {
       });
 
       test('should get length of the vector', (){
-        Expect.equals(5, new Vector(3, 4).length);
+        expect(5, new Vector(3, 4).length);
       });
 
       test('should calc the dot product', (){
-        Expect.equals(23, new Vector(2, 3).dot(new Vector(4, 5)));
+        expect(23, new Vector(2, 3).dot(new Vector(4, 5)));
       });
 
       test('should calc the cross product', (){
-        Expect.equals(-2, new Vector(2, 3).cross(new Vector(4, 5)));
+        expect(-2, new Vector(2, 3).cross(new Vector(4, 5)));
       });
 
       test('should have valid normal', (){

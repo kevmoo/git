@@ -58,24 +58,24 @@ Future<List<_BenchRunResult>> _runMany(TaskLogger logger, int count, String proc
 }
 
 Future<_BenchRunResult> _runOnce(int runNumber, String processName, List<String> args) {
-  final preStart = new Date.now();
-  Date postStart;
+  final preStart = new DateTime.now();
+  DateTime postStart;
 
   return Process.start(processName, args)
       .then((process) {
-        postStart = new Date.now();
+        postStart = new DateTime.now();
         return pipeProcess(process);
       })
       .then((int exitCode) {
-        return new _BenchRunResult(runNumber, exitCode == 0, preStart, postStart, new Date.now());
+        return new _BenchRunResult(runNumber, exitCode == 0, preStart, postStart, new DateTime.now());
       });
 }
 
 class _BenchRunResult {
   final int runNumber;
-  final Date preStart;
-  final Date postStart;
-  final Date postEnd;
+  final DateTime preStart;
+  final DateTime postStart;
+  final DateTime postEnd;
   final bool completed;
 
   _BenchRunResult(this.runNumber, this.completed, this.preStart, this.postStart, this.postEnd);

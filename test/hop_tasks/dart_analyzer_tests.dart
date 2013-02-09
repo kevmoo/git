@@ -69,7 +69,7 @@ void _testAnalyzerTask(Map<String, String> inputs, RunResult expectedResult) {
       .then((TempDir value) {
         assert(value == tempDir);
 
-        var fullPaths = inputs.keys.mappedBy((e) =>
+        var fullPaths = inputs.keys.map((e) =>
             new Path(tempDir.path).join(new Path(e)).toNativePath()).toList();
 
         final task = createDartAnalyzerTask(fullPaths);

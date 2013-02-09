@@ -1,7 +1,7 @@
 part of bot_test;
 
 void pending() {
-  throw new ExpectException('Not implemented');
+  fail('Not implemented');
 }
 
 final Matcher throwsInvalidOperationError =
@@ -81,18 +81,7 @@ class _Finishes extends BaseMatcher {
     item.then((value) {
       done(() { if (_matcher != null) expect(value, _matcher); });
     }, onError: (e) {
-      if(e.error != null && e.error is ExpectException) {
-        done(() => registerException(e.error, e.stackTrace));
-      } else {
-        var reason = 'Expected future to complete successfully, but it failed '
-                     'with ${e.error}';
-        if (e.stackTrace != null) {
-          var stackTrace = e.stackTrace.toString();
-          stackTrace = '  ${stackTrace.replaceAll('\n', '\n  ')}';
-          reason = '$reason\nStack trace:\n$stackTrace';
-        }
-        done(() => expect(false, isTrue, reason: reason));
-      }
+      done(() => registerException(e.error, e.stackTrace));
     });
 
     return true;

@@ -14,8 +14,7 @@ class TestEnumerable {
       });
       test('selectMany', _testSelectMany);
       test('selectNumbers', _testSelectNumbers);
-      test('toHashMap', _testToHashMap);
-      test('toHashSet', _testToHashSet);
+      test('toMap', _testToMap);
     });
   }
 
@@ -41,27 +40,13 @@ class TestEnumerable {
     });
   }
 
-  static void _testToHashSet() {
-    final noDupes = $(['the', 'cat', 'is', 'super']);
-    var hashSet = noDupes.toHashSet();
-    expect(hashSet, unorderedEquals(noDupes));
-    hashSet = noDupes.toHashSet((s) => s.length);
-    expect(hashSet, unorderedEquals([3,2,5]));
-
-    final withDupes = $(['the', 'cat', 'is', 'the', 'super', 'cat']);
-    hashSet = withDupes.toHashSet();
-    expect(hashSet, unorderedEquals(noDupes));
-    hashSet = noDupes.toHashSet((s) => s.length);
-    expect(hashSet, unorderedEquals([3,2,5]));
-  }
-
-  static void _testToHashMap() {
+  static void _testToMap() {
     final noDupes = $(['the', 'kitty', 'is', 'super']);
 
     //
     // where the item is the key
     //
-    var hashMap = noDupes.toHashMap((s) => s.length);
+    var hashMap = noDupes.toMap((s) => s.length);
     hashMap.forEach((k,v) {
       expect(k.length, equals(v));
     });
@@ -70,7 +55,7 @@ class TestEnumerable {
     //
     // where the key is produced by a func, too
     //
-    hashMap = noDupes.toHashMap((s) => s, (s) => s[0]);
+    hashMap = noDupes.toMap((s) => s, (s) => s[0]);
     hashMap.forEach((k,v) {
       expect(k, equals(v[0]));
     });
@@ -79,11 +64,11 @@ class TestEnumerable {
     //
     // doesn't support duplicate keys
     //
-    expect(() => noDupes.toHashMap((s) => s, (s) => s.length),
+    expect(() => noDupes.toMap((s) => s, (s) => s.length),
         throwsUnsupportedError);
 
     final withDupes = $(['the', 'cat', 'is', 'the', 'super', 'cat']);
-    expect(() => withDupes.toHashMap((s) => s.length),
+    expect(() => withDupes.toMap((s) => s.length),
         throwsUnsupportedError);
   }
 

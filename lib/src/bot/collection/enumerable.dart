@@ -69,8 +69,13 @@ abstract class Enumerable<T> extends Iterable<T> {
    * Use the [map] method then [toSet] instead.
    */
   @deprecated
-  Set toHashSet([Func1<T, dynamic> f]) =>
-      CollectionUtil.toHashSet(this, f);
+  Set toHashSet([Func1<T, dynamic> f]) {
+    if(f == null) {
+      return this.toSet();
+    } else {
+      return this.map(f).toSet();
+    }
+  }
 
   /**
    * Use [toMap] instead.

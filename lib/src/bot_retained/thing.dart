@@ -187,7 +187,7 @@ abstract class Thing extends AttachableObject {
     // performance.now is not correctly polyfilled for Chrome 23
     //_lastDrawTime = window.performance.now();
 
-    _lastDrawTime = new Date.now().millisecondsSinceEpoch;
+    _lastDrawTime = new DateTime.now().millisecondsSinceEpoch;
 
     // call the abstract draw method
     drawOverride(ctx);

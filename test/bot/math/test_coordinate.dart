@@ -6,8 +6,8 @@ class TestCoordinate {
 
       test('should be subtract by other Coordinate', (){
         var coor = new Coordinate(5,3) - new Coordinate(2,1);
-        Expect.equals(3, coor.x);
-        Expect.equals(2, coor.y);
+        expect(3, coor.x);
+        expect(2, coor.y);
       });
 
       test('should be compared by other Coordinate', (){
@@ -21,7 +21,7 @@ class TestCoordinate {
       });
 
       test('should get the distance to another point', (){
-        Expect.equals(5, new Coordinate(0, 0).getDistance(new Coordinate(3, 4)));
+        expect(5, new Coordinate(0, 0).getDistance(new Coordinate(3, 4)));
       });
     });
   }
