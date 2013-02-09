@@ -20,9 +20,13 @@ void _runDrt(String htmlFile) {
   final allPassedRegExp = new RegExp('All \\d+ tests passed');
 
   final future = Process.run('DumpRenderTree', [htmlFile])
-    .then((ProcessResult pr) {
-      expect(pr.exitCode, 0);
-      expect(pr.stdout, matches(allPassedRegExp));
+      .then((ProcessResult pr) {
+        expect(pr.exitCode, 0, reason: 'DumpRenderTree should return exit code 0 - success');
+
+        if(!allPassedRegExp.hasMatch(pr.stdout)) {
+          print(pr.stdout);
+          fail('Could not find success value in stdout: ${allPassedRegExp.pattern}');
+        }
     });
 
   expect(future, finishes);
