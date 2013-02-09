@@ -16,7 +16,9 @@ void main() {
   }, 'Just sayin hi.'));
 
   addTask('test', createUnitTestTask(test_console.testCore));
-  addTask('docs', getCompileDocsFunc('gh-pages', 'packages/', _getLibs));
+
+  addTask('docs', getCompileDocsFunc('gh-pages', 'packages/', _getLibs,
+      linkApi: true));
 
   //
   // Analyzer
