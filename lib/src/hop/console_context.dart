@@ -16,12 +16,6 @@ class ConsoleContext extends TaskContext {
     print(message);
   }
 
-  void fail(String message) {
-    print(message);
-    this.dispose();
-    io.exit(1);
-  }
-
   /**
    * At the moment [getSubLogger] returns [this].
    */
@@ -40,7 +34,12 @@ class ConsoleContext extends TaskContext {
   static void runTaskAsProcess(Task task) {
     assert(task != null);
     final ctx = new ConsoleContext();
-    task.run(ctx);
+
+    Runner.runTask(ctx, task)
+      .then((RunResult rr) {
+        ctx.dispose();
+        io.exit(rr.exitCode);
+      });
   }
 
   void _assertNotDisposed() {
