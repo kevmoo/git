@@ -46,8 +46,15 @@ abstract class Enumerable<T> extends Iterable<T> {
   Enumerable<T> exclude(Iterable<T> items) =>
       CollectionUtil.exclude(this, items);
 
+  /**
+   * Use [expand] instead
+   */
+  @deprecated
   Enumerable selectMany(Func1<T, Iterable> f) =>
-      CollectionUtil.selectMany(this, f);
+      this.expand(f);
+
+  Enumerable expand(Func1<T, Iterable> f) =>
+      $(super.expand(f));
 
   Enumerable<T> distinct([Func2<T, T, bool> comparer = null]) =>
       CollectionUtil.distinct(this, comparer);

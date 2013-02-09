@@ -14,10 +14,12 @@ class CollectionUtil {
     return true;
   }
 
-  static Iterable selectMany(Iterable source, Func1<dynamic, Iterable> func) {
-    return new _FuncEnumerable(source, (Iterable s) =>
-        new _SelectManyIterator(s.iterator, func));
-  }
+  /**
+   * Use [source.expand] instead.
+   */
+  @deprecated
+  static Enumerable selectMany(Iterable source, Func1<dynamic, Iterable> func) =>
+      $(source.expand(func));
 
   static int count(Iterable source, Func1<dynamic, bool> test) {
     return source.reduce(0, (int previous, dynamic element) {
@@ -109,48 +111,6 @@ class _DistinctIterator<T> implements Iterator<T> {
     }
     return false;
   }
-}
-
-class _SelectManyIterator<TSource, TOutput>
-  implements Iterator<TOutput> {
-
-  final Iterator<TSource> _sourceIterator;
-  final Func1<TSource, Iterable<TOutput>> _func;
-
-  Iterator<TOutput> _outputIterator;
-  TOutput _current;
-
-  _SelectManyIterator(this._sourceIterator, this._func);
-
-  bool moveNext() {
-    do {
-      if(_outputIterator != null) {
-        if(_outputIterator.moveNext()) {
-          _current = _outputIterator.current;
-          return true;
-        } else {
-          _outputIterator = null;
-        }
-      }
-
-      assert(_outputIterator == null);
-
-      if(_sourceIterator.moveNext()) {
-        final item =  _sourceIterator.current;
-        _outputIterator = _func(item).iterator;
-        if(_outputIterator.moveNext()) {
-          _current = _outputIterator.current;
-          return true;
-        } else {
-          _outputIterator = null;
-        }
-      } else {
-        return false;
-      }
-    } while(_outputIterator == null);
-  }
-
-  TOutput get current => _current;
 }
 
 /**

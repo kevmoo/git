@@ -38,7 +38,7 @@ class Grouping<K, V> {
    */
   Iterable<K> getKeys() => _values.keys;
 
-  Iterable<V> getValues() => CollectionUtil.selectMany(_values.values, (a) => a);
+  Iterable<V> getValues() => _values.values.expand((a) => a);
 
   /**
    * The number of {key, value} pairs in the map.

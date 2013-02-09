@@ -12,7 +12,6 @@ class TestEnumerable {
         test('simple', _testSimpleGrouping);
         test('complex', _testComplexGrouping);
       });
-      test('selectMany', _testSelectMany);
       test('selectNumbers', _testSelectNumbers);
       test('toMap', _testToMap);
     });
@@ -87,36 +86,6 @@ class TestEnumerable {
 
     final sum = e.sum();
     expect(sum, equals(11));
-  }
-
-  //
-  // Select Many
-  //
-  static void _testSelectMany() {
-    final sourceEnum = $(['Okoboji', 'Iowa']);
-
-    var select = sourceEnum.selectMany(_getChars);
-
-    var charList = new List<String>.from(select);
-    expect(charList.length, equals(11));
-    expect(charList[6], equals('i'));
-    expect(charList[7], equals('I'));
-
-    //
-    // now group 'em
-    //
-    var grouped = select.group();
-    // 11 letters, o repeated three times
-    expect(grouped.length, equals(9));
-
-    //
-    // Some and Every
-    //
-    expect(select.some((e) => e == 'k'), isTrue);
-    expect(select.some((e) => e == 'z'), isFalse);
-
-    expect(select.every((e) => e == 'z'), isFalse);
-    expect(select.every((e) => e != 'z'), isTrue);
   }
 
   static List<String> _getChars(String input) {
