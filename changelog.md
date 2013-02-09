@@ -1,6 +1,12 @@
 # Changelog - Dart Bag of Tricks
 
-## 0.13.0-dev - 8 Feb 2013 (SDK 0.3.4.0 r18115)
+## 0.13.1-dev *pre-release* (SDK 0.3.5.1 r18300)
+
+### bot
+
+* Removed references to `dart:collection-dev`
+
+## 0.13.0 - 8 Feb 2013 (SDK 0.3.4.0 r18115)
 
 ### bot
 

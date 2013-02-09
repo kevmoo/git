@@ -27,7 +27,7 @@ abstract class ListBase<E> extends Enumerable<E> implements List<E> {
     return -1;
   }
 
-  Iterator<E> get iterator => new ListIterator(this);
+  Iterator<E> get iterator => new _ListIterator(this);
 
   void operator []=(int index, E value) {
     throw new UnsupportedError(
@@ -98,7 +98,7 @@ abstract class ListBase<E> extends Enumerable<E> implements List<E> {
         "Cannot remove from an unmodifiable list");
   }
 
-  List<E> get reversed => new ReversedListView(this, 0, null);
+  List<E> get reversed => IterableMixinWorkaround.reversedList(this);
 
   void setRange(int start, int length, List<E> from, [int startFrom]) {
     throw new UnsupportedError(

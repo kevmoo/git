@@ -32,7 +32,7 @@ class CollectionUtil {
   static Iterable exclude(Iterable source, Iterable itemsToExclude) {
     requireArgumentNotNull(itemsToExclude, 'itemsToExclude');
     Func1<dynamic, bool> f = (e) => !itemsToExclude.contains(e);
-    return $(new WhereIterable(source, f));
+    return $(IterableMixinWorkaround.where(source, f));
   }
 
   static Iterable distinct(Iterable source, [Func2<dynamic, dynamic, bool> comparer = null]) {
@@ -151,4 +151,33 @@ class _SelectManyIterator<TSource, TOutput>
   }
 
   TOutput get current => _current;
+}
+
+/**
+ * Iterates over a [List] in growing index order.
+ */
+class _ListIterator<E> implements Iterator<E> {
+  final List<E> _list;
+  final int _length;
+  int _position;
+  E _current;
+
+  _ListIterator(List<E> list)
+      : _list = list, _position = -1, _length = list.length;
+
+  bool moveNext() {
+    if (_list.length != _length) {
+      throw new ConcurrentModificationError(_list);
+    }
+    int nextPosition = _position + 1;
+    if (nextPosition < _length) {
+      _position = nextPosition;
+      _current = _list[nextPosition];
+      return true;
+    }
+    _current = null;
+    return false;
+  }
+
+  E get current => _current;
 }
