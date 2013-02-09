@@ -13,7 +13,7 @@ Task createDart2JsTask(List<String> inputs, {String output: null,
             liveTypeAnalysis: liveTypeAnalysis,
             rejectDeprecatedFeatures: rejectDeprecatedFeatures))
         .toList();
-    return _chainTasks(futureFuncs);
+    return _chainTasks(context, futureFuncs);
   }, 'Run Dart-to-Javascript compiler');
 }
 
@@ -57,11 +57,11 @@ Future<bool> _dart2js(TaskContext ctx, String file, {String output: null,
   return startProcess(ctx, 'dart2js', args);
 }
 
-Future<bool> _chainTasks(List<Func<Future<bool>>> futures, [int index=0]) {
+Future<bool> _chainTasks(TaskContext ctx, List<Func<Future<bool>>> futures, [int index=0]) {
   assert(index >= 0);
   assert(index <= futures.length);
   if(futures.length == 0) {
-    throw new TaskFailError("No source files provided.");
+    ctx.fail("No source files provided.");
   }
   if(index == futures.length) {
     return new Future.immediate(true);
@@ -70,7 +70,7 @@ Future<bool> _chainTasks(List<Func<Future<bool>>> futures, [int index=0]) {
   final future = func();
   return future.then((bool status) {
     if(status) {
-      return _chainTasks(futures, index+1);
+      return _chainTasks(ctx, futures, index+1);
     } else {
       return new Future.immediate(false);
     }

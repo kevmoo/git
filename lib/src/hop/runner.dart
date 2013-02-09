@@ -74,8 +74,8 @@ class Runner {
           if(asyncError.error == Task._nullFutureResultEx) {
             context.severe('The provided task returned null instead of a future');
             return RunResult.ERROR;
-          } else if(asyncError.error is TaskFailError) {
-            final TaskFailError e = asyncError.error;
+          } else if(asyncError.error is _TaskFailError) {
+            final _TaskFailError e = asyncError.error;
             context.severe(e.message);
             return RunResult.FAIL;
           }
