@@ -55,6 +55,9 @@ void expectFutureComplete(Future future, [Action1 onComplete]) {
  *
  * To test that a Future completes with an exception, you can use [throws] and
  * [throwsA].
+ *
+ * Unlike [completes] in `unittest`, exceptions are registered directly with
+ * the test framework. They are not wrapped.
  */
 Matcher finishes = const _Finishes(null);
 
@@ -66,6 +69,9 @@ Matcher finishes = const _Finishes(null);
  *
  * To test that a Future completes with an exception, you can use [throws] and
  * [throwsA].
+ *
+ * Unlike [completion] in `unittest`, exceptions are registered directly with
+ * the test framework. They are not wrapped.
  */
 Matcher finishesWith(matcher) => new _Finishes(wrapMatcher(matcher));
 
