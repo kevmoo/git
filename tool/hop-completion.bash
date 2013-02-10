@@ -1,9 +1,10 @@
 #!bash
 #
 # bash completion script for Dart 'hop'
-# https://github.com/kevmoo/hop.dart
+# Part of the Dart Bag of Tricks
+# https://github.com/kevmoo/bot.dart
 #
-# This script assumes hop.dart/bin/hop is in your path
+# This script assumes [bot.dart root]/bin/hop is in your path
 #
 
 _hop() 
