@@ -4,6 +4,7 @@ const _defaultRunCount = 20;
 
 // TODO: options for handling failed processes?
 // TODO: move some of the stat-related code to NumebrEnumerable?
+// TODO: print out all of the summary values
 // TODO: tests?
 
 Task createBenchTask() {
