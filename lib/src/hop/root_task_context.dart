@@ -75,8 +75,10 @@ class RootTaskContext {
       return AnsiColor.RED;
     } else if(logLevel.value > Level.INFO.value) {
       return AnsiColor.LIGHT_RED;
-    } else {
+    } else if(logLevel.value >= Level.INFO.value) {
       return AnsiColor.BLUE;
+    } else {
+      return AnsiColor.GRAY;
     }
   }
 }
