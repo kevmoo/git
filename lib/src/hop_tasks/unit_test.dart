@@ -22,16 +22,21 @@ class _HopTestConfiguration extends unittest.Configuration {
 
   Future<bool> get future => _completer.future;
 
+  @override
   get autoStart => false;
 
+  @override
   void onStart() {
      // overloading to prevent 'print' in baseclass
   }
 
-  void logTestcaseMessage(unittest.TestCase testCase, String message) {
-    // something eles?
+  @override
+  void logTestCaseMessage(unittest.TestCase testCase, String message) {
+    final msg = '${testCase.description}\n$message';
+    _context.fine(msg);
   }
 
+  @override
   void onTestResult(unittest.TestCase testCase) {
     super.onTestResult(testCase);
 
@@ -39,7 +44,7 @@ class _HopTestConfiguration extends unittest.Configuration {
     assert(testCase.result != null);
 
     if(testCase.result == unittest.PASS) {
-      _context.fine(testCase.description);
+      _context.info(testCase.description);
     }
     else {
       _context.severe(
@@ -49,12 +54,13 @@ ${testCase.stackTrace}''');
     }
   }
 
+  @override
   void onSummary(int passed, int failed, int errors, List<unittest.TestCase> results,
               String uncaughtError) {
     final bool success = failed == 0 && errors == 0 && uncaughtError == null;
     final message = "$passed PASSED, $failed FAILED, $errors ERRORS";
     if(success) {
-      _context.fine(message);
+      _context.info(message);
     } else {
       _context.severe(message);
     }

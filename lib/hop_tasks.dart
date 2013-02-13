@@ -4,12 +4,15 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:io';
 import 'dart:math' as math;
+
 import 'package:args/args.dart';
+import 'package:meta/meta.dart';
+import 'package:unittest/unittest.dart' as unittest;
+
 import 'package:bot/bot.dart';
 import 'package:bot/bot_git.dart';
 import 'package:bot/bot_io.dart';
 import 'package:bot/hop.dart';
-import 'package:unittest/unittest.dart' as unittest;
 
 part 'src/hop_tasks/bench_task.dart';
 part 'src/hop_tasks/dart_analyzer.dart';
