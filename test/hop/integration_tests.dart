@@ -20,6 +20,13 @@ class IntegrationTests {
     });
   }
 
+  /*
+   * TODO: feature for bot_test
+   *       wrap Process.run (or Process.start?)
+   *       log process name + args + options?
+   *       log stdout/stderr via logMessage
+   *       do the expect dance to ensure completion without error, etc
+   */
   static void _runHop(Iterable<String> args, Action1<ProcessResult> handler) {
     final list = args.toList();
     
