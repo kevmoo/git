@@ -1,15 +1,11 @@
 part of hop;
 
 class ConsoleContext extends TaskContext {
-  final ReadOnlyCollection<String> arguments;
+  final Task task;
+  final ArgResults arguments;
   bool _isDisposed = false;
 
-  ConsoleContext.raw(this.arguments);
-
-  factory ConsoleContext() {
-    var args = new ReadOnlyCollection(new Options().arguments);
-    return new ConsoleContext.raw(args);
-  }
+  ConsoleContext.raw(this.arguments, this.task);
 
   void log(Level logLevel, String message) {
     _assertNotDisposed();
@@ -33,7 +29,20 @@ class ConsoleContext extends TaskContext {
 
   static void runTaskAsProcess(Task task) {
     assert(task != null);
-    final ctx = new ConsoleContext();
+
+    final parser = new ArgParser();
+    task.configureArgParser(parser);
+
+    ArgResults args;
+    try {
+      args = tryArgsCompletion(parser);
+    } on FormatException catch (ex, stack) {
+      print('There was a problem parsing the provided arguments.');
+      print(ex.message);
+      print(parser.getUsage());
+      io.exit(RunResult.BAD_USAGE.exitCode);
+    }
+    final ctx = new ConsoleContext.raw(args, task);
 
     Runner.runTask(ctx, task)
       .then((RunResult rr) {

@@ -15,9 +15,10 @@ void registerArgTests() {
 
 Task _makeSimpleTask() {
   return new Task.sync((ctx) {
-    expect(ctx.arguments.length, 2);
-    expect(ctx.arguments[0], 'hello');
-    expect(ctx.arguments[1], 'args');
+    final args = ctx.arguments.rest;
+    expect(args.length, 2);
+    expect(args[0], 'hello');
+    expect(args[1], 'args');
     return true;
   });
 }

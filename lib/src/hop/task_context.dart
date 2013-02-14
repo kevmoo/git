@@ -1,7 +1,7 @@
 part of hop;
 
 abstract class TaskContext extends TaskLogger implements Disposable {
-  List<String> get arguments;
+  ArgResults get arguments;
 
   TaskLogger getSubLogger(String name);
 

@@ -1,30 +1,30 @@
-#!bash
+#!/bin/bash
+
+# Inspired by
+# https://github.com/isaacs/npm/blob/master/lib/utils/completion.sh
+
+###-begin-hop-completion-###
 #
-# bash completion script for Dart 'hop'
-# Part of the Dart Bag of Tricks
-# https://github.com/kevmoo/bot.dart
+# npm command completion script
 #
-# This script assumes [bot.dart root]/bin/hop is in your path
+# Installation: npm completion >> ~/.bashrc  (or ~/.zshrc)
+# Or, maybe: npm completion > /usr/local/etc/bash_completion.d/npm
 #
 
-_hop() 
-{
-  local cur prev opts
-  COMPREPLY=()
-  cur="${COMP_WORDS[COMP_CWORD]}"
+COMP_WORDBREAKS=${COMP_WORDBREAKS/=/}
+COMP_WORDBREAKS=${COMP_WORDBREAKS/@/}
+export COMP_WORDBREAKS
 
-  # capture both stdout and stderr
-  opts=`hop print_raw_task_list 2>&1`
-
-  # if exit code for `hop` is not 0, then return an error
-  # probably not in a directory with tool/hop_runner.dart
-  if [ $? -ne 0 ] ; then 
-    return 1
-  fi
-
-  if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] ; then
-      COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-      return 0
-  fi
-}
-complete -F _hop hop
+if type complete &>/dev/null; then
+  _hop_completion () {
+    local si="$IFS"
+    IFS=$'\n' COMPREPLY=($(COMP_CWORD="$COMP_CWORD" \
+                           COMP_LINE="$COMP_LINE" \
+                           COMP_POINT="$COMP_POINT" \
+                           hop completion -- "${COMP_WORDS[@]}" \
+                           2>/dev/null)) || return $?
+    IFS="$si"
+  }
+  complete -F _hop_completion hop
+fi
+###-end-hop-completion-###

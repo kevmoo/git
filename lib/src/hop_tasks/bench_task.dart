@@ -7,13 +7,13 @@ const _defaultRunCount = 20;
 // TODO: print out all of the summary values
 // TODO: tests?
 
+const String _runCountArgName = 'run-count';
+
 Task createBenchTask() {
   return new Task.async((ctx) {
+    final parseResult = ctx.arguments;
 
-    final parser = _getBenchParser();
-    final parseResult = _helpfulParseArgs(ctx, parser, ctx.arguments);
-
-    final count = int.parse(parseResult['run_count'], onError: (s) => _defaultRunCount);
+    final count = int.parse(parseResult[_runCountArgName], onError: (s) => _defaultRunCount);
 
     if(parseResult.rest.isEmpty) {
       ctx.fail('No command provided.');
@@ -30,12 +30,12 @@ Task createBenchTask() {
           return true;
         });
 
-  }, description: 'Run a benchmark against the provided task');
+  }, description: 'Run a benchmark against the provided task', config: _benchParserConfig);
 }
 
-ArgParser _getBenchParser() =>
-  new ArgParser()
-    ..addOption('run_count', abbr: 'r', defaultsTo: _defaultRunCount.toString());
+void _benchParserConfig(ArgParser parser) {
+  parser.addOption(_runCountArgName, abbr: 'r', defaultsTo: _defaultRunCount.toString());
+}
 
 Future<List<_BenchRunResult>> _runMany(TaskLogger logger, int count, String processName, List<String> args) {
 

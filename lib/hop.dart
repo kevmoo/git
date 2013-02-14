@@ -20,6 +20,8 @@ part 'src/hop/task_logger.dart';
 
 final _sharedConfig = new BaseConfig();
 
+final _libLogger = new Logger('hop');
+
 typedef Future<bool> TaskDefinition(TaskContext ctx);
 
 /**
@@ -29,25 +31,7 @@ typedef Future<bool> TaskDefinition(TaskContext ctx);
  */
 void runHopCore() {
   _sharedConfig.freeze();
-  final options = new Options();
-
-  ArgResults args;
-  try {
-    args = Runner.parseArgs(options.arguments);
-  } on FormatException catch(ex, stack) {
-    print("Bad argument");
-    print(ex.message);
-    print(Runner.getUsage());
-
-    io.exit(RunResult.BAD_USAGE.exitCode);
-  }
-
-  final runner = new Runner(_sharedConfig, args);
-  final future = runner.run();
-
-  future.then((RunResult rr) {
-    io.exit(rr.exitCode);
-  });
+  Runner.runCore(_sharedConfig);
 }
 
 void addTask(String name, Task task) {

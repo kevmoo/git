@@ -3,7 +3,7 @@ part of test_hop;
 class TestRunner extends Runner {
 
   TestRunner(BaseConfig state, List<String> arguments) :
-    super(state, Runner.parseArgs(arguments));
+    super(state, arguments);
 
   @protected
   RootTaskContext getContext() {

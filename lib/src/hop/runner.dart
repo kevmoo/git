@@ -2,39 +2,41 @@ part of hop;
 
 class Runner {
   static const String _colorParam = 'color';
-  static const String RAW_TASK_LIST_CMD = 'print_raw_task_list';
-  static final ArgParser _parser = _getParser();
-  final ArgResults _args;
+  final ArgParser _parser;
+  ArgResults _args;
   final BaseConfig _state;
 
-  Runner(this._state, this._args) {
-    assert(_args != null);
+  Runner(BaseConfig config, Iterable<String> args) :
+    this._state = config,
+    this._parser = getParser(config) {
+    _args = _parser.parse(args);
     _state.requireFrozen();
   }
 
+  Runner._internal(this._state, this._parser, this._args);
+
   Future<RunResult> run() {
-    _state.requireFrozen();
+    assert(_state.isFrozen);
 
     final ctx = getContext();
 
-    if(_args.rest.length == 0) {
-      _printHelp(ctx);
-      return new Future.immediate(RunResult.SUCCESS);
-    }
+    if(_args.command != null) {
+      // we're executing a command
+      final subCommandArgResults = _args.command;
+      final taskName = subCommandArgResults.name;
 
-    final taskName = _args.rest[0];
-    final subArgs = _args.rest.getRange(1, _args.rest.length - 1);
-    if(_state.hasTask(taskName)) {
-      var subCtx = ctx.getSubContext(taskName, subArgs);
+      var subCtx = ctx.getSubContext(taskName, subCommandArgResults);
+
       final task = _state._getTask(taskName);
       return runTask(subCtx, task)
           .then((RunResult result) => _logExitCode(ctx, result))
           .whenComplete(() => subCtx.dispose());
-    } else if(taskName == RAW_TASK_LIST_CMD) {
-      _printRawTasks(ctx);
+
+    } else if(_args.rest.length == 0) {
+      _printHelp(ctx);
       return new Future.immediate(RunResult.SUCCESS);
-    }
-    else {
+    } else {
+      final taskName = _args.rest[0];
       ctx.log('No task named "$taskName".');
       return new Future.immediate(RunResult.BAD_USAGE);
     }
@@ -44,6 +46,39 @@ class Runner {
   RootTaskContext getContext() {
     final bool colorEnabled = _args[_colorParam];
     return new RootTaskContext(colorEnabled);
+  }
+
+  /**
+   * Parses provided command line args
+   * Handles command completion with the correct paramaters
+   * etc...
+   */
+  static void runCore(BaseConfig config) {
+    final options = new Options();
+
+    final parser = getParser(config);
+
+    ArgResults args;
+    try {
+      args = tryArgsCompletion(parser);
+    } on FormatException catch(ex, stack) {
+      print("There was an error parsing the provided arguments");
+      print(ex.message);
+      print(parser.getUsage());
+
+      _libLogger.severe(ex.message);
+      _libLogger.severe(Error.safeToString(stack));
+
+      io.exit(RunResult.BAD_USAGE.exitCode);
+    }
+
+    final runner = new Runner._internal(config, parser, args);
+    final future = runner.run();
+
+    future.then((RunResult rr) {
+      _libLogger.info('Exit with $rr');
+      io.exit(rr.exitCode);
+    });
   }
 
   /**
@@ -120,10 +155,7 @@ class Runner {
     }
   }
 
-  static ArgResults parseArgs(List<String> args) =>
-      _parser.parse(args);
-
-  static String getUsage() => _parser.getUsage();
+  String getUsage() => _parser.getUsage();
 
   static RunResult _logExitCode(RootTaskContext ctx, RunResult result) {
     if(result.success) {
@@ -134,11 +166,16 @@ class Runner {
     return result;
   }
 
-  static ArgParser _getParser() {
+  static ArgParser getParser(BaseConfig config) {
+    assert(config.isFrozen);
+
     final parser = new ArgParser();
 
-    parser.addFlag(_colorParam, defaultsTo: true);
+    for(final taskName in config.taskNames) {
+      _initParserForTask(parser, taskName, config._getTask(taskName));
+    }
 
+    parser.addFlag(_colorParam, defaultsTo: true);
 
     // TODO: put help in a const
     // parser.addFlag('help', abbr: '?', help: 'print help text', negatable: false);
@@ -148,5 +185,11 @@ class Runner {
     // trace - show stack dump on fail?
 
     return parser;
+  }
+
+  static void _initParserForTask(ArgParser parser, String taskName, Task task) {
+    final subParser = parser.addCommand(taskName);
+
+    task.configureArgParser(subParser);
   }
 }

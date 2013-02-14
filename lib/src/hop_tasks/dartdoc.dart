@@ -2,12 +2,15 @@ part of hop_tasks;
 
 // TODO: add post-build options to pretty-up the docs
 
+const _allowDirtyArg = 'allow-dirty';
+
 Task getCompileDocsFunc(String targetBranch, String packageDir,
                         Func<Future<List<String>>> libGetter,
                         {Iterable<String> excludeLibs, bool linkApi: false}) {
   return new Task.async((ctx) => compileDocs(ctx, targetBranch, libGetter,
       packageDir, excludeLibs: excludeLibs, linkApi: linkApi),
-      description: 'Generate documentation for the provided libraries.');
+      description: 'Generate documentation for the provided libraries.',
+      config: _dartDocParserConfig);
 }
 
 Future<bool> compileDocs(TaskContext ctx, String targetBranch,
@@ -16,9 +19,8 @@ Future<bool> compileDocs(TaskContext ctx, String targetBranch,
 
   final excludeList = excludeLibs == null ? [] : excludeLibs.toList();
 
-  final parser = _getDartDocParser();
-  final parseResult = _helpfulParseArgs(ctx, parser, ctx.arguments);
-  final bool allowDirty = parseResult['allow-dirty'];
+  final parseResult = ctx.arguments;
+  final bool allowDirty = parseResult[_allowDirtyArg];
 
   final currentWorkingDir = new Directory.current().path;
 
@@ -62,13 +64,8 @@ Future<bool> compileDocs(TaskContext ctx, String targetBranch,
       });
 }
 
-ArgParser _getDartDocParser() {
-  final parser = new ArgParser();
-
-  // TODO: put help in a const
-  parser.addFlag('allow-dirty', abbr: 'd', help: 'Allow a dirty tree to run', defaultsTo: false);
-
-  return parser;
+void _dartDocParserConfig(ArgParser parser) {
+  parser.addFlag(_allowDirtyArg, abbr: 'd', help: 'Allow a dirty tree to run', defaultsTo: false);
 }
 
 Future<String> _getCommitMessageFuture(GitDir gitDir) {

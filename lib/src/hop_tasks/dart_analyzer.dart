@@ -1,3 +1,5 @@
+part of hop_tasks;
+
 // TODO(adam): document methods and class
 // TODO(adam): use verbose
 // TODO: add an async version that takes Func<Future<Iterable<String>>>
@@ -5,27 +7,26 @@
 // TODO(adam?): optional out directory param. Used so that repeat runs
 //              are faster
 
-part of hop_tasks;
+const _verboseArgName = 'verbose';
+const _enableTypeChecksArgName = 'enable-type-checks';
 
 Task createDartAnalyzerTask(Iterable<String> files) {
   return new Task.async((context) {
+    final parseResult = context.arguments;
 
-    final parser = _getDartAnalyzerParser();
-    final parseResult = _helpfulParseArgs(context, parser, context.arguments);
-
-    final bool enableTypeChecks = parseResult['enable_type_checks'];
-    final bool verbose = parseResult['verbose'];
+    final bool enableTypeChecks = parseResult[_enableTypeChecksArgName];
+    final bool verbose = parseResult[_verboseArgName];
 
     final fileList = files.map((f) => new Path(f)).toList();
 
     return _processAnalyzerFile(context, fileList, enableTypeChecks, verbose);
-  }, description: 'Running dart analyzer');
+  }, description: 'Running dart analyzer', config: _analyzerParserConfig);
 }
 
-ArgParser _getDartAnalyzerParser() {
-  return new ArgParser()
-    ..addFlag('enable_type_checks', help: 'Generate runtime type checks', defaultsTo: false)
-    ..addFlag('verbose', help: 'verbose output of all errors', defaultsTo: false);
+void _analyzerParserConfig(ArgParser parser) {
+  parser
+    ..addFlag(_enableTypeChecksArgName, help: 'Generate runtime type checks', defaultsTo: false)
+    ..addFlag(_verboseArgName, help: 'verbose output of all errors', defaultsTo: false);
 }
 
 Future<bool> _processAnalyzerFile(TaskContext context, List<Path> analyzerFilePaths,

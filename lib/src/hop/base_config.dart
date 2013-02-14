@@ -1,8 +1,11 @@
 part of hop;
 
+// TODO: really need to rename this to be more helpful
+//       base of what?
+
 class BaseConfig {
   static final RegExp _validNameRegExp = new RegExp(r'^[a-z][a-z0-9_]*$');
-  static const _reservedTasks = const[Runner.RAW_TASK_LIST_CMD];
+  static const _reservedTasks = const[COMPLETION_COMMAND_NAME];
   final Map<String, Task> _tasks = new Map();
   ReadOnlyCollection<String> _sortedTaskNames;
 

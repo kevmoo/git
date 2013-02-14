@@ -6,7 +6,7 @@ Task createUnitTestTask(Action1<unittest.Configuration> unitTestAction) {
     unitTestAction(config);
 
     unittest.filterTests((unittest.TestCase tc) {
-      return ctx.arguments.every((arg) => tc.description.contains(arg));
+      return ctx.arguments.rest.every((arg) => tc.description.contains(arg));
     });
 
     unittest.runTests();
