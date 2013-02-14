@@ -5,10 +5,10 @@
 
 ###-begin-hop-completion-###
 #
-# npm command completion script
+# hop command completion script
 #
-# Installation: npm completion >> ~/.bashrc  (or ~/.zshrc)
-# Or, maybe: npm completion > /usr/local/etc/bash_completion.d/npm
+# Installation:
+#   'source' tool/hop-completion.bash into your environment
 #
 
 COMP_WORDBREAKS=${COMP_WORDBREAKS/=/}
