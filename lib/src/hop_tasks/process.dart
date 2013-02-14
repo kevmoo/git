@@ -21,7 +21,7 @@ Future<bool> startProcess(TaskLogger ctx, String command,
   return Process.start(command, args)
       .then((process) {
         return pipeProcess(process,
-            stdOutWriter: ctx.fine,
+            stdOutWriter: ctx.info,
             stdErrWriter: ctx.severe);
       })
       .then((int exitCode) {
