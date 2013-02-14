@@ -1,6 +1,6 @@
-###-begin-hop-completion-###
+###-begin-{{binName}}-completion-###
 #
-# hop command completion script
+# {{binName}} command completion script
 #
 # Installation:
 # 
@@ -20,29 +20,29 @@ COMP_WORDBREAKS=${COMP_WORDBREAKS/@/}
 export COMP_WORDBREAKS
 
 if type complete &>/dev/null; then
-  _hop_completion () {
+  _{{funcName}}_completion () {
     local si="$IFS"
     IFS=$'\n' COMPREPLY=($(COMP_CWORD="$COMP_CWORD" \
                            COMP_LINE="$COMP_LINE" \
                            COMP_POINT="$COMP_POINT" \
-                           hop completion -- "${COMP_WORDS[@]}" \
+                           {{binName}} completion -- "${COMP_WORDS[@]}" \
                            2>/dev/null)) || return $?
     IFS="$si"
   }
-  complete -F _hop_completion hop
+  complete -F _{{funcName}}_completion {{binName}}
 elif type compdef &>/dev/null; then
-  _hop_completion() {
+  _{{funcName}}_completion() {
     si=$IFS
     compadd -- $(COMP_CWORD=$((CURRENT-1)) \
                  COMP_LINE=$BUFFER \
                  COMP_POINT=0 \
-                 hop completion -- "${words[@]}" \
+                 {{binName}} completion -- "${words[@]}" \
                  2>/dev/null)
     IFS=$si
   }
-  compdef _hop_completion hop
+  compdef _{{funcName}}_completion {{binName}}
 elif type compctl &>/dev/null; then
-  _hop_completion () {
+  _{{funcName}}_completion () {
     local cword line point words si
     read -Ac words
     read -cn cword
@@ -53,13 +53,12 @@ elif type compctl &>/dev/null; then
     IFS=$'\n' reply=($(COMP_CWORD="$cword" \
                        COMP_LINE="$line" \
                        COMP_POINT="$point" \
-                       hop completion -- "${words[@]}" \
+                       {{binName}} completion -- "${words[@]}" \
                        2>/dev/null)) || return $?
     IFS="$si"
   }
-  compctl -K _hop_completion hop
+  compctl -K _{{funcName}}_completion {{binName}}
 fi
 
-## Generated on 2013-02-14 17:38:22.497
-###-end-hop-completion-###
-
+## {{details}}
+###-end-{{binName}}-completion-###

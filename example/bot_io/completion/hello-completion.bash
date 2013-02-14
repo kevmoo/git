@@ -1,13 +1,18 @@
-#!/bin/bash
-
-# https://github.com/isaacs/npm/blob/master/lib/utils/completion.sh
-
-###-begin-npm-completion-###
+###-begin-hello.dart-completion-###
 #
-# npm command completion script
+# hello.dart command completion script
 #
-# Installation: npm completion >> ~/.bashrc  (or ~/.zshrc)
-# Or, maybe: npm completion > /usr/local/etc/bash_completion.d/npm
+# Installation:
+# 
+# Via shell config file  ~/.bashrc  (or ~/.zshrc)
+#
+#   Append the contents to config file
+#   'source' the file in the config file
+#
+# You may also have a directory on your system that is configured
+#    for completion files, such as:
+#
+#    /usr/local/etc/bash_completion.d/
 #
 
 COMP_WORDBREAKS=${COMP_WORDBREAKS/=/}
@@ -25,5 +30,36 @@ if type complete &>/dev/null; then
     IFS="$si"
   }
   complete -F _hello_dart_completion hello.dart
+elif type compdef &>/dev/null; then
+  _hello_dart_completion() {
+    si=$IFS
+    compadd -- $(COMP_CWORD=$((CURRENT-1)) \
+                 COMP_LINE=$BUFFER \
+                 COMP_POINT=0 \
+                 hello.dart completion -- "${words[@]}" \
+                 2>/dev/null)
+    IFS=$si
+  }
+  compdef _hello_dart_completion hello.dart
+elif type compctl &>/dev/null; then
+  _hello_dart_completion () {
+    local cword line point words si
+    read -Ac words
+    read -cn cword
+    let cword-=1
+    read -l line
+    read -ln point
+    si="$IFS"
+    IFS=$'\n' reply=($(COMP_CWORD="$cword" \
+                       COMP_LINE="$line" \
+                       COMP_POINT="$point" \
+                       hello.dart completion -- "${words[@]}" \
+                       2>/dev/null)) || return $?
+    IFS="$si"
+  }
+  compctl -K _hello_dart_completion hello.dart
 fi
-###-end-npm-completion-###
+
+## Generated on 2013-02-14 17:35:48.805
+###-end-hello.dart-completion-###
+
