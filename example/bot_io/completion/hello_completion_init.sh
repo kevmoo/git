@@ -1,5 +1,3 @@
-#!/bin/bash
-
 #
 # This script should not be run directly (hence, it does not have +x attribute)
 # It should be included in the current environment via
@@ -8,7 +6,7 @@
 #
 
 APP_NAME=hello.dart
-COMPETION_NAME=hello-completion.bash
+COMPETION_NAME=hello-completion.sh
 
 APP_DIR=$( cd $( dirname "${BASH_SOURCE[0]}" ) && pwd )
 
