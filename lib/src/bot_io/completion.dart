@@ -1,0 +1,418 @@
+part of bot_io;
+
+/**
+ * The string 'completion' used to denote that arguments proivded to an app are for command
+ * completion.
+ *
+ * The expected arg format is: completion -- {process name} {rest of current args}
+ */
+const String COMPLETION_COMMAND_NAME = 'completion';
+
+const _compPointVar = 'COMP_POINT';
+
+logging.Logger _completionLogger;
+
+typedef List<String> ArgCompleter(List<String> args, String compLine, int compPoint);
+
+Options tryCompletion(ArgCompleter completer) {
+  final options = new Options();
+  final args = options.arguments;
+
+  final scriptName = new Path(options.script).filename;
+  if(scriptName.isEmpty) {
+    // should have a script name...weird...
+    return options;
+  }
+
+  _log('*');
+  _log('*');
+  _log('* Completion started');
+  _log('Script:                  $scriptName');
+  if(args.length >= 3 &&
+      args[0] == COMPLETION_COMMAND_NAME &&
+      args[1] == '--') {
+    try {
+      _log('completion-reported exe: ${args[2]}');
+
+      final env = Platform.environment;
+
+      // There are 3 interesting env paramaters passed by the completion logic
+      // COMP_LINE:  the full contents of the completion
+      final compLine = env['COMP_LINE'];
+      require(compLine != null, 'Environment variable COMP_LINE must be set');
+
+      // COMP_CWORD: number of words. Also might be nice
+      // COMP_POINT: where the cursor is on the completion line
+      final compPointValue = env[_compPointVar];
+      require(compPointValue != null && !compPointValue.isEmpty,
+          'Environment variable $_compPointVar must be set and non-empty');
+      final compPoint = int.parse(compPointValue, onError: (val) {
+        throw new FormatException('Could not parse $_compPointVar value "$val" into an integer');
+      });
+
+      final trimmedArgs = args.getRange(3, args.length-3);
+
+      while(!trimmedArgs.isEmpty && trimmedArgs.last.isEmpty) {
+        trimmedArgs.removeLast();
+      }
+
+      _log('input args:     ${_helpfulToString(trimmedArgs)}');
+
+      final completions = completer(trimmedArgs, compLine, compPoint);
+
+      _log('completions: ${_helpfulToString(completions)}');
+
+      for(final comp in completions) {
+        print(comp);
+      }
+      exit(0);
+    } catch (ex, stack) {
+      _log('An error occurred while attemping completion');
+      _log(ex);
+      _log(stack);
+      exit(1);
+    }
+  }
+
+  return options;
+}
+
+ArgResults tryArgsCompletion(ArgParser parser) {
+  final options = tryCompletion((List<String> args, String compLine, int compPoint) {
+    return getArgsCompletions(parser, args, compLine, compPoint);
+  });
+  return parser.parse(options.arguments);
+}
+
+/*
+ * TODO: an interesting scenario: if there is only one subcommand,
+ *       then tabbing into an app just completes to that one command. Weird?
+ * TODO: really need to look at someone hitting tab in the middle of the command
+ *       COMP_POINT magic, etc.
+ */
+
+List<String> getArgsCompletions(ArgParser parser, List<String> providedArgs,
+    String compLine, int compPoint) {
+  assert(parser != null);
+  assert(providedArgs != null);
+  // all arg entries: no empty items, no null items, all pre-trimmed
+  for(int i = 0; i < providedArgs.length; i++) {
+    final arg = providedArgs[i];
+    final msg = 'Arg at index $i with value "$arg" ';
+    require(arg != null, msg.concat('is null'));
+    require(!arg.isEmpty, msg.concat('is empty'));
+    require(arg.trim() == arg, msg.concat('has whitespace'));
+  }
+
+  _log('**');
+  _log('**');
+  _log('** getArgsCompletion');
+  _log("provided args: ${_helpfulToString(providedArgs)}");
+  _log('COMP_LINE:  "$compLine"');
+  _log('COMP_POINT:  $compPoint');
+
+  if(providedArgs.isEmpty) {
+    _log('empty args. Complete with all available commands');
+    return parser.commands.keys.toList();
+  }
+
+  final alignedArgsOptions = providedArgs
+      .map((arg) => _getOptionForArg(parser, arg)).toList();
+
+  /*
+   * NOTE: nuanced behavior
+   * If the last item provided is a full, real item (command or option)
+   * It should be completed with its full name so the user can move on
+   * Soooo....we are excluding the last item in [alignedArgsOptions] from
+   * optionsDefinedInArgs
+   *
+   * Keep in mind, if we're already on to the next item to complete, the last item is likely
+   * empty string '' or '--', so this isn't a problem
+   */
+
+  // a set of options in use (minus, potentially, the last one)
+  // all non-null, all unique
+  final optionsDefinedInArgs = alignedArgsOptions.take(alignedArgsOptions.length - 1)
+      .where((o) => o != null)
+      .toSet();
+  _log('defined options: ${optionsDefinedInArgs.map((o) => o.name).toSet()}');
+
+  final parserOptionCompletions = $(_getParserOptionCompletions(parser, optionsDefinedInArgs))
+      .toReadOnlyCollection();
+
+  /*
+   * KNOWN: at least one item in providedArgs last and first are now safe
+   */
+
+  /*
+   * Now we're going to lean on the existing parse functionality to see
+   * if the provided args (or a subset of them) parse to valid [ArgsResult]
+   * If it does, we can use the result to determine what we should do next
+   */
+
+  final subsetTuple = _getValidSubset(parser, providedArgs);
+  final validSubSet = subsetTuple.item1;
+  final subsetResult = subsetTuple.item2;
+
+  _log('valid subset: ${_helpfulToString(validSubSet)}');
+
+  /*
+   * CASE: we have a command
+   * get recursive
+   */
+  if(subsetResult != null && subsetResult.command != null) {
+    // get all of the args *after* the command name
+    // call in recursively with the sub command parser, right?
+    final subCommand = subsetResult.command;
+    final subCommandIndex = providedArgs.indexOf(subCommand.name);
+    assert(subCommandIndex >= 0);
+    _log('so, it seems we have command "${subCommand.name}" at index $subCommandIndex');
+
+    final subCommandParser = parser.commands[subCommand.name];
+    final subCommandArgs = providedArgs.getRange(subCommandIndex + 1, providedArgs.length - subCommandIndex - 1);
+
+    /*
+     * only start rockin' the sub command parser if
+     * 1) there's a start on sub args
+     * 2) there's whitespace at the end of compLine
+     */
+
+    if(!subCommandArgs.isEmpty || compLine.endsWith(' ')) {
+      return getArgsCompletions(subCommandParser, subCommandArgs, compLine, compPoint);
+    }
+  }
+
+
+  final removedItems = providedArgs.getRange(validSubSet.length, providedArgs.length - validSubSet.length);
+  assert(removedItems.length + validSubSet.length == providedArgs.length);
+
+  _log('removed items: ${_helpfulToString(removedItems)}');
+
+  /*
+   * CASE: no removed items and compLine ends in a space -> do command completion
+   */
+  if(removedItems.isEmpty && compLine.endsWith(' ')) {
+    return parser.commands.keys.toList();
+  }
+
+  /*
+   * CASE: one removed item, that looks like a partial option
+   * try to match it against available options
+   */
+  if(removedItems.length == 1 &&
+      removedItems.single.startsWith('--')) {
+
+    final removedItem = removedItems.single;
+
+    if(compLine.endsWith(' ')) {
+      // if the removed item maps to an option w/ allowed values
+      // we should return those values to complete against
+      final option = alignedArgsOptions[providedArgs.length-1];
+      if(option != null && option.allowed != null && !option.allowed.isEmpty) {
+        assert(!option.isFlag);
+
+        _log('completing all allowed value for option "${option.name}"');
+
+        return option.allowed.toList();
+      }
+
+
+    } else {
+      _log('completing the name of options starting with "$removedItem"');
+
+      return parserOptionCompletions
+          .where((String option) => option.startsWith(removedItem))
+          .toList();
+    }
+  }
+
+  /*
+   * CASE: second-to-last arg is an option+allowed and compLine doesn't end with ' '
+   * then we should complete with the available options, right?
+   */
+  if(providedArgs.length >= 2 && !compLine.endsWith(' ')) {
+    final option = alignedArgsOptions[providedArgs.length - 2];
+    if(option != null &&
+        option.allowed != null &&
+        !option.allowed.isEmpty) {
+
+      assert(!option.isFlag);
+      _log('completing option "${option.name}"');
+
+      final String optionValue = providedArgs[providedArgs.length-1];
+
+      return option.allowed
+          .where((String v) => v.startsWith(optionValue))
+          .toList();
+    }
+  }
+
+  final lastArg = providedArgs.last;
+
+  /*
+   * CASE: If we have '--', then let's naively complete all options
+   */
+  if(lastArg == '--') {
+    return parserOptionCompletions;
+  }
+
+  /*
+   * CASE: compLine does not end with a space and the arg before it is an 'option' looking for a value
+   */
+  if(!compLine.endsWith(' ')) {
+    // the index of lastArg is providedArgs.length - 1
+    // so the index of the arg before it is providedArgs.length - 2
+    // see if we have an option there, but only if
+    // providedArgs.length >= 2
+
+    if(providedArgs.length >= 2) {
+      final completingOption = alignedArgsOptions[providedArgs.length - 2];
+
+      if(completingOption != null && !completingOption.isFlag) {
+        // just return [] here. We're finishing an option value
+
+        _log('completing with an option value for "${completingOption.name}"');
+
+        return [];
+      }
+    }
+  }
+
+  /*
+   * CASE: a partial command name?
+   * if the last arg doesn't start with a '-'
+   */
+  if(!lastArg.startsWith('-')) {
+    // for now, let's pretend this is partial command
+
+    _log('completing command names with "$lastArg');
+
+    return parser.commands.keys
+        .where((String commandName) => commandName.startsWith(lastArg))
+        .toList();
+  }
+
+  /*
+   * CASE: the last argument is valid, so we should return it
+   * if types the last char of a valid option, hitting tab should complete it
+   */
+  if(!compLine.endsWith(' ') && parserOptionCompletions.contains(lastArg)) {
+    _log('completing final arg');
+    return [lastArg];
+  }
+
+  _log("so...uh...now what?");
+
+  return [];
+}
+
+Option _getOptionForArg(ArgParser parser, String arg) {
+
+  // could be a full arg name
+  if(arg.startsWith('--')) {
+
+    final nameOption = arg.substring(2);
+    final option = parser.options[nameOption];
+    if(option != null) {
+      return option;
+    }
+  }
+
+  // could be a 'not' arg name
+  if(arg.startsWith('--no-')) {
+    final nameOption = arg.substring(5);
+    final option = parser.options[nameOption];
+    if(option != null && option.negatable) {
+      return option;
+    }
+  }
+
+  if(arg.startsWith('-') && arg.length == 2) {
+    // all abbreviations are single-character
+    final abbr = arg.substring(1);
+    assert(abbr.length == 1);
+    return parser.findByAbbreviation(abbr);
+  }
+}
+
+Iterable<String> _getParserOptionCompletions(ArgParser parser, Set<Option> existingOptions) {
+  assert(existingOptions.every((option) => parser.options.containsValue(option)));
+
+  return parser.options.values
+      .where((Option o) => !existingOptions.contains(o) || o.allowMultiple)
+      .expand(_getArgsOptionCompletions);
+}
+
+Tuple<List<String>, ArgResults> _getValidSubset(ArgParser parser,
+    List<String> providedArgs) {
+
+  /* start with all of the args, loop through parsing them, removing one every time
+   * Util:
+   * 1) we have a valid ArgsResult
+   * 2) we have no more args
+   */
+  final validSubSet = providedArgs.toList();
+  ArgResults subsetResult = null;
+  while(!validSubSet.isEmpty) {
+    try {
+      subsetResult = parser.parse(validSubSet);
+      break;
+    } on FormatException catch(ex, stack) {
+      //_log('tried to parse subset $validSubSet');
+      //_log('error:\t$ex');
+      // I guess that won't parse
+    }
+
+    // TODO: other ways this could fail? Hmm...
+
+    validSubSet.removeLast();
+  }
+
+  return new Tuple(validSubSet, subsetResult);
+}
+
+List<String> _getArgsOptionCompletions(Option option) {
+  final items = new List<String>();
+
+  items.add('--${option.name}');
+
+  if(option.negatable) {
+    items.add('--no-${option.name}');
+  }
+
+  items.sort();
+
+  return items;
+}
+
+String _helpfulToString(Object input) {
+  if(input is Iterable) {
+    final items = (input as Iterable)
+        .map((item) => _helpfulToString(item))
+        .toList();
+
+    if(items.isEmpty) {
+      return '-empty-';
+    } else {
+      return "[${items.join(', ')}]";
+    }
+  }
+
+  return Error.safeToString(input);
+}
+
+void _log(Object o) {
+  String safe;
+
+  try {
+    safe = o.toString();
+  } catch (e, stack) {
+    safe = 'Error converting provided object $o into String\nException:\t$e\Stack:\t$stack';
+  }
+
+  if(_completionLogger == null) {
+    _completionLogger = new logging.Logger('bot_io.completion');
+  }
+
+  _completionLogger.info(safe);
+}

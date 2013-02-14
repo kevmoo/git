@@ -4,9 +4,11 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'dart:io';
 import 'package:logging/logging.dart' as logging;
-import 'bot.dart';
+import 'package:args/args.dart';
+import 'package:bot/bot.dart';
 
 part 'src/bot_io/ansi_color.dart';
+part 'src/bot_io/completion.dart';
 part 'src/bot_io/console.dart';
 part 'src/bot_io/io_helpers.dart';
 part 'src/bot_io/temp_dir.dart';
