@@ -13,7 +13,7 @@ void main() {
   addTask('hello', new Task.sync((ctx) {
     ctx.fine('Welcome to HOP!');
     return true;
-  }, 'Just sayin hi.'));
+  }, description: 'Just sayin hi.'));
 
   addTask('test', createUnitTestTask(test_console.testCore));
 

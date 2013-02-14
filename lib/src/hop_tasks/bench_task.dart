@@ -30,7 +30,7 @@ Task createBenchTask() {
           return true;
         });
 
-  }, 'Run a benchmark against the provided task');
+  }, description: 'Run a benchmark against the provided task');
 }
 
 ArgParser _getBenchParser() =>

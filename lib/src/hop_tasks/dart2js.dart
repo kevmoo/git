@@ -14,7 +14,7 @@ Task createDart2JsTask(List<String> inputs, {String output: null,
             rejectDeprecatedFeatures: rejectDeprecatedFeatures))
         .toList();
     return _chainTasks(context, futureFuncs);
-  }, 'Run Dart-to-Javascript compiler');
+  }, description: 'Run Dart-to-Javascript compiler');
 }
 
 Future<bool> _dart2js(TaskContext ctx, String file, {String output: null,

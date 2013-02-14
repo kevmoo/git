@@ -7,7 +7,7 @@ Task getCompileDocsFunc(String targetBranch, String packageDir,
                         {Iterable<String> excludeLibs, bool linkApi: false}) {
   return new Task.async((ctx) => compileDocs(ctx, targetBranch, libGetter,
       packageDir, excludeLibs: excludeLibs, linkApi: linkApi),
-      'Generate documentation for the provided libraries.');
+      description: 'Generate documentation for the provided libraries.');
 }
 
 Future<bool> compileDocs(TaskContext ctx, String targetBranch,

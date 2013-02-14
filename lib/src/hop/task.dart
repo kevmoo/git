@@ -6,14 +6,14 @@ class Task {
   final TaskDefinition _exec;
   final String description;
 
-  factory Task.sync(Func1<TaskContext, bool> exec, [String description]) {
+  factory Task.sync(Func1<TaskContext, bool> exec, {String description}) {
     final futureExec = (TaskContext ctx) => new Future.delayed(0, () => exec(ctx));
 
-    return new Task.async(futureExec, description);
+    return new Task.async(futureExec, description: description);
   }
 
-  Task.async(this._exec, [String desc = '']) :
-    this.description = (desc == null) ? '' : desc {
+  Task.async(this._exec, {String description}) :
+    this.description = (description == null) ? '' : description {
     requireArgumentNotNull(_exec, '_exec');
   }
 

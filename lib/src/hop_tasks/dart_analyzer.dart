@@ -19,7 +19,7 @@ Task createDartAnalyzerTask(Iterable<String> files) {
     final fileList = files.map((f) => new Path(f)).toList();
 
     return _processAnalyzerFile(context, fileList, enableTypeChecks, verbose);
-  }, 'Running dart analyzer');
+  }, description: 'Running dart analyzer');
 }
 
 ArgParser _getDartAnalyzerParser() {

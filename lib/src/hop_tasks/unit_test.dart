@@ -11,7 +11,7 @@ Task createUnitTestTask(Action1<unittest.Configuration> unitTestAction) {
 
     unittest.runTests();
     return config.future;
-  }, 'Run unit tests in the console');
+  }, description: 'Run unit tests in the console');
 }
 
 class _HopTestConfiguration extends unittest.Configuration {

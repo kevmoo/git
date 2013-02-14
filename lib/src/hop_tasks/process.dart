@@ -1,7 +1,7 @@
 part of hop_tasks;
 
-Task createProcessTask(String command, {List<String> args: null, String description: ''}) {
-  return new Task.async((ctx) => startProcess(ctx, command, args), description);
+Task createProcessTask(String command, {List<String> args: null, String description}) {
+  return new Task.async((ctx) => startProcess(ctx, command, args), description: description);
 }
 
 // TODO: document that start does an 'interactive' process
