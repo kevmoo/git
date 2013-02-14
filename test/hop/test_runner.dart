@@ -18,6 +18,6 @@ class TestTaskContext extends RootTaskContext {
   @protected
   @override
   void printCore(String msg) {
-    // at the moment, just swallowing all print output
+    (new Logger('hop_test_context')).info(msg);
   }
 }
