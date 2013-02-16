@@ -10,8 +10,6 @@ const String COMPLETION_COMMAND_NAME = 'completion';
 
 const _compPointVar = 'COMP_POINT';
 
-logging.Logger _completionLogger;
-
 typedef List<String> ArgCompleter(List<String> args, String compLine, int compPoint);
 
 Options tryCompletion(ArgCompleter completer) {
@@ -24,14 +22,12 @@ Options tryCompletion(ArgCompleter completer) {
     return options;
   }
 
-  _log('*');
-  _log('*');
-  _log('* Completion started');
-  _log('Script:                  $scriptName');
+  _log('Checking for completion on script:\t$scriptName');
   if(args.length >= 3 &&
       args[0] == COMPLETION_COMMAND_NAME &&
       args[1] == '--') {
     try {
+      _log('Starting completion');
       _log('completion-reported exe: ${args[2]}');
 
       final env = Platform.environment;
@@ -74,6 +70,8 @@ Options tryCompletion(ArgCompleter completer) {
     }
   }
 
+  _log('Completion params not found');
+
   return options;
 }
 
@@ -104,15 +102,17 @@ List<String> getArgsCompletions(ArgParser parser, List<String> providedArgs,
     require(arg.trim() == arg, msg.concat('has whitespace'));
   }
 
-  _log('**');
-  _log('**');
-  _log('** getArgsCompletion');
-  _log("provided args: ${_helpfulToString(providedArgs)}");
-  _log('COMP_LINE:  "$compLine"');
-  _log('COMP_POINT:  $compPoint');
+  final sublog = (Object obj) {
+    _log(obj, ['getArgsCompletions']);
+  };
+
+  sublog("provided args: ${_helpfulToString(providedArgs)}");
+  sublog('COMP_LINE:  "$compLine"');
+  sublog('COMP_POINT:  $compPoint');
+
 
   if(providedArgs.isEmpty) {
-    _log('empty args. Complete with all available commands');
+    sublog('empty args. Complete with all available commands');
     return parser.commands.keys.toList();
   }
 
@@ -135,7 +135,7 @@ List<String> getArgsCompletions(ArgParser parser, List<String> providedArgs,
   final optionsDefinedInArgs = alignedArgsOptions.take(alignedArgsOptions.length - 1)
       .where((o) => o != null)
       .toSet();
-  _log('defined options: ${optionsDefinedInArgs.map((o) => o.name).toSet()}');
+  sublog('defined options: ${optionsDefinedInArgs.map((o) => o.name).toSet()}');
 
   final parserOptionCompletions = $(_getParserOptionCompletions(parser, optionsDefinedInArgs))
       .toReadOnlyCollection();
@@ -154,7 +154,7 @@ List<String> getArgsCompletions(ArgParser parser, List<String> providedArgs,
   final validSubSet = subsetTuple.item1;
   final subsetResult = subsetTuple.item2;
 
-  _log('valid subset: ${_helpfulToString(validSubSet)}');
+  sublog('valid subset: ${_helpfulToString(validSubSet)}');
 
   /*
    * CASE: we have a command
@@ -166,7 +166,7 @@ List<String> getArgsCompletions(ArgParser parser, List<String> providedArgs,
     final subCommand = subsetResult.command;
     final subCommandIndex = providedArgs.indexOf(subCommand.name);
     assert(subCommandIndex >= 0);
-    _log('so, it seems we have command "${subCommand.name}" at index $subCommandIndex');
+    sublog('so, it seems we have command "${subCommand.name}" at index $subCommandIndex');
 
     final subCommandParser = parser.commands[subCommand.name];
     final subCommandArgs = providedArgs.getRange(subCommandIndex + 1, providedArgs.length - subCommandIndex - 1);
@@ -186,7 +186,7 @@ List<String> getArgsCompletions(ArgParser parser, List<String> providedArgs,
   final removedItems = providedArgs.getRange(validSubSet.length, providedArgs.length - validSubSet.length);
   assert(removedItems.length + validSubSet.length == providedArgs.length);
 
-  _log('removed items: ${_helpfulToString(removedItems)}');
+  sublog('removed items: ${_helpfulToString(removedItems)}');
 
   /*
    * CASE: no removed items and compLine ends in a space -> do command completion
@@ -211,14 +211,14 @@ List<String> getArgsCompletions(ArgParser parser, List<String> providedArgs,
       if(option != null && option.allowed != null && !option.allowed.isEmpty) {
         assert(!option.isFlag);
 
-        _log('completing all allowed value for option "${option.name}"');
+        sublog('completing all allowed value for option "${option.name}"');
 
         return option.allowed.toList();
       }
 
 
     } else {
-      _log('completing the name of options starting with "$removedItem"');
+      sublog('completing the name of options starting with "$removedItem"');
 
       return parserOptionCompletions
           .where((String option) => option.startsWith(removedItem))
@@ -237,7 +237,7 @@ List<String> getArgsCompletions(ArgParser parser, List<String> providedArgs,
         !option.allowed.isEmpty) {
 
       assert(!option.isFlag);
-      _log('completing option "${option.name}"');
+      sublog('completing option "${option.name}"');
 
       final String optionValue = providedArgs[providedArgs.length-1];
 
@@ -271,7 +271,7 @@ List<String> getArgsCompletions(ArgParser parser, List<String> providedArgs,
       if(completingOption != null && !completingOption.isFlag) {
         // just return [] here. We're finishing an option value
 
-        _log('completing with an option value for "${completingOption.name}"');
+        sublog('completing with an option value for "${completingOption.name}"');
 
         return [];
       }
@@ -285,7 +285,7 @@ List<String> getArgsCompletions(ArgParser parser, List<String> providedArgs,
   if(!lastArg.startsWith('-')) {
     // for now, let's pretend this is partial command
 
-    _log('completing command names with "$lastArg');
+    sublog('completing command names with "$lastArg');
 
     return parser.commands.keys
         .where((String commandName) => commandName.startsWith(lastArg))
@@ -297,11 +297,11 @@ List<String> getArgsCompletions(ArgParser parser, List<String> providedArgs,
    * if types the last char of a valid option, hitting tab should complete it
    */
   if(!compLine.endsWith(' ') && parserOptionCompletions.contains(lastArg)) {
-    _log('completing final arg');
+    sublog('completing final arg');
     return [lastArg];
   }
 
-  _log("so...uh...now what?");
+  sublog("so...uh...now what?");
 
   return [];
 }
@@ -401,7 +401,7 @@ String _helpfulToString(Object input) {
   return Error.safeToString(input);
 }
 
-void _log(Object o) {
+void _log(Object o, [List<String> subContexts]) {
   String safe;
 
   try {
@@ -410,9 +410,14 @@ void _log(Object o) {
     safe = 'Error converting provided object $o into String\nException:\t$e\Stack:\t$stack';
   }
 
-  if(_completionLogger == null) {
-    _completionLogger = new logging.Logger('bot_io.completion');
+  final startArgs = ['bot_io', 'completion'];
+  if(subContexts != null) {
+    startArgs.addAll(subContexts);
   }
 
-  _completionLogger.info(safe);
+  final loggerName = startArgs.join('.');
+
+  final logger = new logging.Logger(loggerName);
+
+  logger.info(safe);
 }
