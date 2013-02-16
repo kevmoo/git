@@ -4,6 +4,7 @@ import 'dart:html';
 import 'dart:async';
 import 'dart:math' as math;
 import 'dart:web_audio';
+import 'package:meta/meta.dart';
 import 'bot.dart';
 
 part 'src/bot_html/_resource_entry.dart';
