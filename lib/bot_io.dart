@@ -26,12 +26,17 @@ part 'src/bot_io/directory_populater.dart';
 void enableScriptLogListener() {
   if(_scriptLogListenerPath == null) {
     final options = new Options();
-    final args = options.arguments;
-    _scriptLogListenerPath = new Path(options.script).toNativePath().concat('.log');
+
+    final script = options.script;
+    _scriptLogListenerPath = new Path(script).toNativePath().concat('.log');
 
     final logging.Logger rootLogger = logging.Logger.root;
 
     rootLogger.on.record.add(_doLog);
+
+    final logging.Logger logger = logging.Logger.root;
+
+    logger.info('Starting log for $script at $_scriptLogListenerPath');
   }
 }
 
