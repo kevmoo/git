@@ -2,6 +2,7 @@
 
 ## 0.14.0-dev - *pre-release* (SDK 0.3.7.2 r18601)
 
+* Bumped minimum Dart SDK version to __3.5.1 r18300__
 * Updated core dart packages to `>= 0.3.5+1`
 * Removed `vendor/dart.js`. Using version from `browser` package
 * Moved examples into library-specific directories.
