@@ -1,6 +1,39 @@
 # Changelog - Dart Bag of Tricks
 
-## 0.13.2-dev - *pre-release* (SDK 0.3.7.2 r18601)
+## 0.14.0-dev - *pre-release* (SDK 0.3.7.2 r18601)
+
+* Updated core dart packages to `>= 0.3.5+1`
+* Removed `vendor/dart.js`. Using version from `browser` package
+* Moved examples into library-specific directories.
+* __NEW!__ `bin/shell_completion_generator.dart` for creating shell completion scripts compatible with completion logic in `bot_io`
+
+### bot
+
+* `Enumerable` learned `expand` and deprecated `selectMany`. Better alignment with `Iterable`
+
+### bot_html
+
+* __DEPRECATED__ and fixed `getTimeoutFuture`
+
+### bot_io
+
+* __NEW!__ `enableScriptLogListener` - an easy way to write all log output to disk.
+* __NEW!__ A whole set of new features around shell command completion.
+
+### hop
+
+* __BREAKING__ Renamed all completion scripts to extension `.sh`. Breaks folks who may be sourcing `tool/hop-completion.bash`
+* __BREAKING__ `description` argument to `Task` constructors is now named (not positional) 
+* Updated `bin/hop` shell script to pass quoted params fully and accurately to `hop_runner.dart`
+* Exposed `Runner.runTask`.
+* __NEW!__ Added `ConsoleContext` - as easy way to run tasks as stand-alone shell commands
+* __DEPRECATED__ `TaskFailError`. Use `TaskContext.fail` instead
+* `RunResult` now has a descriptive `toString`
+* Moved core hop command completion logic to new `bot_io` completion helpers.
+
+### hop_tasks
+
+* __dartdoc__ helpers added optional `excludeLibs` and `linkApi` arguments.
 
 ## 0.13.1 - 9 Feb 2013 (SDK 0.3.5.1 r18300)
 
