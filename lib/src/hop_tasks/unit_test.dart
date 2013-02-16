@@ -5,9 +5,13 @@ Task createUnitTestTask(Action1<unittest.Configuration> unitTestAction) {
     final config = new _HopTestConfiguration(ctx);
     unitTestAction(config);
 
-    unittest.filterTests((unittest.TestCase tc) {
-      return ctx.arguments.rest.every((arg) => tc.description.contains(arg));
-    });
+    if(!ctx.arguments.rest.isEmpty) {
+      ctx.info('Filtering tests by: ${ctx.arguments.rest}');
+
+      unittest.filterTests((unittest.TestCase tc) {
+        return ctx.arguments.rest.every((arg) => tc.description.contains(arg));
+      });
+    }
 
     unittest.runTests();
     return config.future;
