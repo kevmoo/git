@@ -121,6 +121,14 @@ void _registerCompletionTests() {
 
                      ];
 
+      test('compPoint not at the end', () {
+        final compLine = 'help';
+        final args = ['help'];
+
+        _testCompletionPair(parser, args, ['help'], compLine, compLine.length);
+        _testCompletionPair(parser, args, [], compLine, compLine.length - 1);
+      });
+
       pairs.forEach((_CompletionSet p) {
         final compLine = p.args.join(' ');
         final compPoint = compLine.length;

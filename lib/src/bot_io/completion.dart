@@ -85,8 +85,6 @@ ArgResults tryArgsCompletion(ArgParser parser) {
 /*
  * TODO: an interesting scenario: if there is only one subcommand,
  *       then tabbing into an app just completes to that one command. Weird?
- * TODO: really need to look at someone hitting tab in the middle of the command
- *       COMP_POINT magic, etc.
  */
 
 List<String> getArgsCompletions(ArgParser parser, List<String> providedArgs,
@@ -110,6 +108,11 @@ List<String> getArgsCompletions(ArgParser parser, List<String> providedArgs,
   sublog('COMP_LINE:  "$compLine"');
   sublog('COMP_POINT:  $compPoint');
 
+  if(compPoint < compLine.length) {
+    // TODO: ponder smart ways to handle in-line completion
+    sublog('cursor is in the middle of the line. NO-OP');
+    return [];
+  }
 
   if(providedArgs.isEmpty) {
     sublog('empty args. Complete with all available commands');
