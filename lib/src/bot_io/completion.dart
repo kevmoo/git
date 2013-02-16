@@ -260,28 +260,6 @@ List<String> getArgsCompletions(ArgParser parser, List<String> providedArgs,
   }
 
   /*
-   * CASE: compLine does not end with a space and the arg before it is an 'option' looking for a value
-   */
-  if(!compLine.endsWith(' ')) {
-    // the index of lastArg is providedArgs.length - 1
-    // so the index of the arg before it is providedArgs.length - 2
-    // see if we have an option there, but only if
-    // providedArgs.length >= 2
-
-    if(providedArgs.length >= 2) {
-      final completingOption = alignedArgsOptions[providedArgs.length - 2];
-
-      if(completingOption != null && !completingOption.isFlag) {
-        // just return [] here. We're finishing an option value
-
-        sublog('completing with an option value for "${completingOption.name}"');
-
-        return [];
-      }
-    }
-  }
-
-  /*
    * CASE: a partial command name?
    * if the last arg doesn't start with a '-'
    */
