@@ -1,14 +1,14 @@
 #!/bin/bash
 PACK_DIR=`pwd`/packages/
-cmd="dart
---checked
---enable_asserts=true
---enable_checked_mode=true
---enable_type_checks=true
---error_on_malformed_type
---package-root=$PACK_DIR
---verbose_debug=true
---verbose_stacktrace=true
---warning_as_error=true
-./tool/hop_runner.dart $@"
-exec $cmd
+
+args="--checked \
+--enable_asserts=true \
+--enable_checked_mode=true \
+--enable_type_checks=true \
+--error_on_malformed_type \
+--package-root=$PACK_DIR \
+--verbose_debug=true \
+--verbose_stacktrace=true \
+--warning_as_error=true"
+
+exec dart $args ./tool/hop_runner.dart "$@"
