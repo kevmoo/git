@@ -28,15 +28,18 @@ void _printHelpForTask(BaseConfig config, String taskName) {
   final task = config._getTask(taskName);
   assert(task != null);
 
-  print(taskName);
+  _printUsage(taskName);
   print(task.description);
   print('');
 
   final usage = task.getUsage();
   if(!usage.isEmpty) {
-    print(task.getUsage());
+    print('Task options:');
+    print(_indent(task.getUsage()));
     print('');
   }
+
+  _printHopArgsHelp(config);
 }
 
 void _helpParserConfig(BaseConfig config, ArgParser parser) {
@@ -49,19 +52,27 @@ void _helpParserConfig(BaseConfig config, ArgParser parser) {
 
 void _printHelp(BaseConfig config) {
   config.requireFrozen();
-  print('usage: $_hopCmdName [<hop-args>] <task> [<task-args>]');
-  print('');
+  _printUsage();
   print('Tasks:');
   _printTaskTable(config);
 
+  print('');
+  _printHopArgsHelp(config);
+
+  print("See '$_hopCmdName <task>' for more information on a specific command.");
+}
+
+void _printUsage([String taskName = '<task>']) {
+  print('usage: $_hopCmdName [<hop-options>] $taskName [<task-options>] [--] [<task-args>]');
+  print('');
+}
+
+void _printHopArgsHelp(BaseConfig config) {
   final parser = _getParser(config);
 
-  print('');
-  print('Hop args:');
+  print('Hop options:');
   print(_indent(parser.getUsage()));
-
   print('');
-  print("See '$_hopCmdName <task>' for more information on a specific command.");
 }
 
 String _indent(String input) {
