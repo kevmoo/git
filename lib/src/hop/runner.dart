@@ -152,10 +152,8 @@ class Runner {
   String getUsage() => _parser.getUsage();
 
   static RunResult _logExitCode(RootTaskContext ctx, RunResult result) {
-    if(result.success) {
-      ctx.log('Finished', AnsiColor.GREEN);
-    } else {
-      ctx.log('Failed', AnsiColor.RED);
+    if(!result.success) {
+      ctx.log('Task did not complete - ${result.name} (${result.exitCode})', AnsiColor.RED);
     }
     return result;
   }
