@@ -43,8 +43,6 @@ void main() {
         throw msg;
       }
 
-      // TODO: should probably validae the output binName, right?
-
       final scriptFile = new File(scriptPath);
       return scriptFile.directory();
     })
