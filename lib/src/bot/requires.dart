@@ -33,6 +33,17 @@ void requireArgumentNotNullOrEmpty(String argument, String argName) {
   }
 }
 
+void requireArgumentMatches(RegExp regex, String argument, String argName) {
+  if(regex == null) {
+    throw new InvalidOperationError("That's just sad. No null regex");
+  }
+  requireArgumentNotNull(argument, argName);
+  if(!regex.hasMatch(argument)) {
+    throw new DetailedArgumentError(argName,
+        'The value "$argument" must match the regular expression "${regex.pattern}"');
+  }
+}
+
 void _metaRequireArgumentNotNullOrEmpty(String argName) {
   if(argName == null || argName.length == 0) {
     throw new InvalidOperationError("That's just sad. Give me a good argName");
