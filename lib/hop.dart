@@ -15,6 +15,7 @@ part 'src/hop/root_task_context.dart';
 part 'src/hop/run_result.dart';
 part 'src/hop/runner.dart';
 part 'src/hop/task.dart';
+part 'src/hop/task_argument.dart';
 part 'src/hop/task_context.dart';
 part 'src/hop/task_fail_error.dart';
 part 'src/hop/task_logger.dart';

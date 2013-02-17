@@ -21,18 +21,20 @@ Task getHelpTask() {
     return true;
   },
   description: 'Print help information about available tasks',
-  config: (parser) => _helpParserConfig(_sharedConfig, parser));
+  config: (parser) => _helpParserConfig(_sharedConfig, parser),
+  extendedArgs: [new TaskArgument('task-name')]);
 }
 
 void _printHelpForTask(BaseConfig config, String taskName) {
   final task = config._getTask(taskName);
   assert(task != null);
 
-  _printUsage(taskName);
+  final usage = task.getUsage();
+
+  _printUsage(showOptions: !usage.isEmpty, taskName: taskName, extendedArgsUsage: task.getExtendedArgsUsage());
   print(task.description);
   print('');
 
-  final usage = task.getUsage();
   if(!usage.isEmpty) {
     print('Task options:');
     print(_indent(task.getUsage()));
@@ -62,8 +64,10 @@ void _printHelp(BaseConfig config) {
   print("See '$_hopCmdName <task>' for more information on a specific command.");
 }
 
-void _printUsage([String taskName = '<task>']) {
-  print('usage: $_hopCmdName [<hop-options>] $taskName [<task-options>] [--] [<task-args>]');
+void _printUsage({bool showOptions: true, String taskName: '<task>', String extendedArgsUsage: '[--] [<task-args>]'}) {
+  final taskOptions = showOptions ? '[<task-options>] ' : '';
+
+  print('usage: $_hopCmdName [<hop-options>] $taskName $taskOptions$extendedArgsUsage'.trim());
   print('');
 }
 
