@@ -1,14 +1,13 @@
 part of hop;
 
 class Runner {
-  static const String _colorParam = 'color';
   final ArgParser _parser;
   ArgResults _args;
   final BaseConfig _state;
 
   Runner(BaseConfig config, Iterable<String> args) :
     this._state = config,
-    this._parser = getParser(config) {
+    this._parser = _getParser(config) {
     _args = _parser.parse(args);
     _state.requireFrozen();
   }
@@ -33,7 +32,7 @@ class Runner {
           .whenComplete(() => subCtx.dispose());
 
     } else if(_args.rest.length == 0) {
-      _printHelp(ctx);
+      _printHelp(_state, ctx);
       return new Future.immediate(RunResult.SUCCESS);
     } else {
       final taskName = _args.rest[0];
@@ -56,7 +55,7 @@ class Runner {
   static void runCore(BaseConfig config) {
     final options = new Options();
 
-    final parser = getParser(config);
+    final parser = _getParser(config);
 
     ArgResults args;
     try {
@@ -126,62 +125,10 @@ class Runner {
         });
   }
 
-  void _printHelp(RootTaskContext ctx) {
-    ctx.log('Welcome to HOP', AnsiColor.BLUE);
-    ctx.log('');
-    ctx.log('Tasks:', AnsiColor.BLUE);
-    _printTaskTable(ctx);
-    ctx.log('');
-    ctx.log(getUsage());
-  }
-
-  void _printTaskTable(RootTaskContext ctx) {
-    final columns = [
-                     new ColumnDefinition('name', (name) => name),
-                     new ColumnDefinition('description', (name) {
-                       final task = _state._getTask(name);
-                       return task.description;
-                     })
-                     ];
-    final rows = Console.getTable(_state.taskNames, columns);
-    for(final r in rows) {
-      ctx.log(r);
-    }
-  }
-
-  String getUsage() => _parser.getUsage();
-
   static RunResult _logExitCode(RootTaskContext ctx, RunResult result) {
     if(!result.success) {
       ctx.log('Task did not complete - ${result.name} (${result.exitCode})', AnsiColor.RED);
     }
     return result;
-  }
-
-  static ArgParser getParser(BaseConfig config) {
-    assert(config.isFrozen);
-
-    final parser = new ArgParser();
-
-    for(final taskName in config.taskNames) {
-      _initParserForTask(parser, taskName, config._getTask(taskName));
-    }
-
-    parser.addFlag(_colorParam, defaultsTo: true);
-
-    // TODO: put help in a const
-    // parser.addFlag('help', abbr: '?', help: 'print help text', negatable: false);
-
-    // TODO: other global flag ideas
-    // verbose - show a lot of output
-    // trace - show stack dump on fail?
-
-    return parser;
-  }
-
-  static void _initParserForTask(ArgParser parser, String taskName, Task task) {
-    final subParser = parser.addCommand(taskName);
-
-    task.configureArgParser(subParser);
   }
 }

@@ -8,11 +8,12 @@ import 'package:bot/bot_io.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 
-part 'src/hop/runner.dart';
 part 'src/hop/base_config.dart';
 part 'src/hop/console_context.dart';
+part 'src/hop/help.dart';
 part 'src/hop/root_task_context.dart';
 part 'src/hop/run_result.dart';
+part 'src/hop/runner.dart';
 part 'src/hop/task.dart';
 part 'src/hop/task_context.dart';
 part 'src/hop/task_fail_error.dart';
@@ -44,4 +45,25 @@ void addSyncTask(String name, Func1<TaskContext, bool> execFunc) {
 
 void addAsyncTask(String name, TaskDefinition execFuture) {
   _sharedConfig.addAsync(name, execFuture);
+}
+
+const String _colorParam = 'color';
+
+ArgParser _getParser(BaseConfig config) {
+  assert(config.isFrozen);
+
+  final parser = new ArgParser();
+
+  for(final taskName in config.taskNames) {
+    _initParserForTask(parser, taskName, config._getTask(taskName));
+  }
+
+  parser.addFlag(_colorParam, defaultsTo: true);
+
+  return parser;
+}
+
+void _initParserForTask(ArgParser parser, String taskName, Task task) {
+  final subParser = parser.addCommand(taskName);
+  task.configureArgParser(subParser);
 }
