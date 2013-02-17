@@ -47,7 +47,9 @@ void addAsyncTask(String name, TaskDefinition execFuture) {
   _sharedConfig.addAsync(name, execFuture);
 }
 
-const String _colorParam = 'color';
+const String _colorFlag = 'color';
+const String _prefixFlag = 'prefix';
+const String _logLevelOption = 'log-level';
 
 ArgParser _getParser(BaseConfig config) {
   assert(config.isFrozen);
@@ -58,9 +60,28 @@ ArgParser _getParser(BaseConfig config) {
     _initParserForTask(parser, taskName, config._getTask(taskName));
   }
 
-  parser.addFlag(_colorParam, defaultsTo: true);
+  parser.addFlag(_colorFlag, defaultsTo: true,
+      help: 'Specifies if shell output can have color.');
+
+  parser.addFlag(_prefixFlag, defaultsTo: true,
+      help: 'Specifies if shell output is prefixed by the task name.');
+
+  final logLevelAllowed = _getLogLevels()
+      .map((Level l) => l.name.toLowerCase())
+      .toList();
+
+  parser.addOption(_logLevelOption, allowed: logLevelAllowed,
+      defaultsTo: logLevelAllowed.first,
+      help: 'The log level at which task output is printed to the shell');
+
 
   return parser;
+}
+
+List<Level> _getLogLevels() {
+  return [Level.ALL, Level.CONFIG, Level.FINE, Level.FINER, Level.FINEST,
+          Level.INFO, Level.OFF, Level.SEVERE, Level.SHOUT]
+    ..sort((a, b) => a.value.compareTo(b.value));
 }
 
 void _initParserForTask(ArgParser parser, String taskName, Task task) {

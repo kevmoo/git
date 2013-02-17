@@ -32,7 +32,7 @@ class Runner {
           .whenComplete(() => subCtx.dispose());
 
     } else if(_args.rest.length == 0) {
-      _printHelp(_state, ctx);
+      _printHelp(_state);
       return new Future.immediate(RunResult.SUCCESS);
     } else {
       final taskName = _args.rest[0];
@@ -44,7 +44,14 @@ class Runner {
   @protected
   RootTaskContext getContext() {
     final bool colorEnabled = _args[_colorFlag];
-    return new RootTaskContext(colorEnabled: colorEnabled);
+    final bool preFixEnabled = _args[_prefixFlag];
+    final String logLevelOption = _args[_logLevelOption];
+
+    final Level logLevel = _getLogLevels()
+        .singleMatching((Level l) => l.name.toLowerCase() == logLevelOption);
+
+    return new RootTaskContext(colorEnabled: colorEnabled,
+        prefixEnabled: preFixEnabled, minLogLevel: logLevel);
   }
 
   /**
@@ -66,7 +73,8 @@ class Runner {
     } on FormatException catch(ex, stack) {
       print("There was an error parsing the provided arguments");
       print(ex.message);
-      print(parser.getUsage());
+      print('');
+      _printHelp(config);
 
       _libLogger.severe(ex.message);
       _libLogger.severe(Error.safeToString(stack));

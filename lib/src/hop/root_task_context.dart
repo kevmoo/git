@@ -2,8 +2,19 @@ part of hop;
 
 class RootTaskContext {
   final bool _enableColor;
+  final bool _prefixEnabled;
+  final Level _minLogLevel;
 
-  RootTaskContext({bool colorEnabled:true}) : _enableColor = colorEnabled;
+  RootTaskContext({bool colorEnabled:true,
+    bool prefixEnabled: true,
+    Level minLogLevel: Level.ALL}) :
+    _enableColor = colorEnabled,
+    _prefixEnabled = prefixEnabled,
+    _minLogLevel = minLogLevel {
+      requireArgumentNotNull(colorEnabled, 'colorEnabled');
+      requireArgumentNotNull(prefixEnabled, 'prefixEnabled');
+      requireArgumentNotNull(minLogLevel, 'minLogLevel');
+    }
 
   TaskContext getSubContext(String name, ArgResults arguments) =>
     new _SubTaskContext(this, name, arguments);
@@ -30,27 +41,33 @@ class RootTaskContext {
     assert(!titleSections.isEmpty);
     assert(titleSections.every((s) => s != null && !s.isEmpty));
 
-    final color = _getColor(logLevel);
+    if(logLevel >= _minLogLevel) {
+      if(_prefixEnabled) {
+        final color = _getColor(logLevel);
 
-    var indent = '';
-    var title = titleSections.join(' - ').concat(': ');
+        var indent = '';
+        var title = titleSections.join(' - ').concat(': ');
 
-    while(indent.length < title.length) {
-      indent =  indent.concat(' ');
-    }
+        while(indent.length < title.length) {
+          indent =  indent.concat(' ');
+        }
 
-    if(color != null) {
-      title = color.wrap(title);
-    }
+        if(color != null) {
+          title = color.wrap(title);
+        }
 
-    final lines = Util.splitLines(message);
-    var first = true;
-    for(final l in lines) {
-      if(first) {
-        first = false;
-        printCore(title.concat(l));
+        final lines = Util.splitLines(message);
+        var first = true;
+        for(final l in lines) {
+          if(first) {
+            first = false;
+            printCore(title.concat(l));
+          } else {
+            printCore(indent.concat(l));
+          }
+        }
       } else {
-        printCore(indent.concat(l));
+        printCore(message);
       }
     }
   }
