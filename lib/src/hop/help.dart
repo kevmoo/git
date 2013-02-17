@@ -9,16 +9,17 @@ Task getHelpTask() {
     if(args.command != null) {
       _printHelpForTask(_sharedConfig, args.command.name);
       return true;
+    } else {
+
+      _printHelp(_sharedConfig);
+
+      if(!args.rest.isEmpty) {
+        ctx.severe('Not sure how to give help for: ${args.rest}');
+        return false;
+      }
+
+      return true;
     }
-
-    _printHelp(_sharedConfig);
-
-    if(!args.rest.isEmpty) {
-      ctx.severe('Not sure how to give help for: ${args.rest}');
-      return false;
-    }
-
-    return true;
   },
   description: 'Print help information about available tasks',
   config: (parser) => _helpParserConfig(_sharedConfig, parser),
@@ -32,7 +33,7 @@ void _printHelpForTask(BaseConfig config, String taskName) {
   final usage = task.getUsage();
 
   _printUsage(showOptions: !usage.isEmpty, taskName: taskName, extendedArgsUsage: task.getExtendedArgsUsage());
-  print(task.description);
+  print(_indent(task.description));
   print('');
 
   if(!usage.isEmpty) {
