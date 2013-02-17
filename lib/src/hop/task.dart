@@ -27,6 +27,12 @@ class Task {
     }
   }
 
+  String getUsage() {
+    final parser = new ArgParser();
+    configureArgParser(parser);
+    return parser.getUsage();
+  }
+
   Future<bool> run(TaskContext ctx) {
     requireArgumentNotNull(ctx, 'ctx');
 
