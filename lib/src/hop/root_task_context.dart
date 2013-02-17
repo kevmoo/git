@@ -3,7 +3,7 @@ part of hop;
 class RootTaskContext {
   final bool _enableColor;
 
-  RootTaskContext([bool enableColor=true]) : _enableColor = enableColor;
+  RootTaskContext({bool colorEnabled:true}) : _enableColor = colorEnabled;
 
   TaskContext getSubContext(String name, ArgResults arguments) =>
     new _SubTaskContext(this, name, arguments);

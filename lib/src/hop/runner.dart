@@ -43,8 +43,8 @@ class Runner {
 
   @protected
   RootTaskContext getContext() {
-    final bool colorEnabled = _args[_colorParam];
-    return new RootTaskContext(colorEnabled);
+    final bool colorEnabled = _args[_colorFlag];
+    return new RootTaskContext(colorEnabled: colorEnabled);
   }
 
   /**
