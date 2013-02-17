@@ -48,10 +48,6 @@ Options tryCompletion(ArgCompleter completer) {
 
       final trimmedArgs = args.getRange(3, args.length-3);
 
-      while(!trimmedArgs.isEmpty && trimmedArgs.last.isEmpty) {
-        trimmedArgs.removeLast();
-      }
-
       _log('input args:     ${_helpfulToString(trimmedArgs)}');
 
       final completions = completer(trimmedArgs, compLine, compPoint);
@@ -96,8 +92,11 @@ List<String> getArgsCompletions(ArgParser parser, List<String> providedArgs,
     final arg = providedArgs[i];
     final msg = 'Arg at index $i with value "$arg" ';
     require(arg != null, msg.concat('is null'));
-    require(!arg.isEmpty, msg.concat('is empty'));
     require(arg.trim() == arg, msg.concat('has whitespace'));
+
+    if(i < (providedArgs.length-1)) {
+      require(!arg.isEmpty, msg.concat('Only the last arg can be an empty string'));
+    }
   }
 
   final sublog = (Object obj) {
@@ -191,12 +190,7 @@ List<String> getArgsCompletions(ArgParser parser, List<String> providedArgs,
 
   sublog('removed items: ${_helpfulToString(removedItems)}');
 
-  /*
-   * CASE: no removed items and compLine ends in a space -> do command completion
-   */
-  if(removedItems.isEmpty && compLine.endsWith(' ')) {
-    return parser.commands.keys.toList();
-  }
+  final lastArg = providedArgs.last;
 
   /*
    * CASE: one removed item, that looks like a partial option
@@ -230,32 +224,46 @@ List<String> getArgsCompletions(ArgParser parser, List<String> providedArgs,
   }
 
   /*
-   * CASE: second-to-last arg is an option+allowed and compLine doesn't end with ' '
+   * CASE: second-to-last arg is an option+allowed and lastArg is empty
    * then we should complete with the available options, right?
    */
-  if(providedArgs.length >= 2 && !compLine.endsWith(' ')) {
+  if(providedArgs.length >= 2) {
     final option = alignedArgsOptions[providedArgs.length - 2];
-    if(option != null &&
-        option.allowed != null &&
+    if(option != null) {
+
+      if(option.allowed != null &&
         !option.allowed.isEmpty) {
 
-      assert(!option.isFlag);
-      sublog('completing option "${option.name}"');
+        assert(!option.isFlag);
+        sublog('completing option "${option.name}"');
 
-      final String optionValue = providedArgs[providedArgs.length-1];
+        final String optionValue = providedArgs[providedArgs.length-1];
 
-      return option.allowed
-          .where((String v) => v.startsWith(optionValue))
-          .toList();
+        return option.allowed
+            .where((String v) => v.startsWith(optionValue))
+            .toList();
+      } else if(!option.isFlag){
+        sublog("not providing completions. Wating for option value");
+        return [];
+      }
     }
   }
 
-  final lastArg = providedArgs.last;
+  /*
+   * CASE: no removed items and compLine ends in a space -> do command completion
+   */
+  if(removedItems.isEmpty && lastArg == '') {
+
+    sublog('doing command completion');
+
+    return parser.commands.keys.toList();
+  }
 
   /*
    * CASE: If we have '--', then let's naively complete all options
    */
   if(lastArg == '--') {
+    sublog('Completing with all available options.');
     return parserOptionCompletions;
   }
 
@@ -266,7 +274,7 @@ List<String> getArgsCompletions(ArgParser parser, List<String> providedArgs,
   if(!lastArg.startsWith('-')) {
     // for now, let's pretend this is partial command
 
-    sublog('completing command names with "$lastArg');
+    sublog('completing command names that start with "$lastArg"');
 
     return parser.commands.keys
         .where((String commandName) => commandName.startsWith(lastArg))
@@ -277,12 +285,12 @@ List<String> getArgsCompletions(ArgParser parser, List<String> providedArgs,
    * CASE: the last argument is valid, so we should return it
    * if types the last char of a valid option, hitting tab should complete it
    */
-  if(!compLine.endsWith(' ') && parserOptionCompletions.contains(lastArg)) {
+  if(lastArg != '' && parserOptionCompletions.contains(lastArg)) {
     sublog('completing final arg');
     return [lastArg];
   }
 
-  sublog("so...uh...now what?");
+  sublog("Exhausted options. No suggestions.");
 
   return [];
 }

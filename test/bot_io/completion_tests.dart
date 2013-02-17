@@ -84,7 +84,7 @@ void _registerCompletionTests() {
                      ),
 
                      new _CompletionSet("+option+no-allowed+multiple okay to have multiple 'multiple' options, even abbreviations",
-                         ['-m', 'Robert', '--'], allOptions
+                         ['-m', '"John Davis"', '--'], allOptions
                      ),
 
                      new _CompletionSet("+option+no-allowed don't suggest if an option is waiting for a value",
@@ -133,10 +133,6 @@ void _registerCompletionTests() {
         final compLine = p.args.join(' ');
         final compPoint = compLine.length;
         final args = p.args.toList();
-
-        if(!args.isEmpty && args.last == '') {
-          args.removeLast();
-        }
 
         test(p.description, () {
           _testCompletionPair(parser, args, p.suggestions, compLine, compPoint);
