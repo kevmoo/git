@@ -135,12 +135,6 @@ class Runner {
     ctx.log(getUsage());
   }
 
-  void _printRawTasks(RootTaskContext ctx) {
-    for(final t in _state.taskNames) {
-      ctx.log(t);
-    }
-  }
-
   void _printTaskTable(RootTaskContext ctx) {
     final columns = [
                      new ColumnDefinition('name', (name) => name),
