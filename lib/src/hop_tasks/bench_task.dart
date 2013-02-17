@@ -30,7 +30,10 @@ Task createBenchTask() {
           return true;
         });
 
-  }, description: 'Run a benchmark against the provided task', config: _benchParserConfig);
+  },
+  config: _benchParserConfig,
+  description: 'Run a benchmark against the provided task',
+  extendedArgs: [new TaskArgument('command', required: true)]);
 }
 
 void _benchParserConfig(ArgParser parser) {
