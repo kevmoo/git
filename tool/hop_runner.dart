@@ -10,11 +10,6 @@ import '../test/harness_console.dart' as test_console;
 void main() {
   _assertKnownPath();
 
-  addTask('hello', new Task.sync((ctx) {
-    ctx.fine('Welcome to HOP!');
-    return true;
-  }, description: 'Just sayin hi.'));
-
   addTask('test', createUnitTestTask(test_console.testCore));
 
   addTask('docs', getCompileDocsFunc('gh-pages', 'packages/', _getLibs,
@@ -53,6 +48,8 @@ void main() {
       liveTypeAnalysis: true, rejectDeprecatedFeatures: true));
 
   addTask('bench', createBenchTask());
+
+  addTask('help', getHelpTask());
 
   runHopCore();
 }
