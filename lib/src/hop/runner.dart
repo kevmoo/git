@@ -50,7 +50,10 @@ class Runner {
   /**
    * Parses provided command line args
    * Handles command completion with the correct paramaters
-   * etc...
+   *
+   * [runCore] calls [io.exit] which terminates the application.
+   *
+   * [runCore] should be the last method you call in an application.
    */
   static void runCore(BaseConfig config) {
     final options = new Options();

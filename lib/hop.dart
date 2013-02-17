@@ -26,9 +26,9 @@ final _libLogger = new Logger('hop');
 typedef Future<bool> TaskDefinition(TaskContext ctx);
 
 /**
- * [runHopCore] should be the last method you call in an application.
+ * [runHopCore] calls [io.exit] which terminates the application.
  *
- * NOTE: [runHopCore] calls [io.exit] which terminates the application.
+ * [runHopCore] should be the last method you call in an application.
  */
 void runHopCore() {
   _sharedConfig.freeze();
