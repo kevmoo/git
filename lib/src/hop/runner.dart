@@ -100,7 +100,6 @@ class Runner {
           } else if(didComplete) {
             return RunResult.SUCCESS;
           } else {
-            context.severe('Failed');
             return RunResult.FAIL;
           }
         })
