@@ -1,5 +1,7 @@
 part of hop;
 
+const String _hopCmdName = 'hop';
+
 Task getHelpTask() {
   return new Task.sync((_SubTaskContext ctx) {
     final args = ctx.arguments;
@@ -47,21 +49,31 @@ void _helpParserConfig(BaseConfig config, ArgParser parser) {
 
 void _printHelp(BaseConfig config, RootTaskContext ctx) {
   config.requireFrozen();
-  ctx.log('Welcome to HOP', AnsiColor.BLUE);
+  ctx.log('usage: $_hopCmdName [<hop-args>] <task> [<task-args>]');
   ctx.log('');
   ctx.log('Tasks:', AnsiColor.BLUE);
   _printTaskTable(config, ctx);
-  ctx.log('');
 
   final parser = _getParser(config);
 
-  ctx.log(parser.getUsage());
+  ctx.log('');
+  ctx.log('Hop args:', AnsiColor.BLUE);
+  ctx.log(_indent(parser.getUsage()));
+
+  ctx.log('');
+  ctx.log("See '$_hopCmdName <task>' for more information on a specific command.");
+}
+
+String _indent(String input) {
+  return Util.splitLines(input)
+      .map((String line) => '  '.concat(line))
+      .join(('\n'));
 }
 
 void _printTaskTable(BaseConfig config, RootTaskContext ctx) {
   config.requireFrozen();
   final columns = [
-                   new ColumnDefinition('name', (name) => name),
+                   new ColumnDefinition('name', (name) => '  '.concat(name)),
                    new ColumnDefinition('description', (name) {
                      final task = config._getTask(name);
                      return task.description;
@@ -69,6 +81,6 @@ void _printTaskTable(BaseConfig config, RootTaskContext ctx) {
                    ];
   final rows = Console.getTable(config.taskNames, columns);
   for(final r in rows) {
-    ctx.log(r);
+    ctx.log('  '.concat(r));
   }
 }
