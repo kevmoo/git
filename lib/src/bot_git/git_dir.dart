@@ -67,6 +67,24 @@ class GitDir {
         });
   }
 
+  /*
+   * TODO: Test this! No tags. Many tags. Etc.
+   */
+  Future<List<Tag>> getTags() {
+    return showRef(tags: true)
+        .then((List<CommitReference> refs) {
+
+          final futures = refs.map((ref) {
+            return runCommand(['cat-file', '-p', ref.sha])
+                .then((ProcessResult pr) {
+                  return Tag.parseCatFile(pr.stdout);
+                });
+          });
+
+          return Future.wait(futures);
+        });
+  }
+
   Future<List<CommitReference>> showRef({bool heads:false, bool tags:false}) {
     final args = ['show-ref'];
 
