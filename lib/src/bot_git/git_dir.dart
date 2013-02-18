@@ -61,7 +61,24 @@ class GitDir {
   }
 
   Future<List<BranchReference>> getBranchReferences() {
-    return runCommand(['show-ref', '--heads'], false)
+    return showRef(heads: true)
+        .then((List<CommitReference> refs) {
+          return refs.map((cr) => cr.toBranchReference()).toList();
+        });
+  }
+
+  Future<List<CommitReference>> showRef({bool heads:false, bool tags:false}) {
+    final args = ['show-ref'];
+
+    if(heads) {
+      args.add('--heads');
+    }
+
+    if(tags) {
+      args.add('--tags');
+    }
+
+    return runCommand(args, false)
         .then((ProcessResult pr) {
           if(pr.exitCode == 1) {
             // no heads present, return empty collection
@@ -71,9 +88,7 @@ class GitDir {
           // otherwise, it should have worked fine...
           assert(pr.exitCode == 0);
 
-          return CommitReference.fromShowRefOutput(pr.stdout)
-              .map((gr) => gr.toBranchReference())
-              .toList();
+          return CommitReference.fromShowRefOutput(pr.stdout);
         });
   }
 
