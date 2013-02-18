@@ -2,8 +2,8 @@ library bot_retained;
 
 import 'dart:html';
 import 'dart:math' as math;
-import 'bot.dart';
-import 'bot_html.dart';
+import 'package:bot/bot.dart';
+import 'package:bot/bot_html.dart';
 
 part 'src/bot_retained/alignment.dart';
 part 'src/bot_retained/mouse_manager.dart';
