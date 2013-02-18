@@ -19,6 +19,18 @@ class GitDir {
         });
   }
 
+  /**
+   * [rev] should probably be a sha1 to a commit.
+   * But GIT lets you do other things.
+   * See http://git-scm.com/docs/gitrevisions.html
+   */
+  Future<Commit> getCommit(String rev) {
+    return runCommand(['cat-file', '-p', rev])
+        .then((ProcessResult pr) {
+          return Commit.parse(pr.stdout);
+        });
+  }
+
   Future<List<Commit>> getCommits([String branchName = 'HEAD']) {
     return runCommand(['rev-list', '--format=raw', branchName])
         .then((ProcessResult pr) => Commit.parseRawRevList(pr.stdout));
@@ -115,18 +127,6 @@ class GitDir {
             map[paths[i]] = shas[i];
           }
           return map;
-        });
-  }
-
-  /**
-   * [rev] should probably be a sha1 to a commit.
-   * But GIT lets you do other things.
-   * See http://git-scm.com/docs/gitrevisions.html
-   */
-  Future<Commit> getCommit(String rev) {
-    return runCommand(['cat-file', '-p', rev])
-        .then((ProcessResult pr) {
-          return Commit.parse(pr.stdout);
         });
   }
 
