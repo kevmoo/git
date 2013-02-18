@@ -4,7 +4,70 @@ void registerGitDirTests() {
   group('GitDir', () {
     test('populateBranch', _testPopulateBranch);
     test('writeObjects', _testWriteObjects);
+    test('getCommits', _testGetCommits);
   });
+}
+
+void _testGetCommits() {
+  TempDir td;
+  GitDir gd;
+
+  final commitText = const ['', ' \t leading white space is okay, too', 'first', 'second', 'third', 'forth'];
+
+  final msgFromText = (String txt) {
+    if(!txt.isEmpty && txt.trim() == txt) {
+      return 'Commit for $txt\n\nnice\n\nhuh?';
+    } else {
+      return txt;
+    }
+  };
+
+  final future = _getTempGit()
+      .then((tuple) {
+        td = tuple.item1;
+        gd = tuple.item2;
+
+
+        return Future.forEach(commitText, (String commitStr) {
+          final fileMap = {};
+          fileMap['$commitStr.txt'] = '$commitStr content';
+
+          return _doPopulate(gd, td, fileMap, msgFromText(commitStr));
+        });
+      })
+      .then((_) {
+
+        return gd.getCommitCount();
+      })
+      .then((int commitCount) {
+        expect(commitCount, commitText.length);
+
+        return gd.getCommits();
+      })
+      .then((List<Commit> commits) {
+        expect(commits, hasLength(commitText.length));
+
+        for(int i = 0; i < commits.length; i++) {
+          final c = commits[i];
+          final msg = commitText[commitText.length - 1 - i];
+
+          expect(c.message, msgFromText(msg));
+
+          if(i < (commits.length - 1)) {
+            expect(c.parents, unorderedEquals([commits[i+1].commitSha]));
+          } else {
+            expect(c.parents, hasLength(0));
+          }
+        }
+
+      })
+      .whenComplete((){
+        if(td != null) {
+          td.dispose();
+        }
+      });
+
+  expect(future, finishes);
 }
 
 Future _doPopulate(GitDir gd, TempDir td, Map<String, dynamic> contents, String commitMsg) {
@@ -15,7 +78,12 @@ Future _doPopulate(GitDir gd, TempDir td, Map<String, dynamic> contents, String 
       })
       .then((ProcessResult pr) {
         // now commit these silly files
-        return gd.runCommand(['commit', '-m', commitMsg]);
+        final args = ['commit', '--cleanup=verbatim', '--no-edit', '--allow-empty-message'];
+        if(!commitMsg.isEmpty) {
+          args.addAll(['-m', commitMsg]);
+        }
+
+        return gd.runCommand(args);
       });
 }
 
