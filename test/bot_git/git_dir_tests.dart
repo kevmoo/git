@@ -7,6 +7,18 @@ void registerGitDirTests() {
   });
 }
 
+Future _doPopulate(GitDir gd, TempDir td, Map<String, dynamic> contents, String commitMsg) {
+  return td.populate(new MapDirectoryPopulater(contents))
+      .then((_) {
+        // now add this new file
+        return gd.runCommand(['add', '--all']);
+      })
+      .then((ProcessResult pr) {
+        // now commit these silly files
+        return gd.runCommand(['commit', '-m', commitMsg]);
+      });
+}
+
 void _testPopulateBranch() {
 
   TempDir td1;
@@ -41,19 +53,9 @@ void _testPopulateBranch() {
 
         // let's commit some stuff into this new git dir in the master branch
         // just to be safe
-        return td1.populate(new MapDirectoryPopulater(sillyMasterBanchContent));
+        return _doPopulate(gd1, td1, sillyMasterBanchContent, 'master files');
       })
       .then((_) {
-
-        // now add this new file
-        return gd1.runCommand(['add', '--all']);
-      })
-      .then((ProcessResult pr) {
-
-        // now commit these silly files
-        return gd1.runCommand(['commit', '-m', 'master files']);
-      })
-      .then((ProcessResult pr) {
         // no branches or files
         return _testPopulateBranchEmpty(gd1, testBranchName);
       })
