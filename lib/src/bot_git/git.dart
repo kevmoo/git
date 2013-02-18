@@ -153,9 +153,12 @@ class Commit {
   }
 
   static Commit _parse(StringLineReader slr, bool isRevParse) {
+    assert(slr != null);
+    assert(slr.position != null);
+
     final headers = new Map<String, List<String>>();
 
-    final int startSpot = slr.position == null ? 0 : slr.position;
+    final int startSpot = slr.position;
     String lastLine = slr.readNextLine();
 
     while(!lastLine.isEmpty) {
