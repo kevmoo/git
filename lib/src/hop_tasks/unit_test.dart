@@ -1,5 +1,7 @@
 part of hop_tasks;
 
+const _listFlag = 'list';
+
 Task createUnitTestTask(Action1<unittest.Configuration> unitTestAction) {
   return new Task.async((TaskContext ctx) {
     final config = new _HopTestConfiguration(ctx);
@@ -13,11 +15,31 @@ Task createUnitTestTask(Action1<unittest.Configuration> unitTestAction) {
       });
     }
 
+    if(ctx.arguments[_listFlag]) {
+      final list = unittest.testCases
+          .map((tc) => tc.description)
+          .toList();
+
+      list.sort();
+
+      list.insertRange(0, 1, 'Test cases:');
+
+      ctx.info(list.join('\n'));
+
+      return new Future.immediate(true);
+    }
+
     unittest.runTests();
     return config.future;
   },
+  config: _unittestParserConfig,
   description: 'Run unit tests in the console',
   extendedArgs: [new TaskArgument('filter', multiple: true)]);
+}
+
+void _unittestParserConfig(ArgParser parser) {
+  parser.addFlag(_listFlag, abbr: 'l', defaultsTo: false,
+      help: "Just list the test case names. Don't run them. Any filter is still applied.");
 }
 
 class _HopTestConfiguration extends unittest.Configuration {
