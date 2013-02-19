@@ -142,6 +142,34 @@ class GitDir {
   }
 
   /**
+   * See [git-commit-tree](http://git-scm.com/docs/git-commit-tree)
+   */
+  Future<String> commitTree(String treeSha, String commitMessage, {List<String> parentCommitShas}) {
+    requireArgumentValidSha1(treeSha, 'treeSha');
+
+    requireArgumentNotNullOrEmpty(commitMessage, 'commitMessage');
+    requireArgument(commitMessage.trim() == commitMessage, 'commitMessage', 'Value cannot start or end with whitespace.');
+
+    if(parentCommitShas == null) {
+      parentCommitShas = [];
+    }
+
+    final args = ['commit-tree', treeSha, '-m', commitMessage];
+
+    for(final parentSha in parentCommitShas) {
+      requireArgumentValidSha1(parentSha, 'parentCommitShas');
+      args.addAll(['-p', parentSha]);
+    }
+
+    return runCommand(args)
+        .then((ProcessResult pr) {
+          final sha = pr.stdout.trim();
+          assert(Git.isValidSha(sha));
+          return sha;
+        });
+  }
+
+  /**
    * Given a list of [paths], write those files to the object store
    * and return a [Map] where the key is the input path and the value is
    * the SHA of the newly written object.

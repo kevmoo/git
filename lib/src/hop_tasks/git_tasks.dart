@@ -11,7 +11,6 @@ Future<bool> branchForDir(TaskContext ctx, String sourceBranch, String sourceDir
 
   GitDir gitDir;
 
-  List<String> gitArgs;
   String sourceDirTreeSha;
 
   return GitDir.fromExisting(workingDir)
@@ -30,27 +29,25 @@ Future<bool> branchForDir(TaskContext ctx, String sourceBranch, String sourceDir
 
         sourceDirTreeSha = tree.sha;
 
-        gitArgs = ['commit-tree', sourceDirTreeSha];
-
         return gitDir.getBranchReference(targetBranch);
       })
       .then((BranchReference branchRef) {
 
         if(branchRef == null) {
           // branch does not exist. New branch!
-          return _doCommit(ctx, 'created', gitArgs, sourceBranch, sourceDir,
+          return _doCommit(ctx, 'created', sourceDirTreeSha, null, sourceBranch, sourceDir,
               targetBranch, gitDir);
         } else {
           // existing branch, need to find the tree info so we can create
           // a valid commit w/ the right parent
           return _withExistingBranch(ctx, branchRef, sourceDirTreeSha, sourceDir,
-              gitArgs, sourceBranch, targetBranch, gitDir);
+              sourceDirTreeSha, sourceBranch, targetBranch, gitDir);
         }
       });
 }
 
 Future<bool> _withExistingBranch(TaskContext ctx, BranchReference targetBranchRef, String dirSha,
-    String sourceDir, List<String> gitArgs, String sourceBranch, String targetBranch, GitDir gitDir) {
+    String sourceDir, String treeSha, String sourceBranch, String targetBranch, GitDir gitDir) {
 
   return gitDir.getCommit(targetBranchRef.sha)
       .then((Commit commitObj) {
@@ -58,29 +55,29 @@ Future<bool> _withExistingBranch(TaskContext ctx, BranchReference targetBranchRe
           ctx.fine('There have been no changes to "$sourceDir" since the last commit');
           return new Future.immediate(true);
         } else {
-          gitArgs.addAll(['-p', targetBranchRef.sha]);
-          return _doCommit(ctx, 'updated', gitArgs, sourceBranch, sourceDir,
-              targetBranch, gitDir);
+          return _doCommit(ctx, 'updated', treeSha, targetBranchRef.sha, sourceBranch,
+              sourceDir, targetBranch, gitDir);
         }
       });
 }
 
-Future<bool> _doCommit(TaskContext ctx, String verb, List<String> gitArgs,
+Future<bool> _doCommit(TaskContext ctx, String verb, String treeSha, String parentCommitSha,
     String sourceBranch, String sourceDir, String targetBranch, GitDir gitDir) {
 
   return gitDir.getBranchReference(sourceBranch)
       .then((BranchReference branchRef) {
 
         final masterCommit = branchRef.sha.substring(0, 8);
+        final message = 'Contents of $sourceDir from commit $masterCommit';
 
-        gitArgs.addAll(['-m', 'Contents of $sourceDir from commit $masterCommit']);
+        final parentCommitShas = [];
+        if(parentCommitSha != null) {
+          parentCommitShas.add(parentCommitSha);
+        }
 
-        return gitDir.runCommand(gitArgs);
+        return gitDir.commitTree(treeSha, message, parentCommitShas: parentCommitShas);
       })
-      .then((ProcessResult pr) {
-        assert(pr.exitCode == 0);
-
-        final newCommitSha = pr.stdout.trim();
+      .then((String newCommitSha) {
         ctx.info('Create new commit: $newCommitSha');
 
         final branchNameRef = 'refs/heads/$targetBranch';
