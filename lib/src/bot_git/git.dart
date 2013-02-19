@@ -1,5 +1,21 @@
 part of bot_git;
 
+void requireArgumentValidSha1(String value, String argName) {
+  _metaRequireArgumentNotNullOrEmpty(argName);
+  requireArgumentNotNullOrEmpty(value, argName);
+
+  if(!Git.isValidSha(value)) {
+    final message = 'Not a valid SHA1 value: $value';
+    throw new DetailedArgumentError(argName, message);
+  }
+}
+
+void _metaRequireArgumentNotNullOrEmpty(String argName) {
+  if(argName == null || argName.length == 0) {
+    throw new InvalidOperationError("That's just sad. Give me a good argName");
+  }
+}
+
 class Git {
   static const _shaRegexPattern = '[a-f0-9]{40}';
   static final _shaRegEx = new RegExp(r'^'.concat(_shaRegexPattern).concat(r'$'));
@@ -50,7 +66,7 @@ class Tag {
   final String tagger;
 
   Tag._internal(this.objectSha, this.type, this.tag, this.tagger) {
-    assert(Git.isValidSha(objectSha));
+    requireArgumentValidSha1(objectSha, 'objectSha');
     requireArgumentNotNullOrEmpty(type, 'type');
     requireArgumentNotNullOrEmpty(tag, 'tag');
     requireArgumentNotNullOrEmpty(tagger, 'tagger');
@@ -94,7 +110,7 @@ class CommitReference {
   final String reference;
 
   CommitReference(this.sha, this.reference) {
-    assert(Git.isValidSha(sha));
+    requireArgumentValidSha1(this.sha, 'sha');
 
     assert(reference != null);
     // TODO: probably a better way to verify...but this is fine for now
@@ -166,10 +182,12 @@ class Commit {
       this.content, Iterable<String> parents) :
       this.parents = new ReadOnlyCollection<String>(parents) {
 
-    requireArgument(Git.isValidSha(this.treeSha), 'treeSha');
-    requireArgument(commitSha == null || Git.isValidSha(this.commitSha), 'commitSha');
+    requireArgumentValidSha1(this.treeSha, 'treeSha');
+    if(commitSha != null) {
+      requireArgumentValidSha1(this.commitSha, 'commitSha');
+    }
     for(final parent in parents) {
-      requireArgument(Git.isValidSha(parent), 'parents', 'Every entry must be a valid sha');
+      requireArgumentValidSha1(parent, 'parents');
     }
 
     // null checks on many things

@@ -20,6 +20,7 @@ void main() {
       expect(Git.isValidSha(good), true);
 
       expect(() => Git.isValidSha(null), throwsArgumentError);
+      expect(() => requireArgumentValidSha1(null, 'null'), throwsArgumentError);
 
       final bad = ['', ' ', '',
                    ' bcd1284d805951a16e765cea5b2273a464ee2d86',
@@ -38,6 +39,9 @@ bcd1284d805951a16e765cea5b2273a464ee2d86'''];
 
       bad.forEach((v) {
         expect(Git.isValidSha(v), isFalse, reason: "'$v' should be bad");
+
+        expect(() => requireArgumentValidSha1(v, 'v'), throwsArgumentError);
+
       });
     });
 
