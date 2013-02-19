@@ -180,7 +180,6 @@ class GitDir {
     return getCommit(targetBranchSha)
         .then((Commit commitObj) {
           if(commitObj.treeSha == treeSha) {
-            _log('Branch with sha $targetBranchSha not updated. New tree $treeSha matches latest');
             return null;
           }
 
