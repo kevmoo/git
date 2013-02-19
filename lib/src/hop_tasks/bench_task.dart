@@ -37,7 +37,8 @@ Task createBenchTask() {
 }
 
 void _benchParserConfig(ArgParser parser) {
-  parser.addOption(_runCountArgName, abbr: 'r', defaultsTo: _defaultRunCount.toString());
+  parser.addOption(_runCountArgName, abbr: 'r', defaultsTo: _defaultRunCount.toString(),
+      help: 'Specify the number times the specified command should be run');
 }
 
 Future<List<_BenchRunResult>> _runMany(TaskLogger logger, int count, String processName, List<String> args) {
