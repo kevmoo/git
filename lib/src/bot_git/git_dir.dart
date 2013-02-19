@@ -245,8 +245,6 @@ class GitDir {
           // Time to commit.
           return tempDirs.gitDir.runCommand(['commit', '--verbose', '-m', commitMessage])
               .then((ProcessResult pr) {
-                // now...uh...just push gd to 'this'? I'm scared, but we'll try
-
                 // --verbose is not strictly needed, but nice for debugging
                 return tempDirs.gitDir.runCommand(['push', '--verbose', '--progress', path.toNativePath(), branchName]);
               })
