@@ -142,6 +142,55 @@ class GitDir {
   }
 
   /**
+   * Returns the SHA for the new commit if one is created. `null` if the branch is not updated.
+   */
+  Future<String> createOrUpdateBranch(String branchName, String treeSha,
+                              String commitMessage) {
+    requireArgumentNotNullOrEmpty(branchName, 'branchName');
+    requireArgumentValidSha1(treeSha, 'treeSha');
+
+    return getBranchReference(branchName)
+        .then((BranchReference targetBranchRef) {
+          if(targetBranchRef == null) {
+            return commitTree(treeSha, commitMessage);
+          } else {
+            return _updateBranch(targetBranchRef.sha, treeSha, commitMessage);
+          }
+        })
+        .then((String newCommitSha) {
+          if(newCommitSha == null) {
+            return null;
+          }
+
+          assert(Git.isValidSha(newCommitSha));
+
+          final targetBranchRef = 'refs/heads/$branchName';
+
+          // TODO: if update-ref fails should we leave the new commit dangling?
+          // or at least log so the user can go clean up?
+          return runCommand(['update-ref', targetBranchRef, newCommitSha])
+              .then((ProcessResult pr) => newCommitSha);
+        });
+  }
+
+  /**
+   * Returns the SHA for the new commit if one is created. `null` if the branch is not updated.
+   */
+  Future<String> _updateBranch(String targetBranchSha, String treeSha, String commitMessage) {
+    return getCommit(targetBranchSha)
+        .then((Commit commitObj) {
+          if(commitObj.treeSha == treeSha) {
+            _log('Branch with sha $targetBranchSha not updated. New tree $treeSha matches latest');
+            return null;
+          }
+
+          return commitTree(treeSha, commitMessage, parentCommitShas: [targetBranchSha]);
+        });
+  }
+
+  /**
+   * Returns the `SHA1` for the new commit.
+   *
    * See [git-commit-tree](http://git-scm.com/docs/git-commit-tree)
    */
   Future<String> commitTree(String treeSha, String commitMessage, {List<String> parentCommitShas}) {
