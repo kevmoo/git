@@ -29,7 +29,7 @@ class RgbColor {
   String toHex() {
     final buffer = new StringBuffer('#');
     [r,g,b].forEach((c) {
-      buffer.add(_prependZeroIfNecessaryHelper(c.toRadixString(16)));
+      buffer.write(_prependZeroIfNecessaryHelper(c.toRadixString(16)));
     });
     return buffer.toString();
   }

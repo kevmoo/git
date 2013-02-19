@@ -55,9 +55,9 @@ class Console {
       assert(value.length <= width);
 
       while(buffer.length < targetWidth) {
-        buffer.add(' ');
+        buffer.write(' ');
       }
-      buffer.add(value);
+      buffer.write(value);
 
       targetWidth += width + minBuffer;
     }

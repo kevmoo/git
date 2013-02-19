@@ -33,7 +33,7 @@ abstract class Enumerable<T> extends Iterable<T> {
   int count(Func1<T, bool> f) =>
       CollectionUtil.count(this, f);
 
-  @deprecated @override
+  @deprecated
   Enumerable mappedBy(Func1<T, Object> f) =>
       this.map(f);
 
