@@ -1,6 +1,6 @@
 # Changelog - Dart Bag of Tricks
 
-## 0.14.0-dev - *pre-release* (SDK 0.3.7.6 r18717)
+## 0.14.0 - 20 Feb 2013 (SDK 0.3.7.6 r18717)
 
 * Bumped minimum Dart SDK version to __0.3.7.6 r18717__
 * Updated core dart packages to `>= 0.3.7+6`
