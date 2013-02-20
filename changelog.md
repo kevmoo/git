@@ -11,6 +11,19 @@
 ### bot
 
 * `Enumerable` learned `expand` and deprecated `selectMany`. Better alignment with `Iterable`
+* __NEW!__ `requireArgumentMatches` - match an argument against a `Pattern` (`String` or `RegExp`)
+
+### bot_async
+
+* __NEW!__ `getDelayedResult`. See the docs. It's fun.
+
+### bot_git
+
+* __NEW!__ `requireArgumentValidSha1` - lot's of SHA1 hashes flying around. Nice helper.
+* __NEW!__ `Tag` class. Represents info in a Git tag object.
+* `GitDir`
+    * __NEW!__ `getCommits`, `getTags`, `showRef`, `showOrUpdateBranch`,
+    `commitTree`
 
 ### bot_html
 
@@ -20,21 +33,29 @@
 
 * __NEW!__ `enableScriptLogListener` - an easy way to write all log output to disk.
 * __NEW!__ A whole set of new features around shell command completion.
+    * See example in `example/bot_io/completion/`
 
 ### hop
 
 * __BREAKING__ Renamed all completion scripts to extension `.sh`. Breaks folks who may be sourcing `tool/hop-completion.bash`
-* __BREAKING__ `description` argument to `Task` constructors is now named (not positional) 
+* `Task`
+    * __BREAKING__ `description` argument to `Task` constructors is now named (not positional) 
+    * __NEW!__ Easy to wire up `ArgParser` to allow completion of task flags.
+    * __NEW!__ Can provide `List<TaskArgument> extendedArgs` to fully document command line usage.
+* __BREAKING!__ `ConsoleContext` ctor now takes ArgResults and a Task.
+* __DEPRECATED__ `TaskFailError`. Use `TaskContext.fail` instead
+* __NEW!__ Added `getHelpTask()` which allows `hop help <command name>`
 * Updated `bin/hop` shell script to pass quoted params fully and accurately to `hop_runner.dart`
 * Exposed `Runner.runTask`.
-* __NEW!__ Added `ConsoleContext` - as easy way to run tasks as stand-alone shell commands
-* __DEPRECATED__ `TaskFailError`. Use `TaskContext.fail` instead
 * `RunResult` now has a descriptive `toString`
 * Moved core hop command completion logic to new `bot_io` completion helpers.
 
 ### hop_tasks
 
-* __dartdoc__ helpers added optional `excludeLibs` and `linkApi` arguments.
+* __All__ - using new `Task` features to document flags and arguments
+* __dartdoc Task__ - added optional `excludeLibs` and `linkApi` flags.
+* __Git Tasks__ - added `getBranchForDirTask` method
+* __Unit test Tasks__ - added `--list` flag to show all filtered tests, without running them.
 
 ## 0.13.1 - 9 Feb 2013 (SDK 0.3.5.1 r18300)
 
