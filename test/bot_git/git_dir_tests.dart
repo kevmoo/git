@@ -44,21 +44,37 @@ void _testGetCommits() {
 
         return gd.getCommits();
       })
-      .then((List<Commit> commits) {
+      .then((Map<String, Commit> commits) {
         expect(commits, hasLength(commitText.length));
 
-        for(int i = 0; i < commits.length; i++) {
-          final c = commits[i];
-          final msg = commitText[commitText.length - 1 - i];
+        final commitMessages = commitText.map(msgFromText).toList();
 
-          expect(c.message, msgFromText(msg));
+        final indexMap = new Map<int, Tuple<String, Commit>>();
 
-          if(i < (commits.length - 1)) {
-            expect(c.parents, unorderedEquals([commits[i+1].commitSha]));
-          } else {
-            expect(c.parents, hasLength(0));
+        commits.forEach((commitSha, Commit commit) {
+          // index into the text for the message of this commit
+          int commitMessageIndex = null;
+          for(var i = 0; i < commitMessages.length; i++) {
+            if(commitMessages[i] == commit.message) {
+              commitMessageIndex = i;
+              break;
+            }
           }
-        }
+
+          expect(commitMessageIndex, isNotNull, reason: 'a matching message should be found');
+
+          expect(indexMap.containsKey(commitMessageIndex), isFalse);
+          indexMap[commitMessageIndex] = new Tuple(commitSha, commit);
+        });
+
+        indexMap.forEach((int index, Tuple<String, Commit> shaCommitTuple) {
+
+          if(index > 0) {
+            expect(shaCommitTuple.item2.parents, unorderedEquals([indexMap[index-1].item1]));
+          } else {
+            expect(shaCommitTuple.item2.parents, hasLength(0));
+          }
+        });
 
       })
       .whenComplete((){

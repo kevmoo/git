@@ -31,7 +31,7 @@ class GitDir {
         });
   }
 
-  Future<List<Commit>> getCommits([String branchName = 'HEAD']) {
+  Future<Map<String, Commit>> getCommits([String branchName = 'HEAD']) {
     return runCommand(['rev-list', '--format=raw', branchName])
         .then((ProcessResult pr) => Commit.parseRawRevList(pr.stdout));
   }
