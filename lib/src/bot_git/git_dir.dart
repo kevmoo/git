@@ -217,6 +217,7 @@ class GitDir {
         });
   }
 
+  // TODO: should be renamed writeBlob?
   /**
    * Given a list of [paths], write those files to the object store
    * and return a [Map] where the key is the input path and the value is
