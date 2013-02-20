@@ -3,7 +3,7 @@
 ## 0.14.0-dev - *pre-release* (SDK 0.3.7.6 r18717)
 
 * Bumped minimum Dart SDK version to __0.3.7.6 r18717__
-* Updated core dart packages to `>= 0.3.5+1`
+* Updated core dart packages to `>= 0.3.7+6`
 * Removed `vendor/dart.js`. Using version from `browser` package
 * Moved examples into library-specific directories.
 * __NEW!__ `bin/shell_completion_generator.dart` for creating shell completion scripts compatible with completion logic in `bot_io`

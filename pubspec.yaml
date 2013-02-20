@@ -6,8 +6,8 @@ homepage: https://github.com/kevmoo/bot.dart
 environment:
   sdk: '>=0.3.7+6.r18717'
 dependencies:
-  unittest: '>=0.3.5+1'
-  args: '>=0.3.5+1'
-  browser: '>=0.3.5+1'
-  logging: '>=0.3.5+1'
-  meta: '>=0.3.5+1'
+  unittest: '>=0.3.7+6'
+  args: '>=0.3.7+6'
+  browser: '>=0.3.7+6'
+  logging: '>=0.3.7+6'
+  meta: '>=0.3.7+6'
