@@ -259,14 +259,14 @@ __BREAKING__ Moved dependencies on SDK libraries to versions on pub.dartlang.org
 * __BREAKING__ Massive rename. Element is way to overloaded, hence names like 'PElement'. Going with 'Thing'. Not ideal, but not overloaded.
 * `Thing`
     * __NEW__ learned `alpha` -- or at least uses it now
-    * __BREAKING__ a tiny change to how dirty state is tracked to allow thingss to effectively request animation in `drawOverride`.
+    * __BREAKING__ a tiny change to how dirty state is tracked to allow things to effectively request animation in `drawOverride`.
 	* __BREAKING__ Eliminated 'cacheEnabled' ctor argument.
 	* __BREAKING__ Removed `clip` property. It wasn't doing anything. 
 * __BREAKING__ `ShapeThing` constructor now uses named arguments.
 * __NEW__ `NavLayer` -- copied from the Javascript library. Pretty fun.
 * __NEW__ `HorizontalAlignment` and `VerticalAlignment`
 * __NEW__ `RetainedUtil` learned `getOffsetVector`
-* __NEW__ `SubCanvasThing` -- similiar to `ImageThing`, but for drawing contents of a canvas.
+* __NEW__ `SubCanvasThing` -- similar to `ImageThing`, but for drawing contents of a canvas.
 * __NEW__ `TextThing` An element to display text. Lot's of work to do, but a good start.
 * __NEW__ `StageWrapper` - handles requesting frames and drawing them when the stage updates.
 * Added nifty `_RetainedEnum` as a relatively safe, private subclass for other enum types. 
@@ -327,7 +327,7 @@ __BREAKING__ Moved dependencies on SDK libraries to versions on pub.dartlang.org
 * Removed private `_SimpleSet`. Not used.
 
 ### hop - *New*
-* An attempt to create a process management system similiar to [Rake](http://rake.rubyforge.org/) in the Ruby world or [Cake](http://coffeescript.org/#cake) in the CoffeeScript world.
+* An attempt to create a process management system similar to [Rake](http://rake.rubyforge.org/) in the Ruby world or [Cake](http://coffeescript.org/#cake) in the CoffeeScript world.
 * Moved `test`, `dart2js`, and `docs` to this new system.
 * Naming: A play off frog. Which is a play off dart. As in "dart frog" and "frog hop". Yeah a stretch, but it's short.
 
