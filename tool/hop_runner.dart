@@ -21,16 +21,7 @@ void main() {
   //
   // Analyzer
   //
-  addTask('analyze_libs', createDartAnalyzerTask(['lib/bot.dart',
-                                                  'lib/bot_html.dart',
-                                                  'lib/bot_test.dart',
-                                                  'lib/hop_tasks.dart',
-                                                  'lib/bot_async.dart',
-                                                  'lib/bot_io.dart',
-                                                  'lib/bot_texture.dart',
-                                                  'lib/bot_git.dart',
-                                                  'lib/bot_retained.dart',
-                                                  'lib/hop.dart']));
+  addTask('analyze_libs', createDartAnalyzerTask(_getLibs));
 
   addTask('analyze_test_libs', createDartAnalyzerTask(['test/harness_browser.dart',
                                                        'test/test_console.dart',

@@ -2,24 +2,28 @@ part of hop_tasks;
 
 // TODO(adam): document methods and class
 // TODO(adam): use verbose
-// TODO: add an async version that takes Func<Future<Iterable<String>>>
-//       see getCompileDocsFunc
 // TODO(adam?): optional out directory param. Used so that repeat runs
 //              are faster
 
 const _verboseArgName = 'verbose';
 const _enableTypeChecksArgName = 'enable-type-checks';
 
-Task createDartAnalyzerTask(Iterable<String> files) {
+/**
+ * [delayedFileList] a [List<String>] mapping to paths to dart files or some
+ * combinations of [Future] or [Function] values that return a [List<String>].
+ */
+Task createDartAnalyzerTask(dynamic delayedFileList) {
   return new Task.async((context) {
     final parseResult = context.arguments;
 
     final bool enableTypeChecks = parseResult[_enableTypeChecksArgName];
     final bool verbose = parseResult[_verboseArgName];
 
-    final fileList = files.map((f) => new Path(f)).toList();
-
-    return _processAnalyzerFile(context, fileList, enableTypeChecks, verbose);
+    return getDelayedResult(delayedFileList)
+        .then((List<String> files) {
+          final fileList = files.map((f) => new Path(f)).toList();
+          return _processAnalyzerFile(context, fileList, enableTypeChecks, verbose);
+        });
   }, description: 'Running dart analyzer', config: _analyzerParserConfig);
 }
 

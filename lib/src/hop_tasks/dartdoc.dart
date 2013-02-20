@@ -4,17 +4,25 @@ part of hop_tasks;
 
 const _allowDirtyArg = 'allow-dirty';
 
+/**
+ * [delayedLibraryList] a [List<String>] mapping to paths to libraries or some
+ * combinations of [Future] or [Function] values that return a [List<String>].
+ */
 Task getCompileDocsFunc(String targetBranch, String packageDir,
-                        Func<Future<List<String>>> libGetter,
+                        dynamic delayedLibraryList,
                         {Iterable<String> excludeLibs, bool linkApi: false}) {
-  return new Task.async((ctx) => compileDocs(ctx, targetBranch, libGetter,
+  return new Task.async((ctx) => compileDocs(ctx, targetBranch, delayedLibraryList,
       packageDir, excludeLibs: excludeLibs, linkApi: linkApi),
       description: 'Generate documentation for the provided libraries.',
       config: _dartDocParserConfig);
 }
 
+/**
+ * [delayedLibraryList] a [List<String>] mapping to paths to libraries or some
+ * combinations of [Future] or [Function] values that return a [List<String>].
+ */
 Future<bool> compileDocs(TaskContext ctx, String targetBranch,
-    Func<Future<List<String>>> libGetter, String packageDir,
+    dynamic delayedLibraryList, String packageDir,
     {Iterable<String> excludeLibs, bool linkApi: false}) {
 
   final excludeList = excludeLibs == null ? [] : excludeLibs.toList();
@@ -38,7 +46,7 @@ Future<bool> compileDocs(TaskContext ctx, String targetBranch,
           ctx.fail('Working tree is dirty. Cannot generate docs.');
         }
 
-        return libGetter();
+        return getDelayedResult(delayedLibraryList);
       })
       .then((List<String> value) {
         assert(value != null);
