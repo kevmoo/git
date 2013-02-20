@@ -24,7 +24,9 @@ Task createDartAnalyzerTask(dynamic delayedFileList) {
           final fileList = files.map((f) => new Path(f)).toList();
           return _processAnalyzerFile(context, fileList, enableTypeChecks, verbose);
         });
-  }, description: 'Running dart analyzer', config: _analyzerParserConfig);
+  },
+  description: 'Run "dart_analyzer" for the provided dart files.',
+  config: _analyzerParserConfig);
 }
 
 void _analyzerParserConfig(ArgParser parser) {
