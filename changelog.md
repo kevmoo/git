@@ -1,8 +1,8 @@
 # Changelog - Dart Bag of Tricks
 
-## 0.14.0-dev - *pre-release* (SDK 0.3.7.5 r18669)
+## 0.14.0-dev - *pre-release* (SDK 0.3.7.6 r18717)
 
-* Bumped minimum Dart SDK version to __3.6.2 r18539__
+* Bumped minimum Dart SDK version to __0.3.7.6 r18717__
 * Updated core dart packages to `>= 0.3.5+1`
 * Removed `vendor/dart.js`. Using version from `browser` package
 * Moved examples into library-specific directories.
