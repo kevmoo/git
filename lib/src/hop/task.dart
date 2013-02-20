@@ -12,7 +12,7 @@ class Task {
 
   factory Task.sync(Func1<TaskContext, bool> exec,
       {String description, ArgParserConfigure config, List<TaskArgument> extendedArgs}) {
-    final futureExec = (TaskContext ctx) => new Future.delayed(0, () => exec(ctx));
+    final futureExec = (TaskContext ctx) => new Future.of(() => exec(ctx));
 
     return new Task.async(futureExec,
         description: description, config: config, extendedArgs: extendedArgs);

@@ -72,7 +72,7 @@ Future<bool> _chainTasks(TaskContext ctx, List<Func<Future<bool>>> futures, [int
     if(status) {
       return _chainTasks(ctx, futures, index+1);
     } else {
-      return new Future.immediate(false);
+      return false;
     }
   });
 }

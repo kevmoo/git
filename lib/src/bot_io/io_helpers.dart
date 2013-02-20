@@ -59,7 +59,7 @@ class IoHelpers {
     return _mapContents(dir)
         .then((Map<String, dynamic> map) {
           if(map.length != content.length) {
-            return new Future.immediate(false);
+            return false;
           }
 
           final missing = new Set<String>.from(content.keys);
@@ -73,11 +73,11 @@ class IoHelpers {
           if(!missing.isEmpty) {
             // items is missing were not found! sad!
             print('missing: $missing');
-            return new Future.immediate(false);
+            return false;
           } else if(!extra.isEmpty) {
             // too many items!
             print('extra: $extra');
-            return new Future.immediate(false);
+            return false;
           }
 
           final futures = content.keys.map((name) {
