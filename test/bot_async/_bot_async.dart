@@ -9,10 +9,12 @@ import 'package:unittest/unittest.dart';
 
 part 'test_send_port_value.dart';
 part 'test_future_value_result.dart';
+part 'test_delayed_result.dart';
 
 void main() {
   group('bot_async', (){
     TestSendPortValue.run();
     TestFutureValueResult.run();
+    registerDelayedResultTests();
   });
 }
