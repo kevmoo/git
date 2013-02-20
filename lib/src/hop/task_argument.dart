@@ -10,7 +10,7 @@ class TaskArgument {
   TaskArgument(this.name, {this.required: false, this.multiple: false}) {
     requireArgumentNotNull(required, 'required');
     requireArgumentNotNull(multiple, 'multiple');
-    requireArgumentMatches(nameRegex, name, 'name');
+    requireArgumentContainsPattern(nameRegex, name, 'name');
   }
 
   static void validateArgs(List<TaskArgument> args) {

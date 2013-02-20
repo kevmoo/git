@@ -38,7 +38,7 @@ class BaseConfig {
   void addTask(String name, Task task) {
     require(!isFrozen, "Cannot add a task. Frozen.");
     requireArgumentNotNullOrEmpty(name, 'name');
-    requireArgumentMatches(_validNameRegExp, name, 'name');
+    requireArgumentContainsPattern(_validNameRegExp, name, 'name');
     requireArgument(!_reservedTasks.contains(name), 'task',
         'The provided task has a reserved name');
     requireArgument(!_tasks.containsKey(name), 'task',

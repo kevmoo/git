@@ -33,14 +33,22 @@ void requireArgumentNotNullOrEmpty(String argument, String argName) {
   }
 }
 
-void requireArgumentMatches(RegExp regex, String argument, String argName) {
-  if(regex == null) {
-    throw new InvalidOperationError("That's just sad. No null regex");
+@deprecated
+/**
+ * Use [requireArgumentContainsPattern] instead.
+ */
+void requireArgumentMatches(RegExp regex, String argValue, String argName) {
+  requireArgumentContainsPattern(regex, argValue, argName);
+}
+
+void requireArgumentContainsPattern(Pattern pattern, String argValue, String argName) {
+  if(pattern == null) {
+    throw new InvalidOperationError("That's just sad. No null pattern");
   }
-  requireArgumentNotNull(argument, argName);
-  if(!regex.hasMatch(argument)) {
+  requireArgumentNotNull(argValue, argName);
+  if(!argValue.contains(pattern)) {
     throw new DetailedArgumentError(argName,
-        'The value "$argument" must match the regular expression "${regex.pattern}"');
+        'The value "$argValue" does not contain the pattern "${pattern}"');
   }
 }
 
