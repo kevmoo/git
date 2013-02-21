@@ -1,0 +1,21 @@
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body.demo {
+  margin: 0;
+  overflow: hidden;
+}
+
+.toc {
+  padding: 10px;
+  float: left;
+}
+
+iframe {
+  display: block;
+  height: 800px;
+  width: 800px;
+  overflow: hidden;
+}

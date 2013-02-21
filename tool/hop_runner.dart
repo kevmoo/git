@@ -8,6 +8,8 @@ import 'package:bot/hop.dart';
 import 'package:bot/hop_tasks.dart';
 import '../test/harness_console.dart' as test_console;
 
+import 'tasks/update_example_html.dart' as html_tasks;
+
 void main() {
   // Easy to enable hop-wide logging
   // enableScriptLogListener();
@@ -44,6 +46,8 @@ void main() {
   addTask('bench', createBenchTask());
 
   addTask('help', getHelpTask());
+
+  addTask('update-html', html_tasks.getUpdateExampleHtmlTask());
 
   runHopCore();
 }
