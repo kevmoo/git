@@ -17,6 +17,30 @@ part 'sync_tests.dart';
 part 'task_list_tests.dart';
 part 'test_runner.dart';
 
+Future<RunResult> runTaskInTestRunner(Task task, {List<String> extraArgs}) {
+  const _testTaskName = 'test-task';
+
+  final tasks = new BaseConfig();
+  tasks.addTask(_testTaskName, task);
+  tasks.freeze();
+
+  final args = [_testTaskName];
+  if(extraArgs != null) {
+    args.addAll(extraArgs);
+  }
+
+  final runner = new TestRunner(tasks, args);
+  return runner.run();
+}
+
+void testTaskCompletion(Task task, Action1<RunResult> completeHandler,
+                        {List<String> extraArgs}) {
+  final future = runTaskInTestRunner(task, extraArgs: extraArgs);
+  expect(future, isNotNull);
+
+  expectFutureComplete(future, completeHandler);
+}
+
 void main() {
   group('hop', () {
     group('async tasks', AsyncTests.run);

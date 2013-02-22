@@ -99,18 +99,7 @@ class SyncTests {
   }
 
   static Action0 _testSimpleSyncTask(Func1<TaskContext, bool> task,
-                            Action1<Future<bool>> completeHandler) {
-    final name = 'task_name';
-    final tasks = new BaseConfig();
-    tasks.addSync(name, task);
-    tasks.freeze();
-
-    final runner = new TestRunner(tasks, [name]);
-    final future = runner.run();
-    expect(future, isNotNull);
-
-    final onComplete = expectAsync1(completeHandler);
-
-    future.then(onComplete);
+                            Action1<RunResult> completeHandler) {
+    testTaskCompletion(new Task.sync(task), completeHandler);
   }
 }

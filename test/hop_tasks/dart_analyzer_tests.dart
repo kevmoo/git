@@ -73,7 +73,7 @@ void _testAnalyzerTask(Map<String, String> inputs, RunResult expectedResult) {
             new Path(tempDir.path).join(new Path(e)).toNativePath()).toList();
 
         final task = createDartAnalyzerTask(fullPaths);
-        return _runTask(task);
+        return runTaskInTestRunner(task);
       })
       .then((RunResult runResult) {
         expect(runResult, expectedResult);
