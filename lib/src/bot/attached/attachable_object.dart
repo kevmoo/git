@@ -31,9 +31,7 @@ class AttachableObject extends DisposableImpl {
 
   void _onSubscriptionChanged(Attachable property) {
     assert(property != null);
-    if(isDisposed) {
-      assert(_eventHandlers.isEmpty);
-    } else {
+    if(!isDisposed) {
       var handle = _eventHandlers[property];
       assert(handle != null);
       if(!handle.hasSubscribers) {
