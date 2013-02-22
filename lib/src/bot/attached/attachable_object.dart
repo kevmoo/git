@@ -1,12 +1,13 @@
 part of bot;
 
 class AttachableObject extends DisposableImpl {
-  final HashMap<Property, Object> _propertyValues =
-      new HashMap<Property, Object>();
+  final Map<Property, Object> _propertyValues =
+      new Map<Property, Object>();
 
-  final HashMap<Attachable, EventHandle> _eventHandlers =
-      new HashMap<Attachable, EventHandle>();
+  final Map<Attachable, EventHandle> _eventHandlers =
+      new Map<Attachable, EventHandle>();
 
+  @override @protected
   void disposeInternal(){
     super.disposeInternal();
     _eventHandlers.forEach((a, e) {
@@ -15,27 +16,38 @@ class AttachableObject extends DisposableImpl {
     _eventHandlers.clear();
   }
 
-  GlobalId _addHandler(Attachable property, Action1 watcher) {
+  async.Stream _getStream(Attachable property) {
     validateNotDisposed();
-    var handle = _eventHandlers.putIfAbsent(property, () => new EventHandle());
-    return handle.add(watcher);
+    var handle = _eventHandlers.putIfAbsent(property,
+        () => new EventHandle(onSubscriptionStateChange: () => _onSubscriptionChanged(property)));
+    return handle.stream;
   }
 
-  bool _removeHandler(Attachable property, GlobalId handlerId){
+  bool _hasSubscribers(Attachable property) {
     validateNotDisposed();
-    requireArgumentNotNull(handlerId, 'handlerId');
-    var handle = _eventHandlers[property];
-    if(handle != null){
-      return handle.remove(handlerId);
+    final handle = _eventHandlers[property];
+    return handle != null && handle.hasSubscribers;
+  }
+
+  void _onSubscriptionChanged(Attachable property) {
+    assert(property != null);
+    if(isDisposed) {
+      assert(_eventHandlers.isEmpty);
+    } else {
+      var handle = _eventHandlers[property];
+      assert(handle != null);
+      if(!handle.hasSubscribers) {
+        handle.dispose();
+        _eventHandlers.remove(property);
+      }
     }
-    return false;
   }
 
   void _fireEvent(Attachable attachable, dynamic args) {
     validateNotDisposed();
     var handle = _eventHandlers[attachable];
     if(handle != null){
-      handle.fireEvent(args);
+      handle.add(args);
     }
   }
 
@@ -82,7 +94,7 @@ class AttachableObject extends DisposableImpl {
     validateNotDisposed();
     var handle = _eventHandlers[key];
     if(handle != null){
-      handle.fireEvent(key);
+      handle.add(key);
     }
   }
 }

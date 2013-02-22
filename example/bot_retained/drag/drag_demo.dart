@@ -42,14 +42,14 @@ class DraggerDemo{
   DraggerDemo._internal(this._canvas, this._stage, this._tx, this._thing) :
     _demoMapper = new _DemoValue() {
 
-    _demoMapper.outputChanged.add((e) => requestFrame());
+    _demoMapper.outputChanged.listen((e) => requestFrame());
 
-    _stage.invalidated.add(_onStageInvalidated);
+    _stage.invalidated.listen(_onStageInvalidated);
 
     final cm = new MouseManager(_stage);
 
     MouseManager.setDraggable(_thing, true);
-    MouseManager.addDragHandler(_thing, _onDrag);
+    MouseManager.getDragStream(_thing).listen(_onDrag);
   }
 
   void requestFrame(){

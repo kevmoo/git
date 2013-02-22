@@ -2,8 +2,10 @@ part of test_bot_async;
 
 class TestSendPortValue {
   static void run() {
-    test('simple', _testSimple);
-    test('complex', _testComplex);
+    group('SendPortValue', () {
+      test('simple', _testSimple);
+      test('complex', _testComplex);
+    });
   }
 
   static void _testSimple() {
@@ -17,8 +19,8 @@ class TestSendPortValue {
       expect(args.error, equals('wah?'));
     });
 
-    tv.outputChanged.add(callback);
-    tv.error.add(onError);
+    tv.outputChanged.listen(callback);
+    tv.error.listen(onError);
     tv.input = 5;
 
     tv.input = -1;
@@ -35,8 +37,8 @@ class TestSendPortValue {
       expect(args.error, equals('wah?'));
     });
 
-    tv.outputChanged.add(callback);
-    tv.error.add(onError);
+    tv.outputChanged.listen(callback);
+    tv.error.listen(onError);
     tv.input = new Tuple<int, int>(5, 6);
 
     tv.input = null;

@@ -11,7 +11,7 @@ class StageWrapper<T extends Thing> extends DisposableImpl {
   @protected
   final T rootThing;
 
-  GlobalId _invalidatedEventId;
+  StreamSubscription _invalidatedEventSub;
 
   bool _frameRequested = false;
 
@@ -19,7 +19,7 @@ class StageWrapper<T extends Thing> extends DisposableImpl {
     this.canvas = canvas,
     this.rootThing = rootThing,
     this.stage = new Stage(canvas, rootThing) {
-    _invalidatedEventId = stage.invalidated.add((_) => requestFrame());
+    _invalidatedEventSub = stage.invalidated.listen((_) => requestFrame());
   }
 
   void requestFrame() {
@@ -30,8 +30,8 @@ class StageWrapper<T extends Thing> extends DisposableImpl {
   }
 
   void disposeInternal() {
-    stage.invalidated.remove(_invalidatedEventId);
-    _invalidatedEventId = null;
+    _invalidatedEventSub.cancel();
+    _invalidatedEventSub = null;
   }
 
   @protected

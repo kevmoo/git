@@ -60,12 +60,12 @@ class TxThing extends ParentThing {
     _canvasThing.add(_positionShape);
     MouseManager.setCursor(_positionShape, 'pointer');
     MouseManager.setDraggable(_positionShape, true);
-    MouseManager.addDragHandler(_positionShape, _dragPosition);
+    MouseManager.getDragStream(_positionShape).listen(_dragPosition);
 
     _canvasThing.add(_rotateScaleShape);
     MouseManager.setCursor(_rotateScaleShape, 'pointer');
     MouseManager.setDraggable(_rotateScaleShape, true);
-    MouseManager.addDragHandler(_rotateScaleShape, _dragRotateScale);
+    MouseManager.getDragStream(_rotateScaleShape).listen(_dragRotateScale);
 
     _updateRotateScale();
   }

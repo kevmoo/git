@@ -15,14 +15,16 @@ abstract class FutureValue<TInput, TOutput> {
     } else {
       _pending = true;
     }
-    _inputChangedHandle.fireEvent(EventArgs.empty);
+    _inputChangedHandle.add(EventArgs.empty);
   }
 
   TOutput get output => _output;
 
-  EventRoot<EventArgs> get outputChanged => _outputChangedHandle;
-  EventRoot<EventArgs> get inputChanged => _inputChangedHandle;
-  EventRoot get error => _errorHandle;
+  Stream<EventArgs> get outputChanged => _outputChangedHandle.stream;
+  Stream<EventArgs> get inputChanged => _inputChangedHandle.stream;
+
+  // TODO: roll this into outputChanged stream w/ errors? Hmm...
+  Stream get error => _errorHandle.stream;
 
   Future<TOutput> getFuture(TInput value);
 
@@ -36,7 +38,7 @@ abstract class FutureValue<TInput, TOutput> {
   bool _futureException(Object exception) {
     assert(_future != null);
     _future = null;
-    _errorHandle.fireEvent(exception);
+    _errorHandle.add(exception);
     _cleanup();
     return true;
   }
@@ -45,7 +47,7 @@ abstract class FutureValue<TInput, TOutput> {
     assert(_future != null);
     _future = null;
     _output = value;
-    _outputChangedHandle.fireEvent(EventArgs.empty);
+    _outputChangedHandle.add(EventArgs.empty);
     _cleanup();
   }
 

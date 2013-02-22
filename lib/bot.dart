@@ -1,6 +1,7 @@
 library bot;
 
 import 'dart:collection';
+import 'dart:async' as async;
 import 'dart:math' as math;
 import 'package:meta/meta.dart';
 
@@ -35,7 +36,6 @@ part 'src/bot/disposable.dart';
 part 'src/bot/disposable_impl.dart';
 
 part 'src/bot/events/cancelable_event_args.dart';
-part 'src/bot/events/event_root.dart';
 part 'src/bot/events/event_args.dart';
 part 'src/bot/events/event_handle.dart';
 
@@ -43,7 +43,6 @@ part 'src/bot/exceptions/detailed_argument_error.dart';
 part 'src/bot/exceptions/invalid_operation_error.dart';
 part 'src/bot/exceptions/null_argument_error.dart';
 
-part 'src/bot/global_id.dart';
 
 part 'src/bot/math/affine_transform.dart';
 part 'src/bot/math/box.dart';

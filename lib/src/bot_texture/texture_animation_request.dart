@@ -27,7 +27,7 @@ class TextureAnimationRequest {
   bool get fresh => _frame == null;
   bool get done => _done;
 
-  EventRoot<EventArgs> get started => _startEventHandle;
+  Stream<EventArgs> get started => _startEventHandle.stream;
 
   void update() {
     if(_frame == null) {
@@ -40,7 +40,7 @@ class TextureAnimationRequest {
     }
 
     if(_frame == 0 && !_done) {
-      _startEventHandle.fireEvent(EventArgs.empty);
+      _startEventHandle.add(EventArgs.empty);
     }
   }
 

@@ -1,5 +1,6 @@
 library test_bot;
 
+import 'dart:async' as async;
 import 'dart:math' as math;
 import 'package:bot/bot.dart';
 import 'package:bot/bot_test.dart';

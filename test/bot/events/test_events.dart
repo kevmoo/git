@@ -5,10 +5,10 @@ class TestEvents {
 
   TestEvents(): _testEventHandle = new EventHandle<String>();
 
-  EventRoot<String> get testEvent => _testEventHandle;
+  async.Stream<String> get testEvent => _testEventHandle.stream;
 
   void fireTestEvent(String value){
-    _testEventHandle.fireEvent(value);
+    _testEventHandle.add(value);
   }
 
   static void run(){
@@ -24,7 +24,7 @@ class TestEvents {
       target.fireTestEvent('bar');
       expect(watcher.lastArgs, isNull);
 
-      var eventId = target.testEvent.add(watcher.handler);
+      var eventId = target.testEvent.listen(watcher.handler);
 
       // after registration, event should change value
       target.fireTestEvent('bar');
@@ -34,12 +34,9 @@ class TestEvents {
       target.fireTestEvent('foo');
       expect(watcher.lastArgs, equals('foo'));
 
-      var didRemove = target.testEvent.remove(eventId);
-      expect(didRemove, isTrue);
-
-      // removing a second time should fail
-      didRemove = target.testEvent.remove(eventId);
-      expect(didRemove, isFalse);
+      expect(target._testEventHandle.hasSubscribers, isTrue);
+      eventId.cancel();
+      expect(target._testEventHandle.hasSubscribers, isFalse);
 
       // after removing, event should not change value
       target.fireTestEvent('bar');

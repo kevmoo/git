@@ -17,23 +17,14 @@ class TestAttachedEvents extends AttachableObject {
   static void _testRemove() {
     final obj = new TestAttachedEvents();
     final watcher1 = new EventWatcher<EventArgs>();
-    final h1 = _testEvent1.addHandler(obj, watcher1.handler);
 
-    bool removed = _testEvent1.removeHandler(obj, h1);
-    expect(removed, isTrue);
+    expect(_testEvent1.hasSubscribers(obj), false);
+    final h1 = _testEvent1.getStream(obj).listen(watcher1.handler);
 
-    removed = _testEvent1.removeHandler(obj, h1);
-    expect(removed, isFalse);
+    expect(_testEvent1.hasSubscribers(obj), true);
 
-    removed = _testEvent1.removeHandler(obj, new GlobalId());
-    expect(removed, isFalse);
-
-    expect(() => _testEvent1.removeHandler(obj, null), throwsNullArgumentError);
-
-    expect(() => _testEvent1.removeHandler(null, new GlobalId()), throwsNullArgumentError);
-
-    removed = _testEvent1.removeHandler(new TestAttachedEvents(), new GlobalId());
-    expect(removed, isFalse);
+    h1.cancel();
+    expect(_testEvent1.hasSubscribers(obj), false);
   }
 
   static void _testWholeDeal() {
@@ -41,8 +32,8 @@ class TestAttachedEvents extends AttachableObject {
     final watcher2 = new EventWatcher<EventArgs>();
 
     final obj = new TestAttachedEvents();
-    final h1 = _testEvent1.addHandler(obj, watcher1.handler);
-    final h2 = _testEvent2.addHandler(obj, watcher2.handler);
+    final h1 = _testEvent1.getStream(obj).listen(watcher1.handler);
+    final h2 = _testEvent2.getStream(obj).listen(watcher2.handler);
 
     _testEvent1.fireEvent(obj, EventArgs.empty);
     expect(watcher1.eventCount, equals(1));
@@ -52,34 +43,24 @@ class TestAttachedEvents extends AttachableObject {
     expect(watcher1.eventCount, equals(1));
     expect(watcher2.eventCount, equals(1));
 
-    var removed = _testEvent1.removeHandler(obj, h1);
-    expect(removed, isTrue);
-    final h3 = _testEvent1.addHandler(obj, watcher2.handler);
+    final h3 = _testEvent1.getStream(obj).listen(watcher2.handler);
+
+    h1.cancel();
+    // h3 is still subscribed
+    expect(_testEvent1.hasSubscribers(obj), isTrue);
 
     _testEvent1.fireEvent(obj, EventArgs.empty);
     expect(watcher1.eventCount, equals(1));
     expect(watcher2.eventCount, equals(2));
 
-    // already removed, should be false
-    removed = _testEvent1.removeHandler(obj, h1);
-    expect(removed, isFalse);
-
-    // never added, should be false
-    removed = _testEvent1.removeHandler(obj, h2);
-    expect(removed, isFalse);
+    // true first time
+    expect(_testEvent2.hasSubscribers(obj), isTrue);
+    h2.cancel();
+    expect(_testEvent2.hasSubscribers(obj), isFalse);
 
     // true first time
-    removed = _testEvent2.removeHandler(obj, h2);
-    expect(removed, isTrue);
-    // then false
-    removed = _testEvent2.removeHandler(obj, h2);
-    expect(removed, isFalse);
-
-    // true first time
-    removed = _testEvent1.removeHandler(obj, h3);
-    expect(removed, isTrue);
-    // then false
-    removed = _testEvent1.removeHandler(obj, h3);
-    expect(removed, isFalse);
+    expect(_testEvent1.hasSubscribers(obj), isTrue);
+    h3.cancel();
+    expect(_testEvent1.hasSubscribers(obj), isFalse);
   }
 }

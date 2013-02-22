@@ -30,12 +30,8 @@ class Property<T> extends Attachable {
 
   bool isSet(AttachableObject obj) => obj._isSet(this);
 
-  GlobalId addHandler(AttachableObject obj, Action1<Property> handler){
-    return obj._addHandler(this, handler);
-  }
-
-  bool removeHandler(AttachableObject obj, GlobalId handlerId){
-    return obj._removeHandler(this, handlerId);
+  async.Stream getStream(AttachableObject obj){
+    return obj._getStream(this);
   }
 
   String toString() => "Property '$name'";

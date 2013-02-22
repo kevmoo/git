@@ -22,9 +22,9 @@ abstract class ResourceLoader<T> {
 
   String get state => _state;
 
-  EventRoot get loaded => _loadedEvent;
+  Stream get loaded => _loadedEvent.stream;
 
-  EventRoot get progress => _progressEvent;
+  Stream get progress => _progressEvent.stream;
 
   T getResource(String url) => _getByUrl(url).resource;
 
@@ -73,7 +73,7 @@ abstract class ResourceLoader<T> {
 
     if(_entries.every((e) => e.completed)) {
       _state = StateLoaded;
-      _loadedEvent.fireEvent(EventArgs.empty);
+      _loadedEvent.add(EventArgs.empty);
     }
   }
 
@@ -135,7 +135,7 @@ abstract class ResourceLoader<T> {
     assert(args.position == args.loaded);
 
     if(entry.updateProgress(args.loaded, args.totalSize)) {
-      _progressEvent.fireEvent(EventArgs.empty);
+      _progressEvent.add(EventArgs.empty);
     }
   }
 }

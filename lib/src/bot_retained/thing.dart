@@ -64,7 +64,7 @@ abstract class Thing extends AttachableObject {
     }
   }
 
-  EventRoot<EventArgs> get invalidated => _invalidatedEventHandle;
+  Stream<EventArgs> get invalidated => _invalidatedEventHandle.stream;
 
   AffineTransform getTransform() {
     var tx = new AffineTransform();
@@ -195,7 +195,7 @@ abstract class Thing extends AttachableObject {
 
   void _invalidateParent(){
     assert(this._parent != null);
-    _invalidatedEventHandle.fireEvent(EventArgs.empty);
+    _invalidatedEventHandle.add(EventArgs.empty);
     _parent.childInvalidated(this);
   }
 }

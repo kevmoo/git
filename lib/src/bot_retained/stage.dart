@@ -15,7 +15,7 @@ class Stage extends AttachableObject
 
   Size get size => new Size(_canvas.width, _canvas.height);
 
-  EventRoot<EventArgs> get invalidated => _invalidatedEventHandle;
+  Stream<EventArgs> get invalidated => _invalidatedEventHandle.stream;
 
   CanvasRenderingContext2D get ctx {
     validateNotDisposed();
@@ -39,7 +39,7 @@ class Stage extends AttachableObject
   void childInvalidated(Thing child){
     validateNotDisposed();
     assert(child == rootThing);
-    _invalidatedEventHandle.fireEvent(EventArgs.empty);
+    _invalidatedEventHandle.add(EventArgs.empty);
   }
 
   void disposeInternal(){

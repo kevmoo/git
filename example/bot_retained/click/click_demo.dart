@@ -22,7 +22,7 @@ class ClickDemo extends StageWrapper<CanvasThing> {
       blue.fillStyle = (blue.fillStyle == _blueColor) ? 'lightblue' : _blueColor;
     };
 
-    MouseManager.addHandler(blue, clickHandler);
+    MouseManager.getClickStream(blue).listen(clickHandler);
 
     pCanvas.add(blue);
 
@@ -35,8 +35,8 @@ class ClickDemo extends StageWrapper<CanvasThing> {
     pCanvas.setCenter(red, const Coordinate(50, 150));
 
     MouseManager.setClickable(red, true);
-    MouseManager.addMouseUpHandler(red, (args) => print(['up', args]));
-    MouseManager.addMouseDownHandler(red, (args) => print(['down', args]));
+    MouseManager.getMouseUpStream(red).listen((args) => print(['up', args]));
+    MouseManager.getMouseDownStream(red).listen((args) => print(['down', args]));
 
     pCanvas.addTransform().translate(
       (canvas.width - pCanvas.width) / 2,

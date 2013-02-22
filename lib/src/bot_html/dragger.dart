@@ -20,16 +20,16 @@ class Dragger {
     window.onBlur.listen(_endDrag);
   }
 
-  EventRoot<Vector> get dragDelta => _dragDeltaHandle;
+  Stream<Vector> get dragDelta => _dragDeltaHandle.stream;
 
-  EventRoot<CancelableEventArgs> get dragStart => _dragStartHandle;
+  Stream<CancelableEventArgs> get dragStart => _dragStartHandle.stream;
 
   bool get isDragging => _clientLoc != null;
 
   void _onMouseDown(MouseEvent event) {
     assert(!isDragging);
     final args = new CancelableEventArgs();
-    _dragStartHandle.fireEvent(args);
+    _dragStartHandle.add(args);
     if(!args.isCanceled) {
       event.preventDefault();
       _clientLoc = new Coordinate(event.clientX, event.clientY);
@@ -42,7 +42,7 @@ class Dragger {
       final newLoc = new Coordinate(event.clientX, event.clientY);
 
       final delta = newLoc - _clientLoc;
-      _dragDeltaHandle.fireEvent(delta);
+      _dragDeltaHandle.add(delta);
 
       _clientLoc = newLoc;
     }

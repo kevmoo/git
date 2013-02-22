@@ -52,7 +52,7 @@ class TestProperties extends AttachableObject {
         var h1 = new EventWatcher<Property>();
 
         // set handler 1 on prop
-        var g1 = testProperty.addHandler(object, h1.handler);
+        var g1 = testProperty.getStream(object).listen(h1.handler);
         expect(h1.eventCount, equals(0));
 
         // set prop
@@ -69,7 +69,7 @@ class TestProperties extends AttachableObject {
         var h2 = new EventWatcher<Property>();
 
         // set handler 1 on prop
-        var g2 = testProperty.addHandler(object, h2.handler);
+        var g2 = testProperty.getStream(object).listen(h2.handler);
         expect(h2.eventCount, equals(0));
 
         // set prop
@@ -79,10 +79,7 @@ class TestProperties extends AttachableObject {
         expect(h2.eventCount, equals(1));
 
         // remove handler 1
-        bool removed = testProperty.removeHandler(object, g1);
-        expect(removed, isTrue);
-        removed = testProperty.removeHandler(object, g1);
-        expect(removed, isFalse);
+        g1.cancel();
         // clear prop
         testProperty.clear(object);
         // should fire h2, but not h1
@@ -90,10 +87,7 @@ class TestProperties extends AttachableObject {
         expect(h2.eventCount, equals(2));
 
         // remove handler 2
-        removed = testProperty.removeHandler(object, g2);
-        expect(removed, isTrue);
-        removed = testProperty.removeHandler(object, g2);
-        expect(removed, isFalse);
+        g2.cancel();
         // set prop
         testProperty.set(object, "the bar!");
         // should not fire either handler
@@ -127,7 +121,7 @@ class TestProperties extends AttachableObject {
 
     var object = new TestProperties();
 
-    prop.addHandler(object, wodWatcher.handler);
+    prop.getStream(object).listen(wodWatcher.handler);
 
     //
     // Checks

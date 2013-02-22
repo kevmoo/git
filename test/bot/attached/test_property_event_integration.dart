@@ -9,12 +9,12 @@ class TestPropertyEventIntegration extends AttachableObject {
 
   TestPropertyEventIntegration() {
 
-    _nameProperty.addHandler(this, (args){
-      _nameChangedEventHandle.fireEvent(EventArgs.empty);
+    _nameProperty.getStream(this).listen((args) {
+      _nameChangedEventHandle.add(EventArgs.empty);
     });
 
-    _ageProperty.addHandler(this, (args){
-      _ageChangedEventHandle.fireEvent(EventArgs.empty);
+    _ageProperty.getStream(this).listen((args) {
+      _ageChangedEventHandle.add(EventArgs.empty);
     });
   }
 
@@ -27,7 +27,7 @@ class TestPropertyEventIntegration extends AttachableObject {
     _nameProperty.set(this, value);
   }
 
-  EventRoot<EventArgs> get nameChanged => _nameChangedEventHandle;
+  async.Stream<EventArgs> get nameChanged => _nameChangedEventHandle.stream;
 
   //
   // Age property
@@ -38,7 +38,7 @@ class TestPropertyEventIntegration extends AttachableObject {
     _ageProperty.set(this, value);
   }
 
-  EventRoot<EventArgs> get ageChanged =>_ageChangedEventHandle;
+  async.Stream<EventArgs> get ageChanged =>_ageChangedEventHandle.stream;
 
   void reset(){
     _nameProperty.clear(this);
@@ -55,8 +55,8 @@ class TestPropertyEventIntegration extends AttachableObject {
     var ah = new EventWatcher<EventArgs>();
 
     var obj = new TestPropertyEventIntegration();
-    obj.nameChanged.add(nh.handler);
-    obj.ageChanged.add(ah.handler);
+    obj.nameChanged.listen(nh.handler);
+    obj.ageChanged.listen(ah.handler);
 
     //
     // Initial checks
