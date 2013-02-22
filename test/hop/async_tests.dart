@@ -27,17 +27,6 @@ class AsyncTests {
   static Action0 _testSimpleAsyncTask(Func1<TaskContext,
                                      Future<bool>> taskFuture,
                                      Action1<RunResult> completeHandler) {
-    final name = 'task_name';
-    final tasks = new BaseConfig();
-    tasks.addAsync(name, taskFuture);
-    tasks.freeze();
-
-    final runner = new TestRunner(tasks, [name]);
-    final future = runner.run();
-    expect(future, isNotNull);
-
-    final onComplete = expectAsync1(completeHandler);
-
-    future.then(onComplete);
+    testTaskCompletion(new Task.async(taskFuture), completeHandler);
   }
 }

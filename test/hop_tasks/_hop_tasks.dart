@@ -22,20 +22,3 @@ void main() {
     DartAnalyzerTests.register();
   });
 }
-
-Future<RunResult> _runTask(Task task) {
-  final name = 'task_name';
-  final tasks = new BaseConfig();
-  tasks.addTask(name, task);
-  tasks.freeze();
-
-  final runner = new TestRunner(tasks, [name]);
-  return runner.run();
-}
-
-void _testSimpleAsyncTask(Task task, Action1<RunResult> completeHandler) {
-  final future = _runTask(task);
-  expect(future, isNotNull);
-
-  expectFutureComplete(future, completeHandler);
-}

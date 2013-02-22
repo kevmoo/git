@@ -15,7 +15,7 @@ class ProcessTests {
     final scriptPath = _getTestScriptPath('bash_exit_0');
     final task = createProcessTask(scriptPath);
 
-    _testSimpleAsyncTask(task, (RunResult result) {
+    testTaskCompletion(task, (RunResult result) {
       expect(result.success, isTrue);
     });
   }
@@ -24,7 +24,7 @@ class ProcessTests {
     final scriptPath = _getTestScriptPath('bash_exit_1');
     final task = createProcessTask(scriptPath);
 
-    _testSimpleAsyncTask(task, (RunResult rr) {
+    testTaskCompletion(task, (RunResult rr) {
       expect(rr, RunResult.FAIL);
     });
   }
@@ -35,7 +35,7 @@ class ProcessTests {
     final scriptPath = 'does_not_exist_right';
     final task = createProcessTask(scriptPath);
 
-    _testSimpleAsyncTask(task, (RunResult rr) {
+    testTaskCompletion(task, (RunResult rr) {
       expect(rr, RunResult.EXCEPTION);
     });
   }

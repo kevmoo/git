@@ -57,7 +57,7 @@ class GitTests {
 
               // running now should still fail...no branch created
               final task = _createBranchTask(gitDir.path.toString());
-              return _runTask(task);
+              return runTaskInTestRunner(task);
             })
             .then((RunResult rr) {
               // yup, running here should cause an exception
@@ -87,7 +87,7 @@ class GitTests {
               // now, create branch should work great
               // running now should still fail...no branch created
               final task = _createBranchTask(gitDir.path.toString());
-              return _runTask(task);
+              return runTaskInTestRunner(task);
             })
             .then((RunResult rr) {
               // yup, running here should work great
@@ -129,7 +129,7 @@ class GitTests {
               // now, create branch should work great
               // running now should still fail...no branch created
               final task = _createBranchTask(gitDir.path.toString());
-              return _runTask(task);
+              return runTaskInTestRunner(task);
             })
             .then((RunResult rr) {
               // yup, running here should work great
@@ -166,7 +166,7 @@ class GitTests {
               // now, create branch should work great
               // running now should still fail...no branch created
               final task = _createBranchTask(gitDir.path.toString());
-              return _runTask(task);
+              return runTaskInTestRunner(task);
             })
             .then((RunResult rr) {
               // yup, running here should work great
