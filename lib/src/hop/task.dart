@@ -56,19 +56,7 @@ class Task {
 
   Future<bool> run(TaskContext ctx) {
     requireArgumentNotNull(ctx, 'ctx');
-
-    Future<bool> f;
-
-    try {
-      f = _exec(ctx);
-    } catch(error, stackTrace) {
-      return new Future.immediateError(error, stackTrace);
-    }
-    if(f == null) {
-      return new Future.immediateError(_nullFutureResultEx);
-    } else {
-      return f;
-    }
+    return new Future<bool>.of(() => _exec(ctx));
   }
 
   @override
