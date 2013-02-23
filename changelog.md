@@ -2,6 +2,8 @@
 
 ## 0.15.0 *pre-release* (SDK 0.3.7.6 r18717)
 
+* [Changes Since v0.14.1](https://github.com/kevmoo/bot.dart/compare/v0.14.1...master)
+
 ## 0.14.1 - 23 Feb 2013 (SDK 0.3.7.6 r18717)
 
 * [Changes Since v0.14.0](https://github.com/kevmoo/bot.dart/compare/v0.14.0...v0.14.1)
