@@ -1,6 +1,6 @@
 ###-begin-hop-completion-###
 #
-# hop command completion script
+# Command completion script: "hop"
 #
 # Installation:
 # 
@@ -20,7 +20,7 @@ COMP_WORDBREAKS=${COMP_WORDBREAKS/@/}
 export COMP_WORDBREAKS
 
 if type complete &>/dev/null; then
-  _hop_completion () {
+  __hop_completion() {
     local si="$IFS"
     IFS=$'\n' COMPREPLY=($(COMP_CWORD="$COMP_CWORD" \
                            COMP_LINE="$COMP_LINE" \
@@ -29,9 +29,9 @@ if type complete &>/dev/null; then
                            2>/dev/null)) || return $?
     IFS="$si"
   }
-  complete -F _hop_completion hop
+  complete -F __hop_completion hop
 elif type compdef &>/dev/null; then
-  _hop_completion() {
+  __hop_completion() {
     si=$IFS
     compadd -- $(COMP_CWORD=$((CURRENT-1)) \
                  COMP_LINE=$BUFFER \
@@ -40,9 +40,9 @@ elif type compdef &>/dev/null; then
                  2>/dev/null)
     IFS=$si
   }
-  compdef _hop_completion hop
+  compdef __hop_completion hop
 elif type compctl &>/dev/null; then
-  _hop_completion () {
+  __hop_completion() {
     local cword line point words si
     read -Ac words
     read -cn cword
@@ -57,9 +57,10 @@ elif type compctl &>/dev/null; then
                        2>/dev/null)) || return $?
     IFS="$si"
   }
-  compctl -K _hop_completion hop
+  compctl -K __hop_completion hop
 fi
 
-## Generated on 2013-02-14 17:38:22.497
+## Generated 2013-02-23 18:06:17.311Z
+## By /Users/kevin/source/github/bot.dart/bin/shell_completion_generator.dart
 ###-end-hop-completion-###
 

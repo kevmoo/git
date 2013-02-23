@@ -8,11 +8,22 @@ const _binNameReplacement = '{{binName}}';
 const _funcNameReplacement = '{{funcName}}';
 const _scriptDetailsReplacement = '{{details}}';
 
-final _binNameMatch = new RegExp(r'^[a-zA-Z]((\w|-|\.)*[a-zA-Z0-9])?$');
+/*
+ * Must be at least one char.
+ * Must start with a letter or number
+ * Can contain letters, numbers, '_', '-', '.'
+ * Must end with letter or number
+ */
+final _binNameMatch = new RegExp(r'^[a-zA-Z0-9]((\w|-|\.)*[a-zA-Z0-9])?$');
 
 /*
- * Inspiration:
- * https://github.com/isaacs/{{binName}}/blob/master/lib/utils/completion.sh
+ * Format for unified bash and zsh completion script:
+ * https://npmjs.org/
+ * https://github.com/isaacs/npm/blob/master/lib/utils/completion.sh
+ *
+ * Inspiration for auto-generating completion scripts:
+ * https://github.com/mklabs/node-tabtab
+ * https://github.com/mklabs/node-tabtab/blob/master/lib/completion.sh
  */
 
 void main() {
@@ -64,10 +75,13 @@ void main() {
     .then((String templateContents) {
       templateContents = templateContents.replaceAll(_binNameReplacement, binName);
 
-      final funcName = binName.replaceAll('.', '_');
+      var funcName = binName.replaceAll('.', '_');
+      funcName = '__${funcName}_completion';
       templateContents = templateContents.replaceAll(_funcNameReplacement, funcName);
 
-      final details = 'Generated on ${new DateTime.now()}';
+      final detailLines = ['Generated ${new DateTime.now().toUtc()}', 'By ${options.script}'];
+
+      final details = detailLines.map((l) => '## $l').join('\n');
       templateContents = templateContents.replaceAll(_scriptDetailsReplacement, details);
 
       print(templateContents);
