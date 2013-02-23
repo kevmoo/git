@@ -107,10 +107,11 @@ class _Stats {
 
   factory _Stats(Iterable<num> source) {
     assert(source != null);
-    assert(!source.isEmpty);
 
     final list = source.toList()
         ..sort();
+
+    assert(!list.isEmpty);
 
     final max = list.last;
     final min = list.first;
