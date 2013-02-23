@@ -1,19 +1,4 @@
 ###-begin-{{binName}}-completion-###
-#
-# Command completion script: "{{binName}}"
-#
-# Installation:
-# 
-# Via shell config file  ~/.bashrc  (or ~/.zshrc)
-#
-#   Append the contents to config file
-#   'source' the file in the config file
-#
-# You may also have a directory on your system that is configured
-#    for completion files, such as:
-#
-#    /usr/local/etc/bash_completion.d/
-#
 
 if type complete &>/dev/null; then
   {{funcName}}() {
@@ -56,5 +41,4 @@ elif type compctl &>/dev/null; then
   compctl -K {{funcName}} {{binName}}
 fi
 
-{{details}}
 ###-end-{{binName}}-completion-###
