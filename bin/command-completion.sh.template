@@ -15,10 +15,6 @@
 #    /usr/local/etc/bash_completion.d/
 #
 
-COMP_WORDBREAKS=${COMP_WORDBREAKS/=/}
-COMP_WORDBREAKS=${COMP_WORDBREAKS/@/}
-export COMP_WORDBREAKS
-
 if type complete &>/dev/null; then
   {{funcName}}() {
     local si="$IFS"

@@ -15,10 +15,6 @@
 #    /usr/local/etc/bash_completion.d/
 #
 
-COMP_WORDBREAKS=${COMP_WORDBREAKS/=/}
-COMP_WORDBREAKS=${COMP_WORDBREAKS/@/}
-export COMP_WORDBREAKS
-
 if type complete &>/dev/null; then
   __hello_dart_completion() {
     local si="$IFS"
@@ -60,7 +56,7 @@ elif type compctl &>/dev/null; then
   compctl -K __hello_dart_completion hello.dart
 fi
 
-## Generated 2013-02-23 18:05:32.708Z
+## Generated 2013-02-23 18:12:41.235Z
 ## By /Users/kevin/source/github/bot.dart/bin/shell_completion_generator.dart
 ###-end-hello.dart-completion-###
 
