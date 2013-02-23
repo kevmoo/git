@@ -15,10 +15,6 @@
 #    /usr/local/etc/bash_completion.d/
 #
 
-COMP_WORDBREAKS=${COMP_WORDBREAKS/=/}
-COMP_WORDBREAKS=${COMP_WORDBREAKS/@/}
-export COMP_WORDBREAKS
-
 if type complete &>/dev/null; then
   __hop_completion() {
     local si="$IFS"
@@ -60,7 +56,7 @@ elif type compctl &>/dev/null; then
   compctl -K __hop_completion hop
 fi
 
-## Generated 2013-02-23 18:06:17.311Z
+## Generated 2013-02-23 18:17:01.756Z
 ## By /Users/kevin/source/github/bot.dart/bin/shell_completion_generator.dart
 ###-end-hop-completion-###
 
