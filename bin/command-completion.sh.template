@@ -1,6 +1,6 @@
 ###-begin-{{binName}}-completion-###
 #
-# {{binName}} command completion script
+# Command completion script: "{{binName}}"
 #
 # Installation:
 # 
@@ -20,7 +20,7 @@ COMP_WORDBREAKS=${COMP_WORDBREAKS/@/}
 export COMP_WORDBREAKS
 
 if type complete &>/dev/null; then
-  _{{funcName}}_completion () {
+  {{funcName}}() {
     local si="$IFS"
     IFS=$'\n' COMPREPLY=($(COMP_CWORD="$COMP_CWORD" \
                            COMP_LINE="$COMP_LINE" \
@@ -29,9 +29,9 @@ if type complete &>/dev/null; then
                            2>/dev/null)) || return $?
     IFS="$si"
   }
-  complete -F _{{funcName}}_completion {{binName}}
+  complete -F {{funcName}} {{binName}}
 elif type compdef &>/dev/null; then
-  _{{funcName}}_completion() {
+  {{funcName}}() {
     si=$IFS
     compadd -- $(COMP_CWORD=$((CURRENT-1)) \
                  COMP_LINE=$BUFFER \
@@ -40,9 +40,9 @@ elif type compdef &>/dev/null; then
                  2>/dev/null)
     IFS=$si
   }
-  compdef _{{funcName}}_completion {{binName}}
+  compdef {{funcName}} {{binName}}
 elif type compctl &>/dev/null; then
-  _{{funcName}}_completion () {
+  {{funcName}}() {
     local cword line point words si
     read -Ac words
     read -cn cword
@@ -57,8 +57,8 @@ elif type compctl &>/dev/null; then
                        2>/dev/null)) || return $?
     IFS="$si"
   }
-  compctl -K _{{funcName}}_completion {{binName}}
+  compctl -K {{funcName}} {{binName}}
 fi
 
-## {{details}}
+{{details}}
 ###-end-{{binName}}-completion-###
