@@ -2,6 +2,29 @@
 
 ## 0.15.0 *pre-release* (SDK 0.3.7.6 r18717)
 
+## 0.14.1 - 23 Feb 2013 (SDK 0.3.7.6 r18717)
+
+* [Changes Since v0.14.0](https://github.com/kevmoo/bot.dart/compare/v0.14.0...v0.14.1)
+
+### bot
+
+* Added `requiresArgumentContainsPattern`, which deprecates `requiresArgumentMatches`.
+
+### hop
+
+* Support task names that contain (but don't start with) '-'
+
+### hop_tasks
+
+* `bench` - Output all final results as Duration. Include Standard Error.
+* `dart2js` - Added `createDart2JsTask` method.
+
+### Shell Completion Script
+
+* added symlink `bin/shell-completion-generator` that points to `bin/shell_completion_generator.dart`
+* Removed export of `COMP_WORDBREAKS` in completion script. No need to mess with these values.
+* Generates script for multiple command names
+
 ## 0.14.0 - 20 Feb 2013 (SDK 0.3.7.6 r18717)
 
 * [Changes Since v0.13.1](https://github.com/kevmoo/bot.dart/compare/v0.13.1...v0.14.0)
