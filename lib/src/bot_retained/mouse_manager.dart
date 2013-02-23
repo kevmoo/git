@@ -290,8 +290,10 @@ class ThingDragStartingEventArgs extends ThingMouseEventArgs implements Cancelab
   ThingDragStartingEventArgs(Thing thing, MouseEvent source) :
     super(thing, source);
 
+  @override
   bool get isCanceled => _canceled;
 
+  @override
   void cancel() {
     assert(!isCanceled);
     _canceled = true;
