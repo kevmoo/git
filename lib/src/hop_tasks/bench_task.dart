@@ -97,13 +97,18 @@ $completed''';
 }
 
 class _Stats {
+  final int count;
   final num mean;
   final num median;
   final num max;
   final num min;
   final num standardDeviation;
+  final num standardError;
 
-  _Stats.raw(this.mean, this.median, this.max, this.min, this.standardDeviation);
+  _Stats.raw(int count, this.mean, this.median, this.max, this.min, num standardDeviation) :
+    this.count = count,
+    this.standardDeviation = standardDeviation,
+    standardError = standardDeviation / math.sqrt(count);
 
   factory _Stats(Iterable<num> source) {
     assert(source != null);
@@ -112,6 +117,8 @@ class _Stats {
         ..sort();
 
     assert(!list.isEmpty);
+
+    final count = list.length;
 
     final max = list.last;
     final min = list.first;
@@ -122,7 +129,7 @@ class _Stats {
       sum += value;
     });
 
-    final mean = sum / list.length;
+    final mean = sum / count;
 
     // variance
     // The average of the squared difference from the Mean
@@ -133,29 +140,43 @@ class _Stats {
       sumOfSquaredDiffFromMean += squareDiffFromMean;
     });
 
-    final variance = sumOfSquaredDiffFromMean / list.length;
+    final variance = sumOfSquaredDiffFromMean / count;
 
     // standardDeviation: sqrt of the variance
     final standardDeviation = math.sqrt(variance);
 
     num median = null;
     // if length is odd, take middle value
-    if(list.length % 2 == 1) {
-      final middleIndex = (list.length / 2 - 0.5).toInt();
+    if(count % 2 == 1) {
+      final middleIndex = (count / 2 - 0.5).toInt();
       median = list[middleIndex];
     } else {
-      final secondMiddle = list.length ~/ 2;
+      final secondMiddle = count ~/ 2;
       final firstMiddle = secondMiddle - 1;
       median = (list[firstMiddle] + list[secondMiddle]) / 2.0;
     }
 
-    return new _Stats.raw(mean, median, max, min, standardDeviation);
+    return new _Stats.raw(count, mean, median, max, min, standardDeviation);
   }
 
-  String toString() => '''
-Min:    $min
-Max:    $max
-Median: $median
-Mean:   $mean
-StdDev: $standardDeviation''';
+  String toString() {
+    var rows = [
+                  ['Min', min],
+                  ['Max', max],
+                  ['Media', median],
+                  ['Mean', mean],
+                  ['StdDev', standardDeviation],
+                  ['StdErr', standardError],
+                  ];
+
+    final cols = [
+                  new ColumnDefinition('Name', (a) => a[0]),
+                  new ColumnDefinition('Value', (a) {
+                    final num val = a[1];
+                    return new Duration(milliseconds: val.toInt()).toString();
+                  })
+                  ];
+
+    return Console.getTable(rows, cols).join('\n');
+  }
 }
