@@ -54,11 +54,6 @@ class _HopTestConfiguration extends unittest.Configuration {
   get autoStart => false;
 
   @override
-  void onStart() {
-     // overloading to prevent 'print' in baseclass
-  }
-
-  @override
   void logTestCaseMessage(unittest.TestCase testCase, String message) {
     final msg = '${testCase.description}\n$message';
     _context.fine(msg);
