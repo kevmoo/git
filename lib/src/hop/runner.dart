@@ -50,7 +50,7 @@ class Runner {
     final Level logLevel = _getLogLevels()
         .singleMatching((Level l) => l.name.toLowerCase() == logLevelOption);
 
-    return new RootTaskContext(colorEnabled: colorEnabled,
+    return new RootTaskContext(_state.doPrint, colorEnabled: colorEnabled,
         prefixEnabled: preFixEnabled, minLogLevel: logLevel);
   }
 

@@ -1,16 +1,21 @@
 part of hop;
 
+typedef void Printer(Object value);
+
 class RootTaskContext {
+  final Printer _printer;
   final bool _enableColor;
   final bool _prefixEnabled;
   final Level _minLogLevel;
 
-  RootTaskContext({bool colorEnabled:true,
+  RootTaskContext(Printer printer, {bool colorEnabled:true,
     bool prefixEnabled: true,
     Level minLogLevel: Level.ALL}) :
+    _printer = printer,
     _enableColor = colorEnabled,
     _prefixEnabled = prefixEnabled,
     _minLogLevel = minLogLevel {
+      requireArgumentNotNull(printer, 'printer');
       requireArgumentNotNull(colorEnabled, 'colorEnabled');
       requireArgumentNotNull(prefixEnabled, 'prefixEnabled');
       requireArgumentNotNull(minLogLevel, 'minLogLevel');
@@ -28,7 +33,7 @@ class RootTaskContext {
       message = color.wrap(message);
     }
 
-    printCore(message);
+    _printer(message);
   }
 
   void _subTaskLog(_SubTaskContext subTask, Level logLevel, String message) {
@@ -61,20 +66,15 @@ class RootTaskContext {
         for(final l in lines) {
           if(first) {
             first = false;
-            printCore(title.concat(l));
+            _printer(title.concat(l));
           } else {
-            printCore(indent.concat(l));
+            _printer(indent.concat(l));
           }
         }
       } else {
-        printCore(message);
+        _printer(message);
       }
     }
-  }
-
-  @protected
-  void printCore(String message) {
-    print(message);
   }
 
   AnsiColor _getColor(Level logLevel) {

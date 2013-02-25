@@ -15,7 +15,6 @@ part 'async_tests.dart';
 part 'integration_tests.dart';
 part 'sync_tests.dart';
 part 'task_list_tests.dart';
-part 'test_runner.dart';
 
 void main() {
   group('hop', () {
@@ -93,7 +92,7 @@ Future<RunResult> runTaskInTestRunner(Task task, {List<String> extraArgs}) {
     args.addAll(extraArgs);
   }
 
-  final runner = new TestRunner(tasks, args);
+  final runner = new Runner(tasks, args);
   return runner.run();
 }
 
