@@ -22,37 +22,25 @@ class IoHelpers {
   }
 
   static Future<Map> _mapContents(Directory dir) {
-    final completer = new Completer<Map>();
-    final map = new Map<String, dynamic>();
 
+    return dir.list()
+        .toList()
+        .then((List<FileSystemEntity> entities) {
+          final map = new Map<String, dynamic>();
+          for(final e in entities) {
+            if(e is File) {
+              final file = e as File;
+              final name = new Path(file.name).filename;
+              map[name] = file.readAsStringSync();
+            } else {
+              final dir = e as Directory;
+              final name = new Path(dir.path).filename;
+              map[name] = _dirPlaceHolder;
+            }
+          }
 
-    final lister = dir.list();
-    lister.onDir = (String dirPath) {
-      final name = new Path(dirPath).filename;
-      assert(!map.containsKey(name));
-      map[name] = _dirPlaceHolder;
-    };
-
-    lister.onDone = (bool completed) {
-      if(completed) {
-        completer.complete(map);
-      } else {
-        completer.completeError('done, but not completed...weird...');
-      }
-    };
-
-    lister.onError = (e) {
-      completer.completeError(e);
-    };
-
-    lister.onFile = (String filePath) {
-      final path = new Path(filePath);
-      final name = path.filename;
-      final file = new File.fromPath(path);
-      map[name] = file.readAsStringSync();
-    };
-
-    return completer.future;
+          return map;
+        });
   }
 
   static Future<bool> _verifyContents(Directory dir, Map<String, dynamic> content) {

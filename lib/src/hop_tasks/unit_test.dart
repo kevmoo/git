@@ -42,20 +42,39 @@ void _unittestParserConfig(ArgParser parser) {
       help: "Just list the test case names. Don't run them. Any filter is still applied.");
 }
 
-class _HopTestConfiguration extends unittest.Configuration {
+class _HopTestConfiguration implements unittest.Configuration {
   final Completer<bool> _completer;
   final TaskContext _context;
+
+  unittest.TestCase _currentTestCase;
 
   _HopTestConfiguration(this._context) : this._completer = new Completer<bool>();
 
   Future<bool> get future => _completer.future;
 
   @override
-  get autoStart => false;
+  unittest.TestCase get currentTestCase => _currentTestCase;
+
+  @override
+  String get name => 'hop_tasks.unittest';
+
+  @override
+  bool get autoStart => false;
+
+  @override
+  void onInit() {
+    assert(_currentTestCase == null);
+  }
 
   @override
   void onStart() {
-     // overloading to prevent 'print' in baseclass
+    assert(_currentTestCase == null);
+  }
+
+  @override
+  void onTestStart(unittest.TestCase testCase) {
+    assert(_currentTestCase == null);
+    _currentTestCase = testCase;
   }
 
   @override
@@ -65,8 +84,14 @@ class _HopTestConfiguration extends unittest.Configuration {
   }
 
   @override
+  void logMessage(String message) {
+    _context.fine(message);
+  }
+
+  @override
   void onTestResult(unittest.TestCase testCase) {
-    super.onTestResult(testCase);
+    assert(testCase == _currentTestCase);
+    _currentTestCase = null;
 
     // result should not be null here
     assert(testCase.result != null);
@@ -92,7 +117,29 @@ ${testCase.stackTrace}''');
     } else {
       _context.severe(message);
     }
+  }
+
+  @override
+  void onDone(bool success) {
     _completer.complete(success);
+  }
+
+  @override
+  @deprecated
+  void handleExternalError(error, String message) {
+    // should never occur in the context of hop runner
+    if(currentTestCase == null) {
+      _context.severe('$message\nCaught $error');
+      _context.fail('An external error occured in the test suite outside of a Unit Test');
+    } else {
+      currentTestCase.error('An external error occured in the test suite during ${currentTestCase.description}\n$message\nCaught $error');
+    }
+  }
+
+  @override
+  @deprecated
+  void notifyController(String message) {
+    // TODO: this should be removed. Never used.
   }
 }
 
