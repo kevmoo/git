@@ -31,7 +31,6 @@ Future<bool> startProcess(TaskLogger ctx, String command,
 
 Future<int> pipeProcess(Process process,
     {Action1<String> stdOutWriter, Action1<String> stdErrWriter}) {
-  final completer = new Completer<int>();
 
   bool finished = false;
 
@@ -47,19 +46,17 @@ Future<int> pipeProcess(Process process,
   }
 
   if(stdOutWriter != null) {
-    process.stdout.onData = () {
-      final data = process.stdout.read();
+    process.stdout.listen((List<int> data) {
       final str = new String.fromCharCodes(data).trim();
 
       if(validateNotFinished('stdout - $str')) {
         stdOutWriter(str);
       }
-    };
+    });
   }
 
   if(stdErrWriter != null) {
-    process.stderr.onData = () {
-      final data = process.stderr.read();
+    process.stderr.listen((List<int> data) {
       assert(data != null);
       final str = new String.fromCharCodes(data).trim();
 
@@ -67,15 +64,12 @@ Future<int> pipeProcess(Process process,
         stdErrWriter(str);
       }
 
-    };
+    });
   }
 
-  process.onExit = (int exitCode){
-    if(validateNotFinished('onExit')) {
-      finished = true;
-      completer.complete(exitCode);
-    }
-  };
-
-  return completer.future;
+  return process.exitCode
+      .whenComplete(() {
+        validateNotFinished('onExit');
+        finished = true;
+      });
 }

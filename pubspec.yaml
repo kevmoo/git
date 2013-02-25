@@ -4,10 +4,10 @@ author: Kevin Moore <kevin@thinkpixellab.com>
 description: A collection of (mostly) general libraries to make working with Dart more productive.
 homepage: https://github.com/kevmoo/bot.dart
 environment:
-  sdk: '>=0.3.7+6.r18717'
+  sdk: '>=0.4.0+0.r18915'
 dependencies:
-  unittest: '>=0.3.7+6'
-  args: '>=0.3.7+6'
-  browser: '>=0.3.7+6'
-  logging: '>=0.3.7+6'
-  meta: '>=0.3.7+6'
+  unittest: '>=0.4.0'
+  args: '>=0.4.0'
+  browser: '>=0.4.0'
+  logging: '>=0.4.0'
+  meta: '>=0.4.0'
