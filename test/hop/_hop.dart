@@ -20,7 +20,7 @@ part 'test_runner.dart';
 Future<RunResult> runTaskInTestRunner(Task task, {List<String> extraArgs}) {
   const _testTaskName = 'test-task';
 
-  final tasks = new HopConfig();
+  final tasks = _getTestConfig();
   tasks.addTask(_testTaskName, task);
   tasks.freeze();
 
@@ -39,6 +39,22 @@ void testTaskCompletion(Task task, Action1<RunResult> completeHandler,
   expect(future, isNotNull);
 
   expectFutureComplete(future, completeHandler);
+}
+
+HopConfig _getTestConfig() => new _TestHopConfig();
+
+class _TestHopConfig extends HopConfig {
+
+  @override
+  void doPrint(Object value) {
+    String msg;
+    try {
+      msg = value.toString();
+    } catch (ex, stack) {
+      msg = Error.safeToString(value);
+    }
+    (new Logger('hop_test_context')).info(msg);
+  }
 }
 
 void main() {

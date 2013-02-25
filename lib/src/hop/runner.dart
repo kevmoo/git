@@ -71,9 +71,9 @@ class Runner {
     try {
       args = tryArgsCompletion(parser);
     } on FormatException catch(ex, stack) {
-      print("There was an error parsing the provided arguments");
-      print(ex.message);
-      print('');
+      config.doPrint("There was an error parsing the provided arguments");
+      config.doPrint(ex.message);
+      config.doPrint('');
       _printHelp(config);
 
       _libLogger.severe(ex.message);

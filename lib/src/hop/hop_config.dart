@@ -68,4 +68,11 @@ class HopConfig {
   }
 
   bool get isFrozen => _sortedTaskNames != null;
+
+  /**
+   * Defaults to [print] method from `dart:io`
+   */
+  void doPrint(Object value) {
+    print(value);
+  }
 }
