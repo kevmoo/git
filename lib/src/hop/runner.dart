@@ -3,9 +3,9 @@ part of hop;
 class Runner {
   final ArgParser _parser;
   ArgResults _args;
-  final BaseConfig _state;
+  final HopConfig _state;
 
-  Runner(BaseConfig config, Iterable<String> args) :
+  Runner(HopConfig config, Iterable<String> args) :
     this._state = config,
     this._parser = _getParser(config) {
     _args = _parser.parse(args);
@@ -62,7 +62,7 @@ class Runner {
    *
    * [runCore] should be the last method you call in an application.
    */
-  static void runCore(BaseConfig config) {
+  static void runCore(HopConfig config) {
     final options = new Options();
 
     final parser = _getParser(config);

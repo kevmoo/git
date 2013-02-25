@@ -20,7 +20,7 @@ part 'test_runner.dart';
 Future<RunResult> runTaskInTestRunner(Task task, {List<String> extraArgs}) {
   const _testTaskName = 'test-task';
 
-  final tasks = new BaseConfig();
+  final tasks = new HopConfig();
   tasks.addTask(_testTaskName, task);
   tasks.freeze();
 

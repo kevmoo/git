@@ -49,7 +49,7 @@ class SyncTests {
   }
 
   static void _testBadParam() {
-    final tasks = new BaseConfig();
+    final tasks = new HopConfig();
     tasks.addSync('good', (ctx) => true);
     tasks.freeze();
 
@@ -66,7 +66,7 @@ class SyncTests {
   }
 
   static void _testNoParam() {
-    final tasks = new BaseConfig();
+    final tasks = new HopConfig();
     tasks.addSync('good', (ctx) => true);
     tasks.freeze();
 
@@ -83,7 +83,7 @@ class SyncTests {
   }
 
   static void _testNoTasks() {
-    final tasks = new BaseConfig();
+    final tasks = new HopConfig();
     tasks.freeze();
 
     final runner = new TestRunner(tasks, []);

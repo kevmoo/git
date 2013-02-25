@@ -26,7 +26,7 @@ Task getHelpTask() {
   extendedArgs: [new TaskArgument('task-name')]);
 }
 
-void _printHelpForTask(BaseConfig config, String taskName) {
+void _printHelpForTask(HopConfig config, String taskName) {
   final task = config._getTask(taskName);
   assert(task != null);
 
@@ -45,7 +45,7 @@ void _printHelpForTask(BaseConfig config, String taskName) {
   _printHopArgsHelp(config);
 }
 
-void _helpParserConfig(BaseConfig config, ArgParser parser) {
+void _helpParserConfig(HopConfig config, ArgParser parser) {
   config.requireFrozen();
 
   for(final taskName in config.taskNames) {
@@ -53,7 +53,7 @@ void _helpParserConfig(BaseConfig config, ArgParser parser) {
   }
 }
 
-void _printHelp(BaseConfig config) {
+void _printHelp(HopConfig config) {
   config.requireFrozen();
   _printUsage();
   print('Tasks:');
@@ -72,7 +72,7 @@ void _printUsage({bool showOptions: true, String taskName: '<task>', String exte
   print('');
 }
 
-void _printHopArgsHelp(BaseConfig config) {
+void _printHopArgsHelp(HopConfig config) {
   final parser = _getParser(config);
 
   print('Hop options:');
@@ -86,7 +86,7 @@ String _indent(String input) {
       .join(('\n'));
 }
 
-void _printTaskTable(BaseConfig config) {
+void _printTaskTable(HopConfig config) {
   config.requireFrozen();
   final columns = [
                    new ColumnDefinition('name', (name) => '  '.concat(name)),
