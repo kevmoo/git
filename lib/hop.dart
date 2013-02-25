@@ -8,9 +8,9 @@ import 'package:bot/bot_io.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 
-part 'src/hop/base_config.dart';
 part 'src/hop/console_context.dart';
 part 'src/hop/help.dart';
+part 'src/hop/hop_config.dart';
 part 'src/hop/root_task_context.dart';
 part 'src/hop/run_result.dart';
 part 'src/hop/runner.dart';
@@ -20,7 +20,7 @@ part 'src/hop/task_context.dart';
 part 'src/hop/task_fail_error.dart';
 part 'src/hop/task_logger.dart';
 
-final _sharedConfig = new BaseConfig();
+final _sharedConfig = new HopConfig();
 
 final _libLogger = new Logger('hop');
 
@@ -52,7 +52,7 @@ const String _colorFlag = 'color';
 const String _prefixFlag = 'prefix';
 const String _logLevelOption = 'log-level';
 
-ArgParser _getParser(BaseConfig config) {
+ArgParser _getParser(HopConfig config) {
   assert(config.isFrozen);
 
   final parser = new ArgParser();

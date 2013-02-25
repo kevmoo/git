@@ -3,9 +3,9 @@ part of hop;
 class Runner {
   final ArgParser _parser;
   ArgResults _args;
-  final BaseConfig _state;
+  final HopConfig _state;
 
-  Runner(BaseConfig config, Iterable<String> args) :
+  Runner(HopConfig config, Iterable<String> args) :
     this._state = config,
     this._parser = _getParser(config) {
     _args = _parser.parse(args);
@@ -62,7 +62,7 @@ class Runner {
    *
    * [runCore] should be the last method you call in an application.
    */
-  static void runCore(BaseConfig config) {
+  static void runCore(HopConfig config) {
     final options = new Options();
 
     final parser = _getParser(config);
@@ -71,9 +71,9 @@ class Runner {
     try {
       args = tryArgsCompletion(parser);
     } on FormatException catch(ex, stack) {
-      print("There was an error parsing the provided arguments");
-      print(ex.message);
-      print('');
+      config.doPrint("There was an error parsing the provided arguments");
+      config.doPrint(ex.message);
+      config.doPrint('');
       _printHelp(config);
 
       _libLogger.severe(ex.message);

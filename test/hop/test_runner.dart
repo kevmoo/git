@@ -2,7 +2,7 @@ part of test_hop;
 
 class TestRunner extends Runner {
 
-  TestRunner(BaseConfig state, List<String> arguments) :
+  TestRunner(HopConfig state, List<String> arguments) :
     super(state, arguments);
 
   @protected

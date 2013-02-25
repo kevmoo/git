@@ -1,15 +1,21 @@
 part of hop;
 
-// TODO: really need to rename this to be more helpful
-//       base of what?
+/**
+ * Deprecated in favor of [HopConfig].
+ *
+ * Just a name change.
+ */
+@deprecated
+class BaseConfig extends HopConfig {
+}
 
-class BaseConfig {
+class HopConfig {
   static final RegExp _validNameRegExp = new RegExp(r'^[a-z]([a-z0-9_\-]*[a-z0-9])?$');
   static const _reservedTasks = const[COMPLETION_COMMAND_NAME];
   final Map<String, Task> _tasks = new Map();
   ReadOnlyCollection<String> _sortedTaskNames;
 
-  BaseConfig();
+  HopConfig();
 
   /// Can only be accessed when frozen
   /// Always sorted
@@ -62,4 +68,11 @@ class BaseConfig {
   }
 
   bool get isFrozen => _sortedTaskNames != null;
+
+  /**
+   * Defaults to [print] method from `dart:io`
+   */
+  void doPrint(Object value) {
+    print(value);
+  }
 }

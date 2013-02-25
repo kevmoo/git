@@ -26,26 +26,26 @@ Task getHelpTask() {
   extendedArgs: [new TaskArgument('task-name')]);
 }
 
-void _printHelpForTask(BaseConfig config, String taskName) {
+void _printHelpForTask(HopConfig config, String taskName) {
   final task = config._getTask(taskName);
   assert(task != null);
 
   final usage = task.getUsage();
 
-  _printUsage(showOptions: !usage.isEmpty, taskName: taskName, extendedArgsUsage: task.getExtendedArgsUsage());
-  print(_indent(task.description));
-  print('');
+  _printUsage(config, showOptions: !usage.isEmpty, taskName: taskName, extendedArgsUsage: task.getExtendedArgsUsage());
+  config.doPrint(_indent(task.description));
+  config.doPrint('');
 
   if(!usage.isEmpty) {
-    print('Task options:');
-    print(_indent(task.getUsage()));
-    print('');
+    config.doPrint('Task options:');
+    config.doPrint(_indent(task.getUsage()));
+    config.doPrint('');
   }
 
   _printHopArgsHelp(config);
 }
 
-void _helpParserConfig(BaseConfig config, ArgParser parser) {
+void _helpParserConfig(HopConfig config, ArgParser parser) {
   config.requireFrozen();
 
   for(final taskName in config.taskNames) {
@@ -53,31 +53,31 @@ void _helpParserConfig(BaseConfig config, ArgParser parser) {
   }
 }
 
-void _printHelp(BaseConfig config) {
+void _printHelp(HopConfig config) {
   config.requireFrozen();
-  _printUsage();
-  print('Tasks:');
+  _printUsage(config);
+  config.doPrint('Tasks:');
   _printTaskTable(config);
 
-  print('');
+  config.doPrint('');
   _printHopArgsHelp(config);
 
-  print("See '$_hopCmdName <task>' for more information on a specific command.");
+  config.doPrint("See '$_hopCmdName <task>' for more information on a specific command.");
 }
 
-void _printUsage({bool showOptions: true, String taskName: '<task>', String extendedArgsUsage: '[--] [<task-args>]'}) {
+void _printUsage(HopConfig config, {bool showOptions: true, String taskName: '<task>', String extendedArgsUsage: '[--] [<task-args>]'}) {
   final taskOptions = showOptions ? '[<task-options>] ' : '';
 
-  print('usage: $_hopCmdName [<hop-options>] $taskName $taskOptions$extendedArgsUsage'.trim());
-  print('');
+  config.doPrint('usage: $_hopCmdName [<hop-options>] $taskName $taskOptions$extendedArgsUsage'.trim());
+  config.doPrint('');
 }
 
-void _printHopArgsHelp(BaseConfig config) {
+void _printHopArgsHelp(HopConfig config) {
   final parser = _getParser(config);
 
-  print('Hop options:');
-  print(_indent(parser.getUsage()));
-  print('');
+  config.doPrint('Hop options:');
+  config.doPrint(_indent(parser.getUsage()));
+  config.doPrint('');
 }
 
 String _indent(String input) {
@@ -86,7 +86,7 @@ String _indent(String input) {
       .join(('\n'));
 }
 
-void _printTaskTable(BaseConfig config) {
+void _printTaskTable(HopConfig config) {
   config.requireFrozen();
   final columns = [
                    new ColumnDefinition('name', (name) => '  '.concat(name)),
@@ -97,6 +97,6 @@ void _printTaskTable(BaseConfig config) {
                    ];
   final rows = Console.getTable(config.taskNames, columns);
   for(final r in rows) {
-    print('  '.concat(r));
+    config.doPrint('  '.concat(r));
   }
 }
