@@ -46,27 +46,26 @@ class RootTaskContext {
     assert(!titleSections.isEmpty);
     assert(titleSections.every((s) => s != null && !s.isEmpty));
 
+    final title = titleSections.join(' - ').concat(': ');
+
     if(logLevel >= _minLogLevel) {
       if(_prefixEnabled) {
         final color = _getColor(logLevel);
 
         var indent = '';
-        var title = titleSections.join(' - ').concat(': ');
 
         while(indent.length < title.length) {
           indent =  indent.concat(' ');
         }
 
-        if(color != null) {
-          title = color.wrap(title);
-        }
+        final coloredTitle = (color != null) ? color.wrap(title) : title;
 
         final lines = Util.splitLines(message);
         var first = true;
         for(final l in lines) {
           if(first) {
             first = false;
-            _printer(title.concat(l));
+            _printer(coloredTitle.concat(l));
           } else {
             _printer(indent.concat(l));
           }
@@ -75,6 +74,8 @@ class RootTaskContext {
         _printer(message);
       }
     }
+
+    _libLogger.log(logLevel, "$title $message");
   }
 
   AnsiColor _getColor(Level logLevel) {
