@@ -31,6 +31,7 @@ void enableScriptLogListener() {
     _scriptLogListenerPath = new Path(script).toNativePath().concat('.log');
 
     final logging.Logger rootLogger = logging.Logger.root;
+    rootLogger.level = logging.Level.ALL;
 
     rootLogger.on.record.add(_doLog);
 
@@ -44,7 +45,7 @@ String _scriptLogListenerPath;
 
 void _doLog(logging.LogRecord record) {
 
-  final msg = '${record.time}\t${record.loggerName}\t${record.message}';
+  final msg = '${record.time}\t${record.level}\t${record.loggerName}\t${record.message}';
 
   final logFile = new File(_scriptLogListenerPath);
 
