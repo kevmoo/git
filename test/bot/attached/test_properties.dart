@@ -49,7 +49,7 @@ class TestProperties extends AttachableObject {
         expect(testProperty.getCore(object), equals(Property.Undefined));
         expect(testProperty.isSet(object), isFalse);
 
-        var h1 = new EventWatcher<Property>();
+        var h1 = new EventWatcher<PropertyChangedEventArgs>();
 
         // set handler 1 on prop
         var g1 = testProperty.getStream(object).listen(h1.handler);
@@ -66,7 +66,7 @@ class TestProperties extends AttachableObject {
         expect(h1.eventCount, equals(2));
 
         // define handler 2 + set handler
-        var h2 = new EventWatcher<Property>();
+        var h2 = new EventWatcher<PropertyChangedEventArgs>();
 
         // set handler 1 on prop
         var g2 = testProperty.getStream(object).listen(h2.handler);
@@ -117,7 +117,7 @@ class TestProperties extends AttachableObject {
   }
 
   static void testFactories(Property<int> prop, int setValue, int propFactoryValue){
-    var wodWatcher = new EventWatcher<Property>();
+    var wodWatcher = new EventWatcher<PropertyChangedEventArgs>();
 
     var object = new TestProperties();
 

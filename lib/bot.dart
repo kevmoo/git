@@ -17,6 +17,7 @@ part 'src/bot/attached/attachable.dart';
 part 'src/bot/attached/attachable_object.dart';
 part 'src/bot/attached/attached_event.dart';
 part 'src/bot/attached/property.dart';
+part 'src/bot/attached/property_changed_event_args.dart';
 
 part 'src/bot/cloneable.dart';
 

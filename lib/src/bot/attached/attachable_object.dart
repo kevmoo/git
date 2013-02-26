@@ -53,7 +53,7 @@ class AttachableObject extends DisposableImpl {
     validateNotDisposed();
     assert(!identical(value, Property.Undefined));
     _propertyValues[key] = value;
-    _fireChange(key);
+    _fireChange(key, value, false);
   }
 
   bool _isSet(Property key){
@@ -68,7 +68,7 @@ class AttachableObject extends DisposableImpl {
       // NOTE: remove returns the removed item, which could be null. Bleh.
       // TODO: ponder null-ish value to avoid these double access scenarios? Maybe?
       _propertyValues.remove(key);
-      _fireChange(key);
+      _fireChange(key, null, true);
     }
   }
 
@@ -88,11 +88,16 @@ class AttachableObject extends DisposableImpl {
     }
   }
 
-  void _fireChange(Property key) {
+  void _fireChange(Property key, dynamic value, bool isClear) {
     validateNotDisposed();
     var handle = _eventHandlers[key];
     if(handle != null){
-      handle.add(key);
+      if(isClear) {
+        assert(value == null);
+        handle.add(new PropertyChangedEventArgs.valueCleared(key));
+      } else {
+        handle.add(new PropertyChangedEventArgs(key, value));
+      }
     }
   }
 }
