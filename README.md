@@ -16,17 +16,9 @@ Starting by porting bits of the [PL javascript library](https://github.com/think
 
 # Try It Now
 
-The __Dart Bag-of-Tricks__ ( __BOT__ ) is hosted on [pub.dartlang.org](http://pub.dartlang.org/packages/bot).
-Add the __BOT__ package to your `pubspec.yaml` file, selecting a version range that works with your version of the SDK. For example:
+The __Dart Bag-of-Tricks__ ( __BOT__ ) is hosted on [pub.dartlang.org](http://pub.dartlang.org/packages/bot). Add the __BOT__ package to your `pubspec.yaml` file, selecting a version range that works with your version of the SDK. _Always check the [BOT page](http://pub.dartlang.org/packages/bot) on pub to find the latest release._
 
-```yaml
-dependencies:
-  bot: ">=0.11.3"    # works with SDK v0.3.2.0 r17657
-```
-
-_Always check the [BOT page](http://pub.dartlang.org/packages/bot) on pub to find the latest release._
-
-Versions change within the range when we release small bug fixes, but it changes outside of the range on any breaking change. See the [changelog](https://github.com/kevmoo/bot.dart/blob/master/changelog.md) to find the version that works best for you.
+See the [changelog](https://github.com/kevmoo/bot.dart/blob/master/changelog.md) to find the version that works best for you.
 
 If you'd like to track bleeding edge developments, you can reference the the [GitHub repository](https://github.com/kevmoo/bot.dart) directly:
 ```yaml
