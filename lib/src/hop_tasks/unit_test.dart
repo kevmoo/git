@@ -97,7 +97,7 @@ class _HopTestConfiguration implements unittest.Configuration {
     assert(testCase.result != null);
 
     if(testCase.result == unittest.PASS) {
-      _context.info(testCase.description);
+      _context.info('${testCase.description} -- PASS');
     }
     else {
       _context.severe(
