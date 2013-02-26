@@ -64,17 +64,20 @@ class _HopTestConfiguration implements unittest.Configuration {
   @override
   void onInit() {
     assert(_currentTestCase == null);
+    _context.config('Initializing');
   }
 
   @override
   void onStart() {
     assert(_currentTestCase == null);
+    _context.config('Starting');
   }
 
   @override
   void onTestStart(unittest.TestCase testCase) {
     assert(_currentTestCase == null);
     _currentTestCase = testCase;
+    _context.config('Starting ${testCase.description}');
   }
 
   @override
