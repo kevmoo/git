@@ -2,9 +2,24 @@ part of hop;
 
 abstract class TaskLogger {
 
+  // level 300
+  void finest(String message) {
+    log(Level.FINEST, message);
+  }
+
+  // level 400
+  void finer(String message) {
+    log(Level.FINER, message);
+  }
+
   // level 500
   void fine(String message) {
     log(Level.FINE, message);
+  }
+
+  // level 700
+  void config(String message) {
+    log(Level.CONFIG, message);
   }
 
   // level 800
