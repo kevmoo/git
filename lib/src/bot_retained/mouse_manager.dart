@@ -5,7 +5,8 @@ part of bot_retained;
 //       Nothing interesting exists on the instance of CM
 
 class MouseManager {
-  static const String _autoCursor = 'auto';
+  static final Property<String> cursorProperty =
+      new Property<String>("cursor");
 
   static final Property<MouseManager> _clickManagerProperty =
       new Property<MouseManager>("_clickManager");
@@ -15,9 +16,6 @@ class MouseManager {
 
   static final Property<bool> _isDraggableProperty =
       new Property<bool>("isDraggable", false);
-
-  static final Property<String> _cursorProperty =
-      new Property<String>("_cursor");
 
   static final AttachedEvent<ThingMouseEventArgs> _clickEvent =
       new AttachedEvent<ThingMouseEventArgs>('clickEvent');
@@ -69,15 +67,15 @@ class MouseManager {
   static void setCursor(Thing thing, String value) {
     assert(thing != null);
     if(value == null) {
-      _cursorProperty.clear(thing);
+      cursorProperty.clear(thing);
     } else {
-      _cursorProperty.set(thing, value);
+      cursorProperty.set(thing, value);
     }
   }
 
   static String getCursor(Thing thing) {
     assert(thing != null);
-    return _cursorProperty.get(thing);
+    return cursorProperty.get(thing);
   }
 
   static void setClickable(Thing thing, bool value) {
@@ -130,13 +128,13 @@ class MouseManager {
         }
       }
     }
-    _updateCursor(cursor);
+    _updateStageCursor(cursor);
   }
 
   void _mouseOut(MouseEvent e) {
     _updateMouseLocation(null);
     _mouseOutEvent.fireEvent(_stage, EventArgs.empty);
-    _updateCursor(null);
+    _updateStageCursor(null);
   }
 
   void _mouseUp(MouseEvent e) {
@@ -182,12 +180,8 @@ class MouseManager {
     }
   }
 
-  void _updateCursor(String cursor) {
-    if(cursor == null) {
-      cursor = _autoCursor;
-    }
-    final canvas = _stage._canvas;
-    canvas.style.cursor = cursor;
+  void _updateStageCursor(String cursor) {
+    cursorProperty.set(_stage, cursor);
   }
 
   List<Thing> _updateMouseLocation(Coordinate value) {
