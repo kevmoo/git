@@ -8,9 +8,9 @@ import 'package:html5lib/dom.dart';
 import 'package:html5lib/parser.dart';
 import 'package:html5lib/dom_parsing.dart';
 
-const _startPath = r'example/bot_retained/';
-const _demoFinder = r'**/*_demo.html';
-final _exampleFile = _startPath.concat('index.html');
+const _startPath = r'example/bot_retained';
+const _demoFinder = r'/**/*_demo.html';
+final _exampleFile = _startPath.concat('/index.html');
 
 Task getUpdateExampleHtmlTask() {
   return new Task.async((ctx) {
@@ -25,7 +25,7 @@ Task getUpdateExampleHtmlTask() {
           ctx.info(msg);
           return true;
         });
-  });
+  }, description: 'Updated the sample file at $_exampleFile');
 }
 
 Future<bool> _transform(List<String> samples) {
@@ -45,8 +45,6 @@ void _tweakDocument(Document doc, List<String> samples) {
   final sampleList = doc.queryAll('ul')
       .where((Element e) => e.id == 'demo-list')
       .single;
-
-  print(sampleList.outerHtml);
 
   sampleList.children.clear();
 
@@ -91,9 +89,10 @@ Future<List<String>> _getExampleFiles() {
             .map((path) {
               assert(path.startsWith(_startPath));
               final lastSlash = path.lastIndexOf('/');
-              final name = path.substring(_startPath.length, lastSlash);
+              final name = path.substring(_startPath.length+1, lastSlash);
               // this could be a lot prettier...but...eh
-              assert(path == "$_startPath$name/${name}_demo.html");
+              final targetPath = "$_startPath/$name/${name}_demo.html";
+              assert(path == targetPath);
               return name;
             })
             .toList();
