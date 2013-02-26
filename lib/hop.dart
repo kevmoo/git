@@ -71,8 +71,10 @@ ArgParser _getParser(HopConfig config) {
       .map((Level l) => l.name.toLowerCase())
       .toList();
 
+  final String defaultLogLevel = logLevelAllowed.singleMatching((v) => v == config.logLevel.name.toLowerCase());
+
   parser.addOption(_logLevelOption, allowed: logLevelAllowed,
-      defaultsTo: logLevelAllowed.first,
+      defaultsTo: defaultLogLevel,
       help: 'The log level at which task output is printed to the shell');
 
 

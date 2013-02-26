@@ -13,9 +13,20 @@ class HopConfig {
   static final RegExp _validNameRegExp = new RegExp(r'^[a-z]([a-z0-9_\-]*[a-z0-9])?$');
   static const _reservedTasks = const[COMPLETION_COMMAND_NAME];
   final Map<String, Task> _tasks = new Map();
+
+  Level _logLevel = Level.INFO;
+
   ReadOnlyCollection<String> _sortedTaskNames;
 
   HopConfig();
+
+  Level get logLevel => _logLevel;
+
+  void set logLevel(Level value) {
+    require(!isFrozen, "Cannot change logLevel. Frozen.");
+    requireArgumentNotNull(value, 'value');
+    _logLevel = value;
+  }
 
   /// Can only be accessed when frozen
   /// Always sorted
