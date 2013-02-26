@@ -2,7 +2,22 @@
 
 ## 0.15.0 *pre-release* (SDK 0.3.7.6 r18717)
 
-* [Changes Since v0.14.1](https://github.com/kevmoo/bot.dart/compare/v0.14.1...master)
+* [Changes Since v0.14.2](https://github.com/kevmoo/bot.dart/compare/v0.14.2...master)
+
+## 0.14.2 - 25 Feb 2013 (SDK 0.4.0.0 r18915)
+
+* [Changes Since v0.14.1](https://github.com/kevmoo/bot.dart/compare/v0.14.1...v0.14.2)
+* Bumped minimum Dart SDK version to __0.4.0.0 r18915__
+* Updated core dart packages to `>= 0.4.0+0`
+
+### hop
+
+* Renamed `BaseConfig` to `HopConfig`. `BaseConfig` is new deprecated.
+* `HopConfig` learned `doPrint`. Unifying all printing within hop to allow better redirection.
+
+### hop_tasks
+
+* The unit test task logic has a new, cleaner `Configuration` class.
 
 ## 0.14.1 - 23 Feb 2013 (SDK 0.3.7.6 r18717)
 
