@@ -7,7 +7,7 @@ import 'package:bot/bot_io.dart';
 import 'package:args/args.dart';
 import 'package:logging/logging.dart' as logging;
 
-import 'completion_args.dart';
+import '../../../test/bot_io/completion_tests_args.dart';
 
 void main() {
   /*
