@@ -34,6 +34,7 @@ Future<bool> compileDocs(TaskContext ctx, String targetBranch,
 
   GitDir gitDir;
   List<String> libs;
+  bool isClean;
 
   return GitDir.fromExisting(currentWorkingDir)
       .then((GitDir value) {
@@ -41,7 +42,8 @@ Future<bool> compileDocs(TaskContext ctx, String targetBranch,
 
         return gitDir.isWorkingTreeClean();
       })
-      .then((bool isClean) {
+      .then((bool value) {
+        isClean = value;
         if(!allowDirty && !isClean) {
           ctx.fail('Working tree is dirty. Cannot generate docs.');
         }
@@ -52,7 +54,7 @@ Future<bool> compileDocs(TaskContext ctx, String targetBranch,
         assert(value != null);
         libs = value;
 
-        return _getCommitMessageFuture(gitDir);
+        return _getCommitMessageFuture(gitDir, isClean);
       })
       .then((String commitMessage) {
 
@@ -76,13 +78,19 @@ void _dartDocParserConfig(ArgParser parser) {
   parser.addFlag(_allowDirtyArg, abbr: 'd', help: 'Allow a dirty tree to run', defaultsTo: false);
 }
 
-Future<String> _getCommitMessageFuture(GitDir gitDir) {
+Future<String> _getCommitMessageFuture(GitDir gitDir, bool isClean) {
   return gitDir.getCurrentBranch()
     .then((BranchReference currentBranchRef) {
 
       final abbrevSha = currentBranchRef.sha.substring(0, 7);
 
-      return "Docs generated for ${currentBranchRef.branchName} at ${abbrevSha}";
+      var msg = "Docs generated for ${currentBranchRef.branchName} at ${abbrevSha}";
+
+      if(!isClean) {
+        msg = msg.concat(' (dirty)');
+      }
+
+      return msg;
     });
 }
 
