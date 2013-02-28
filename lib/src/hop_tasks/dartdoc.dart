@@ -5,25 +5,54 @@ part of hop_tasks;
 const _allowDirtyArg = 'allow-dirty';
 
 /**
+ * [targetBranch] the Git branch that will contain the generated docs. If the
+ * branch doesn't exist, it will be created. Default: `gh-pages`
+ *
+ * [packageDir] the package directory for the current project. Default: `packages/`
+ *
  * [delayedLibraryList] a [List<String>] mapping to paths to libraries or some
  * combinations of [Future] or [Function] values that return a [List<String>].
  */
-Task getCompileDocsFunc(String targetBranch, String packageDir,
-                        dynamic delayedLibraryList,
-                        {Iterable<String> excludeLibs, bool linkApi: false}) {
-  return new Task.async((ctx) => compileDocs(ctx, targetBranch, delayedLibraryList,
-      packageDir, excludeLibs: excludeLibs, linkApi: linkApi),
-      description: 'Generate documentation for the provided libraries.',
-      config: _dartDocParserConfig);
+Task createDartDocTask(dynamic delayedLibraryList, {
+  String targetBranch: 'gh-pages',
+  String packageDir: 'packages/',
+  Iterable<String> excludeLibs,
+  bool linkApi: false}) {
+  return new Task.async((ctx) {
+    return _compileDocs(ctx, targetBranch, delayedLibraryList, packageDir,
+        excludeLibs, linkApi);
+  },
+  description: 'Generate documentation for the provided libraries.',
+  config: _dartDocParserConfig);
 }
 
 /**
- * [delayedLibraryList] a [List<String>] mapping to paths to libraries or some
- * combinations of [Future] or [Function] values that return a [List<String>].
+ * This method is deprecated. Use [createDartDocTask] instead.
  */
+@deprecated
+Task getCompileDocsFunc(String targetBranch, String packageDir,
+                        dynamic delayedLibraryList,
+                        {Iterable<String> excludeLibs, bool linkApi: false}) {
+  return createDartDocTask(delayedLibraryList,
+      targetBranch: targetBranch,
+      packageDir: packageDir,
+      excludeLibs:excludeLibs,
+      linkApi:linkApi);
+}
+
+/**
+ * This method is deprecated. Use [createDartDocTask] instead.
+ */
+@deprecated
 Future<bool> compileDocs(TaskContext ctx, String targetBranch,
     dynamic delayedLibraryList, String packageDir,
     {Iterable<String> excludeLibs, bool linkApi: false}) {
+  return _compileDocs(ctx, targetBranch, delayedLibraryList, packageDir, excludeLibs, linkApi);
+}
+
+Future<bool> _compileDocs(TaskContext ctx, String targetBranch,
+    dynamic delayedLibraryList, String packageDir,
+    Iterable<String> excludeLibs, bool linkApi) {
 
   final excludeList = excludeLibs == null ? [] : excludeLibs.toList();
 

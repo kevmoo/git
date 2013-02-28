@@ -17,8 +17,7 @@ void main() {
 
   addTask('test', createUnitTestTask(test_console.testCore));
 
-  addTask('docs', getCompileDocsFunc('gh-pages', 'packages/', _getLibs,
-      linkApi: true));
+  addTask('docs', createDartDocTask(_getLibs, linkApi: true));
 
   //
   // Analyzer
