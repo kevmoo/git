@@ -1,7 +1,5 @@
 part of hop_tasks;
 
-// TODO: add post-build options to pretty-up the docs
-
 const _allowDirtyArg = 'allow-dirty';
 const _targetBranchArg = 'target-branch';
 
@@ -13,12 +11,18 @@ const _targetBranchArg = 'target-branch';
  *
  * [delayedLibraryList] a [List<String>] mapping to paths to libraries or some
  * combinations of [Future] or [Function] values that return a [List<String>].
+ *
+ * [postBuild] A [Function] to call before content is committed. It has the
+ * signature `Future postBuild(TaskLogger logger, String tempDocPath)`. Use this
+ * if you want to modify the doc output.
  */
 Task createDartDocTask(dynamic delayedLibraryList, {
   String targetBranch: 'gh-pages',
   String packageDir: 'packages/',
   Iterable<String> excludeLibs,
-  bool linkApi: false}) {
+  bool linkApi: false,
+  Func2<TaskContext, String, Future> postBuild
+  }) {
   requireArgumentNotNull(targetBranch, 'targetBranch');
   requireArgumentNotNull(packageDir, 'packageDir');
 
@@ -26,7 +30,7 @@ Task createDartDocTask(dynamic delayedLibraryList, {
     targetBranch = ctx.arguments[_targetBranchArg];
 
     return _compileDocs(ctx, targetBranch, delayedLibraryList, packageDir,
-        excludeLibs, linkApi);
+        excludeLibs, linkApi, postBuild);
   },
   description: 'Generate documentation for the provided libraries.',
   config: (parser) => _dartDocParserConfig(parser, targetBranch));
@@ -53,12 +57,13 @@ Task getCompileDocsFunc(String targetBranch, String packageDir,
 Future<bool> compileDocs(TaskContext ctx, String targetBranch,
     dynamic delayedLibraryList, String packageDir,
     {Iterable<String> excludeLibs, bool linkApi: false}) {
-  return _compileDocs(ctx, targetBranch, delayedLibraryList, packageDir, excludeLibs, linkApi);
+  return _compileDocs(ctx, targetBranch, delayedLibraryList, packageDir,
+      excludeLibs, linkApi, null);
 }
 
 Future<bool> _compileDocs(TaskContext ctx, String targetBranch,
     dynamic delayedLibraryList, String packageDir,
-    Iterable<String> excludeLibs, bool linkApi) {
+    Iterable<String> excludeLibs, bool linkApi, Func2<TaskContext, String, Future> postBuild) {
 
   final excludeList = excludeLibs == null ? [] : excludeLibs.toList();
 
@@ -95,7 +100,7 @@ Future<bool> _compileDocs(TaskContext ctx, String targetBranch,
       .then((String commitMessage) {
 
         return gitDir.populateBranch(targetBranch,
-            (TempDir td) => _doDocsPopulate(ctx, td, libs, packageDir, excludeList, linkApi),
+            (TempDir td) => _doDocsPopulate(ctx, td, libs, packageDir, excludeList, linkApi, postBuild),
             commitMessage);
       })
       .then((Commit value) {
@@ -132,7 +137,8 @@ Future<String> _getCommitMessageFuture(GitDir gitDir, bool isClean) {
 }
 
 Future _doDocsPopulate(TaskContext ctx, TempDir dir, Collection<String> libs,
-                       String packageDir, List<String> excludeList, bool linkApi) {
+                       String packageDir, List<String> excludeList,
+                       bool linkApi, Func2<TaskContext, String, Future> postBuild) {
   final args = ['--pkg', packageDir, '--omit-generation-time', '--out', dir.path, '--verbose'];
 
   if(linkApi) {
@@ -157,5 +163,10 @@ Future _doDocsPopulate(TaskContext ctx, TempDir dir, Collection<String> libs,
 
         // yeah, silly. ctx.fail should blow up. Should not get heer
         assert(dartDocSuccess);
+
+        if(postBuild != null) {
+          // TODO: this should be platfrom specific...pathos?
+          return postBuild(ctx.getSubLogger('post-build'), dir.path);
+        }
       });
 }
