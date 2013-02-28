@@ -45,7 +45,8 @@ Future<bool> compileDocs(TaskContext ctx, String targetBranch,
       .then((bool value) {
         isClean = value;
         if(!allowDirty && !isClean) {
-          ctx.fail('Working tree is dirty. Cannot generate docs.');
+          ctx.fail('Working tree is dirty. Cannot generate docs.\n'
+              'Try using the --${_allowDirtyArg} flag.');
         }
 
         return getDelayedResult(delayedLibraryList);
