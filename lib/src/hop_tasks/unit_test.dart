@@ -143,6 +143,7 @@ ${testCase.stackTrace}''');
   @deprecated
   void notifyController(String message) {
     // TODO: this should be removed. Never used.
+    // waiting for r19067 to land
   }
 }
 
