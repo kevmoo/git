@@ -3,6 +3,7 @@ part of hop_tasks;
 // TODO: add post-build options to pretty-up the docs
 
 const _allowDirtyArg = 'allow-dirty';
+const _targetBranchArg = 'target-branch';
 
 /**
  * [targetBranch] the Git branch that will contain the generated docs. If the
@@ -18,12 +19,17 @@ Task createDartDocTask(dynamic delayedLibraryList, {
   String packageDir: 'packages/',
   Iterable<String> excludeLibs,
   bool linkApi: false}) {
+  requireArgumentNotNull(targetBranch, 'targetBranch');
+  requireArgumentNotNull(packageDir, 'packageDir');
+
   return new Task.async((ctx) {
+    targetBranch = ctx.arguments[_targetBranchArg];
+
     return _compileDocs(ctx, targetBranch, delayedLibraryList, packageDir,
         excludeLibs, linkApi);
   },
   description: 'Generate documentation for the provided libraries.',
-  config: _dartDocParserConfig);
+  config: (parser) => _dartDocParserConfig(parser, targetBranch));
 }
 
 /**
@@ -104,8 +110,9 @@ Future<bool> _compileDocs(TaskContext ctx, String targetBranch,
       });
 }
 
-void _dartDocParserConfig(ArgParser parser) {
+void _dartDocParserConfig(ArgParser parser, String targetBranch) {
   parser.addFlag(_allowDirtyArg, abbr: 'd', help: 'Allow a dirty tree to run', defaultsTo: false);
+  parser.addOption(_targetBranchArg, abbr: 'b', help: 'The git branch which gets the doc output', defaultsTo: targetBranch);
 }
 
 Future<String> _getCommitMessageFuture(GitDir gitDir, bool isClean) {
