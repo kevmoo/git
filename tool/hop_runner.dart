@@ -9,6 +9,7 @@ import 'package:bot/hop_tasks.dart';
 import '../test/harness_console.dart' as test_console;
 
 import 'tasks/update_example_html.dart' as html_tasks;
+import 'tasks/dartdoc_postbuild.dart' as dartdoc;
 
 void main() {
   // Easy to enable hop-wide logging
@@ -17,7 +18,7 @@ void main() {
 
   addTask('test', createUnitTestTask(test_console.testCore));
 
-  addTask('docs', createDartDocTask(_getLibs, linkApi: true));
+  addTask('docs', createDartDocTask(_getLibs, linkApi: true, postBuild: dartdoc.postBuild));
 
   //
   // Analyzer
