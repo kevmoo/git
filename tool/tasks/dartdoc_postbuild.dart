@@ -12,14 +12,21 @@ const _sourceTitle = 'Dart Documentation';
 const _outputTitle = 'BOT Documentation';
 
 Future postBuild(TaskLogger logger, String tempDocDir) {
-  logger.info('Group the main toc');
 
   final indexPath = path.join(tempDocDir, 'index.html');
-  logger.fine('index file: $indexPath');
 
+  logger.info('Updating main page');
   return transformHtml(indexPath, _updateIndex)
       .then((_) {
+        logger.info('Fixing titles');
         return _updateTitles(tempDocDir);
+      })
+      .then((_) {
+        logger.info('Copying resources');
+        return Process.run('bash', ['-c', 'cp resource/* $tempDocDir']);
+      })
+      .then((ProcessResult pr) {
+        assert(pr.exitCode == 0);
       });
 }
 
@@ -80,6 +87,8 @@ Future<Document> _updateIndex(Document source) {
   contentDiv.children.add(new Element.tag('h2')
     ..innerHtml = 'Dart Bag of Tricks');
 
+  contentDiv.children.add(_getAboutElement());
+
   final doSection = (String name, List<Element> sectionContent) {
     if(!sectionContent.isEmpty) {
       contentDiv.children.add(new Element.tag('h3')
@@ -95,4 +104,27 @@ Future<Document> _updateIndex(Document source) {
   doSection('Dependencies', otherHeaders);
 
   return new Future<Document>.immediate(source);
+}
+
+Element _getAboutElement() {
+  final logo = new Element.tag('img')
+    ..attributes['src'] = 'logo.png'
+    ..attributes['width'] = '333'
+    ..attributes['height'] = '250'
+    ..attributes['title'] = 'Dart Bag of Tricks';
+
+  final logoLink = new Element.tag('a')
+    ..attributes['href'] = 'https://github.com/kevmoo/bot.dart'
+    ..children.add(logo);
+
+  final ghLink = new Element.tag('a')
+  ..attributes['href'] = 'https://github.com/kevmoo/bot.dart'
+  ..innerHtml = 'github.com/kevmoo/bot.dart';
+
+
+  return new Element.tag('div')
+    ..attributes['class'] = 'about'
+    ..children.add(logoLink)
+    ..children.add(new Element.tag('br'))
+    ..children.add(ghLink);
 }
