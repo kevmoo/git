@@ -7,8 +7,9 @@ environment:
   sdk: '>=0.4.0+0.r18915'
 dependencies:
   unittest: '>=0.4.0'
+  html5lib: '>=0.3.3+2'
   args: '>=0.4.0'
   browser: '>=0.4.0'
   logging: '>=0.4.0'
+  pathos: '>=0.4.0'
   meta: '>=0.4.0'
-  html5lib: '>=0.3.3'
