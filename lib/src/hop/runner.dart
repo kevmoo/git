@@ -28,8 +28,7 @@ class Runner {
 
       final task = _state._getTask(taskName);
       return runTask(subCtx, task)
-          .then((RunResult result) => _logExitCode(ctx, result))
-          .whenComplete(() => subCtx.dispose());
+          .then((RunResult result) => _logExitCode(ctx, result));
 
     } else if(_args.rest.length == 0) {
       _printHelp(_state);
@@ -102,6 +101,9 @@ class Runner {
     requireArgumentNotNull(task, 'task');
     requireArgument(!context.isDisposed, 'context', 'cannot be disposed');
 
+    final start = new DateTime.now();
+    context.finest('Started at $start');
+
     return task.run(context)
         .then((bool didComplete) {
           if(didComplete == null) {
@@ -132,6 +134,13 @@ class Runner {
             }
             return RunResult.EXCEPTION;
           }
+        })
+        .whenComplete(() {
+          final end = new DateTime.now();
+          context.finest('Finished at $end');
+          final duration = end.difference(start);
+          context.fine('Run time: $duration');
+          context.dispose();
         });
   }
 
