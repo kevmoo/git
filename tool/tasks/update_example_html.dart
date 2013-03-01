@@ -8,6 +8,8 @@ import 'package:html5lib/dom.dart';
 import 'package:html5lib/parser.dart';
 import 'package:html5lib/dom_parsing.dart';
 
+import 'shared.dart';
+
 const _startPath = r'example/bot_retained';
 const _demoFinder = r'/**/*_demo.html';
 final _exampleFile = _startPath.concat('/index.html');
@@ -29,15 +31,10 @@ Task getUpdateExampleHtmlTask() {
 }
 
 Future<bool> _transform(List<String> samples) {
-  final file = new File(_exampleFile);
-  assert(file.existsSync());
-  return file.readAsString()
-      .then((String contents) {
-        var parser = new HtmlParser(contents, generateSpans: true);
-        var document = parser.parse();
-        _tweakDocument(document, samples);
-        return _updateIfChanged(_exampleFile, document.outerHtml);
-      });
+  return transformHtml(_exampleFile, (Document doc) {
+    _tweakDocument(doc, samples);
+    return new Future<Document>.immediate(doc);
+  });
 }
 
 void _tweakDocument(Document doc, List<String> samples) {
@@ -59,26 +56,6 @@ void _tweakDocument(Document doc, List<String> samples) {
     sampleList.children.add(li);
   }
 
-}
-
-Future<bool> _updateIfChanged(String filePath, String newContent) {
-  final file = new File(filePath);
-  return file.exists()
-      .then((bool exists) {
-        if(exists) {
-          return file.readAsString()
-              .then((String content) => content != newContent);
-        } else {
-          return true;
-        }
-      }).then((bool shouldUpdate) {
-        if(shouldUpdate) {
-          return file.writeAsString(newContent)
-            .then((_) => true);
-        } else {
-          return false;
-        }
-      });
 }
 
 Future<List<String>> _getExampleFiles() {
