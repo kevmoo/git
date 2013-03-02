@@ -1,9 +1,6 @@
-###-begin-hop-completion-###
-#
-# Command completion script: "hop"
 #
 # Installation:
-# 
+#
 # Via shell config file  ~/.bashrc  (or ~/.zshrc)
 #
 #   Append the contents to config file
@@ -14,6 +11,8 @@
 #
 #    /usr/local/etc/bash_completion.d/
 #
+
+###-begin-hop-completion-###
 
 if type complete &>/dev/null; then
   __hop_completion() {
@@ -56,7 +55,8 @@ elif type compctl &>/dev/null; then
   compctl -K __hop_completion hop
 fi
 
-## Generated 2013-02-23 18:17:01.756Z
-## By /Users/kevin/source/github/bot.dart/bin/shell_completion_generator.dart
 ###-end-hop-completion-###
+
+## Generated 2013-03-02 00:40:25.778Z
+## By /Users/kevin/source/github/bot.dart/bin/shell-completion-generator
 

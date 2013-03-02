@@ -1,9 +1,6 @@
-###-begin-hello.dart-completion-###
-#
-# Command completion script: "hello.dart"
 #
 # Installation:
-# 
+#
 # Via shell config file  ~/.bashrc  (or ~/.zshrc)
 #
 #   Append the contents to config file
@@ -14,6 +11,8 @@
 #
 #    /usr/local/etc/bash_completion.d/
 #
+
+###-begin-hello.dart-completion-###
 
 if type complete &>/dev/null; then
   __hello_dart_completion() {
@@ -56,7 +55,8 @@ elif type compctl &>/dev/null; then
   compctl -K __hello_dart_completion hello.dart
 fi
 
-## Generated 2013-02-23 18:12:41.235Z
-## By /Users/kevin/source/github/bot.dart/bin/shell_completion_generator.dart
 ###-end-hello.dart-completion-###
+
+## Generated 2013-03-02 00:41:19.959Z
+## By /Users/kevin/source/github/bot.dart/bin/shell-completion-generator
 
