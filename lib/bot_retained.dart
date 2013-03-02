@@ -10,7 +10,7 @@ import 'package:bot/bot_html.dart';
 part 'src/bot_retained/alignment.dart';
 part 'src/bot_retained/mouse_manager.dart';
 part 'src/bot_retained/thing_mouse_event_args.dart';
-part 'src/bot_retained/thnig_parent.dart';
+part 'src/bot_retained/thing_parent.dart';
 part 'src/bot_retained/image_thing.dart';
 part 'src/bot_retained/mouse.dart';
 part 'src/bot_retained/nav_thing.dart';
