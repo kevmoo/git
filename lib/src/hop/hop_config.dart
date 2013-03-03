@@ -41,10 +41,6 @@ class HopConfig {
     return _tasks.containsKey(taskName);
   }
 
-  Task _getTask(String taskName) {
-    return _tasks[taskName];
-  }
-
   void addSync(String name, Func1<TaskContext, bool> func) {
     addTask(name, new Task.sync(func));
   }
@@ -72,12 +68,6 @@ class HopConfig {
     }
   }
 
-  void _addHelpTask(String helpTaskName) {
-    assert(_helpTaskName == null);
-    addTask(helpTaskName, _getHelpTask());
-    _helpTaskName = helpTaskName;
-  }
-
   void freeze() {
     require(!isFrozen, "Already frozen.");
     final list = new List<String>.from(_tasks.keys);
@@ -92,5 +82,15 @@ class HopConfig {
    */
   void doPrint(Object value) {
     print(value);
+  }
+
+  void _addHelpTask(String helpTaskName) {
+    assert(_helpTaskName == null);
+    addTask(helpTaskName, _getHelpTask());
+    _helpTaskName = helpTaskName;
+  }
+
+  Task _getTask(String taskName) {
+    return _tasks[taskName];
   }
 }
