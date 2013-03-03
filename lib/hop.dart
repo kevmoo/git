@@ -90,7 +90,7 @@ ArgParser _getParser(HopConfig config) {
     _initParserForTask(parser, taskName, config._getTask(taskName));
   }
 
-  parser.addFlag(_colorFlag, defaultsTo: _defaultColorEnabled,
+  parser.addFlag(_colorFlag, defaultsTo: Console.supportsColor,
       help: 'Specifies if shell output can have color.');
 
   parser.addFlag(_prefixFlag, defaultsTo: true,
@@ -109,8 +109,6 @@ ArgParser _getParser(HopConfig config) {
 
   return parser;
 }
-
-bool get _defaultColorEnabled => io.Platform.environment.containsKey('CLICOLOR');
 
 List<Level> _getLogLevels() {
   return [Level.ALL, Level.CONFIG, Level.FINE, Level.FINER, Level.FINEST,

@@ -1,6 +1,22 @@
 part of bot_io;
 
+// TODO: rename this Shell? Hmm...
+
 class Console {
+
+  /**
+   * `true` if it is valid to include [ANSI escape code](https://en.wikipedia.org/wiki/ANSI_escape_code)
+   * entities in values sent to standard output (usually via [print]).
+   *
+   * At the moment, this is just a check to see if the `CLICOLOR` value is set
+   * in [Platform.environment].
+   *
+   * Other methods might include checking the value of the `TERM` environment
+   * variable or the output of `tput colors` in bash.
+   *
+   * Open to feedback and suggestions here.
+   */
+  static bool get supportsColor => Platform.environment.containsKey('CLICOLOR');
 
   static Iterable<String> getTable(List source,
       List<ColumnDefinition> columns, {bool includeHeader: false}) {
