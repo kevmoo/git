@@ -45,8 +45,6 @@ void main() {
 
   addTask('bench', createBenchTask());
 
-  addTask('help', getHelpTask());
-
   addTask('update-html', html_tasks.getUpdateExampleHtmlTask());
 
   runHopCore();

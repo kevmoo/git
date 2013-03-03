@@ -12,8 +12,9 @@ class BaseConfig extends HopConfig {
 class HopConfig {
   static final RegExp _validNameRegExp = new RegExp(r'^[a-z]([a-z0-9_\-]*[a-z0-9])?$');
   static const _reservedTasks = const[COMPLETION_COMMAND_NAME];
-  final Map<String, Task> _tasks = new Map();
+  final Map<String, Task> _tasks = new Map<String, Task>();
 
+  String _helpTaskName;
   Level _logLevel = Level.INFO;
 
   ReadOnlyCollection<String> _sortedTaskNames;
@@ -69,6 +70,12 @@ class HopConfig {
     if(!isFrozen) {
       throw "not frozen!";
     }
+  }
+
+  void _addHelpTask(String helpTaskName) {
+    assert(_helpTaskName == null);
+    addTask(helpTaskName, _getHelpTask());
+    _helpTaskName = helpTaskName;
   }
 
   void freeze() {

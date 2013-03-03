@@ -31,14 +31,25 @@ typedef Future<bool> TaskDefinition(TaskContext ctx);
  * Designed to enable features in __Hop__. Should be the last method called in
  * `tool/hop_runner.dart`.
  *
- * If [paranoid] is `true`, [runHop] will verify the running script is
- * `tool/hop_runner.dart` relative to the working directory.
- *
  * [runHopCore] calls [io.exit] which terminates the application.
+ *
+ * If [paranoid] is `true`, [runHopCore] will verify the running script is
+ * `tool/hop_runner.dart` relative to the working directory. If not, an
+ * exception is thrown.
+ *
+ * If [helpTaskName], defines (surprise!) the name of the help task. If `null`
+ * no help task is added. If [helpTaskName] conflicts with an already defined
+ * task, an exception is thrown.
  */
-void runHopCore({bool paranoid: true}) {
+void runHopCore({
+  bool paranoid: true,
+  String helpTaskName: 'help'
+  }) {
   if(paranoid) {
     _paranoidHopCheck();
+  }
+  if(helpTaskName != null) {
+    _sharedConfig._addHelpTask(helpTaskName);
   }
   _sharedConfig.freeze();
   Runner.runCore(_sharedConfig);

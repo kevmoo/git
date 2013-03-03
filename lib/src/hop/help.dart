@@ -2,7 +2,18 @@ part of hop;
 
 const String _hopCmdName = 'hop';
 
+/**
+ * Help is such a core concept, it has been added directly to the call to
+ * [runHopCore] with the named argument [helpTaskName].
+ *
+ * See [runHopCore] for more details.
+ */
+@deprecated
 Task getHelpTask() {
+  return _getHelpTask();
+}
+
+Task _getHelpTask() {
   return new Task.sync((TaskContext ctx) {
     final args = ctx.arguments;
 
@@ -62,7 +73,10 @@ void _printHelp(HopConfig config) {
   config.doPrint('');
   _printHopArgsHelp(config);
 
-  config.doPrint("See '$_hopCmdName <task>' for more information on a specific command.");
+  final helpName = config._helpTaskName;
+  if(helpName != null) {
+    config.doPrint("See '$_hopCmdName $helpName <task>' for more information on a specific command.");
+  }
 }
 
 void _printUsage(HopConfig config, {bool showOptions: true, String taskName: '<task>', String extendedArgsUsage: '[--] [<task-args>]'}) {
