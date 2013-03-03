@@ -7,6 +7,7 @@ import 'package:bot/bot.dart';
 import 'package:bot/bot_io.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
+import 'package:pathos/path.dart' as path;
 
 part 'src/hop/console_context.dart';
 part 'src/hop/help.dart';
@@ -27,11 +28,18 @@ final _libLogger = new Logger('hop');
 typedef Future<bool> TaskDefinition(TaskContext ctx);
 
 /**
- * [runHopCore] calls [io.exit] which terminates the application.
+ * Designed to enable features in __Hop__. Should be the last method called in
+ * `tool/hop_runner.dart`.
  *
- * [runHopCore] should be the last method you call in an application.
+ * If [paranoid] is `true`, [runHop] will verify the running script is
+ * `tool/hop_runner.dart` relative to the working directory.
+ *
+ * [runHopCore] calls [io.exit] which terminates the application.
  */
-void runHopCore() {
+void runHopCore({bool paranoid: true}) {
+  if(paranoid) {
+    _paranoidHopCheck();
+  }
   _sharedConfig.freeze();
   Runner.runCore(_sharedConfig);
 }
@@ -46,6 +54,16 @@ void addSyncTask(String name, Func1<TaskContext, bool> execFunc) {
 
 void addAsyncTask(String name, TaskDefinition execFuture) {
   _sharedConfig.addAsync(name, execFuture);
+}
+
+void _paranoidHopCheck() {
+  var runningScript = new Options().script;
+  runningScript = path.absolute(runningScript);
+  runningScript = path.normalize(runningScript);
+
+  final expectedPath = path.join(path.current, 'tool', 'hop_runner.dart');
+  require(runningScript == expectedPath,
+      'Running script should be at "$expectedPath" but was at "$runningScript"');
 }
 
 const String _colorFlag = 'color';
