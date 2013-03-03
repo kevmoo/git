@@ -48,7 +48,7 @@ void _printHelpForTask(HopConfig config, String taskName) {
   config.doPrint('');
 
   if(!usage.isEmpty) {
-    config.doPrint('Task options:');
+    config.doPrint('${taskName} options:');
     config.doPrint(_indent(task.getUsage()));
     config.doPrint('');
   }
@@ -80,7 +80,7 @@ void _printHelp(HopConfig config) {
 }
 
 void _printUsage(HopConfig config, {bool showOptions: true, String taskName: '<task>', String extendedArgsUsage: '[--] [<task-args>]'}) {
-  final taskOptions = showOptions ? '[<task-options>] ' : '';
+  final taskOptions = showOptions ? '[<${taskName}-options>] ' : '';
 
   config.doPrint('usage: $_hopCmdName [<hop-options>] $taskName $taskOptions$extendedArgsUsage'.trim());
   config.doPrint('');
