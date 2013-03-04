@@ -14,7 +14,6 @@ import 'tasks/dartdoc_postbuild.dart' as dartdoc;
 void main() {
   // Easy to enable hop-wide logging
   // enableScriptLogListener();
-  _assertKnownPath();
 
   addTask('test', createUnitTestTask(test_console.testCore));
 
@@ -48,14 +47,6 @@ void main() {
   addTask('update-html', html_tasks.getUpdateExampleHtmlTask());
 
   runHop();
-}
-
-void _assertKnownPath() {
-  // since there is no way to determine the path of 'this' file
-  // assume that Directory.current() is the root of the project.
-  // So check for existance of /bin/hop_runner.dart
-  final thisFile = new File('tool/hop_runner.dart');
-  assert(thisFile.existsSync());
 }
 
 Future<List<String>> _getLibs() {
