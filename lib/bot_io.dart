@@ -3,16 +3,19 @@ library bot_io;
 import 'dart:async';
 import 'dart:math' as math;
 import 'dart:io';
-import 'package:logging/logging.dart' as logging;
 import 'package:args/args.dart';
+import 'package:logging/logging.dart' as logging;
+import 'package:meta/meta.dart';
+
 import 'package:bot/bot.dart';
 
 part 'src/bot_io/ansi_color.dart';
 part 'src/bot_io/completion.dart';
 part 'src/bot_io/console.dart';
-part 'src/bot_io/io_helpers.dart';
-part 'src/bot_io/temp_dir.dart';
 part 'src/bot_io/directory_populater.dart';
+part 'src/bot_io/io_helpers.dart';
+part 'src/bot_io/shell_string.dart';
+part 'src/bot_io/temp_dir.dart';
 
 /*
  * TODO: Document this! Cool trick, but needs details.
