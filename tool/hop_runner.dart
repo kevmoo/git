@@ -47,7 +47,7 @@ void main() {
 
   addTask('update-html', html_tasks.getUpdateExampleHtmlTask());
 
-  runHopCore();
+  runHop();
 }
 
 void _assertKnownPath() {

@@ -88,7 +88,7 @@ class Runner {
   /**
    * [run] exists primarily for testing [Task] implementations.
    *
-   * If you want to use Hop in an app, see [runHopCore].
+   * If you want to use Hop in an app, see [runHop].
    *
    * If you want to run a specific [Task] in isolation, see [runTask].
    */
