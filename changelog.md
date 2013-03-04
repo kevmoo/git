@@ -4,6 +4,64 @@
 
 * [Changes Since v0.14.2](https://github.com/kevmoo/bot.dart/compare/v0.14.2...master)
 
+### bot
+
+* Many changes related to using `Stream` for events
+    * `AttachedEvent`
+        * __BREAKING__ `addHandler` -> `getStream`
+        * Learned `bool hasSubscribers`
+    * `EventHandle`
+        * Now extends `StreamController` from `dart:async`
+        * __BREAKING__ removed `fireEvent`, `add`, `remove`
+    * __BREAKING__ `EventRoot` removed.
+    * __BREAKING__ `GlobalId` removed.
+    * `Property`
+        * __BREAKING__ `addhandler` -> `getStream`
+        * __BREAKING__ `removeHandler` removed
+        * __BREAKING__ Change events are now of __NEW!__ type `PropertyChangedEventArgs`
+
+### bot_async
+
+* `FutureValue`
+    * __BREAKING__ `outputChanged`, `inputChanged`, `error` are all now `Stream`
+
+### bot_html
+
+* `Dragger`
+    * __BREAKING__ `dragStart` and `dragDelta` are now `Stream`
+* `ResourceLoader`
+    * __BREAKING__ `progress` and `loaded` are now `Stream`
+
+### bot_io
+
+* `AnsiColor`
+    * __NEW!__ Supports bold text
+    * __NEW!__ `BOLD` and `RESET` consts
+    * __NEW!__ `instance.asBold()` method
+
+* `Console`
+    * __NEW!__ `static bool get supportsColor`: An initial attempt to let console apps know if the host console supports color output via a call to `String format(bool useColor)`
+
+* __NEW!__ `ShellString`
+    * A `String`-like value that stores a value and an `AnsiColor`.
+    * Allows centralized creation of text to be sent to the shell with the option to output with our without ANSI escape codes.
+
+### bot_retained
+
+_TODO_
+
+### bot_texture
+
+_TODO_
+
+### hop
+
+_TODO_
+
+### hop_tasks
+
+_TODO_
+
 ## 0.14.2 - 25 Feb 2013 (SDK 0.4.0.0 r18915)
 
 * [Changes Since v0.14.1](https://github.com/kevmoo/bot.dart/compare/v0.14.1...v0.14.2)
