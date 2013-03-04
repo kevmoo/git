@@ -7,6 +7,7 @@ part of hop;
  */
 @deprecated
 class BaseConfig extends HopConfig {
+  BaseConfig():super();
 }
 
 class HopConfig {
@@ -16,10 +17,11 @@ class HopConfig {
 
   String _helpTaskName;
   Level _logLevel = Level.INFO;
-
+  bool _useColor;
   ReadOnlyCollection<String> _sortedTaskNames;
 
-  HopConfig();
+  HopConfig({bool useColor: null}) :
+    _useColor = useColor;
 
   Level get logLevel => _logLevel;
 
@@ -81,7 +83,19 @@ class HopConfig {
    * Defaults to [print] method from `dart:io`
    */
   void doPrint(Object value) {
+    final useColor = (_useColor == null) ? Console.supportsColor : _useColor;
+    assert(useColor != null);
+    if(value is ShellString) {
+      final ss = value as ShellString;
+      value = ss.format(useColor);
+    }
     print(value);
+  }
+
+  void _setUseColor(bool value) {
+    assert(value != null);
+    assert(_useColor == null);
+    _useColor = value;
   }
 
   void _addHelpTask(String helpTaskName) {

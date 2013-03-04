@@ -3,6 +3,8 @@ part of hop;
 class Runner {
   final ArgParser _parser;
   ArgResults _args;
+
+  // TODO: rename this to _config
   final HopConfig _state;
 
   Runner(HopConfig config, Iterable<String> args) :
@@ -42,14 +44,13 @@ class Runner {
 
   @protected
   RootTaskContext getContext() {
-    final bool colorEnabled = _args[_colorFlag];
     final bool preFixEnabled = _args[_prefixFlag];
     final String logLevelOption = _args[_logLevelOption];
 
     final Level logLevel = _getLogLevels()
         .singleMatching((Level l) => l.name.toLowerCase() == logLevelOption);
 
-    return new RootTaskContext(_state.doPrint, colorEnabled: colorEnabled,
+    return new RootTaskContext(_state.doPrint,
         prefixEnabled: preFixEnabled, minLogLevel: logLevel);
   }
 
@@ -70,6 +71,7 @@ class Runner {
     try {
       args = tryArgsCompletion(parser);
     } on FormatException catch(ex, stack) {
+      // TODO: try to guess if --no-color was passed in here?
       config.doPrint("There was an error parsing the provided arguments");
       config.doPrint(ex.message);
       config.doPrint('');
@@ -80,6 +82,10 @@ class Runner {
 
       io.exit(RunResult.BAD_USAGE.exitCode);
     }
+
+    final bool useColor = args[_colorFlag];
+
+    config._setUseColor(useColor);
 
     final runner = new Runner._internal(config, parser, args);
     final future = runner.run();
@@ -146,7 +152,8 @@ class Runner {
 
   static RunResult _logExitCode(RootTaskContext ctx, RunResult result) {
     if(!result.success) {
-      ctx.log('Task did not complete - ${result.name} (${result.exitCode})', AnsiColor.RED);
+      final msg = 'Task did not complete - ${result.name} (${result.exitCode})';
+      ctx.log(new ShellString.withColor(msg, AnsiColor.RED));
     }
     return result;
   }

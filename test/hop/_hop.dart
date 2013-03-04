@@ -108,6 +108,8 @@ HopConfig _getTestConfig() => new _TestHopConfig();
 
 class _TestHopConfig extends HopConfig {
 
+  _TestHopConfig():super(useColor: false);
+
   @override
   void doPrint(Object value) {
     String msg;

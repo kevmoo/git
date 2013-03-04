@@ -4,19 +4,16 @@ typedef void Printer(Object value);
 
 class RootTaskContext {
   final Printer _printer;
-  final bool _enableColor;
   final bool _prefixEnabled;
   final Level _minLogLevel;
 
-  RootTaskContext(Printer printer, {bool colorEnabled:true,
-    bool prefixEnabled: true,
+  RootTaskContext(Printer printer,
+      {bool prefixEnabled: true,
     Level minLogLevel: Level.ALL}) :
     _printer = printer,
-    _enableColor = colorEnabled,
     _prefixEnabled = prefixEnabled,
     _minLogLevel = minLogLevel {
       requireArgumentNotNull(printer, 'printer');
-      requireArgumentNotNull(colorEnabled, 'colorEnabled');
       requireArgumentNotNull(prefixEnabled, 'prefixEnabled');
       requireArgumentNotNull(minLogLevel, 'minLogLevel');
     }
@@ -24,15 +21,7 @@ class RootTaskContext {
   TaskContext getSubContext(String name, ArgResults arguments) =>
     new _SubTaskContext(this, name, arguments);
 
-  void log(String message, [AnsiColor color = null]) {
-    if(!_enableColor) {
-      color = null;
-    }
-
-    if(color != null) {
-      message = color.wrap(message);
-    }
-
+  void log(Object message) {
     _printer(message);
   }
 
@@ -50,7 +39,8 @@ class RootTaskContext {
 
     if(logLevel >= _minLogLevel) {
       if(_prefixEnabled) {
-        final color = _getColor(logLevel);
+        final color = getLogColor(logLevel);
+        final coloredTitle = new ShellString.withColor(title, color);
 
         var indent = '';
 
@@ -58,16 +48,14 @@ class RootTaskContext {
           indent =  indent.concat(' ');
         }
 
-        final coloredTitle = (color != null) ? color.wrap(title) : title;
-
         final lines = Util.splitLines(message);
         var first = true;
-        for(final l in lines) {
+        for(final line in lines) {
           if(first) {
             first = false;
-            _printer(coloredTitle.concat(l));
+            _printer(coloredTitle.concat(line));
           } else {
-            _printer(indent.concat(l));
+            _printer(indent.concat(line));
           }
         }
       } else {
@@ -76,14 +64,6 @@ class RootTaskContext {
     }
 
     _libLogger.log(logLevel, "$title $message");
-  }
-
-  AnsiColor _getColor(Level logLevel) {
-    if(_enableColor) {
-      return getLogColor(logLevel);
-    } else {
-      return null;
-    }
   }
 
   static AnsiColor getLogColor(Level logLevel) {
