@@ -11,12 +11,12 @@ class TaskRegistry {
   /// Can only be accessed when frozen
   /// Always sorted
   List<String> get taskNames {
-    requireFrozen();
+    _requireFrozen();
     return _sortedTaskNames;
   }
 
   bool hasTask(String taskName) {
-    requireFrozen();
+    _requireFrozen();
     return _tasks.containsKey(taskName);
   }
 
@@ -41,17 +41,19 @@ class TaskRegistry {
     _tasks[name] = task;
   }
 
-  void requireFrozen() {
+  void _requireFrozen() {
     if(!isFrozen) {
       throw "not frozen!";
     }
   }
 
-  void freeze() {
-    require(!isFrozen, "Already frozen.");
-    final list = new List<String>.from(_tasks.keys);
-    list.sort();
-    _sortedTaskNames = new ReadOnlyCollection<String>.wrap(list);
+  void _freeze() {
+    if(!isFrozen) {
+      final list = _tasks.keys
+          .toList()
+          ..sort();
+      _sortedTaskNames = new ReadOnlyCollection<String>.wrap(list);
+    }
   }
 
   bool get isFrozen => _sortedTaskNames != null;

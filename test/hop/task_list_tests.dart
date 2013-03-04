@@ -30,11 +30,8 @@ class TaskListTests {
       final tasks = new TaskRegistry();
 
       expect(tasks.isFrozen, isFalse);
-      tasks.freeze();
+      final hopConfig = new HopConfig(tasks, ['bad'], _testPrint);
       expect(tasks.isFrozen, isTrue);
-
-      // cannot re-freeze
-      expect(() => tasks.freeze(), throws);
 
       // cannot add task when frozen
       expect(() => tasks.addSync('task', (ctx) => true), throws);

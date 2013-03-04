@@ -34,7 +34,7 @@ Task _getHelpTask(_HelpArgs helpArgs) {
 }
 
 void _helpParserConfig(TaskRegistry config, ArgParser parser) {
-  config.requireFrozen();
+  config._requireFrozen();
 
   for(final taskName in config.taskNames) {
     parser.addCommand(taskName);
@@ -107,7 +107,7 @@ ShellString _getTitle(String input) {
 }
 
 void _printTaskTable(Printer printer, TaskRegistry config) {
-  config.requireFrozen();
+  config._requireFrozen();
   final columns = [
                    new ColumnDefinition('name', (name) => '  '.concat(name)),
                    new ColumnDefinition('description', (name) {

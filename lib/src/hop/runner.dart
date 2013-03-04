@@ -12,7 +12,7 @@ class HopConfig {
    * If you're using it in another context, you might be doing something wrong.
    */
   factory HopConfig(TaskRegistry registry, List<String> args, Printer printer) {
-    registry.freeze();
+    registry._freeze();
 
     final parser = _getParser(registry, Level.INFO);
     final argResults = parser.parse(args);
@@ -21,7 +21,7 @@ class HopConfig {
   }
 
   HopConfig._internal(this.taskRegistry, this.parser, this.args, this._printer) {
-    requireArgument(taskRegistry.isFrozen, 'taskRegistry');
+    taskRegistry._freeze();
     requireArgumentNotNull(args, 'args');
     requireArgumentNotNull(parser, 'parser');
     requireArgumentNotNull(_printer, '_printer');
@@ -144,7 +144,7 @@ class Runner {
       registry.addTask(helpTaskName, _getHelpTask(helpArgs));
     }
 
-    registry.freeze();
+    registry._freeze();
 
     final parser = _getParser(registry, Level.INFO);
     helpArgs.parser = parser;
