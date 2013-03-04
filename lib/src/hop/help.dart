@@ -2,27 +2,23 @@ part of hop;
 
 const String _hopCmdName = 'hop';
 
-/**
- * Help is such a core concept, it has been added directly to the call to
- * [runHopCore] with the named argument [helpTaskName].
- *
- * See [runHopCore] for more details.
- */
-@deprecated
-Task getHelpTask() {
-  return _getHelpTask();
+class _HelpArgs {
+  final TaskRegistry registry;
+  ArgParser parser;
+  Printer printer = print;
+
+  _HelpArgs(this.registry);
 }
 
-Task _getHelpTask() {
+Task _getHelpTask(_HelpArgs helpArgs) {
   return new Task.sync((TaskContext ctx) {
     final args = ctx.arguments;
 
     if(args.command != null) {
-      _printHelpForTask(_sharedConfig, args.command.name);
+      _printHelpForTask(helpArgs.printer, helpArgs.registry, args.command.name, helpArgs.parser);
       return true;
     } else {
-
-      _printHelp(_sharedConfig);
+      _printHelp(helpArgs.printer, helpArgs.registry, helpArgs.parser);
 
       if(!args.rest.isEmpty) {
         ctx.severe('Not sure how to give help for: ${args.rest}');
@@ -33,33 +29,11 @@ Task _getHelpTask() {
     }
   },
   description: 'Print help information about available tasks',
-  config: (parser) => _helpParserConfig(_sharedConfig, parser),
+  config: (parser) => _helpParserConfig(helpArgs.registry, parser),
   extendedArgs: [new TaskArgument('task-name')]);
 }
 
-void _printHelpForTask(HopConfig config, String taskName) {
-  final task = config._getTask(taskName);
-  assert(task != null);
-
-  final usage = task.getUsage();
-
-  config.doPrint(_getUsage(showOptions: !usage.isEmpty, taskName: taskName, extendedArgsUsage: task.getExtendedArgsUsage()));
-  config.doPrint('');
-  if(!task.description.isEmpty) {
-    config.doPrint(_indent(task.description));
-    config.doPrint('');
-  }
-
-  if(!usage.isEmpty) {
-    config.doPrint(_getTitle('${taskName} options'));
-    config.doPrint(_indent(usage));
-    config.doPrint('');
-  }
-
-  _printHopArgsHelp(config);
-}
-
-void _helpParserConfig(HopConfig config, ArgParser parser) {
+void _helpParserConfig(TaskRegistry config, ArgParser parser) {
   config.requireFrozen();
 
   for(final taskName in config.taskNames) {
@@ -67,19 +41,41 @@ void _helpParserConfig(HopConfig config, ArgParser parser) {
   }
 }
 
-void _printHelp(HopConfig config) {
+void _printHelpForTask(Printer printer, TaskRegistry config, String taskName, ArgParser hopArgParser) {
+  final task = config._getTask(taskName);
+  assert(task != null);
 
-  config.doPrint(_getUsage());
-  config.doPrint('');
-  config.doPrint(_getTitle('Tasks'));
-  _printTaskTable(config);
+  final usage = task.getUsage();
 
-  config.doPrint('');
-  _printHopArgsHelp(config);
+  printer(_getUsage(showOptions: !usage.isEmpty, taskName: taskName, extendedArgsUsage: task.getExtendedArgsUsage()));
+  printer('');
+  if(!task.description.isEmpty) {
+    printer(_indent(task.description));
+    printer('');
+  }
 
-  final helpName = config._helpTaskName;
+  if(!usage.isEmpty) {
+    printer(_getTitle('${taskName} options'));
+    printer(_indent(usage));
+    printer('');
+  }
+
+  _printHopArgsHelp(printer, hopArgParser);
+}
+
+void _printHelp(Printer printer, TaskRegistry registry, ArgParser parser) {
+
+  printer(_getUsage());
+  printer('');
+  printer(_getTitle('Tasks'));
+  _printTaskTable(printer, registry);
+
+  printer('');
+  _printHopArgsHelp(printer, parser);
+
+  final helpName = registry._helpTaskName;
   if(helpName != null) {
-    config.doPrint("See '$_hopCmdName $helpName <task>' for more information on a specific command.");
+    printer("See '$_hopCmdName $helpName <task>' for more information on a specific command.");
   }
 }
 
@@ -91,12 +87,10 @@ String _getUsage({bool showOptions: true, String taskName: '<task>', String exte
   return 'usage: $_hopCmdName [<hop-options>] $taskName $taskOptions$extendedArgsUsage'.trim();
 }
 
-void _printHopArgsHelp(HopConfig config) {
-  final parser = _getParser(config);
-
-  config.doPrint(_getTitle('Hop options'));
-  config.doPrint(_indent(parser.getUsage()));
-  config.doPrint('');
+void _printHopArgsHelp(Printer printer, ArgParser hopArgParser) {
+  printer(_getTitle('Hop options'));
+  printer(_indent(hopArgParser.getUsage()));
+  printer('');
 }
 
 String _indent(String input) {
@@ -112,7 +106,7 @@ ShellString _getTitle(String input) {
   return new ShellString.withAlt(input.toUpperCase(), AnsiColor.BOLD, '$input:');
 }
 
-void _printTaskTable(HopConfig config) {
+void _printTaskTable(Printer printer, TaskRegistry config) {
   config.requireFrozen();
   final columns = [
                    new ColumnDefinition('name', (name) => '  '.concat(name)),
@@ -123,6 +117,6 @@ void _printTaskTable(HopConfig config) {
                    ];
   final rows = Console.getTable(config.taskNames, columns);
   for(final r in rows) {
-    config.doPrint('  '.concat(r));
+    printer('  '.concat(r));
   }
 }

@@ -1,100 +1,36 @@
 part of hop;
 
-class Runner {
-  final ArgParser _parser;
-  final HopConfig _config;
-
-  ArgResults _args;
-
-  Runner(HopConfig config, Iterable<String> args) :
-    this._config = config,
-    this._parser = _getParser(config) {
-    _args = _parser.parse(args);
-    _config.requireFrozen();
-  }
-
-  Runner._internal(this._config, this._parser, this._args);
-
-  Future<RunResult> run() {
-    assert(_config.isFrozen);
-
-    final ctx = getContext();
-
-    if(_args.command != null) {
-      // we're executing a command
-      final subCommandArgResults = _args.command;
-      final taskName = subCommandArgResults.name;
-
-      var subCtx = ctx.getSubContext(taskName, subCommandArgResults);
-
-      final task = _config._getTask(taskName);
-      return runTask(subCtx, task)
-          .then((RunResult result) => _logExitCode(ctx, result));
-
-    } else if(_args.rest.length == 0) {
-      _printHelp(_config);
-      return new Future.immediate(RunResult.SUCCESS);
-    } else {
-      final taskName = _args.rest[0];
-      ctx.log('No task named "$taskName".');
-      return new Future.immediate(RunResult.BAD_USAGE);
-    }
-  }
-
-  @protected
-  RootTaskContext getContext() {
-    final bool preFixEnabled = _args[_prefixFlag];
-    final String logLevelOption = _args[_logLevelOption];
-
-    final Level logLevel = _getLogLevels()
-        .singleMatching((Level l) => l.name.toLowerCase() == logLevelOption);
-
-    return new RootTaskContext(_config.doPrint,
-        prefixEnabled: preFixEnabled, minLogLevel: logLevel);
-  }
+class HopConfig {
+  final TaskRegistry taskRegistry;
+  final ArgParser parser;
+  final ArgResults args;
+  final Printer _printer;
 
   /**
-   * Parses provided command line args
-   * Handles command completion with the correct paramaters
+   * This constructor exists for testing Hop.
    *
-   * [runCore] calls [io.exit] which terminates the application.
-   *
-   * [runCore] should be the last method you call in an application.
+   * If you're using it in another context, you might be doing something wrong.
    */
-  static void runCore(HopConfig config) {
-    final options = new Options();
+  factory HopConfig(TaskRegistry registry, List<String> args, Printer printer) {
+    registry.freeze();
 
-    final parser = _getParser(config);
+    final parser = _getParser(registry, Level.INFO);
+    final argResults = parser.parse(args);
 
-    ArgResults args;
-    try {
-      args = tryArgsCompletion(parser);
-    } on FormatException catch(ex, stack) {
-      // TODO: try to guess if --no-color was passed in here?
-      config.doPrint("There was an error parsing the provided arguments");
-      config.doPrint(ex.message);
-      config.doPrint('');
-      _printHelp(config);
-
-      _libLogger.severe(ex.message);
-      _libLogger.severe(Error.safeToString(stack));
-
-      io.exit(RunResult.BAD_USAGE.exitCode);
-    }
-
-    final bool useColor = args[_colorFlag];
-
-    config._setUseColor(useColor);
-
-    final runner = new Runner._internal(config, parser, args);
-    final future = runner.run();
-
-    future.then((RunResult rr) {
-      _libLogger.info('Exit with $rr');
-      io.exit(rr.exitCode);
-    });
+    return new HopConfig._internal(registry, parser, argResults, printer);
   }
 
+  HopConfig._internal(this.taskRegistry, this.parser, this.args, this._printer) {
+    requireArgument(taskRegistry.isFrozen, 'taskRegistry');
+    requireArgumentNotNull(args, 'args');
+    requireArgumentNotNull(parser, 'parser');
+    requireArgumentNotNull(_printer, '_printer');
+  }
+
+  void doPrint(Object value) => _printer(value);
+}
+
+class Runner {
   /**
    * Runs a [Task] with the specificed [TaskContext].
    *
@@ -147,6 +83,107 @@ class Runner {
           context.fine('Run time: $duration');
           context.dispose();
         });
+  }
+
+  /**
+   * [run] exists primarily for testing [Task] implementations.
+   *
+   * If you want to use Hop in an app, see [runHopCore].
+   *
+   * If you want to run a specific [Task] in isolation, see [runTask].
+   */
+  static Future<RunResult> run(HopConfig config) {
+    requireArgumentNotNull(config, 'config');
+
+    final ctx = _getContext(config);
+
+    if(config.args.command != null) {
+      // we're executing a command
+      final subCommandArgResults = config.args.command;
+      final taskName = subCommandArgResults.name;
+
+      var subCtx = ctx.getSubContext(taskName, subCommandArgResults);
+
+      final task = config.taskRegistry._getTask(taskName);
+      return runTask(subCtx, task)
+          .then((RunResult result) => _logExitCode(ctx, result));
+
+    } else if(config.args.rest.length == 0) {
+      _printHelp(config.doPrint, config.taskRegistry, config.parser);
+      return new Future.immediate(RunResult.SUCCESS);
+    } else {
+      final taskName = config.args.rest[0];
+      ctx.log('No task named "$taskName".');
+      return new Future.immediate(RunResult.BAD_USAGE);
+    }
+  }
+
+  static RootTaskContext _getContext(HopConfig config) {
+    final bool preFixEnabled = config.args[_prefixFlag];
+    final String logLevelOption = config.args[_logLevelOption];
+
+    final Level logLevel = _getLogLevels()
+        .singleMatching((Level l) => l.name.toLowerCase() == logLevelOption);
+
+    return new RootTaskContext(config.doPrint,
+        prefixEnabled: preFixEnabled, minLogLevel: logLevel);
+  }
+
+  static void _runShell(TaskRegistry registry, String helpTaskName) {
+
+    // a bit ugly
+    // the help task needs the parser and a print method
+    // we can't get those until the help task is created
+    // so we use this dummy object which the help task closure holds onto
+    // then we update the values before the help task could ever be called
+    // sorry. Weird, I know
+    final helpArgs = new _HelpArgs(registry);
+
+    // wire up help task
+    if(helpTaskName != null) {
+      registry.addTask(helpTaskName, _getHelpTask(helpArgs));
+    }
+
+    registry.freeze();
+
+    final parser = _getParser(registry, Level.INFO);
+    helpArgs.parser = parser;
+
+    ArgResults args;
+    try {
+      args = tryArgsCompletion(parser);
+    } on FormatException catch(ex, stack) {
+      // TODO: try to guess if --no-color was passed in here?
+      print("There was an error parsing the provided arguments");
+      print(ex.message);
+      print('');
+      _printHelp(print, registry, parser);
+
+      _libLogger.severe(ex.message);
+      _libLogger.severe(Error.safeToString(stack));
+
+      io.exit(RunResult.BAD_USAGE.exitCode);
+    }
+
+    final bool useColor = args[_colorFlag];
+    final Printer printer = useColor ? _colorPrinter : print;
+
+    final config = new HopConfig._internal(registry, parser, args, printer);
+    helpArgs.printer = config.doPrint;
+
+    final future = Runner.run(config);
+
+    future.then((RunResult rr) {
+      _libLogger.info('Exit with $rr');
+      io.exit(rr.exitCode);
+    });
+  }
+
+  static void _colorPrinter(Object value) {
+    if(value is ShellString) {
+      value = value.format(true);
+    }
+    print(value);
   }
 
   static RunResult _logExitCode(RootTaskContext ctx, RunResult result) {

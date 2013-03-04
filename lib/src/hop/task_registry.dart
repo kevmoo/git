@@ -1,35 +1,12 @@
 part of hop;
 
-/**
- * Deprecated in favor of [HopConfig].
- *
- * Just a name change.
- */
-@deprecated
-class BaseConfig extends HopConfig {
-  BaseConfig():super();
-}
-
-class HopConfig {
+class TaskRegistry {
   static final RegExp _validNameRegExp = new RegExp(r'^[a-z]([a-z0-9_\-]*[a-z0-9])?$');
   static const _reservedTasks = const[COMPLETION_COMMAND_NAME];
   final Map<String, Task> _tasks = new Map<String, Task>();
 
   String _helpTaskName;
-  Level _logLevel = Level.INFO;
-  bool _useColor;
   ReadOnlyCollection<String> _sortedTaskNames;
-
-  HopConfig({bool useColor: null}) :
-    _useColor = useColor;
-
-  Level get logLevel => _logLevel;
-
-  void set logLevel(Level value) {
-    require(!isFrozen, "Cannot change logLevel. Frozen.");
-    requireArgumentNotNull(value, 'value');
-    _logLevel = value;
-  }
 
   /// Can only be accessed when frozen
   /// Always sorted
@@ -78,31 +55,6 @@ class HopConfig {
   }
 
   bool get isFrozen => _sortedTaskNames != null;
-
-  /**
-   * Defaults to [print] method from `dart:io`
-   */
-  void doPrint(Object value) {
-    final useColor = (_useColor == null) ? Console.supportsColor : _useColor;
-    assert(useColor != null);
-    if(value is ShellString) {
-      final ss = value as ShellString;
-      value = ss.format(useColor);
-    }
-    print(value);
-  }
-
-  void _setUseColor(bool value) {
-    assert(value != null);
-    assert(_useColor == null);
-    _useColor = value;
-  }
-
-  void _addHelpTask(String helpTaskName) {
-    assert(_helpTaskName == null);
-    addTask(helpTaskName, _getHelpTask());
-    _helpTaskName = helpTaskName;
-  }
 
   Task _getTask(String taskName) {
     return _tasks[taskName];

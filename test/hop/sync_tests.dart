@@ -49,12 +49,12 @@ class SyncTests {
   }
 
   static void _testBadParam() {
-    final taskConfig = _getTestConfig();
+    final taskConfig = new TaskRegistry();
     taskConfig.addSync('good', (ctx) => true);
-    taskConfig.freeze();
 
-    final runner = new Runner(taskConfig, ['bad']);
-    final future = runner.run();
+    final hopConfig = new HopConfig(taskConfig, ['bad'], _testPrint);
+
+    final future = Runner.run(hopConfig);
     expect(future, isNotNull);
 
     final onComplete = expectAsync1((value) {
@@ -66,12 +66,12 @@ class SyncTests {
   }
 
   static void _testNoParam() {
-    final taskConfig = _getTestConfig();
+    final taskConfig = new TaskRegistry();
     taskConfig.addSync('good', (ctx) => true);
-    taskConfig.freeze();
 
-    final runner = new Runner(taskConfig, []);
-    final future = runner.run();
+    final hopConfig = new HopConfig(taskConfig, [], _testPrint);
+
+    final future = Runner.run(hopConfig);
     expect(future, isNotNull);
 
     final onComplete = expectAsync1((value) {
@@ -83,11 +83,11 @@ class SyncTests {
   }
 
   static void _testNoTasks() {
-    final taskConfig = _getTestConfig();
-    taskConfig.freeze();
+    final taskConfig = new TaskRegistry();
 
-    final runner = new Runner(taskConfig, []);
-    final future = runner.run();
+    final hopConfig = new HopConfig(taskConfig, [], _testPrint);
+
+    final future = Runner.run(hopConfig);
     expect(future, isNotNull);
 
     final onComplete = expectAsync1((value) {

@@ -83,17 +83,17 @@ void main() {
 Future<RunResult> runTaskInTestRunner(Task task, {List<String> extraArgs}) {
   const _testTaskName = 'test-task';
 
-  final taskConfig = _getTestConfig();
+  final taskConfig = new TaskRegistry();
   taskConfig.addTask(_testTaskName, task);
-  taskConfig.freeze();
 
   final args = [_testTaskName];
   if(extraArgs != null) {
     args.addAll(extraArgs);
   }
 
-  final runner = new Runner(taskConfig, args);
-  return runner.run();
+  final hopConfig = new HopConfig(taskConfig, args, _testPrint);
+
+  return Runner.run(hopConfig);
 }
 
 void testTaskCompletion(Task task, Action1<RunResult> completeHandler,
@@ -104,21 +104,12 @@ void testTaskCompletion(Task task, Action1<RunResult> completeHandler,
   expectFutureComplete(future, completeHandler);
 }
 
-HopConfig _getTestConfig() => new _TestHopConfig();
-
-class _TestHopConfig extends HopConfig {
-
-  _TestHopConfig():super(useColor: false);
-
-  @override
-  void doPrint(Object value) {
-    String msg;
-    try {
-      msg = value.toString();
-    } catch (ex, stack) {
-      msg = Error.safeToString(value);
-    }
-    (new Logger('hop_test_context')).info(msg);
+void _testPrint(Object value) {
+  String msg;
+  try {
+    msg = value.toString();
+  } catch (ex, stack) {
+    msg = Error.safeToString(value);
   }
+  (new Logger('hop_test_context')).info(msg);
 }
-

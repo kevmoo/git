@@ -11,7 +11,7 @@ import 'package:pathos/path.dart' as path;
 
 part 'src/hop/console_context.dart';
 part 'src/hop/help.dart';
-part 'src/hop/hop_config.dart';
+part 'src/hop/task_registry.dart';
 part 'src/hop/root_task_context.dart';
 part 'src/hop/run_result.dart';
 part 'src/hop/runner.dart';
@@ -21,7 +21,7 @@ part 'src/hop/task_context.dart';
 part 'src/hop/task_fail_error.dart';
 part 'src/hop/task_logger.dart';
 
-final _sharedConfig = new HopConfig();
+final _sharedConfig = new TaskRegistry();
 
 final _libLogger = new Logger('hop');
 
@@ -48,11 +48,7 @@ void runHopCore({
   if(paranoid) {
     _paranoidHopCheck();
   }
-  if(helpTaskName != null) {
-    _sharedConfig._addHelpTask(helpTaskName);
-  }
-  _sharedConfig.freeze();
-  Runner.runCore(_sharedConfig);
+  Runner._runShell(_sharedConfig, helpTaskName);
 }
 
 void addTask(String name, Task task) {
@@ -81,7 +77,7 @@ const String _colorFlag = 'color';
 const String _prefixFlag = 'prefix';
 const String _logLevelOption = 'log-level';
 
-ArgParser _getParser(HopConfig config) {
+ArgParser _getParser(TaskRegistry config, Level defaultLogLevel) {
   assert(config.isFrozen);
 
   final parser = new ArgParser();
@@ -100,12 +96,11 @@ ArgParser _getParser(HopConfig config) {
       .map((Level l) => l.name.toLowerCase())
       .toList();
 
-  final String defaultLogLevel = logLevelAllowed.singleMatching((v) => v == config.logLevel.name.toLowerCase());
+  assert(logLevelAllowed.contains(defaultLogLevel.name.toLowerCase()));
 
   parser.addOption(_logLevelOption, allowed: logLevelAllowed,
-      defaultsTo: defaultLogLevel,
+      defaultsTo: defaultLogLevel.name.toLowerCase(),
       help: 'The log level at which task output is printed to the shell');
-
 
   return parser;
 }
