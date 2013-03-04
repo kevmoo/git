@@ -2,22 +2,21 @@ part of hop;
 
 class Runner {
   final ArgParser _parser;
+  final HopConfig _config;
+
   ArgResults _args;
 
-  // TODO: rename this to _config
-  final HopConfig _state;
-
   Runner(HopConfig config, Iterable<String> args) :
-    this._state = config,
+    this._config = config,
     this._parser = _getParser(config) {
     _args = _parser.parse(args);
-    _state.requireFrozen();
+    _config.requireFrozen();
   }
 
-  Runner._internal(this._state, this._parser, this._args);
+  Runner._internal(this._config, this._parser, this._args);
 
   Future<RunResult> run() {
-    assert(_state.isFrozen);
+    assert(_config.isFrozen);
 
     final ctx = getContext();
 
@@ -28,12 +27,12 @@ class Runner {
 
       var subCtx = ctx.getSubContext(taskName, subCommandArgResults);
 
-      final task = _state._getTask(taskName);
+      final task = _config._getTask(taskName);
       return runTask(subCtx, task)
           .then((RunResult result) => _logExitCode(ctx, result));
 
     } else if(_args.rest.length == 0) {
-      _printHelp(_state);
+      _printHelp(_config);
       return new Future.immediate(RunResult.SUCCESS);
     } else {
       final taskName = _args.rest[0];
@@ -50,7 +49,7 @@ class Runner {
     final Level logLevel = _getLogLevels()
         .singleMatching((Level l) => l.name.toLowerCase() == logLevelOption);
 
-    return new RootTaskContext(_state.doPrint,
+    return new RootTaskContext(_config.doPrint,
         prefixEnabled: preFixEnabled, minLogLevel: logLevel);
   }
 

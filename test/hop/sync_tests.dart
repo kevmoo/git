@@ -49,11 +49,11 @@ class SyncTests {
   }
 
   static void _testBadParam() {
-    final tasks = _getTestConfig();
-    tasks.addSync('good', (ctx) => true);
-    tasks.freeze();
+    final taskConfig = _getTestConfig();
+    taskConfig.addSync('good', (ctx) => true);
+    taskConfig.freeze();
 
-    final runner = new Runner(tasks, ['bad']);
+    final runner = new Runner(taskConfig, ['bad']);
     final future = runner.run();
     expect(future, isNotNull);
 
@@ -66,11 +66,11 @@ class SyncTests {
   }
 
   static void _testNoParam() {
-    final tasks = _getTestConfig();
-    tasks.addSync('good', (ctx) => true);
-    tasks.freeze();
+    final taskConfig = _getTestConfig();
+    taskConfig.addSync('good', (ctx) => true);
+    taskConfig.freeze();
 
-    final runner = new Runner(tasks, []);
+    final runner = new Runner(taskConfig, []);
     final future = runner.run();
     expect(future, isNotNull);
 
@@ -83,10 +83,10 @@ class SyncTests {
   }
 
   static void _testNoTasks() {
-    final tasks = _getTestConfig();
-    tasks.freeze();
+    final taskConfig = _getTestConfig();
+    taskConfig.freeze();
 
-    final runner = new Runner(tasks, []);
+    final runner = new Runner(taskConfig, []);
     final future = runner.run();
     expect(future, isNotNull);
 

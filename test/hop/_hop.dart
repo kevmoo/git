@@ -83,16 +83,16 @@ void main() {
 Future<RunResult> runTaskInTestRunner(Task task, {List<String> extraArgs}) {
   const _testTaskName = 'test-task';
 
-  final tasks = _getTestConfig();
-  tasks.addTask(_testTaskName, task);
-  tasks.freeze();
+  final taskConfig = _getTestConfig();
+  taskConfig.addTask(_testTaskName, task);
+  taskConfig.freeze();
 
   final args = [_testTaskName];
   if(extraArgs != null) {
     args.addAll(extraArgs);
   }
 
-  final runner = new Runner(tasks, args);
+  final runner = new Runner(taskConfig, args);
   return runner.run();
 }
 
