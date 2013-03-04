@@ -18,7 +18,6 @@ Task _getHelpTask() {
     final args = ctx.arguments;
 
     if(args.command != null) {
-      // TODO: need TaskContext to expose 'color supported' property
       _printHelpForTask(_sharedConfig, args.command.name);
       return true;
     } else {
