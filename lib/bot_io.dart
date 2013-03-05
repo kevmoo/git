@@ -17,14 +17,11 @@ part 'src/bot_io/io_helpers.dart';
 part 'src/bot_io/shell_string.dart';
 part 'src/bot_io/temp_dir.dart';
 
-/*
- * TODO: Document this! Cool trick, but needs details.
- */
 /**
  * When called, a listener is added to the root [Logger] and all output is
  * appended to a log file named "`new Options().script`.log".
  *
- * The format: [LogRecord.time] 'tab' [LogRecord.loggerName] 'tab' [LoggerRecord.message]
+ * The format: [LogRecord.time] 'tab' [LogRecord.level] 'tab' [LogRecord.loggerName] 'tab' [LoggerRecord.message]
  */
 void enableScriptLogListener() {
   if(_scriptLogListenerPath == null) {
@@ -36,7 +33,7 @@ void enableScriptLogListener() {
     final logging.Logger rootLogger = logging.Logger.root;
     rootLogger.level = logging.Level.ALL;
 
-    rootLogger.on.record.add(_doLog);
+    rootLogger.onRecord.listen(_doLog);
 
     final logging.Logger logger = logging.Logger.root;
 

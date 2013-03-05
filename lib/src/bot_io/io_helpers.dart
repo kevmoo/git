@@ -28,13 +28,12 @@ class IoHelpers {
         .then((List<FileSystemEntity> entities) {
           final map = new Map<String, dynamic>();
           for(final e in entities) {
+            final name = new Path(e.path).filename;
             if(e is File) {
               final file = e as File;
-              final name = new Path(file.name).filename;
               map[name] = file.readAsStringSync();
             } else {
-              final dir = e as Directory;
-              final name = new Path(dir.path).filename;
+              assert(e is Directory);
               map[name] = _dirPlaceHolder;
             }
           }

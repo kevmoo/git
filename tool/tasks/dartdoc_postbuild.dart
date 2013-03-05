@@ -34,7 +34,7 @@ Future _updateTitles(String tempDocDir) {
   final dir = new Directory(tempDocDir);
   return dir.list(recursive:true)
       .where((FileSystemEntity fse) => fse is File)
-      .map((File f) => f.name)
+      .map((File f) => f.path)
       .where((String path) => path.endsWith('.html'))
       .toList()
       .then((List<String> files) {

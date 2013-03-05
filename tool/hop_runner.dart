@@ -52,6 +52,6 @@ void main() {
 Future<List<String>> _getLibs() {
   return new Directory('lib').list()
       .where((FileSystemEntity fse) => fse is File)
-      .map((File file) => file.name)
+      .map((File file) => file.path)
       .toList();
 }

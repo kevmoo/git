@@ -4,6 +4,7 @@ abstract class ListBase<E> extends Enumerable<E> implements List<E> {
 
   const ListBase();
 
+  @override
   List<E> getRange(int start, int length) {
     List<E> result = <E>[];
     for (int i = 0; i < length; i++) {
@@ -12,6 +13,7 @@ abstract class ListBase<E> extends Enumerable<E> implements List<E> {
     return result;
   }
 
+  @override
   int indexOf(E value, [int start = 0]) {
     for (int i = start; i < length; i++) {
       if (this[i] == value) return i;
@@ -19,6 +21,7 @@ abstract class ListBase<E> extends Enumerable<E> implements List<E> {
     return -1;
   }
 
+  @override
   int lastIndexOf(E value, [int start]) {
     if (start == null) start = length - 1;
     for (int i = start; i >= 0; i--) {
@@ -27,7 +30,11 @@ abstract class ListBase<E> extends Enumerable<E> implements List<E> {
     return -1;
   }
 
+  @override
   Iterator<E> get iterator => new _ListIterator(this);
+
+  @override
+  Map<int, E> asMap() => IterableMixinWorkaround.asMapList(this);
 
   void operator []=(int index, E value) {
     throw new UnsupportedError(
