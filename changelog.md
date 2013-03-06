@@ -1,6 +1,6 @@
 # Changelog - Dart Bag of Tricks
 
-## 0.15.0 *pre-release* (SDK 0.4.1.0 r19425)
+## 0.15.0 2013-03-06 (SDK 0.4.1.0 r19425)
 
 * [Changes Since v0.14.2](https://github.com/kevmoo/bot.dart/compare/v0.14.2...master)
 
