@@ -48,19 +48,32 @@
 
 ### bot_retained
 
-_TODO_
+* `MouseManager`
+    * expose `cursorProperty`
+    * __BREAKING__ All events are now `Stream`-based
+    * __BREAKING__ cursor logic no longer sets the `cursor` style on the target `CanvasElement`.
+* __BREAKING__ `Thing`, `ThingParent` and `Stage` `invalidated` now `Stream`
 
 ### bot_texture
 
-_TODO_
+* `TextureAnimationRequest.started` is now `Stream`
 
 ### hop
 
-_TODO_
+* __BREAKING__ `getHelpTask` has been removed. Now a config option on `runHop`
+* `RootTaskContext`
+    * __BREAKING__ constructor now has a mandatory argument `Printer`
+    * __BREAKING__ `log` changed signature to take an `Object` instead of `String`. `color` argument removed.
+    * __BREAKING__ `printCore` removed
+* __BREAKING__ `Runner` is now completely static. All state is stored and passed in via new `HopConfig` class.
+* `TaskLogger` learned `finest`, `finer`, and `config` log levels.
+* __BREAKING__ `HopConfig` was renamed `TaskRegistry`. A lot of members were hidden.
 
 ### hop_tasks
 
-_TODO_
+* __dartdoc__
+    * __NEW!__ `createDartDocTask` method that returns a `Task`. Supports `postBuild` option. Smart defaults.
+    * __DEPRECATED__ `getCompileDocsFunc` and `compileDocs`
 
 ## 0.14.2 - 25 Feb 2013 (SDK 0.4.0.0 r18915)
 
