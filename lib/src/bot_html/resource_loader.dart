@@ -15,8 +15,9 @@ abstract class ResourceLoader<T> {
 
   String _state = StateUnloaded;
 
-  ResourceLoader(Iterable<String> urlList) :
-    _entries = new ReadOnlyCollection(urlList.map((url) => new _ResourceEntry(url)));
+  ResourceLoader(Iterable<String> urlList) : _entries = $(urlList)
+      .map((url) => new _ResourceEntry(url))
+      .toReadOnlyCollection();
 
   int get completedCount => _entries.count((e) => e.completed);
 
@@ -42,40 +43,20 @@ abstract class ResourceLoader<T> {
     }).sum();
   }
 
-  void load() {
+  Future load() {
     assert(_state == StateUnloaded);
     _state = StateLoading;
-    for(final e in _entries) {
-      _httpLoad(e.url);
-    }
+    return Future.wait(_entries.map((e) => _httpLoad(e)))
+        .then((_) {
+          if(_entries.every((e) => e.completed)) {
+            _state = StateLoaded;
+            _loadedEvent.add(EventArgs.empty);
+          }
+        });
   }
 
-  // protected
-  void _doLoad(String blobUrl);
-
-  // protected
-  void _loadResourceFailed(String blobUrl) {
-    // TODO: report error some how?
-    final e = _getByBlobUrl(blobUrl);
-    print(["failled to load resources with blobUrl", e.url]);
-    e.revokeBlobUrl();
-  }
-
-  // protected
-  void _loadResourceSucceed(String blobUrl, T resource) {
-    assert(_state == StateLoading);
-    assert(resource != null);
-
-    final entry = _getByBlobUrl(blobUrl);
-    entry.revokeBlobUrl();
-
-    entry.setResource(resource);
-
-    if(_entries.every((e) => e.completed)) {
-      _state = StateLoaded;
-      _loadedEvent.add(EventArgs.empty);
-    }
-  }
+  @protected
+  Future<T> _doLoad(String blobUrl);
 
   _ResourceEntry<T> _getByUrl(String url) {
     assert(url != null);
@@ -87,43 +68,32 @@ abstract class ResourceLoader<T> {
     return _entries.singleMatching((e) => e.matchesBlobUrl(blobUrl));
   }
 
-  void _httpLoad(String url) {
-    final request = new HttpRequest();
-
-    final e = _getByUrl(url);
-
-    request.onAbort.listen((args) => _onError(e, args));
-    request.onError.listen((args) => _onError(e, args));
-
-    // use loadEnd instead
-    //request.on.load.add(_onHttpEvent);
-    request.onLoadEnd.listen((args) => _onLoadEnd(e, args));
-
-    // loadStart is not that interesting
-    //request.on.loadStart.add(_onHttpEvent);
-    request.onProgress.listen((args) => _onProgress(e, args));
-
-    // doesn't seem to add anything over other methods
-    // request.on.readyStateChange.add(_onHttpEvent);
-    request.open('GET', url);
-    request.responseType = 'blob';
-    request.send();
+  Future _httpLoad(_ResourceEntry<T> entry) {
+    return HttpRequest.request(entry.url, responseType: 'blob',
+        onProgress: (ProgressEvent args) => _onProgress(entry, args))
+        .then((HttpRequest request) => _onLoadEnd(entry, request))
+        .catchError((AsyncError error) => _onError(entry, error));
   }
 
-  void _onLoadEnd(_ResourceEntry<T> entry, HttpRequestProgressEvent args) {
-    final HttpRequest request = args.currentTarget;
+  Future _onLoadEnd(_ResourceEntry<T> entry, HttpRequest request) {
     assert(request.readyState == HttpRequest.DONE);
-    if(request.status == 200) {
-      final blobUrl = entry.getBlobUrl(request.response);
-      _doLoad(blobUrl);
-    } else {
-      _onError(entry, args);
-    }
+    assert(request.status == 200);
+    require(request.response != null, 'request.response should not be null');
+    final blobUrl = entry.getBlobUrl(request.response);
+
+    return _doLoad(blobUrl)
+        .then((T resource) {
+          assert(_state == StateLoading);
+          assert(resource != null);
+          entry.setResource(resource);
+        })
+        .whenComplete(() => entry.revokeBlobUrl());
   }
 
-  void _onError(_ResourceEntry<T> entry, HttpRequestProgressEvent args) {
-    // some error thingy here...
-    throw 'wtf?';
+  void _onError(_ResourceEntry<T> entry, AsyncError error) {
+    _libLogger.severe('There was an error loading resource ${entry.url}');
+    _libLogger.severe(error.toString());
+    throw error;
   }
 
   void _onProgress(_ResourceEntry<T> entry, HttpRequestProgressEvent args) {

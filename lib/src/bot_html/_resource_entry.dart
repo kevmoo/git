@@ -6,7 +6,9 @@ class _ResourceEntry<T> {
   String _blobUrl;
   int _total = null, _completed = 0;
 
-  _ResourceEntry(this.url);
+  _ResourceEntry(this.url) {
+    assert(url != null && !url.isEmpty);
+  }
 
   int get totalBytes => _total;
 

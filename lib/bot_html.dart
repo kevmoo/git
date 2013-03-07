@@ -4,6 +4,7 @@ import 'dart:html';
 import 'dart:async';
 import 'dart:math' as math;
 import 'dart:web_audio';
+import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 import 'package:bot/bot.dart';
 
@@ -15,3 +16,5 @@ part 'src/bot_html/top_level.dart';
 part 'src/bot_html/html_view.dart';
 part 'src/bot_html/image_loader.dart';
 part 'src/bot_html/resource_loader.dart';
+
+final _libLogger = new Logger('bot_html');
