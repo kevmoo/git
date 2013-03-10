@@ -58,7 +58,7 @@ class Console {
     return cells.rows.map((r) => _getRow(r, maxWidths));
   }
 
-  static String _getRow(List<String> row, List<int> columnWidths) {
+  static String _getRow(Sequence<String> row, List<int> columnWidths) {
     final minBuffer = 3;
 
     assert(row.length == columnWidths.length);

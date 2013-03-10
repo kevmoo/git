@@ -1,6 +1,6 @@
 part of bot;
 
-class ReadOnlyCollection<T> extends ListBase<T> {
+class ReadOnlyCollection<T> extends Sequence<T> {
   final List<T> _items;
 
   /**
@@ -16,6 +16,7 @@ class ReadOnlyCollection<T> extends ListBase<T> {
    * Copies all of the elements from [source] into a new collection.
    * Add or removing items in source will not change the contents of the
    * new collection.
+   *
    * _Note: this is not a **deep** copy._
    **/
   ReadOnlyCollection(Iterable<T> source) :
@@ -24,14 +25,15 @@ class ReadOnlyCollection<T> extends ListBase<T> {
   /**
    * Returns the number of elements in this collection.
    */
+  @override
   int get length => _items.length;
 
   /**
    * Returns the element at the given [index] in the list or throws
    * an [IndexOutOfRangeException] if [index] is out of bounds.
    */
+  @override
   T operator [](int index) {
-    // NOTE: we're relying on List<E> to do the range checking for us.
     return _items[index];
   }
 }

@@ -113,16 +113,13 @@ class _DistinctIterator<T> implements Iterator<T> {
   }
 }
 
-/**
- * Iterates over a [List] in growing index order.
- */
-class _ListIterator<E> implements Iterator<E> {
-  final List<E> _list;
+class _SequenceIterator<E> implements Iterator<E> {
+  final Sequence<E> _list;
   final int _length;
   int _position;
   E _current;
 
-  _ListIterator(List<E> list)
+  _SequenceIterator(Sequence<E> list)
       : _list = list, _position = -1, _length = list.length;
 
   bool moveNext() {

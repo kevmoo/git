@@ -8,9 +8,11 @@ class TaskRegistry {
   String _helpTaskName;
   ReadOnlyCollection<String> _sortedTaskNames;
 
-  /// Can only be accessed when frozen
-  /// Always sorted
-  List<String> get taskNames {
+  /**
+   * Can only be accessed when frozen
+   * Always sorted
+   */
+  Sequence<String> get taskNames {
     _requireFrozen();
     return _sortedTaskNames;
   }

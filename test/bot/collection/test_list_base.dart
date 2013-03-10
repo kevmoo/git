@@ -1,10 +1,10 @@
 part of test_bot;
 
-class TestListBase extends ListBase<int> {
+class TestListBase extends Sequence<int> {
   static final int _length = 5;
   static final TestListBase instance = const TestListBase();
   static final TestListBase flipped = const TestListBase(true);
-  static final ListBase<int> empty = const ReadOnlyCollection.empty();
+  static final Sequence<int> empty = const ReadOnlyCollection.empty();
 
   final bool flip;
 
@@ -33,7 +33,6 @@ class TestListBase extends ListBase<int> {
     group('ListBase', (){
       test('filter', _testFilter);
       test('forEach', _testForEach);
-      test('getRange', _testRange);
       test('indexOf', _testIndexOf);
       test('map', _testMap);
       test('reduce', _testReduce);
@@ -101,33 +100,6 @@ class TestListBase extends ListBase<int> {
     //
     expect(flipped.indexOf(0), equals(-1));
     expect(flipped.lastIndexOf(0), equals(-1));
-  }
-
-  static void _testRange() {
-    var mt = roc([]);
-    expect(mt.getRange(0, 0), orderedEquals([]));
-
-    expect(mt.getRange(-1, 0), orderedEquals([]));
-
-    var oneTwo = roc([1, 2]);
-    expect(oneTwo.getRange(0, 2), orderedEquals([1, 2]));
-
-    expect(oneTwo.getRange(0, 1), orderedEquals([1]));
-
-    expect(oneTwo.getRange(1, 1), orderedEquals([2]));
-
-    expect(oneTwo.getRange(0, 0), orderedEquals([]));
-
-    expect(roc([1, 2, 3, 4]).getRange(1, 2), orderedEquals([2, 3]));
-
-    expect(roc([1, 2, 3, 4]).getRange(1, 2), orderedEquals([2, 3]));
-
-    expect(mt.getRange(0, -1), orderedEquals([]));
-
-    expect(() => mt.getRange(-1, 1), throwsArgumentError);
-    expect(() => mt.getRange(1, 1), throwsArgumentError);
-    expect(() => roc([1]).getRange(0, 2), throwsArgumentError);
-    expect(() => roc([1]).getRange(1, 1), throwsArgumentError);
   }
 
   static void _testForEach() {

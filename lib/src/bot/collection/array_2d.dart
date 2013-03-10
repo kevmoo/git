@@ -5,7 +5,7 @@ part of bot;
 // implement equals
 // toString
 
-class Array2d<T> extends ListBase<T> {
+class Array2d<T> extends Sequence<T> {
   final int width;
   final int height;
   final List<T> _source;
@@ -15,7 +15,7 @@ class Array2d<T> extends ListBase<T> {
     requireArgumentNotNull(source, 'source');
     final list = new List<T>.from(source);
     final s = source == null ? null : new ReadOnlyCollection<T>.wrap(list);
-    return new Array2d.wrap(width, s);
+    return new Array2d.wrap(width, s.asList());
   }
 
   factory Array2d(int width, int height, [T initialValue]) {
@@ -67,7 +67,7 @@ class Array2d<T> extends ListBase<T> {
 
   // TODO: test
   //  - especially equality across instances, rows, etc
-  List<List<T>> get rows =>
+  Sequence<Sequence<T>> get rows =>
       new _Array2dRows(this);
 
   T get(int x, int y) {
@@ -112,30 +112,36 @@ class Array2d<T> extends ListBase<T> {
   }
 }
 
-class _Array2dRows<T> extends ListBase<List<T>> {
+class _Array2dRows<T> extends Sequence<Sequence<T>> {
   final Array2d<T> source;
 
   _Array2dRows(this.source);
 
+  @override
   int get length => source.height;
 
-  List<T> operator [](int index) => new _Array2dRow<T>(this.source, index);
+  @override
+  Sequence<T> operator [](int index) => new _Array2dRow<T>(this.source, index);
 
+  @override
   bool operator ==(other) {
     return other is _Array2dRows && other.source == this.source;
   }
 }
 
-class _Array2dRow<T> extends ListBase<T> {
+class _Array2dRow<T> extends Sequence<T> {
   final Array2d<T> source;
   final int row;
 
   _Array2dRow(this.source, this.row);
 
+  @override
   int get length => source.width;
 
+  @override
   T operator [](int index) => source.get(index, row);
 
+  @override
   bool operator ==(other) {
     return other is _Array2dRow && other.source == this.source &&
         other.row == this.row;

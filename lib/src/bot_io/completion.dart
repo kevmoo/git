@@ -264,7 +264,7 @@ List<String> getArgsCompletions(ArgParser parser, List<String> providedArgs,
    */
   if(lastArg == '--') {
     sublog('Completing with all available options.');
-    return parserOptionCompletions;
+    return parserOptionCompletions.asList();
   }
 
   /*
