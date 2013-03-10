@@ -38,7 +38,6 @@ class TestListBase extends ListBase<int> {
       test('map', _testMap);
       test('reduce', _testReduce);
       test('simple', _testSimple);
-      test('some and all', _testSomeAll);
       test('last', _testLast);
     });
   }
@@ -139,22 +138,6 @@ class TestListBase extends ListBase<int> {
     sum = 0;
     flipped.forEach((e) => sum += e);
     expect(sum, equals(30));
-  }
-
-  static void _testSomeAll() {
-    expect(instance.every(_lt0), isFalse);
-    expect(instance.some(_lt0), isFalse);
-
-    expect(instance.every(_gt0), isTrue);
-    expect(instance.some(_gt0), isTrue);
-
-    expect(instance.every(_lt3), isFalse);
-    expect(instance.some(_lt3), isTrue);
-
-    [_lt0, _gt0, _lt3].forEach((f) {
-      expect(empty.some(f), isFalse);
-      expect(empty.every(f), isTrue);
-    });
   }
 
   static void _testFilter() {

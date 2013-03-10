@@ -16,43 +16,21 @@ abstract class Enumerable<T> extends Iterable<T> {
     return new _SimpleEnumerable<T>(source);
   }
 
-  /**
-   * Returns true if one element of this collection satisfies the
-   * predicate [f]. Returns false otherwise.
-   */
-  bool some(Func1<T, bool> f) {
-    requireArgumentNotNull(f, 'f');
-    for (final e in this) {
-      if(f(e)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   int count(Func1<T, bool> f) =>
       CollectionUtil.count(this, f);
 
-  @deprecated
-  Enumerable mappedBy(Func1<T, Object> f) =>
-      this.map(f);
-
+  @override
   Enumerable map(Func1<T, Object> f) =>
       $(super.map(f));
 
+  @override
   Enumerable<T> where(Func1<T, bool> f) =>
       $(super.where(f));
 
   Enumerable<T> exclude(Iterable<T> items) =>
       CollectionUtil.exclude(this, items);
 
-  /**
-   * Use [expand] instead
-   */
-  @deprecated
-  Enumerable selectMany(Func1<T, Iterable> f) =>
-      this.expand(f);
-
+  @override
   Enumerable expand(Func1<T, Iterable> f) =>
       $(super.expand(f));
 
@@ -72,31 +50,13 @@ abstract class Enumerable<T> extends Iterable<T> {
     }
   }
 
-  /**
-   * Use the [map] method then [toSet] instead.
-   */
-  @deprecated
-  Set toHashSet([Func1<T, dynamic> f]) {
-    if(f == null) {
-      return this.toSet();
-    } else {
-      return this.map(f).toSet();
-    }
-  }
-
-  /**
-   * Use [toMap] instead.
-   */
-  @deprecated
-  Map toHashMap(Func1<T, Object> valueFunc, [Func1<T, dynamic> keyFunc]) =>
-      this.toMap(valueFunc, keyFunc);
-
   Map toMap(Func1<T, Object> valueFunc, [Func1<T, dynamic> keyFunc]) =>
       CollectionUtil.toMap(this, valueFunc, keyFunc);
 
   NumberEnumerable selectNumbers(Func1<T, num> f) =>
       new NumberEnumerable.from(this.map(f));
 
+  @override
   String toString() => "[${join(', ')}]";
 }
 
@@ -105,6 +65,7 @@ class _SimpleEnumerable<T> extends Enumerable<T> {
 
   const _SimpleEnumerable(this._source) : super();
 
+  @override
   Iterator<T> get iterator => _source.iterator;
 }
 
@@ -114,5 +75,6 @@ class _FuncEnumerable<TSource, TOutput> extends Enumerable<TOutput> {
 
   const _FuncEnumerable(this._source, this._func) : super();
 
+  @override
   Iterator<TOutput> get iterator => _func(_source);
 }
