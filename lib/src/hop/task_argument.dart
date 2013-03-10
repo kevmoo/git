@@ -13,12 +13,12 @@ class TaskArgument {
     requireArgumentContainsPattern(nameRegex, name, 'name');
   }
 
-  static void validateArgs(List<TaskArgument> args) {
+  static void validateArgs(Iterable<TaskArgument> args) {
     requireArgumentNotNull(args, 'args');
 
     bool finishRequired = false;
-    for(var i = 0; i < args.length; i++) {
-      final arg = args[i];
+
+    $(args).forEachWithIndex((arg, i) {
       final argName = 'args[$i]';
       requireArgumentNotNull(arg, argName);
 
@@ -37,6 +37,6 @@ class TaskArgument {
       for(final other in args.take(i)) {
         requireArgument(arg.name != other.name, argName, 'name ${arg.name} has already been defined');
       }
-    }
+    });
   }
 }

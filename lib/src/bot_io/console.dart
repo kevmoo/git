@@ -18,7 +18,7 @@ class Console {
    */
   static bool get supportsColor => Platform.environment.containsKey('CLICOLOR');
 
-  static Iterable<String> getTable(List source,
+  static Iterable<String> getTable(Iterable source,
       List<ColumnDefinition> columns, {bool includeHeader: false}) {
     requireArgumentNotNull(source, 'source');
     requireArgumentNotNull(columns, 'columns');
@@ -45,15 +45,15 @@ class Console {
       }
     }
 
-    for(int i = 0; i < source.length; i++) {
+    $(source).forEachWithIndex((item, i) {
       final rowIndex = i + headerInclude;
       for(var col = 0; col < columns.length; col++) {
         final column = columns[col];
-        final value = column._mapper(source[i]).trim();
+        final value = column._mapper(item).trim();
         maxWidths[col] = math.max(maxWidths[col], value.length);
         cells.set(col, rowIndex, value);
       }
-    }
+    });
 
     return cells.rows.map((r) => _getRow(r, maxWidths));
   }
