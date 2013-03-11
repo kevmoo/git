@@ -20,7 +20,7 @@ class ReadOnlyCollection<T> extends Sequence<T> {
    * _Note: this is not a **deep** copy._
    **/
   ReadOnlyCollection(Iterable<T> source) :
-    _items = new List<T>.from(source);
+    _items = new List<T>.from(source, growable: false);
 
   /**
    * Returns the number of elements in this collection.
@@ -33,7 +33,5 @@ class ReadOnlyCollection<T> extends Sequence<T> {
    * an [IndexOutOfRangeException] if [index] is out of bounds.
    */
   @override
-  T operator [](int index) {
-    return _items[index];
-  }
+  T operator [](int index) => _items[index];
 }
