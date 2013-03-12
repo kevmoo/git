@@ -93,7 +93,7 @@ Future<int> _analyzer(TaskLogger logger, Path filePath, bool enableTypeChecks,
 
         processArgs.addAll([filePath.toNativePath()]);
 
-        return Process.start('dart_analyzer', processArgs);
+        return Process.start(_getDartAnalyzerExePath(), processArgs);
       })
       .then((process) {
         if(verbose) {
@@ -109,4 +109,14 @@ Future<int> _analyzer(TaskLogger logger, Path filePath, bool enableTypeChecks,
           tmpDir.dispose();
         }
       });
+}
+
+
+String _getDartAnalyzerExePath() {
+  final bin = 'dart_analyzer';
+  if(Platform.operatingSystem == 'windows') {
+    return bin.concat('.bat');
+  } else {
+    return bin;
+  }
 }
