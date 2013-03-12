@@ -1,5 +1,11 @@
 # Changelog - Dart Bag of Tricks
 
+## 0.15.0+2 2013-03-12 (SDK 0.4.1.0 r19425)
+
+### hop_tasks
+
+* Fixed `dart2js` and `dart_analyzer` task on Windows
+
 ## 0.15.0+1 2013-03-11 (SDK 0.4.1.0 r19425)
 
 ### hop_tasks
