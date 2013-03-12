@@ -77,15 +77,5 @@ Future<bool> _dart2js(TaskContext ctx, String file, {String output: null,
     args.add('--package-root=$packageRoot');
   }
 
-  return startProcess(ctx, _getDart2JsExePath(), args);
-}
-
-
-String _getDart2JsExePath() {
-  final bin = 'dart2js';
-  if(Platform.operatingSystem == 'windows') {
-    return bin.concat('.bat');
-  } else {
-    return bin;
-  }
+  return startProcess(ctx, _getPlatformBin('dart2js'), args);
 }

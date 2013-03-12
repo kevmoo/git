@@ -34,3 +34,11 @@ ArgResults _helpfulParseArgs(TaskContext ctx, ArgParser parser, List<String> arg
     ctx.fail(ex.message);
   }
 }
+
+String _getPlatformBin(String binName) {
+  if(Platform.operatingSystem == 'windows') {
+    return '${binName}.bat';
+  } else {
+    return binName;
+  }
+}
