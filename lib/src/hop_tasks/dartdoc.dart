@@ -155,7 +155,7 @@ Future _doDocsPopulate(TaskContext ctx, TempDir dir, Collection<String> libs,
 
   final sublogger = ctx.getSubLogger('dartdoc');
 
-  return startProcess(sublogger, "dartdoc", args)
+  return startProcess(sublogger, _getDartDocExePath(), args)
       .then((bool dartDocSuccess) {
         if(!dartDocSuccess) {
           ctx.fail('The dartdoc process failed.');
@@ -169,4 +169,12 @@ Future _doDocsPopulate(TaskContext ctx, TempDir dir, Collection<String> libs,
           return postBuild(ctx.getSubLogger('post-build'), dir.path);
         }
       });
+}
+
+String _getDartDocExePath() {
+  if(Platform.operatingSystem == 'windows') {
+    return 'dartdoc.bat';
+  } else {
+    return 'dartdoc';
+  }
 }

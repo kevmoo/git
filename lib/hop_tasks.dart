@@ -7,6 +7,7 @@ import 'dart:math' as math;
 
 import 'package:args/args.dart';
 import 'package:meta/meta.dart';
+import 'package:pathos/path.dart' as path;
 import 'package:unittest/unittest.dart' as unittest;
 
 import 'package:bot/bot.dart';
