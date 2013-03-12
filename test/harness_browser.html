@@ -5,26 +5,8 @@
     <title>Run the unit tests</title>
   </head>
   <body>
-    <script type="application/dart" src="harness_browser.dart"></script>
+    <script type="text/javascript" src="packages/unittest/test_controller.js"></script>
     <script src="packages/browser/dart.js"></script>
-    <script>
-      if (window.testRunner) {
-        testRunner.dumpAsText();
-        testRunner.waitUntilDone();
-        window.addEventListener("message", receiveMessage, false);
-        window.addEventListener('error', onError);
-      }
-
-      function onError(event) {
-        testRunner.notifyDone();
-      }
-
-      function receiveMessage(event) {
-        if(event.data == 'unittest-suite-done') {
-          testRunner.notifyDone();
-        }
-      }
-
-    </script>
+    <script type="application/dart" src="harness_browser.dart"></script>
   </body>
 </html>
