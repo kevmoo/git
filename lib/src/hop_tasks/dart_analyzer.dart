@@ -93,7 +93,7 @@ Future<int> _analyzer(TaskLogger logger, Path filePath, bool enableTypeChecks,
 
         processArgs.addAll([filePath.toNativePath()]);
 
-        return Process.start('dart_analyzer', processArgs);
+        return Process.start(_getPlatformBin('dart_analyzer'), processArgs);
       })
       .then((process) {
         if(verbose) {

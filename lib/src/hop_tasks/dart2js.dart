@@ -77,5 +77,5 @@ Future<bool> _dart2js(TaskContext ctx, String file, {String output: null,
     args.add('--package-root=$packageRoot');
   }
 
-  return startProcess(ctx, 'dart2js', args);
+  return startProcess(ctx, _getPlatformBin('dart2js'), args);
 }

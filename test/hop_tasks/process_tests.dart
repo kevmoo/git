@@ -12,8 +12,8 @@ class ProcessTests {
   }
 
   static void _testProcessSuccess() {
-    final scriptPath = _getTestScriptPath('bash_exit_0');
-    final task = createProcessTask(scriptPath);
+    final scriptPath = _getTestScriptPath('exit0');
+    final task = createProcessTask('dart', args: [scriptPath]);
 
     testTaskCompletion(task, (RunResult result) {
       expect(result.success, isTrue);
@@ -21,8 +21,8 @@ class ProcessTests {
   }
 
   static void _testProcessFail() {
-    final scriptPath = _getTestScriptPath('bash_exit_1');
-    final task = createProcessTask(scriptPath);
+    final scriptPath = _getTestScriptPath('exit1');
+    final task = createProcessTask('dart', args: [scriptPath]);
 
     testTaskCompletion(task, (RunResult rr) {
       expect(rr, RunResult.FAIL);
@@ -45,7 +45,7 @@ class ProcessTests {
     // assume that script was run from the root of the project
     // so...the file should be at...
 
-    final filePath = 'test/hop_tasks/process_scripts/$name';
+    final filePath = 'test/hop_tasks/process_scripts/$name.dart';
     final file = new File(filePath);
 
     if(!file.existsSync()) {
