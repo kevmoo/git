@@ -14,7 +14,13 @@ class TestEnumerable {
       });
       test('selectNumbers', _testSelectNumbers);
       test('toMap', _testToMap);
+      test('concat', _testConcat);
     });
+  }
+
+  static void _testConcat() {
+    final enum = $([0,1,2]).concat([3,4,5]);
+    expect(enum, orderedEquals([0,1,2,3,4,5]));
   }
 
   static void _testExclude() {

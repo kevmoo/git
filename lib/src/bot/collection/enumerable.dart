@@ -41,6 +41,9 @@ abstract class Enumerable<T> extends Iterable<T> {
     return new Grouping(this, keyFunc);
   }
 
+  Enumerable<T> concat(Iterable<T> source) =>
+      $([this, source]).expand((e) => e);
+
   ReadOnlyCollection<T> toReadOnlyCollection() => new ReadOnlyCollection<T>(this);
 
   void forEachWithIndex(Action2<T, int> f) {
@@ -63,7 +66,7 @@ abstract class Enumerable<T> extends Iterable<T> {
 class _SimpleEnumerable<T> extends Enumerable<T> {
   final Iterable<T> _source;
 
-  const _SimpleEnumerable(this._source) : super();
+  _SimpleEnumerable(this._source) : super();
 
   @override
   Iterator<T> get iterator => _source.iterator;
@@ -73,7 +76,7 @@ class _FuncEnumerable<TSource, TOutput> extends Enumerable<TOutput> {
   final TSource _source;
   final Func1<TSource, Iterator<TOutput>> _func;
 
-  const _FuncEnumerable(this._source, this._func) : super();
+  _FuncEnumerable(this._source, this._func) : super();
 
   @override
   Iterator<TOutput> get iterator => _func(_source);
