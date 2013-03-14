@@ -5810,39 +5810,6 @@ $$._waitForPendingPorts_anon = {"": "Closure;callback_0",
   }
 };
 
-$$.HashMap_addAll_anon = {"": "Closure;this_0",
-  call$2: function(key, value) {
-    var t1, offset;
-    t1 = this.this_0;
-    offset = t1.get$_hashTable()._put$1(key);
-    t1.get$_hashTable()._setValue$2(offset, value);
-    t1.get$_hashTable()._checkCapacity$0();
-  }
-};
-
-$$.AsyncError_throwDelayed_reportError = {"": "Closure;this_0",
-  call$0: function() {
-    var t1 = this.this_0;
-    $.Primitives_printString("Uncaught Error: " + $.S(t1.get$error()));
-    t1 = t1.get$stackTrace();
-    if (t1 != null)
-      $.Primitives_printString("Stack Trace:\n" + $.S(t1) + "\n");
-  }
-};
-
-$$.AsyncError_throwDelayed_anon = {"": "Closure;this_1,reportError_2",
-  call$0: function() {
-    this.reportError_2.call$0();
-    throw $.$$throw(this.this_1.get$error());
-  }
-};
-
-$$._FutureImpl__handleValue_anon = {"": "Closure;thenFuture_0,value_1",
-  call$0: function() {
-    this.thenFuture_0._sendValue$1(this.value_1);
-  }
-};
-
 $$.Stream_toList_anon = {"": "Closure;result_0",
   call$1: function(data) {
     $.add$1$a(this.result_0, data);
@@ -5878,9 +5845,36 @@ $$.Stream_length_anon0 = {"": "Closure;box_0,future_1",
   }
 };
 
-$$._PendingSendPortFinder_visitList_anon = {"": "Closure;this_0",
-  call$1: function(e) {
-    return this.this_0._dispatch$1(e);
+$$.HashMap_addAll_anon = {"": "Closure;this_0",
+  call$2: function(key, value) {
+    var t1, offset;
+    t1 = this.this_0;
+    offset = t1.get$_hashTable()._put$1(key);
+    t1.get$_hashTable()._setValue$2(offset, value);
+    t1.get$_hashTable()._checkCapacity$0();
+  }
+};
+
+$$.AsyncError_throwDelayed_reportError = {"": "Closure;this_0",
+  call$0: function() {
+    var t1 = this.this_0;
+    $.Primitives_printString("Uncaught Error: " + $.S(t1.get$error()));
+    t1 = t1.get$stackTrace();
+    if (t1 != null)
+      $.Primitives_printString("Stack Trace:\n" + $.S(t1) + "\n");
+  }
+};
+
+$$.AsyncError_throwDelayed_anon = {"": "Closure;this_1,reportError_2",
+  call$0: function() {
+    this.reportError_2.call$0();
+    throw $.$$throw(this.this_1.get$error());
+  }
+};
+
+$$._FutureImpl__handleValue_anon = {"": "Closure;thenFuture_0,value_1",
+  call$0: function() {
+    this.thenFuture_0._sendValue$1(this.value_1);
   }
 };
 
@@ -5902,6 +5896,12 @@ $$.Stream_isEmpty_anon = {"": "Closure;box_0,future_1",
 $$.Stream_isEmpty_anon0 = {"": "Closure;future_2",
   call$0: function() {
     this.future_2._liblib0$_setValue$1(true);
+  }
+};
+
+$$._PendingSendPortFinder_visitList_anon = {"": "Closure;this_0",
+  call$1: function(e) {
+    return this.this_0._dispatch$1(e);
   }
 };
 
@@ -5957,15 +5957,15 @@ $$._StreamImpl__sendError_anon = {"": "Closure;error_0",
   }
 };
 
-$$.MouseManager__mouseUp_anon = {"": "Closure;",
-  call$1: function(e) {
-    return $.get$MouseManager__isClickableProperty().get$1(e);
-  }
-};
-
-$$.MouseManager__mouseUp_anon0 = {"": "Closure;",
-  call$0: function() {
-    return;
+$$._BaseSendPort_call_anon = {"": "Closure;completer_0,port_1",
+  call$2: function(value, ignoreReplyTo) {
+    var t1;
+    this.port_1.close$0();
+    t1 = this.completer_0;
+    if (typeof value === "object" && value !== null && !!value.$isException)
+      t1.completeError$1(value);
+    else
+      t1.complete$1(value);
   }
 };
 
@@ -5987,6 +5987,18 @@ $$.invokeClosure_anon1 = {"": "Closure;closure_3,arg1_4,arg2_5",
   }
 };
 
+$$.MouseManager__mouseUp_anon = {"": "Closure;",
+  call$1: function(e) {
+    return $.get$MouseManager__isClickableProperty().get$1(e);
+  }
+};
+
+$$.MouseManager__mouseUp_anon0 = {"": "Closure;",
+  call$0: function() {
+    return;
+  }
+};
+
 $$._StreamImpl__sendDone_anon = {"": "Closure;this_0",
   call$1: function(subscriber) {
     var e, e0, s, exception, t1;
@@ -6005,18 +6017,6 @@ $$._StreamImpl__sendDone_anon = {"": "Closure;this_0",
       }
     }
 
-  }
-};
-
-$$._BaseSendPort_call_anon = {"": "Closure;completer_0,port_1",
-  call$2: function(value, ignoreReplyTo) {
-    var t1;
-    this.port_1.close$0();
-    t1 = this.completer_0;
-    if (typeof value === "object" && value !== null && !!value.$isException)
-      t1.completeError$1(value);
-    else
-      t1.complete$1(value);
   }
 };
 
@@ -8247,26 +8247,26 @@ Isolate.makeConstantList = function(list) {
   return list;
 };
 $.CONSTANT23 = Isolate.makeConstantList([]);
-$.CONSTANT10 = new $.EventArgs();
 $.CONSTANT21 = new $.EventStreamProvider("mousemove");
-$.CONSTANT1 = new $.ShapeType("Rect");
+$.CONSTANT10 = new $.EventArgs();
 $.CONSTANT3 = new $.ShapeType("Ellipse");
+$.CONSTANT1 = new $.ShapeType("Rect");
 $.CONSTANT22 = new $.Object();
 $.CONSTANT14 = new $._LinkedHashTableHeadMarker();
 $.CONSTANT24 = new $.Coordinate(0, 0);
 $.CONSTANT19 = new $.EventStreamProvider("mouseup");
 $.CONSTANT20 = new $.EventStreamProvider("mouseout");
-$.CONSTANT12 = new $.Duration(0);
 $.CONSTANT11 = new $.DisposedError("Invalid operation on disposed object");
+$.CONSTANT12 = new $.Duration(0);
 $.CONSTANT9 = new $.JSNull();
 $.CONSTANT5 = new $.JSArray();
 $.CONSTANT0 = new $.NullThrownError();
 $.CONSTANT6 = new $.JSNumber();
-$.CONSTANT17 = new $.JSInt();
+$.CONSTANT18 = new $.EventStreamProvider("mousedown");
 $.CONSTANT = new $.JSString();
 $.CONSTANT15 = new $._UndefinedValue();
-$.CONSTANT18 = new $.EventStreamProvider("mousedown");
 $.CONSTANT2 = new $.Coordinate(110, 15);
+$.CONSTANT17 = new $.JSInt();
 $.CONSTANT4 = new $.Coordinate(50, 150);
 $.CONSTANT16 = new $.EventStreamProvider("blur");
 $.CONSTANT13 = new $._DelayedDone();

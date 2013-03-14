@@ -5810,15 +5810,15 @@ $$._RetainedEnum = {"": "Object;name>",
   }
 };
 
-$$.ParentThing_update_anon = {"": "Closure;",
-  call$1: function(e) {
-    return e.update$0();
-  }
-};
-
 $$.ParentThing_drawOverride_anon = {"": "Closure;ctx_0",
   call$1: function(e) {
     return e.drawCore$1(this.ctx_0);
+  }
+};
+
+$$.ParentThing_update_anon = {"": "Closure;",
+  call$1: function(e) {
+    return e.update$0();
   }
 };
 
@@ -5879,29 +5879,6 @@ $$._waitForPendingPorts_anon = {"": "Closure;callback_0",
   }
 };
 
-$$.AsyncError_throwDelayed_reportError = {"": "Closure;this_0",
-  call$0: function() {
-    var t1 = this.this_0;
-    $.Primitives_printString("Uncaught Error: " + $.S(t1.get$error()));
-    t1 = t1.get$stackTrace();
-    if (t1 != null)
-      $.Primitives_printString("Stack Trace:\n" + $.S(t1) + "\n");
-  }
-};
-
-$$.AsyncError_throwDelayed_anon = {"": "Closure;this_1,reportError_2",
-  call$0: function() {
-    this.reportError_2.call$0();
-    throw $.$$throw(this.this_1.get$error());
-  }
-};
-
-$$._FutureImpl__handleValue_anon = {"": "Closure;thenFuture_0,value_1",
-  call$0: function() {
-    this.thenFuture_0._sendValue$1(this.value_1);
-  }
-};
-
 $$.LinkedHashMap_addAll_anon = {"": "Closure;this_0",
   call$2: function(key, value) {
     var t1, offset;
@@ -5909,18 +5886,6 @@ $$.LinkedHashMap_addAll_anon = {"": "Closure;this_0",
     offset = t1.get$_hashTable()._put$1(key);
     t1.get$_hashTable()._setValue$2(offset, value);
     t1.get$_hashTable()._checkCapacity$0();
-  }
-};
-
-$$.Stream_toList_anon = {"": "Closure;result_0",
-  call$1: function(data) {
-    $.add$1$a(this.result_0, data);
-  }
-};
-
-$$.Stream_toList_anon0 = {"": "Closure;result_1,future_2",
-  call$0: function() {
-    this.future_2._liblib0$_setValue$1(this.result_1);
   }
 };
 
@@ -5947,16 +5912,38 @@ $$.Stream_length_anon0 = {"": "Closure;box_0,future_1",
   }
 };
 
-$$.Stream_isEmpty_anon = {"": "Closure;box_0,future_1",
-  call$1: function(_) {
-    this.box_0.subscription_0.cancel$0();
-    this.future_1._liblib0$_setValue$1(false);
+$$.AsyncError_throwDelayed_reportError = {"": "Closure;this_0",
+  call$0: function() {
+    var t1 = this.this_0;
+    $.Primitives_printString("Uncaught Error: " + $.S(t1.get$error()));
+    t1 = t1.get$stackTrace();
+    if (t1 != null)
+      $.Primitives_printString("Stack Trace:\n" + $.S(t1) + "\n");
   }
 };
 
-$$.Stream_isEmpty_anon0 = {"": "Closure;future_2",
+$$.AsyncError_throwDelayed_anon = {"": "Closure;this_1,reportError_2",
   call$0: function() {
-    this.future_2._liblib0$_setValue$1(true);
+    this.reportError_2.call$0();
+    throw $.$$throw(this.this_1.get$error());
+  }
+};
+
+$$._FutureImpl__handleValue_anon = {"": "Closure;thenFuture_0,value_1",
+  call$0: function() {
+    this.thenFuture_0._sendValue$1(this.value_1);
+  }
+};
+
+$$.Stream_toList_anon = {"": "Closure;result_0",
+  call$1: function(data) {
+    $.add$1$a(this.result_0, data);
+  }
+};
+
+$$.Stream_toList_anon0 = {"": "Closure;result_1,future_2",
+  call$0: function() {
+    this.future_2._liblib0$_setValue$1(this.result_1);
   }
 };
 
@@ -5974,15 +5961,28 @@ $$._PendingSendPortFinder_visitList_anon = {"": "Closure;this_0",
   }
 };
 
-$$._FutureImpl__handleError_anon = {"": "Closure;error_0,errorFuture_1",
+$$.Stream_isEmpty_anon = {"": "Closure;box_0,future_1",
+  call$1: function(_) {
+    this.box_0.subscription_0.cancel$0();
+    this.future_1._liblib0$_setValue$1(false);
+  }
+};
+
+$$.Stream_isEmpty_anon0 = {"": "Closure;future_2",
   call$0: function() {
-    this.errorFuture_1._sendError$1(this.error_0);
+    this.future_2._liblib0$_setValue$1(true);
   }
 };
 
 $$._PendingSendPortFinder_visitMap_anon = {"": "Closure;this_0",
   call$1: function(e) {
     return this.this_0._dispatch$1(e);
+  }
+};
+
+$$._FutureImpl__handleError_anon = {"": "Closure;error_0,errorFuture_1",
+  call$0: function() {
+    this.errorFuture_1._sendError$1(this.error_0);
   }
 };
 
@@ -8231,8 +8231,8 @@ $.Match = {builtin$cls: "Match"};
 $.String = {builtin$cls: "String"};
 $.ReceivePort = {builtin$cls: "ReceivePort"};
 $.bool = {builtin$cls: "bool"};
-$.$double = {builtin$cls: "$double"};
 $.Date = {builtin$cls: "Date"};
+$.$double = {builtin$cls: "$double"};
 $.Node = {builtin$cls: "Node"};
 $.$int = {builtin$cls: "$int"};
 $._ManagerStub = {builtin$cls: "_ManagerStub"};
@@ -8242,18 +8242,18 @@ Isolate.makeConstantList = function(list) {
   return list;
 };
 $.CONSTANT22 = Isolate.makeConstantList([]);
-$.CONSTANT5 = new $.EventArgs();
 $.CONSTANT20 = new $.EventStreamProvider("mousemove");
+$.CONSTANT5 = new $.EventArgs();
 $.CONSTANT21 = new $.Object();
 $.CONSTANT8 = new $._LinkedHashTableHeadMarker();
 $.CONSTANT23 = new $.Coordinate(0, 0);
+$.CONSTANT18 = new $.EventStreamProvider("mouseup");
+$.CONSTANT19 = new $.EventStreamProvider("mouseout");
 $.CONSTANT11 = new $.ShapeType("Rect");
 $.CONSTANT15 = new $.ShapeType("Ellipse");
-$.CONSTANT19 = new $.EventStreamProvider("mouseout");
-$.CONSTANT18 = new $.EventStreamProvider("mouseup");
 $.CONSTANT13 = new $.Vector(0, 10);
-$.CONSTANT9 = new $.Duration(0);
 $.CONSTANT6 = new $.DisposedError("Invalid operation on disposed object");
+$.CONSTANT9 = new $.Duration(0);
 $.CONSTANT7 = new $.JSNull();
 $.CONSTANT4 = new $.JSArray();
 $.CONSTANT0 = new $.NullThrownError();

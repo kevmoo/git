@@ -5818,18 +5818,18 @@ $$.AttachableObject_disposeInternal_anon = {"": "Closure;",
   }
 };
 
-$$._PendingEvents_schedule_anon = {"": "Closure;this_0,stream_1",
-  call$0: function() {
-    this.this_0.set$scheduleTimer(null);
-    this.stream_1._handlePendingEvents$0();
-  }
-};
-
 $$._EventLoop__runHelper_next = {"": "Closure;this_0",
   call$0: function() {
     if (!this.this_0.runIteration$0())
       return;
     $.Timer_run(this);
+  }
+};
+
+$$._PendingEvents_schedule_anon = {"": "Closure;this_0,stream_1",
+  call$0: function() {
+    this.this_0.set$scheduleTimer(null);
+    this.stream_1._handlePendingEvents$0();
   }
 };
 
@@ -5857,25 +5857,6 @@ $$._waitForPendingPorts_anon = {"": "Closure;callback_0",
   }
 };
 
-$$._FutureImpl__handleValue_anon = {"": "Closure;thenFuture_0,value_1",
-  call$0: function() {
-    this.thenFuture_0._sendValue$1(this.value_1);
-  }
-};
-
-$$.Stream_length_anon = {"": "Closure;box_0",
-  call$1: function(_) {
-    var t1 = this.box_0;
-    t1.count_0 = $.$$add$n(t1.count_0, 1);
-  }
-};
-
-$$.Stream_length_anon0 = {"": "Closure;box_0,future_1",
-  call$0: function() {
-    this.future_1._liblib1$_setValue$1(this.box_0.count_0);
-  }
-};
-
 $$.HashMap_addAll_anon = {"": "Closure;this_0",
   call$2: function(key, value) {
     var t1, offset;
@@ -5886,15 +5867,13 @@ $$.HashMap_addAll_anon = {"": "Closure;this_0",
   }
 };
 
-$$.Stream_toList_anon = {"": "Closure;result_0",
-  call$1: function(data) {
-    $.add$1$a(this.result_0, data);
-  }
-};
-
-$$.Stream_toList_anon0 = {"": "Closure;result_1,future_2",
-  call$0: function() {
-    this.future_2._liblib1$_setValue$1(this.result_1);
+$$.LinkedHashMap_addAll_anon = {"": "Closure;this_0",
+  call$2: function(key, value) {
+    var t1, offset;
+    t1 = this.this_0;
+    offset = t1.get$_hashTable()._put$1(key);
+    t1.get$_hashTable()._setValue$2(offset, value);
+    t1.get$_hashTable()._checkCapacity$0();
   }
 };
 
@@ -5915,13 +5894,34 @@ $$.AsyncError_throwDelayed_anon = {"": "Closure;this_1,reportError_2",
   }
 };
 
-$$.LinkedHashMap_addAll_anon = {"": "Closure;this_0",
-  call$2: function(key, value) {
-    var t1, offset;
-    t1 = this.this_0;
-    offset = t1.get$_hashTable()._put$1(key);
-    t1.get$_hashTable()._setValue$2(offset, value);
-    t1.get$_hashTable()._checkCapacity$0();
+$$._FutureImpl__handleValue_anon = {"": "Closure;thenFuture_0,value_1",
+  call$0: function() {
+    this.thenFuture_0._sendValue$1(this.value_1);
+  }
+};
+
+$$.Stream_length_anon = {"": "Closure;box_0",
+  call$1: function(_) {
+    var t1 = this.box_0;
+    t1.count_0 = $.$$add$n(t1.count_0, 1);
+  }
+};
+
+$$.Stream_length_anon0 = {"": "Closure;box_0,future_1",
+  call$0: function() {
+    this.future_1._liblib1$_setValue$1(this.box_0.count_0);
+  }
+};
+
+$$.Stream_toList_anon = {"": "Closure;result_0",
+  call$1: function(data) {
+    $.add$1$a(this.result_0, data);
+  }
+};
+
+$$.Stream_toList_anon0 = {"": "Closure;result_1,future_2",
+  call$0: function() {
+    this.future_2._liblib1$_setValue$1(this.result_1);
   }
 };
 
@@ -6028,6 +6028,12 @@ $$.invokeClosure_anon1 = {"": "Closure;closure_3,arg1_4,arg2_5",
   }
 };
 
+$$.anon1 = {"": "Closure;this_0",
+  call$1: function(e) {
+    return this.this_0.requestFrame$0();
+  }
+};
+
 $$.MouseManager__mouseUp_anon = {"": "Closure;",
   call$1: function(e) {
     return $.get$MouseManager__isClickableProperty().get$1(e);
@@ -6073,9 +6079,19 @@ $$._StreamImpl__sendDone_anon = {"": "Closure;this_0",
   }
 };
 
-$$.anon1 = {"": "Closure;this_0",
-  call$1: function(e) {
-    return this.this_0.requestFrame$0();
+$$._FutureImpl__scheduleUnhandledError_anon = {"": "Closure;this_0",
+  call$0: function() {
+    var t1, error;
+    t1 = this.this_0;
+    if (t1.get$_hasUnhandledError() === true) {
+      t1.set$_state($.$$and$n(t1.get$_state(), 4294967291));
+      error = t1.get$_resultOrListeners();
+      $.Primitives_printString("Uncaught Error: " + $.S(error.get$error()));
+      t1 = error.get$stackTrace();
+      if (t1 != null)
+        $.Primitives_printString("Stack Trace:\n" + $.S(t1) + "\n");
+      throw $.$$throw(error.get$error());
+    }
   }
 };
 
@@ -6110,19 +6126,12 @@ $$.Stream_contains_anon0 = {"": "Closure;future_6",
   }
 };
 
-$$._FutureImpl__scheduleUnhandledError_anon = {"": "Closure;this_0",
-  call$0: function() {
-    var t1, error;
-    t1 = this.this_0;
-    if (t1.get$_hasUnhandledError() === true) {
-      t1.set$_state($.$$and$n(t1.get$_state(), 4294967291));
-      error = t1.get$_resultOrListeners();
-      $.Primitives_printString("Uncaught Error: " + $.S(error.get$error()));
-      t1 = error.get$stackTrace();
-      if (t1 != null)
-        $.Primitives_printString("Stack Trace:\n" + $.S(t1) + "\n");
-      throw $.$$throw(error.get$error());
-    }
+$$._Copier_visitMap_anon = {"": "Closure;box_0,this_1",
+  call$2: function(key, val) {
+    var t1, t2;
+    t1 = this.box_0.copy_0;
+    t2 = this.this_1;
+    $.$$indexSet$a(t1, t2._dispatch$1(key), t2._dispatch$1(val));
   }
 };
 
@@ -6137,15 +6146,6 @@ $$.anon0 = {"": "Closure;this_0",
       p.send$2(t4.$index(t3, "message"), t4.$index(t3, "replyTo"));
     }
     t1.set$pending(null);
-  }
-};
-
-$$._Copier_visitMap_anon = {"": "Closure;box_0,this_1",
-  call$2: function(key, val) {
-    var t1, t2;
-    t1 = this.box_0.copy_0;
-    t2 = this.this_1;
-    $.$$indexSet$a(t1, t2._dispatch$1(key), t2._dispatch$1(val));
   }
 };
 
@@ -6234,6 +6234,13 @@ $$.Stream_elementAt_anon0 = {"": "Closure;future_2",
   }
 };
 
+$$.IsolateNatives_spawn_anon = {"": "Closure;completer_0,port_1",
+  call$2: function(msg, replyPort) {
+    this.port_1.close$0();
+    this.completer_0.complete$1(replyPort);
+  }
+};
+
 $$.Timer_run_anon = {"": "Closure;",
   call$0: function() {
     var runCallbacks, i, callback, newCallbacks, exception;
@@ -6253,13 +6260,6 @@ $$.Timer_run_anon = {"": "Closure;",
       }
 
     }
-  }
-};
-
-$$.IsolateNatives_spawn_anon = {"": "Closure;completer_0,port_1",
-  call$2: function(msg, replyPort) {
-    this.port_1.close$0();
-    this.completer_0.complete$1(replyPort);
   }
 };
 
@@ -8468,19 +8468,19 @@ Isolate.makeConstantList = function(list) {
   return list;
 };
 $.CONSTANT11 = Isolate.makeConstantList([]);
+$.CONSTANT2 = new $._DeadEntry();
 $.CONSTANT4 = new $.JSNull();
 $.CONSTANT1 = new $.JSArray();
 $.CONSTANT0 = new $.NullThrownError();
 $.CONSTANT5 = new $.JSNumber();
-$.CONSTANT6 = new $.EventArgs();
-$.CONSTANT = new $.JSString();
 $.CONSTANT10 = new $.JSInt();
-$.CONSTANT9 = new $.Duration(0);
-$.CONSTANT8 = new $._LinkedHashTableHeadMarker();
+$.CONSTANT = new $.JSString();
 $.CONSTANT13 = new $._UndefinedValue();
+$.CONSTANT3 = new $._NullKey();
+$.CONSTANT6 = new $.EventArgs();
+$.CONSTANT8 = new $._LinkedHashTableHeadMarker();
 $.CONSTANT21 = new $.Coordinate(0, 0);
 $.CONSTANT16 = new $.EventStreamProvider("mouseup");
-$.CONSTANT3 = new $._NullKey();
 $.CONSTANT17 = new $.EventStreamProvider("mouseout");
 $.CONSTANT14 = new $.EventStreamProvider("blur");
 $.CONSTANT15 = new $.EventStreamProvider("mousedown");
@@ -8488,8 +8488,8 @@ $.CONSTANT18 = new $.EventStreamProvider("mousemove");
 $.CONSTANT19 = new $.EventStreamProvider("load");
 $.CONSTANT12 = new $._DelayedDone();
 $.CONSTANT20 = new $.Object();
-$.CONSTANT2 = new $._DeadEntry();
 $.CONSTANT7 = new $.DisposedError("Invalid operation on disposed object");
+$.CONSTANT9 = new $.Duration(0);
 $.lazyPort = null;
 $._BufferingSendPort__idCount = 0;
 $.ReceivePortImpl__nextFreeId = 1;

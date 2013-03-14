@@ -5453,15 +5453,15 @@ $$._RetainedEnum = {"": "Object;name>",
   }
 };
 
-$$.ParentThing_drawOverride_anon = {"": "Closure;ctx_0",
-  call$1: function(e) {
-    return e.drawCore$1(this.ctx_0);
-  }
-};
-
 $$.ParentThing_update_anon = {"": "Closure;",
   call$1: function(e) {
     return e.update$0();
+  }
+};
+
+$$.ParentThing_drawOverride_anon = {"": "Closure;ctx_0",
+  call$1: function(e) {
+    return e.drawCore$1(this.ctx_0);
   }
 };
 
@@ -5502,29 +5502,6 @@ $$.convertDartToNative_Dictionary_anon = {"": "Closure;object_0",
 $$._waitForPendingPorts_anon = {"": "Closure;callback_0",
   call$1: function(_) {
     return this.callback_0.call$0();
-  }
-};
-
-$$.AsyncError_throwDelayed_reportError = {"": "Closure;this_0",
-  call$0: function() {
-    var t1 = this.this_0;
-    $.Primitives_printString("Uncaught Error: " + $.S(t1.get$error()));
-    t1 = t1.get$stackTrace();
-    if (t1 != null)
-      $.Primitives_printString("Stack Trace:\n" + $.S(t1) + "\n");
-  }
-};
-
-$$.AsyncError_throwDelayed_anon = {"": "Closure;this_1,reportError_2",
-  call$0: function() {
-    this.reportError_2.call$0();
-    throw $.$$throw(this.this_1.get$error());
-  }
-};
-
-$$._FutureImpl__handleValue_anon = {"": "Closure;thenFuture_0,value_1",
-  call$0: function() {
-    this.thenFuture_0._sendValue$1(this.value_1);
   }
 };
 
@@ -5573,11 +5550,26 @@ $$.Stream_length_anon0 = {"": "Closure;box_0,future_1",
   }
 };
 
-$$._DoneSubscription__delayDone_anon = {"": "Closure;this_0",
+$$.AsyncError_throwDelayed_reportError = {"": "Closure;this_0",
   call$0: function() {
     var t1 = this.this_0;
-    if (t1.get$_handler() != null)
-      t1._handler$0();
+    $.Primitives_printString("Uncaught Error: " + $.S(t1.get$error()));
+    t1 = t1.get$stackTrace();
+    if (t1 != null)
+      $.Primitives_printString("Stack Trace:\n" + $.S(t1) + "\n");
+  }
+};
+
+$$.AsyncError_throwDelayed_anon = {"": "Closure;this_1,reportError_2",
+  call$0: function() {
+    this.reportError_2.call$0();
+    throw $.$$throw(this.this_1.get$error());
+  }
+};
+
+$$._FutureImpl__handleValue_anon = {"": "Closure;thenFuture_0,value_1",
+  call$0: function() {
+    this.thenFuture_0._sendValue$1(this.value_1);
   }
 };
 
@@ -5600,15 +5592,23 @@ $$.Stream_isEmpty_anon0 = {"": "Closure;future_2",
   }
 };
 
-$$._FutureImpl__handleError_anon = {"": "Closure;error_0,errorFuture_1",
+$$._DoneSubscription__delayDone_anon = {"": "Closure;this_0",
   call$0: function() {
-    this.errorFuture_1._sendError$1(this.error_0);
+    var t1 = this.this_0;
+    if (t1.get$_handler() != null)
+      t1._handler$0();
   }
 };
 
 $$._PendingSendPortFinder_visitMap_anon = {"": "Closure;this_0",
   call$1: function(e) {
     return this.this_0._dispatch$1(e);
+  }
+};
+
+$$._FutureImpl__handleError_anon = {"": "Closure;error_0,errorFuture_1",
+  call$0: function() {
+    this.errorFuture_1._sendError$1(this.error_0);
   }
 };
 
@@ -5790,21 +5790,6 @@ $$._WorkerSendPort_send_anon = {"": "Closure;this_0,message_1,replyTo_2",
   }
 };
 
-$$.ToString__emitMap_anon = {"": "Closure;box_0,result_1,visiting_2",
-  call$2: function(k, v) {
-    var t1, t2;
-    t1 = this.box_0;
-    if (t1.first_0 !== true)
-      $.add$1$a(this.result_1, ", ");
-    t1.first_0 = false;
-    t1 = this.result_1;
-    t2 = this.visiting_2;
-    $.ToString__emitObject(k, t1, t2);
-    $.add$1$a(t1, ": ");
-    $.ToString__emitObject(v, t1, t2);
-  }
-};
-
 $$.Stream_elementAt_anon = {"": "Closure;box_0,future_1",
   call$1: function(value) {
     var t1 = this.box_0;
@@ -5820,6 +5805,21 @@ $$.Stream_elementAt_anon = {"": "Closure;box_0,future_1",
 $$.Stream_elementAt_anon0 = {"": "Closure;future_2",
   call$0: function() {
     this.future_2._setError$1($.AsyncError$($.StateError$("Not enough elements for elementAt"), null));
+  }
+};
+
+$$.ToString__emitMap_anon = {"": "Closure;box_0,result_1,visiting_2",
+  call$2: function(k, v) {
+    var t1, t2;
+    t1 = this.box_0;
+    if (t1.first_0 !== true)
+      $.add$1$a(this.result_1, ", ");
+    t1.first_0 = false;
+    t1 = this.result_1;
+    t2 = this.visiting_2;
+    $.ToString__emitObject(k, t1, t2);
+    $.add$1$a(t1, ": ");
+    $.ToString__emitObject(v, t1, t2);
   }
 };
 
@@ -7904,11 +7904,11 @@ $._nullDoneHandler.$name = "_nullDoneHandler";
 $.List = {builtin$cls: "List"};
 $.num = {builtin$cls: "num"};
 $.Match = {builtin$cls: "Match"};
-$.String = {builtin$cls: "String"};
-$._ManagerStub = {builtin$cls: "_ManagerStub"};
 $.Node = {builtin$cls: "Node"};
 $.ReceivePort = {builtin$cls: "ReceivePort"};
+$._ManagerStub = {builtin$cls: "_ManagerStub"};
 $.$int = {builtin$cls: "$int"};
+$.String = {builtin$cls: "String"};
 $.bool = {builtin$cls: "bool"};
 $.Date = {builtin$cls: "Date"};
 $.$double = {builtin$cls: "$double"};
@@ -7918,19 +7918,15 @@ Isolate.makeConstantList = function(list) {
   return list;
 };
 $.CONSTANT22 = Isolate.makeConstantList([]);
-$.CONSTANT18 = new $.VerticalAlignment("top");
 $.CONSTANT11 = new $.EventArgs();
 $.CONSTANT21 = new $.Object();
-$.CONSTANT2 = new $.HorizontalAlignment("center");
-$.CONSTANT1 = new $.VerticalAlignment("middle");
 $.CONSTANT10 = new $._LinkedHashTableHeadMarker();
-$.CONSTANT13 = new $.ShapeType("Rect");
-$.CONSTANT15 = new $.ShapeType("Ellipse");
 $.CONSTANT24 = new $.Coordinate(0, 0);
-$.CONSTANT16 = new $.HorizontalAlignment("left");
-$.CONSTANT8 = new $.Duration(0);
+$.CONSTANT15 = new $.ShapeType("Ellipse");
+$.CONSTANT13 = new $.ShapeType("Rect");
+$.CONSTANT19 = new $.VerticalAlignment("bottom");
 $.CONSTANT12 = new $.DisposedError("Invalid operation on disposed object");
-$.CONSTANT17 = new $.HorizontalAlignment("right");
+$.CONSTANT16 = new $.HorizontalAlignment("left");
 $.CONSTANT7 = new $.JSNull();
 $.CONSTANT6 = new $.JSArray();
 $.CONSTANT0 = new $.NullThrownError();
@@ -7938,9 +7934,13 @@ $.CONSTANT3 = new $.JSNumber();
 $.CONSTANT9 = new $.JSInt();
 $.CONSTANT = new $.JSString();
 $.CONSTANT14 = new $._UndefinedValue();
+$.CONSTANT17 = new $.HorizontalAlignment("right");
 $.CONSTANT20 = new $.EventStreamProvider("mousedown");
-$.CONSTANT19 = new $.VerticalAlignment("bottom");
+$.CONSTANT8 = new $.Duration(0);
+$.CONSTANT1 = new $.VerticalAlignment("middle");
 $.CONSTANT23 = new $._DelayedDone();
+$.CONSTANT2 = new $.HorizontalAlignment("center");
+$.CONSTANT18 = new $.VerticalAlignment("top");
 $.CONSTANT4 = new $._DeadEntry();
 $.CONSTANT5 = new $._NullKey();
 $.lazyPort = null;

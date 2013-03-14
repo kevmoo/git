@@ -12,9 +12,9 @@ file:///Users/kevin/source/github/bot.dart/packages/bot/src/bot/collection/array
 file:///Users/kevin/source/github/bot.dart/packages/bot/src/bot/collection/collection_util.dart
 file:///Users/kevin/source/github/bot.dart/packages/bot/src/bot/collection/enumerable.dart
 file:///Users/kevin/source/github/bot.dart/packages/bot/src/bot/collection/grouping.dart
-file:///Users/kevin/source/github/bot.dart/packages/bot/src/bot/collection/list_base.dart
 file:///Users/kevin/source/github/bot.dart/packages/bot/src/bot/collection/number_enumerable.dart
 file:///Users/kevin/source/github/bot.dart/packages/bot/src/bot/collection/read_only_collection.dart
+file:///Users/kevin/source/github/bot.dart/packages/bot/src/bot/collection/sequence.dart
 file:///Users/kevin/source/github/bot.dart/packages/bot/src/bot/color/hsl_color.dart
 file:///Users/kevin/source/github/bot.dart/packages/bot/src/bot/color/husl_converter.dart
 file:///Users/kevin/source/github/bot.dart/packages/bot/src/bot/color/rgb_color.dart
@@ -48,6 +48,7 @@ file:///Users/kevin/source/github/bot.dart/packages/bot/src/bot_html/html_view.d
 file:///Users/kevin/source/github/bot.dart/packages/bot/src/bot_html/image_loader.dart
 file:///Users/kevin/source/github/bot.dart/packages/bot/src/bot_html/resource_loader.dart
 file:///Users/kevin/source/github/bot.dart/packages/bot/src/bot_html/top_level.dart
+file:///Users/kevin/source/github/bot.dart/packages/logging/logging.dart
 file:///Users/kevin/source/github/bot.dart/packages/meta/meta.dart
 file:///usr/local/Cellar/dart-editor/19425/dart-sdk/lib/_collection_dev/arrays.dart
 file:///usr/local/Cellar/dart-editor/19425/dart-sdk/lib/_collection_dev/collection_dev.dart
