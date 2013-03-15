@@ -96,6 +96,9 @@ class _HopTestConfiguration implements unittest.Configuration {
 ${testCase.message}
 ${testCase.stackTrace}''');
     }
+
+    // TODO: print out runningTime once a build post r19522 lands
+    //_context.fine('Duration: ${testCase.runningTime}');
   }
 
   @override
