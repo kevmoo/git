@@ -18,7 +18,7 @@ void _metaRequireArgumentNotNullOrEmpty(String argName) {
 
 class Git {
   static const _shaRegexPattern = '[a-f0-9]{40}';
-  static final _shaRegEx = new RegExp(r'^'.concat(_shaRegexPattern).concat(r'$'));
+  static final _shaRegEx = new RegExp(r'^' + _shaRegexPattern + r'$');
 
   static bool isValidSha(String value) {
     return _shaRegEx.hasMatch(value);
@@ -270,8 +270,8 @@ class Commit {
 
 class TreeEntry {
   static final _lsTreeLine = r'^([0-9]{6}) (blob|tree) ('
-      .concat(Git._shaRegexPattern)
-      .concat(')\t(\\S.*\\S)\$');
+      + Git._shaRegexPattern
+      + ')\t(\\S.*\\S)\$';
 
   static final _lsTreeRegEx = new RegExp(_lsTreeLine);
 

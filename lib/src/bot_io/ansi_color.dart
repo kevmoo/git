@@ -42,7 +42,7 @@ class AnsiColor {
     final value = 'AnsiColor: $name';
 
     if(isBold) {
-      return value.concat(' (BOLD)');
+      return value + ' (BOLD)';
     } else {
       return value;
     }

@@ -147,7 +147,7 @@ class MouseManager {
     //       Mouse capture anyone?
 
     final hits = _updateMouseLocation(getMouseEventCoordinate(e));
-    final thing = hits.firstMatching((e) => getClickable(e), orElse: () => null);
+    final thing = hits.firstWhere((e) => getClickable(e), orElse: () => null);
 
     if(thing != null) {
       _doMouseUp(thing, e);
@@ -212,7 +212,7 @@ class MouseManager {
     _dragStartingEvent.fireEvent(thing, args);
     if(!args.isCanceled) {
       e.preventDefault();
-      _dragCoordinate = new Coordinate(e.clientX, e.clientY);
+      _dragCoordinate = new Coordinate(e.client.x, e.client.y);
     }
   }
 

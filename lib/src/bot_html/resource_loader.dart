@@ -60,12 +60,12 @@ abstract class ResourceLoader<T> {
 
   _ResourceEntry<T> _getByUrl(String url) {
     assert(url != null);
-    return _entries.singleMatching((e) => e.url == url);
+    return _entries.singleWhere((e) => e.url == url);
   }
 
   _ResourceEntry<T> _getByBlobUrl(String blobUrl) {
     assert(blobUrl != null);
-    return _entries.singleMatching((e) => e.matchesBlobUrl(blobUrl));
+    return _entries.singleWhere((e) => e.matchesBlobUrl(blobUrl));
   }
 
   Future _httpLoad(_ResourceEntry<T> entry) {

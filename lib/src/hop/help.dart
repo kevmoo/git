@@ -95,7 +95,7 @@ void _printHopArgsHelp(Printer printer, ArgParser hopArgParser) {
 
 String _indent(String input) {
   return Util.splitLines(input)
-      .map((String line) => '  '.concat(line))
+      .map((String line) => '  ' + line)
       .join(('\n'));
 }
 
@@ -109,7 +109,7 @@ ShellString _getTitle(String input) {
 void _printTaskTable(Printer printer, TaskRegistry config) {
   config._requireFrozen();
   final columns = [
-                   new ColumnDefinition('name', (name) => '  '.concat(name)),
+                   new ColumnDefinition('name', (name) => '  ' + name),
                    new ColumnDefinition('description', (name) {
                      final task = config._getTask(name);
                      return task.description;
@@ -117,6 +117,6 @@ void _printTaskTable(Printer printer, TaskRegistry config) {
                    ];
   final rows = Console.getTable(config.taskNames, columns);
   for(final r in rows) {
-    printer('  '.concat(r));
+    printer('  ' + r);
   }
 }

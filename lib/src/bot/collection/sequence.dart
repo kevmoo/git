@@ -49,10 +49,22 @@ class _SequenceList<E> extends Sequence<E> implements List<E> {
   int get length => _source.length;
 
   @override
-  List<E> getRange(int start, int length) {
-    List<E> result = <E>[];
+  @deprecated
+  List<E> getRange(int start, int length) => sublist(start, start + length);
+
+  @override
+  List<E> sublist(int start, [int end]) {
+    if (end == null) end = length;
+    if (start < 0 || start > this.length) {
+      throw new RangeError.range(start, 0, this.length);
+    }
+    if (end < start || end > this.length) {
+      throw new RangeError.range(end, start, this.length);
+    }
+    int length = end - start;
+    List<E> result = new List<E>()..length = length;
     for (int i = 0; i < length; i++) {
-      result.add(this[start + i]);
+      result[i] = this[start + i];
     }
     return result;
   }
@@ -62,6 +74,12 @@ class _SequenceList<E> extends Sequence<E> implements List<E> {
 
   @override
   List<E> get reversed => IterableMixinWorkaround.reversedList(this);
+
+  @override
+  void insert(int, E item) {
+    throw new UnsupportedError(
+    "Cannot modify an unmodifiable list");
+  }
 
   @override
   void operator []=(int index, E value) {
@@ -112,13 +130,13 @@ class _SequenceList<E> extends Sequence<E> implements List<E> {
   }
 
   @override
-  void retainMatching(Func1<E, bool> test) {
+  void retainWhere(Func1<E, bool> test) {
     throw new UnsupportedError(
     "Cannot modify an unmodifiable list");
   }
 
   @override
-  void removeMatching(bool test(E element)) {
+  void removeWhere(bool test(E element)) {
     throw new UnsupportedError(
         "Cannot remove from an unmodifiable list");
   }

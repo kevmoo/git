@@ -54,7 +54,7 @@ Future<String> _updateTitle(String source) {
 
 Future<Document> _updateIndex(Document source) {
   final contentDiv = source.queryAll('div')
-      .singleMatching((Element div) => div.attributes['class'] == 'content');
+      .singleWhere((Element div) => div.attributes['class'] == 'content');
 
   // should only have h3 and h4 elements
   final botHeaders = new List<Element>();

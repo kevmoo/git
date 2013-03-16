@@ -123,7 +123,7 @@ class Runner {
     final String logLevelOption = config.args[_logLevelOption];
 
     final Level logLevel = _getLogLevels()
-        .singleMatching((Level l) => l.name.toLowerCase() == logLevelOption);
+        .singleWhere((Level l) => l.name.toLowerCase() == logLevelOption);
 
     return new RootTaskContext(config.doPrint,
         prefixEnabled: preFixEnabled, minLogLevel: logLevel);

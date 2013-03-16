@@ -35,7 +35,7 @@ class RootTaskContext {
     assert(!titleSections.isEmpty);
     assert(titleSections.every((s) => s != null && !s.isEmpty));
 
-    final title = titleSections.join(' - ').concat(': ');
+    final title = titleSections.join(' - ') + ': ';
 
     if(logLevel >= _minLogLevel) {
       if(_prefixEnabled) {
@@ -45,7 +45,7 @@ class RootTaskContext {
         var indent = '';
 
         while(indent.length < title.length) {
-          indent =  indent.concat(' ');
+          indent =  indent + ' ';
         }
 
         final lines = Util.splitLines(message);

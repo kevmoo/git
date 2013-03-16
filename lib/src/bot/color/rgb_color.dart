@@ -19,9 +19,9 @@ class RgbColor {
   factory RgbColor.fromHex(String hexColor) {
     requireArgumentNotNull(hexColor, 'hexColor');
     hexColor = _normalizeHex(hexColor);
-    var r = int.parse('0x'.concat(hexColor.substring(1, 3)));
-    var g = int.parse('0x'.concat(hexColor.substring(3, 5)));
-    var b = int.parse('0x'.concat(hexColor.substring(5, 7)));
+    var r = int.parse('0x' + hexColor.substring(1, 3));
+    var g = int.parse('0x' + hexColor.substring(3, 5));
+    var b = int.parse('0x' + hexColor.substring(5, 7));
 
     return new RgbColor(r,g,b);
   }

@@ -6,7 +6,9 @@ class SubCanvasThing extends Thing {
   SubCanvasThing(num width, num height, this._canvas) :
     super(width, height);
 
+  @override
   void drawOverride(CanvasRenderingContext2D ctx) {
-    ctx.drawImage(_canvas, 0, 0, width, height);
+    final rect = new Rect(0,0,width,height);
+    ctx.drawImageAtScale(_canvas, rect);
   }
 }

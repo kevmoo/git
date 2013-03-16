@@ -72,7 +72,7 @@ void addAsyncTask(String name, TaskDefinition execFuture) {
 }
 
 void _paranoidHopCheck() {
-  var runningScript = new Options().script;
+  var runningScript = new io.Options().script;
   runningScript = path.absolute(runningScript);
   runningScript = path.normalize(runningScript);
 

@@ -20,7 +20,7 @@ Task createBenchTask() {
     }
 
     final processName = parseResult.rest.first;
-    final args = parseResult.rest.getRange(1, parseResult.rest.length-1);
+    final args = parseResult.rest.sublist(1);
 
     return _runMany(ctx, count, processName, args)
         .then((list) {

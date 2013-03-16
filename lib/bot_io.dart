@@ -28,14 +28,14 @@ void enableScriptLogListener() {
     final options = new Options();
 
     final script = options.script;
-    _scriptLogListenerPath = new Path(script).toNativePath().concat('.log');
+    _scriptLogListenerPath = new Path(script).toNativePath() + '.log';
 
-    final logging.Logger rootLogger = logging.Logger.root;
+    final rootLogger = logging.Logger.root;
     rootLogger.level = logging.Level.ALL;
 
     rootLogger.onRecord.listen(_doLog);
 
-    final logging.Logger logger = logging.Logger.root;
+    final logger = logging.Logger.root;
 
     logger.info('Starting log for $script at $_scriptLogListenerPath');
   }

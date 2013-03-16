@@ -129,7 +129,7 @@ ${testCase.stackTrace}''');
 
   @override
   @deprecated
-  void handleExternalError(error, String message) {
+  void handleExternalError(error, String message, [String stack = '']) {
     // should never occur in the context of hop runner
     if(unittest.currentTestCase == null) {
       _context.severe('$message\nCaught $error');
