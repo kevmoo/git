@@ -1,6 +1,8 @@
 # Changelog - Dart Bag of Tricks
 
-## 0.15.0+2 2013-03-12 (SDK 0.4.2.2 r20138)
+## 0.16.0-dev *pre-release* (SDK 0.4.2.2 r20138)
+
+## 0.15.0+2 2013-03-12 (SDK 0.4.1.0 r19425)
 
 ### hop_tasks
 
