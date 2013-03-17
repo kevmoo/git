@@ -5,9 +5,10 @@ void registerArgTests() {
     test('simple args', () {
 
       final task = _makeSimpleTask();
-      testTaskCompletion(task, (RunResult result) {
-        expect(result, RunResult.SUCCESS);
-      }, extraArgs: ['hello', 'args']);
+      return runTaskInTestRunner(task, extraArgs: ['hello', 'args'])
+          .then((RunResult result) {
+            expect(result, RunResult.SUCCESS);
+          });
     });
   });
 }

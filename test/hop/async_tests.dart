@@ -6,27 +6,23 @@ class AsyncTests {
     test('exception outside future' , _testException);
   }
 
-  static void _testNullResult() {
-    _testSimpleAsyncTask((ctx) => null,
-      (value) {
-        expect(value, RunResult.ERROR);
-      }
-    );
+  static Future _testNullResult() {
+    return _testSimpleAsyncTask((ctx) => null)
+        .then((value) {
+          expect(value, RunResult.ERROR);
+        });
   }
 
-  static void _testException() {
-    _testSimpleAsyncTask((ctx) {
-      throw 'not impld';
-    },
-      (value) {
+  static Future _testException() {
+    return _testSimpleAsyncTask((ctx) {
+        throw 'not impld';
+      }).then((value) {
         expect(value, RunResult.EXCEPTION);
-      }
-    );
+      });
   }
 
-  static Action0 _testSimpleAsyncTask(Func1<TaskContext,
-                                     Future<bool>> taskFuture,
-                                     Action1<RunResult> completeHandler) {
-    testTaskCompletion(new Task.async(taskFuture), completeHandler);
+  static Future<RunResult> _testSimpleAsyncTask(Func1<TaskContext,
+                                     Future<bool>> taskFuture) {
+    return runTaskInTestRunner(new Task.async(taskFuture));
   }
 }

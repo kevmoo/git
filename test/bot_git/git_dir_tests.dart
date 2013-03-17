@@ -8,7 +8,7 @@ void registerGitDirTests() {
   });
 }
 
-void _testGetCommits() {
+Future _testGetCommits() {
   TempDir td;
   GitDir gd;
 
@@ -22,7 +22,7 @@ void _testGetCommits() {
     }
   };
 
-  final future = _getTempGit()
+  return _getTempGit()
       .then((tuple) {
         td = tuple.item1;
         gd = tuple.item2;
@@ -82,8 +82,6 @@ void _testGetCommits() {
           td.dispose();
         }
       });
-
-  expect(future, finishes);
 }
 
 Future _doPopulate(GitDir gd, TempDir td, Map<String, dynamic> contents, String commitMsg) {
@@ -103,7 +101,7 @@ Future _doPopulate(GitDir gd, TempDir td, Map<String, dynamic> contents, String 
       });
 }
 
-void _testPopulateBranch() {
+Future _testPopulateBranch() {
 
   TempDir td1;
   GitDir gd1;
@@ -130,7 +128,7 @@ void _testPopulateBranch() {
 
   Commit returnedCommit;
 
-  final future = _getTempGit()
+  return _getTempGit()
       .then((tuple) {
         td1 = tuple.item1;
         gd1 = tuple.item2;
@@ -163,8 +161,6 @@ void _testPopulateBranch() {
           td1.dispose();
         }
       });
-
-  expect(future, finishes);
 }
 
 Future _testPopulateBranchEmpty(GitDir gitDir, String branchName) {
@@ -294,7 +290,7 @@ Future _testPopulateBranchWithDupeContent(GitDir gitDir, String branchName,
     });
 }
 
-void _testWriteObjects() {
+Future _testWriteObjects() {
   final file1Name = 'file1.txt';
   final file2Name = 'file2.txt';
 
@@ -309,7 +305,7 @@ void _testWriteObjects() {
   GitDir gitDir;
   TempDir tempGitDir;
 
-  final future = _getTempGit()
+  return _getTempGit()
     .then((Tuple items) {
 
       tempGitDir = items.item1;
@@ -357,8 +353,6 @@ void _testWriteObjects() {
         tempContent.dispose();
       }
     });
-
-  expect(future, finishes);
 }
 
 Future<Tuple<TempDir, GitDir>> _getTempGit() {

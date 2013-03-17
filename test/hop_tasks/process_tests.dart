@@ -11,33 +11,36 @@ class ProcessTests {
     test('test command does not exist', _testProcessMissing);
   }
 
-  static void _testProcessSuccess() {
+  static Future _testProcessSuccess() {
     final scriptPath = _getTestScriptPath('exit0');
     final task = createProcessTask('dart', args: [scriptPath]);
 
-    testTaskCompletion(task, (RunResult result) {
-      expect(result.success, isTrue);
-    });
+    return runTaskInTestRunner(task)
+        .then((RunResult result) {
+          expect(result.success, isTrue);
+        });
   }
 
-  static void _testProcessFail() {
+  static Future _testProcessFail() {
     final scriptPath = _getTestScriptPath('exit1');
     final task = createProcessTask('dart', args: [scriptPath]);
 
-    testTaskCompletion(task, (RunResult rr) {
-      expect(rr, RunResult.FAIL);
-    });
+    return runTaskInTestRunner(task)
+        .then((RunResult rr) {
+          expect(rr, RunResult.FAIL);
+        });
   }
 
-  static void _testProcessMissing() {
+  static Future _testProcessMissing() {
     // NOTE: making the relatively safe assumption that this is not
     // a valid command on the test system. Could find out w/ 'which'..but...eh
     final scriptPath = 'does_not_exist_right';
     final task = createProcessTask(scriptPath);
 
-    testTaskCompletion(task, (RunResult rr) {
-      expect(rr, RunResult.EXCEPTION);
-    });
+    return runTaskInTestRunner(task)
+        .then((RunResult rr) {
+          expect(rr, RunResult.EXCEPTION);
+        });
   }
 
   static String _getTestScriptPath(String name) {

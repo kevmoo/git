@@ -96,14 +96,6 @@ Future<RunResult> runTaskInTestRunner(Task task, {List<String> extraArgs}) {
   return Runner.run(hopConfig);
 }
 
-void testTaskCompletion(Task task, Action1<RunResult> completeHandler,
-                        {List<String> extraArgs}) {
-  final future = runTaskInTestRunner(task, extraArgs: extraArgs);
-  expect(future, isNotNull);
-
-  expectFutureComplete(future, completeHandler);
-}
-
 void _testPrint(Object value) {
   String msg;
   try {
