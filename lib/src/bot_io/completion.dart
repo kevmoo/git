@@ -46,7 +46,7 @@ Options tryCompletion(ArgCompleter completer) {
         throw new FormatException('Could not parse $_compPointVar value "$val" into an integer');
       });
 
-      final trimmedArgs = args.getRange(3, args.length-3);
+      final trimmedArgs = args.sublist(3);
 
       _log('input args:     ${_helpfulToString(trimmedArgs)}');
 
@@ -171,7 +171,7 @@ List<String> getArgsCompletions(ArgParser parser, List<String> providedArgs,
     sublog('so, it seems we have command "${subCommand.name}" at index $subCommandIndex');
 
     final subCommandParser = parser.commands[subCommand.name];
-    final subCommandArgs = providedArgs.getRange(subCommandIndex + 1, providedArgs.length - subCommandIndex - 1);
+    final subCommandArgs = providedArgs.sublist(subCommandIndex + 1);
 
     /*
      * only start rockin' the sub command parser if
@@ -185,7 +185,7 @@ List<String> getArgsCompletions(ArgParser parser, List<String> providedArgs,
   }
 
 
-  final removedItems = providedArgs.getRange(validSubSet.length, providedArgs.length - validSubSet.length);
+  final removedItems = providedArgs.sublist(validSubSet.length);
   assert(removedItems.length + validSubSet.length == providedArgs.length);
 
   sublog('removed items: ${_helpfulToString(removedItems)}');

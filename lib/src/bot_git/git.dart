@@ -124,7 +124,7 @@ class CommitReference {
     // last line should be empty
     assert(lines.last.length == 0);
 
-    return lines.getRange(0, lines.length-1)
+    return lines.sublist(0, lines.length-1)
         .map((line) {
           final match = _lsRemoteRegExp.allMatches(line).single;
           assert(match.groupCount == 2);
@@ -314,7 +314,7 @@ class TreeEntry {
     // last line should be empty
     assert(lines.last.length == 0);
 
-    return lines.getRange(0, lines.length-1)
+    return lines.sublist(0, lines.length-1)
         .map((line) => new TreeEntry.fromLsTree(line))
         .toList();
   }
