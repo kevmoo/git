@@ -58,12 +58,12 @@ class _HopTestConfiguration implements unittest.Configuration {
 
   @override
   void onInit() {
-    _context.config('Initializing');
+    _context.config('config: onInit');
   }
 
   @override
   void onStart() {
-    _context.config('Starting');
+    _context.config('config: onStart');
   }
 
   @override
@@ -97,8 +97,7 @@ ${testCase.message}
 ${testCase.stackTrace}''');
     }
 
-    // TODO: print out runningTime once a build post r19522 lands
-    //_context.fine('Duration: ${testCase.runningTime}');
+    _context.fine('Duration: ${testCase.runningTime}');
   }
 
   @override
