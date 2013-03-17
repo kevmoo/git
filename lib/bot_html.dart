@@ -18,3 +18,6 @@ part 'src/bot_html/image_loader.dart';
 part 'src/bot_html/resource_loader.dart';
 
 final _libLogger = new Logger('bot_html');
+
+Coordinate _p2c(Point p) => new Coordinate(p.x, p.y);
+Point _c2p(Coordinate c) => new Point(c.x, c.y);

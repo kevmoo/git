@@ -32,14 +32,14 @@ class Dragger {
     _dragStartHandle.add(args);
     if(!args.isCanceled) {
       event.preventDefault();
-      _clientLoc = new Coordinate(event.clientX, event.clientY);
+      _clientLoc = _p2c(event.client);
     }
   }
 
   void _handleMove(MouseEvent event) {
     if(isDragging) {
 
-      final newLoc = new Coordinate(event.clientX, event.clientY);
+      final newLoc = _p2c(event.client);
 
       final delta = newLoc - _clientLoc;
       _dragDeltaHandle.add(delta);

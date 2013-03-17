@@ -212,13 +212,13 @@ class MouseManager {
     _dragStartingEvent.fireEvent(thing, args);
     if(!args.isCanceled) {
       e.preventDefault();
-      _dragCoordinate = new Coordinate(e.client.x, e.client.y);
+      _dragCoordinate = _p2c(e.client);
     }
   }
 
   void _windowMouseMove(MouseEvent e) {
     if(_isDragging) {
-      final newLoc = new Coordinate(e.clientX, e.clientY);
+      final newLoc = _p2c(e.client);
 
       final delta = newLoc - _dragCoordinate;
       final args = new ThingDragEventArgs(_draggingThing, e, delta);
