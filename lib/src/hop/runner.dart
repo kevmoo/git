@@ -81,7 +81,6 @@ class Runner {
           context.finest('Finished at $end');
           final duration = end.difference(start);
           context.fine('Run time: $duration');
-          context.dispose();
         });
   }
 
@@ -106,7 +105,10 @@ class Runner {
 
       final task = config.taskRegistry._getTask(taskName);
       return runTask(subCtx, task)
-          .then((RunResult result) => _logExitCode(ctx, result));
+          .then((RunResult result) => _logExitCode(ctx, result))
+          .whenComplete(() {
+            subCtx.dispose();
+          });
 
     } else if(config.args.rest.length == 0) {
       _printHelp(config.doPrint, config.taskRegistry, config.parser);
