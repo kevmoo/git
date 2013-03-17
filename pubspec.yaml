@@ -8,9 +8,10 @@ environment:
   sdk: '>=0.4.2+2.r20138'
 dependencies:
   unittest: '>=0.4.1'
-  html5lib: '>=0.4.0'
   args: '>=0.4.1'
-  browser: '>=0.4.1'
   logging: '>=0.4.1'
   pathos: '>=0.4.1'
   meta: '>=0.4.1+1'
+dev_dependencies:
+  html5lib: '>=0.4.0'
+  browser: '>=0.4.1'
