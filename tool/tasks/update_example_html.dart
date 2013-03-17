@@ -12,7 +12,7 @@ import 'shared.dart';
 
 const _startPath = r'example/bot_retained';
 const _demoFinder = r'/**/*_demo.html';
-final _exampleFile = _startPath.concat('/index.html');
+final _exampleFile = _startPath + '/index.html';
 
 Task getUpdateExampleHtmlTask() {
   return new Task.async((ctx) {
@@ -59,7 +59,7 @@ void _tweakDocument(Document doc, List<String> samples) {
 }
 
 Future<List<String>> _getExampleFiles() {
-  final findStr = _startPath.concat(_demoFinder);
+  final findStr = _startPath + _demoFinder;
   return Process.run('bash', ['-c', 'find $findStr'])
       .then((ProcessResult pr) {
         return Util.splitLines(pr.stdout.trim())

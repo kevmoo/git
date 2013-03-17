@@ -91,11 +91,11 @@ List<String> getArgsCompletions(ArgParser parser, List<String> providedArgs,
   for(int i = 0; i < providedArgs.length; i++) {
     final arg = providedArgs[i];
     final msg = 'Arg at index $i with value "$arg" ';
-    require(arg != null, msg.concat('is null'));
-    require(arg.trim() == arg, msg.concat('has whitespace'));
+    require(arg != null, msg + 'is null');
+    require(arg.trim() == arg, msg + 'has whitespace');
 
     if(i < (providedArgs.length-1)) {
-      require(!arg.isEmpty, msg.concat('Only the last arg can be an empty string'));
+      require(!arg.isEmpty, msg + 'Only the last arg can be an empty string');
     }
   }
 

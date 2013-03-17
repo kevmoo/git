@@ -129,7 +129,7 @@ Future<String> _getCommitMessageFuture(GitDir gitDir, bool isClean) {
       var msg = "Docs generated for ${currentBranchRef.branchName} at ${abbrevSha}";
 
       if(!isClean) {
-        msg = msg.concat(' (dirty)');
+        msg = msg + ' (dirty)';
       }
 
       return msg;

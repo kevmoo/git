@@ -84,7 +84,7 @@ class RgbColor {
   }
 
   static String _prependZeroIfNecessaryHelper(String hex) {
-    return hex.length == 1 ? '0'.concat(hex) : hex;
+    return hex.length == 1 ? '0' + hex : hex;
   }
 
   // TODO: support colors in the format #rgb

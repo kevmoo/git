@@ -55,7 +55,7 @@ class RootTaskContext {
             first = false;
             _printer(coloredTitle.concat(line));
           } else {
-            _printer(indent.concat(line));
+            _printer(indent + line);
           }
         }
       } else {

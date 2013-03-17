@@ -45,7 +45,7 @@ void main() {
       for(final binName in options.arguments) {
         if(!_binNameMatch.hasMatch(binName)) {
           final msg = 'The provided name - "$binName" - is invalid\n'
-              .concat('It must match regex: ${_binNameMatch.pattern}');
+              'It must match regex: ${_binNameMatch.pattern}';
           throw msg;
         }
       }

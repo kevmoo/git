@@ -44,12 +44,12 @@ void _testSilly(List<bool> values, bool doThrow) {
 
   var msg = values.map((v) => v ? 'future' : 'func').join(' to ');
   if(!msg.isEmpty) {
-    msg = msg.concat(' to ');
+    msg = msg + ' to ';
   }
 
   final finalOutput = doThrow ? 'throw sorry' : 'obj';
 
-  msg = msg.concat(finalOutput);
+  msg = msg + finalOutput;
 
   _drTest(msg, _returnSilly(values, finalVal, doThrow), finalVal, doThrow);
 }

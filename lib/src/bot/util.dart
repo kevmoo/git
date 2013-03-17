@@ -31,7 +31,7 @@ class Util {
   static String padLeft(String text, int minWidth) {
     requireArgumentNotNull(text, 'text');
     while(text.length < minWidth) {
-      text = ' '.concat(text);
+      text = ' ' + text;
     }
     return text;
   }

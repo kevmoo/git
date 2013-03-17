@@ -45,7 +45,7 @@ class Task {
     return _extendedArgs.map((TaskArgument arg) {
       var value = '<${arg.name}>';
       if(arg.multiple) {
-        value = value.concat('...');
+        value = value + '...';
       }
       if(!arg.required) {
         value = '[$value]';
