@@ -2,6 +2,19 @@
 
 ## 0.16.0-dev *pre-release* (SDK 0.4.2.2 r20138)
 
+* [Changes Since v0.14.2](https://github.com/kevmoo/bot.dart/compare/v0.15.0.2...0-16-stable)
+* Fixes for changes in `String`, `Iterable` and `dart:html`.
+
+### bot
+
+* __BREAKING__ Removed a number of deprecated APIs from `Enumerable`.
+* __BREAKING__ Replaced `ListBase` with `Sequence`. Sequence does not implement `List`,
+but it does have an get indexer `[int index]`.
+
+### hop_tasks
+
+* The unit test task logs a few more things.
+
 ## 0.15.0+2 2013-03-12 (SDK 0.4.1.0 r19425)
 
 ### hop_tasks
