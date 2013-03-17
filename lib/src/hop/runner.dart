@@ -80,7 +80,7 @@ class Runner {
           final end = new DateTime.now();
           context.finest('Finished at $end');
           final duration = end.difference(start);
-          context.fine('Run time: $duration');
+          context.finer('Run time: $duration');
         });
   }
 
