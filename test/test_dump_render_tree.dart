@@ -1,5 +1,6 @@
 library test_dump_render_tree;
 
+import 'dart:async';
 import 'dart:io';
 import 'package:unittest/unittest.dart';
 import 'package:bot/bot_test.dart';
@@ -16,10 +17,10 @@ void main() {
   });
 }
 
-void _runDrt(String htmlFile) {
+Future _runDrt(String htmlFile) {
   final allPassedRegExp = new RegExp('All \\d+ tests passed');
 
-  final future = Process.run('DumpRenderTree', [htmlFile])
+  return Process.run('DumpRenderTree', [htmlFile])
       .then((ProcessResult pr) {
         expect(pr.exitCode, 0, reason: 'DumpRenderTree should return exit code 0 - success');
 
@@ -28,6 +29,4 @@ void _runDrt(String htmlFile) {
           fail('Could not find success value in stdout: ${allPassedRegExp.pattern}');
         }
     });
-
-  expect(future, finishes);
 }

@@ -37,7 +37,7 @@ class GitTests {
         TempDir tempDir;
         GitDir gitDir;
 
-        final future = TempDir.create()
+        return TempDir.create()
             .then((TempDir value) {
               tempDir = value;
 
@@ -189,8 +189,6 @@ class GitTests {
                 tempDir.dispose();
               }
             });
-
-        expect(future, finishes);
       });
 
     });
