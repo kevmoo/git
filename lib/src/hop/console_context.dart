@@ -9,7 +9,9 @@ class ConsoleContext extends TaskContext {
 
   void log(Level logLevel, String message) {
     _assertNotDisposed();
-    print(message);
+    if(logLevel >= Level.FINE) {
+      print(message);
+    }
   }
 
   /**
