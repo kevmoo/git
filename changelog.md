@@ -1,6 +1,6 @@
 # Changelog - Dart Bag of Tricks
 
-## 0.16.0-dev *pre-release* (SDK 0.4.2.2 r20138)
+## 0.16.0-dev *pre-release* (SDK 0.4.2.4 r20157)
 
 * [Changes Since v0.14.2](https://github.com/kevmoo/bot.dart/compare/v0.15.0.2...0-16-stable)
 * Fixes for changes in `String`, `Iterable` and `dart:html`.
