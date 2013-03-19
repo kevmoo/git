@@ -5180,23 +5180,24 @@ $$.MouseManager = {"": "Object;_stage,_mouseDownThing,_draggingThing,_dragCoordi
     return this._dragCoordinate != null;
   },
   _mouseMove$1: function(e) {
-    var t1, t2, items, cursor, args, t3;
-    t1 = $.getInterceptor$x(e);
-    t2 = this._stage;
-    items = $.Mouse_markMouseOver(t2, $.Coordinate$(t1.get$offsetX(e), t1.get$offsetY(e)));
+    var t1, t2, t3, items, cursor, args;
+    t1 = $.get$offset$x(e);
+    t2 = $.getInterceptor$x(t1);
+    t3 = this._stage;
+    items = $.Mouse_markMouseOver(t3, $.Coordinate$(t2.get$x(t1), t2.get$y(t1)));
     t1 = this._draggingThing;
     cursor = t1 != null ? $.get$MouseManager_cursorProperty().get$1(t1) : null;
     t1 = $.getInterceptor$asx(items);
     if ($.$gt$n(t1.get$length(items), 0) === true) {
       args = $.ThingMouseEventArgs$(t1.$index(items, 0), e);
       for (t1 = t1.get$iterator(items); t1.moveNext$0() === true;) {
-        t3 = t1.get$current();
-        $.get$MouseManager__mouseMoveEvent().fireEvent$2(t3, args);
+        t2 = t1.get$current();
+        $.get$MouseManager__mouseMoveEvent().fireEvent$2(t2, args);
         if (cursor == null)
-          cursor = $.get$MouseManager_cursorProperty().get$1(t3);
+          cursor = $.get$MouseManager_cursorProperty().get$1(t2);
       }
     }
-    $.get$MouseManager_cursorProperty().set$2(t2, cursor);
+    $.get$MouseManager_cursorProperty().set$2(t3, cursor);
   },
   get$_mouseMove: function() {
     return new $.BoundClosure$1(this, "_mouseMove$1");
@@ -5211,9 +5212,10 @@ $$.MouseManager = {"": "Object;_stage,_mouseDownThing,_draggingThing,_dragCoordi
     return new $.BoundClosure$1(this, "_mouseOut$1");
   },
   _mouseUp$1: function(e) {
-    var t1, thing;
-    t1 = $.getInterceptor$x(e);
-    thing = $.firstWhere$2$orElse$ax($.Mouse_markMouseOver(this._stage, $.Coordinate$(t1.get$offsetX(e), t1.get$offsetY(e))), new $.MouseManager__mouseUp_anon(), new $.MouseManager__mouseUp_anon0());
+    var t1, t2, thing;
+    t1 = $.get$offset$x(e);
+    t2 = $.getInterceptor$x(t1);
+    thing = $.firstWhere$2$orElse$ax($.Mouse_markMouseOver(this._stage, $.Coordinate$(t2.get$x(t1), t2.get$y(t1))), new $.MouseManager__mouseUp_anon(), new $.MouseManager__mouseUp_anon0());
     if (thing != null) {
       this._doMouseUp$2(thing, e);
       if ($.$eq(thing, this._mouseDownThing) === true)
@@ -5225,10 +5227,11 @@ $$.MouseManager = {"": "Object;_stage,_mouseDownThing,_draggingThing,_dragCoordi
     return new $.BoundClosure$1(this, "_mouseUp$1");
   },
   _mouseDown$1: function(e) {
-    var t1, t2;
-    t1 = $.getInterceptor$x(e);
-    for (t2 = $.get$iterator$ax($.Mouse_markMouseOver(this._stage, $.Coordinate$(t1.get$offsetX(e), t1.get$offsetY(e)))); t2.moveNext$0() === true;) {
-      t1 = t2.get$current();
+    var t1, t2, t3;
+    t1 = $.get$offset$x(e);
+    t2 = $.getInterceptor$x(t1);
+    for (t3 = $.get$iterator$ax($.Mouse_markMouseOver(this._stage, $.Coordinate$(t2.get$x(t1), t2.get$y(t1)))); t3.moveNext$0() === true;) {
+      t1 = t3.get$current();
       if ($.get$MouseManager__isDraggableProperty().get$1(t1) === true) {
         this._draggingThing = t1;
         this._startDrag$2(this._draggingThing, e);
@@ -5256,20 +5259,23 @@ $$.MouseManager = {"": "Object;_stage,_mouseDownThing,_draggingThing,_dragCoordi
     $.get$MouseManager__clickEvent().fireEvent$2(thing, args);
   },
   _startDrag$2: function(thing, e) {
-    var args, t1;
+    var args, t1, t2;
     args = $.ThingDragStartingEventArgs$(thing, e);
     $.get$MouseManager__dragStartingEvent().fireEvent$2(thing, args);
     if (!args.get$isCanceled()) {
       t1 = $.getInterceptor$x(e);
       t1.preventDefault$0(e);
-      this._dragCoordinate = $.Coordinate$($.get$x$x(t1.get$client(e)), $.get$y$x(t1.get$client(e)));
+      t1 = t1.get$client(e);
+      t2 = $.getInterceptor$x(t1);
+      this._dragCoordinate = $.Coordinate$(t2.get$x(t1), t2.get$y(t1));
     }
   },
   _windowMouseMove$1: function(e) {
-    var t1, newLoc, delta, args;
+    var t1, t2, newLoc, delta, args;
     if (this.get$_isDragging() === true) {
-      t1 = $.getInterceptor$x(e);
-      newLoc = $.Coordinate$(t1.get$clientX(e), t1.get$clientY(e));
+      t1 = $.get$client$x(e);
+      t2 = $.getInterceptor$x(t1);
+      newLoc = $.Coordinate$(t2.get$x(t1), t2.get$y(t1));
       delta = newLoc.$sub(newLoc, this._dragCoordinate);
       args = $.ThingDragEventArgs$(this._draggingThing, e, delta);
       $.get$MouseManager__dragEvent().fireEvent$2(this._draggingThing, args);
@@ -7667,12 +7673,6 @@ $.get$topLeft$x = function(receiver) {
 $.get$userAgent$x = function(receiver) {
   return $.getInterceptor$x(receiver).get$userAgent(receiver);
 };
-$.get$x$x = function(receiver) {
-  return $.getInterceptor$x(receiver).get$x(receiver);
-};
-$.get$y$x = function(receiver) {
-  return $.getInterceptor$x(receiver).get$y(receiver);
-};
 $.getBoundingClientRect$0$x = function(receiver) {
   return $.getInterceptor$x(receiver).getBoundingClientRect$0(receiver);
 };
@@ -8111,10 +8111,14 @@ $.$defineNativeClass("DOMException", {
   }
 });
 
-$.$defineNativeClass("Element", {"": "id=,$$dom_clientHeight:clientHeight=,$$dom_clientLeft:clientLeft=,$$dom_clientTop:clientTop=,$$dom_clientWidth:clientWidth=",
+$.$defineNativeClass("Element", {"": "id=,$$dom_clientHeight:clientHeight=,$$dom_clientLeft:clientLeft=,$$dom_clientTop:clientTop=,$$dom_clientWidth:clientWidth=,$$dom_offsetHeight:offsetHeight=,$$dom_offsetLeft:offsetLeft=,$$dom_offsetTop:offsetTop=,$$dom_offsetWidth:offsetWidth=",
   get$client: function(receiver) {
     var t1 = $.getInterceptor$x(receiver);
     return $.Rect$(t1.get$$$dom_clientLeft(receiver), t1.get$$$dom_clientTop(receiver), t1.get$$$dom_clientWidth(receiver), t1.get$$$dom_clientHeight(receiver));
+  },
+  get$offset: function(receiver) {
+    var t1 = $.getInterceptor$x(receiver);
+    return $.Rect$(t1.get$$$dom_offsetLeft(receiver), t1.get$$$dom_offsetTop(receiver), t1.get$$$dom_offsetWidth(receiver), t1.get$$$dom_offsetHeight(receiver));
   },
   getBoundingClientRect$0: function(receiver) {
     return receiver.getBoundingClientRect();
@@ -8297,18 +8301,6 @@ $.$defineNativeClass("MediaStreamEvent", {"": "stream="});
 $.$defineNativeClass("HTMLMetaElement", {"": "name="});
 
 $.$defineNativeClass("MouseEvent", {"": "$$dom_clientX:clientX=,$$dom_clientY:clientY=",
-  get$clientX: function(receiver) {
-    return $.get$client$x(receiver).x;
-  },
-  get$clientY: function(receiver) {
-    return $.get$client$x(receiver).y;
-  },
-  get$offsetX: function(receiver) {
-    return $.get$x$x($.get$offset$x(receiver));
-  },
-  get$offsetY: function(receiver) {
-    return $.get$y$x($.get$offset$x(receiver));
-  },
   get$client: function(receiver) {
     var t1 = $.getInterceptor$x(receiver);
     return $.Point$(t1.get$$$dom_clientX(receiver), t1.get$$$dom_clientY(receiver));

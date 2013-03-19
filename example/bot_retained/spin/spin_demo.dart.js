@@ -27,8 +27,10 @@ $$.SpinDemo = {"": "StageWrapper;_tx,_mouseLocation,canvas,stage,rootThing,_inva
     return new $.BoundClosure$1(this, "drawFrame$1");
   },
   _canvas_mouseMove$1: function(e) {
-    var t1 = $.getInterceptor$x(e);
-    this._mouseLocation = $.Coordinate$(t1.get$offsetX(e), t1.get$offsetY(e));
+    var t1, t2;
+    t1 = $.get$offset$x(e);
+    t2 = $.getInterceptor$x(t1);
+    this._mouseLocation = $.Coordinate$(t2.get$x(t1), t2.get$y(t1));
   },
   get$_canvas_mouseMove: function() {
     return new $.BoundClosure$1(this, "_canvas_mouseMove$1");
@@ -7724,7 +7726,11 @@ $.$defineNativeClass("DOMException", {
   }
 });
 
-$.$defineNativeClass("Element", {"": "id=",
+$.$defineNativeClass("Element", {"": "id=,$$dom_offsetHeight:offsetHeight=,$$dom_offsetLeft:offsetLeft=,$$dom_offsetTop:offsetTop=,$$dom_offsetWidth:offsetWidth=",
+  get$offset: function(receiver) {
+    var t1 = $.getInterceptor$x(receiver);
+    return $.Rect$(t1.get$$$dom_offsetLeft(receiver), t1.get$$$dom_offsetTop(receiver), t1.get$$$dom_offsetWidth(receiver), t1.get$$$dom_offsetHeight(receiver));
+  },
   getBoundingClientRect$0: function(receiver) {
     return receiver.getBoundingClientRect();
   },
@@ -7886,12 +7892,6 @@ $.$defineNativeClass("MediaStream", {"": "id=",
 $.$defineNativeClass("HTMLMetaElement", {"": "name="});
 
 $.$defineNativeClass("MouseEvent", {"": "$$dom_clientX:clientX=,$$dom_clientY:clientY=",
-  get$offsetX: function(receiver) {
-    return $.get$x$x($.get$offset$x(receiver));
-  },
-  get$offsetY: function(receiver) {
-    return $.get$y$x($.get$offset$x(receiver));
-  },
   get$client: function(receiver) {
     var t1 = $.getInterceptor$x(receiver);
     return $.Point$(t1.get$$$dom_clientX(receiver), t1.get$$$dom_clientY(receiver));

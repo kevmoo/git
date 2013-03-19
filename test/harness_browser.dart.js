@@ -846,7 +846,7 @@ $$.TestCoordinate_run__anon0 = {"": "Closure;",
 $$.TestCoordinate_run__anon1 = {"": "Closure;",
   call$0: function() {
     $.expect($.Coordinate$(2, 2), $._IsNot$($.wrapMatcher($._IsSameAs$($.Coordinate$(2, 2)))), null, null, false);
-    $.expect($.CONSTANT38, $._IsSameAs$($.CONSTANT38), null, null, false);
+    $.expect($.CONSTANT37, $._IsSameAs$($.CONSTANT37), null, null, false);
   },
   $isFunction: true
 };
@@ -929,7 +929,7 @@ $$.TestVector_run__anon2 = {"": "Closure;",
 $$.TestVector_run__anon3 = {"": "Closure;",
   call$0: function() {
     $.expect($.Vector$(2, 2), $.Vector$(2, 2), null, null, false);
-    $.expect($.CONSTANT36, $._IsSameAs$($.CONSTANT36), null, null, false);
+    $.expect($.CONSTANT35, $._IsSameAs$($.CONSTANT35), null, null, false);
   },
   $isFunction: true
 };
@@ -969,16 +969,16 @@ $$.TestVector_run__anon7 = {"": "Closure;",
 
 $$.TestVector_run__anon8 = {"": "Closure;",
   call$0: function() {
-    $.expect($.CONSTANT34.get$angle(), $._IsCloseTo$(0, 0.001), null, null, false);
-    $.expect($.CONSTANT35.get$angle(), $._IsCloseTo$(0.7853981633974483, 0.001), null, null, false);
-    $.expect($.CONSTANT34.getAngle$1($.CONSTANT35), $._IsCloseTo$(0.7853981633974483, 0.001), null, null, false);
+    $.expect($.CONSTANT33.get$angle(), $._IsCloseTo$(0, 0.001), null, null, false);
+    $.expect($.CONSTANT34.get$angle(), $._IsCloseTo$(0.7853981633974483, 0.001), null, null, false);
+    $.expect($.CONSTANT33.getAngle$1($.CONSTANT34), $._IsCloseTo$(0.7853981633974483, 0.001), null, null, false);
   },
   $isFunction: true
 };
 
 $$.TestVector_run__anon9 = {"": "Closure;",
   call$0: function() {
-    var a = $.CONSTANT32.rotate$1($.CONSTANT32, 1.5707963267948966);
+    var a = $.CONSTANT31.rotate$1($.CONSTANT31, 1.5707963267948966);
     $.expect(a.x, $._IsCloseTo$(1, 0.000001), null, null, false);
     $.expect(a.y, $._IsCloseTo$(1, 0.000001), null, null, false);
     a = a.rotate$1(a, -3.141592653589793);
@@ -991,7 +991,7 @@ $$.TestVector_run__anon9 = {"": "Closure;",
 $$.TestVector_run__anon10 = {"": "Closure;",
   call$0: function() {
     var a, t1;
-    a = $.CONSTANT32.rotateAroundPoint$2($.CONSTANT33, 1.5707963267948966);
+    a = $.CONSTANT31.rotateAroundPoint$2($.CONSTANT32, 1.5707963267948966);
     t1 = $.getInterceptor$x(a);
     $.expect(t1.get$x(a), $._IsCloseTo$(2, 0.000001), null, null, false);
     $.expect(t1.get$y(a), $._IsCloseTo$(0, 0.000001), null, null, false);
@@ -10246,7 +10246,7 @@ $$.NumberEnumerable = {"": "Iterable;",
     for (t1 = this.get$iterator(this), theSum = 0; t1.moveNext$0() === true;) {
       t2 = t1.get$current();
       if (t2 == null)
-        throw $.$$throw($.CONSTANT40);
+        throw $.$$throw($.CONSTANT39);
       if (typeof t2 !== "number")
         throw $.iae(t2);
       theSum += t2;
@@ -10258,7 +10258,7 @@ $$.NumberEnumerable = {"": "Iterable;",
     for (t1 = this.get$iterator(this), theCount = 0, theSum = 0; t1.moveNext$0() === true;) {
       t2 = t1.get$current();
       if (t2 == null)
-        throw $.$$throw($.CONSTANT40);
+        throw $.$$throw($.CONSTANT39);
       if (typeof t2 !== "number")
         throw $.iae(t2);
       theSum += t2;
@@ -10688,7 +10688,7 @@ $$.RgbColor_toHex_anon = {"": "Closure;buffer_0",
     var t1, t2;
     t1 = this.buffer_0;
     t2 = $.toRadixString$1$n(c, 16);
-    t1.write$1(t2.length === 1 ? "0" + t2 : t2);
+    t1.write$1(t2.length === 1 ? $.JSString_methods.$add("0", t2) : t2);
   },
   $isFunction: true
 };
@@ -11658,23 +11658,24 @@ $$.MouseManager = {"": "Object;_stage,_mouseDownThing,_draggingThing,_dragCoordi
     return this._dragCoordinate != null;
   },
   _mouseMove$1: function(e) {
-    var t1, t2, items, cursor, args, t3;
-    t1 = $.getInterceptor$x(e);
-    t2 = this._stage;
-    items = $.Mouse_markMouseOver(t2, $.Coordinate$(t1.get$offsetX(e), t1.get$offsetY(e)));
+    var t1, t2, t3, items, cursor, args;
+    t1 = $.get$offset$x(e);
+    t2 = $.getInterceptor$x(t1);
+    t3 = this._stage;
+    items = $.Mouse_markMouseOver(t3, $.Coordinate$(t2.get$x(t1), t2.get$y(t1)));
     t1 = this._draggingThing;
     cursor = t1 != null ? $.get$MouseManager_cursorProperty().get$1(t1) : null;
     t1 = $.getInterceptor$asx(items);
     if ($.$gt$n(t1.get$length(items), 0) === true) {
       args = $.ThingMouseEventArgs$(t1.$index(items, 0), e);
       for (t1 = t1.get$iterator(items); t1.moveNext$0() === true;) {
-        t3 = t1.get$current();
-        $.get$MouseManager__mouseMoveEvent().fireEvent$2(t3, args);
+        t2 = t1.get$current();
+        $.get$MouseManager__mouseMoveEvent().fireEvent$2(t2, args);
         if (cursor == null)
-          cursor = $.get$MouseManager_cursorProperty().get$1(t3);
+          cursor = $.get$MouseManager_cursorProperty().get$1(t2);
       }
     }
-    $.get$MouseManager_cursorProperty().set$2(t2, cursor);
+    $.get$MouseManager_cursorProperty().set$2(t3, cursor);
   },
   get$_mouseMove: function() {
     return new $.BoundClosure$1(this, "_mouseMove$1");
@@ -11689,9 +11690,10 @@ $$.MouseManager = {"": "Object;_stage,_mouseDownThing,_draggingThing,_dragCoordi
     return new $.BoundClosure$1(this, "_mouseOut$1");
   },
   _mouseUp$1: function(e) {
-    var t1, thing;
-    t1 = $.getInterceptor$x(e);
-    thing = $.firstWhere$2$orElse$ax($.Mouse_markMouseOver(this._stage, $.Coordinate$(t1.get$offsetX(e), t1.get$offsetY(e))), new $.MouseManager__mouseUp_anon(), new $.MouseManager__mouseUp_anon0());
+    var t1, t2, thing;
+    t1 = $.get$offset$x(e);
+    t2 = $.getInterceptor$x(t1);
+    thing = $.firstWhere$2$orElse$ax($.Mouse_markMouseOver(this._stage, $.Coordinate$(t2.get$x(t1), t2.get$y(t1))), new $.MouseManager__mouseUp_anon(), new $.MouseManager__mouseUp_anon0());
     if (thing != null) {
       this._doMouseUp$2(thing, e);
       if ($.$eq(thing, this._mouseDownThing) === true)
@@ -11703,10 +11705,11 @@ $$.MouseManager = {"": "Object;_stage,_mouseDownThing,_draggingThing,_dragCoordi
     return new $.BoundClosure$1(this, "_mouseUp$1");
   },
   _mouseDown$1: function(e) {
-    var t1, t2;
-    t1 = $.getInterceptor$x(e);
-    for (t2 = $.get$iterator$ax($.Mouse_markMouseOver(this._stage, $.Coordinate$(t1.get$offsetX(e), t1.get$offsetY(e)))); t2.moveNext$0() === true;) {
-      t1 = t2.get$current();
+    var t1, t2, t3;
+    t1 = $.get$offset$x(e);
+    t2 = $.getInterceptor$x(t1);
+    for (t3 = $.get$iterator$ax($.Mouse_markMouseOver(this._stage, $.Coordinate$(t2.get$x(t1), t2.get$y(t1)))); t3.moveNext$0() === true;) {
+      t1 = t3.get$current();
       if ($.get$MouseManager__isDraggableProperty().get$1(t1) === true) {
         this._draggingThing = t1;
         this._startDrag$2(this._draggingThing, e);
@@ -11734,20 +11737,23 @@ $$.MouseManager = {"": "Object;_stage,_mouseDownThing,_draggingThing,_dragCoordi
     $.get$MouseManager__clickEvent().fireEvent$2(thing, args);
   },
   _startDrag$2: function(thing, e) {
-    var args, t1;
+    var args, t1, t2;
     args = $.ThingDragStartingEventArgs$(thing, e);
     $.get$MouseManager__dragStartingEvent().fireEvent$2(thing, args);
     if (!args.get$isCanceled()) {
       t1 = $.getInterceptor$x(e);
       t1.preventDefault$0(e);
-      this._dragCoordinate = $.Coordinate$($.get$x$x(t1.get$client(e)), $.get$y$x(t1.get$client(e)));
+      t1 = t1.get$client(e);
+      t2 = $.getInterceptor$x(t1);
+      this._dragCoordinate = $.Coordinate$(t2.get$x(t1), t2.get$y(t1));
     }
   },
   _windowMouseMove$1: function(e) {
-    var t1, newLoc, delta, args;
+    var t1, t2, newLoc, delta, args;
     if (this.get$_isDragging() === true) {
-      t1 = $.getInterceptor$x(e);
-      newLoc = $.Coordinate$(t1.get$clientX(e), t1.get$clientY(e));
+      t1 = $.get$client$x(e);
+      t2 = $.getInterceptor$x(t1);
+      newLoc = $.Coordinate$(t2.get$x(t1), t2.get$y(t1));
       delta = newLoc.$sub(newLoc, this._dragCoordinate);
       args = $.ThingDragEventArgs$(this._draggingThing, e, delta);
       $.get$MouseManager__dragEvent().fireEvent$2(this._draggingThing, args);
@@ -14102,21 +14108,21 @@ $.TestListBase_run = function() {
 };
 
 $.TestListBase__testLast = function() {
-  $.expect($.CONSTANT41.get$last($.CONSTANT41), 1, null, null, false);
+  $.expect($.CONSTANT40.get$last($.CONSTANT40), 1, null, null, false);
 };
 
 $.TestListBase__testReduce = function() {
-  $.expect($.CONSTANT41.reduce$2($.CONSTANT41, 0, new $.TestListBase__testReduce_anon()), 15, null, null, false);
-  $.expect($.CONSTANT41.reduce$2($.CONSTANT41, 1, new $.TestListBase__testReduce_anon0()), 120, null, null, false);
+  $.expect($.CONSTANT40.reduce$2($.CONSTANT40, 0, new $.TestListBase__testReduce_anon()), 15, null, null, false);
+  $.expect($.CONSTANT40.reduce$2($.CONSTANT40, 1, new $.TestListBase__testReduce_anon0()), 120, null, null, false);
 };
 
 $.TestListBase__testSimple = function() {
-  $.expect($.CONSTANT41.get$length($.CONSTANT41), $._DeepMatcher$(5, 100), null, null, false);
-  $.expect($.CONSTANT41, $._OrderedEquals$([5, 4, 3, 2, 1]), null, null, false);
+  $.expect($.CONSTANT40.get$length($.CONSTANT40), $._DeepMatcher$(5, 100), null, null, false);
+  $.expect($.CONSTANT40, $._OrderedEquals$([5, 4, 3, 2, 1]), null, null, false);
 };
 
 $.TestListBase__testMap = function() {
-  var list = $.CONSTANT41.map$1($.CONSTANT41, new $.TestListBase__testMap_anon());
+  var list = $.CONSTANT40.map$1($.CONSTANT40, new $.TestListBase__testMap_anon());
   $.expect($.get$length$asx(list), $._DeepMatcher$(5, 100), null, null, false);
   $.expect(list, $._OrderedEquals$([10, 8, 6, 4, 2]), null, null, false);
 };
@@ -14124,33 +14130,33 @@ $.TestListBase__testMap = function() {
 $.TestListBase__testIndexOf = function() {
   var i;
   for (var i = 1; i <= 5; ++i) {
-    $.expect($.CONSTANT42.indexOf$1($.CONSTANT42, i), $._DeepMatcher$(5 - i, 100), null, null, false);
-    $.expect($.CONSTANT42.lastIndexOf$1($.CONSTANT42, i), $._DeepMatcher$(5 + i - 1, 100), null, null, false);
+    $.expect($.CONSTANT41.indexOf$1($.CONSTANT41, i), $._DeepMatcher$(5 - i, 100), null, null, false);
+    $.expect($.CONSTANT41.lastIndexOf$1($.CONSTANT41, i), $._DeepMatcher$(5 + i - 1, 100), null, null, false);
   }
   for (i = 1; i <= 5; ++i)
-    $.expect($.CONSTANT42.indexOf$2($.CONSTANT42, i, 5), $._DeepMatcher$(5 + i - 1, 100), null, null, false);
+    $.expect($.CONSTANT41.indexOf$2($.CONSTANT41, i, 5), $._DeepMatcher$(5 + i - 1, 100), null, null, false);
   for (i = 1; i <= 5; ++i)
-    $.expect($.CONSTANT42.lastIndexOf$2($.CONSTANT42, i, 4), 5 - i, null, null, false);
-  $.expect($.CONSTANT42.indexOf$2($.CONSTANT42, 1, 6), $._DeepMatcher$(-1, 100), null, null, false);
-  $.expect($.CONSTANT42.lastIndexOf$2($.CONSTANT42, 1, 3), $._DeepMatcher$(-1, 100), null, null, false);
-  $.expect($.CONSTANT42.indexOf$1($.CONSTANT42, 0), $._DeepMatcher$(-1, 100), null, null, false);
-  $.expect($.CONSTANT42.lastIndexOf$1($.CONSTANT42, 0), $._DeepMatcher$(-1, 100), null, null, false);
+    $.expect($.CONSTANT41.lastIndexOf$2($.CONSTANT41, i, 4), 5 - i, null, null, false);
+  $.expect($.CONSTANT41.indexOf$2($.CONSTANT41, 1, 6), $._DeepMatcher$(-1, 100), null, null, false);
+  $.expect($.CONSTANT41.lastIndexOf$2($.CONSTANT41, 1, 3), $._DeepMatcher$(-1, 100), null, null, false);
+  $.expect($.CONSTANT41.indexOf$1($.CONSTANT41, 0), $._DeepMatcher$(-1, 100), null, null, false);
+  $.expect($.CONSTANT41.lastIndexOf$1($.CONSTANT41, 0), $._DeepMatcher$(-1, 100), null, null, false);
 };
 
 $.TestListBase__testForEach = function() {
   var t1 = {};
   t1.sum_0 = 0;
-  $.CONSTANT41.forEach$1($.CONSTANT41, new $.TestListBase__testForEach_anon(t1));
+  $.CONSTANT40.forEach$1($.CONSTANT40, new $.TestListBase__testForEach_anon(t1));
   $.expect(t1.sum_0, $._DeepMatcher$(15, 100), null, null, false);
   t1.sum_0 = 0;
-  $.CONSTANT42.forEach$1($.CONSTANT42, new $.TestListBase__testForEach_anon0(t1));
+  $.CONSTANT41.forEach$1($.CONSTANT41, new $.TestListBase__testForEach_anon0(t1));
   $.expect(t1.sum_0, $._DeepMatcher$(30, 100), null, null, false);
 };
 
 $.TestListBase__testFilter = function() {
-  $.expect($.List_List$from($.CONSTANT41.where$1($.CONSTANT41, $.TestListBase__lt3), true, $.$int), $._OrderedEquals$([2, 1]), null, null, false);
-  $.expect($.List_List$from($.CONSTANT42.where$1($.CONSTANT42, $.TestListBase__lt3), true, $.$int), $._OrderedEquals$([2, 1, 1, 2]), null, null, false);
-  $.expect($.List_List$from($.CONSTANT42.where$1($.CONSTANT42, $.TestListBase__lt0), true, $.$int), $._OrderedEquals$([]), null, null, false);
+  $.expect($.List_List$from($.CONSTANT40.where$1($.CONSTANT40, $.TestListBase__lt3), true, $.$int), $._OrderedEquals$([2, 1]), null, null, false);
+  $.expect($.List_List$from($.CONSTANT41.where$1($.CONSTANT41, $.TestListBase__lt3), true, $.$int), $._OrderedEquals$([2, 1, 1, 2]), null, null, false);
+  $.expect($.List_List$from($.CONSTANT41.where$1($.CONSTANT41, $.TestListBase__lt0), true, $.$int), $._OrderedEquals$([]), null, null, false);
 };
 
 $.TestListBase__lt0 = function(a) {
@@ -14189,7 +14195,7 @@ $.TestNumberEnumerable__testMax = function() {
 
 $.TestNumberEnumerable__testAverage = function() {
   $.expect($.NumberEnumerable_NumberEnumerable$from([1, 2, 3], null).average$0(), $._DeepMatcher$(2, 100), null, null, false);
-  $.expect(new $.TestNumberEnumerable__testAverage_anon(), $.CONSTANT39, null, null, false);
+  $.expect(new $.TestNumberEnumerable__testAverage_anon(), $.CONSTANT38, null, null, false);
 };
 
 $.TestHslColor_run = function() {
@@ -14483,13 +14489,13 @@ $.TestBox_run = function() {
 };
 
 $.TestBox__testEquals = function() {
-  $.expect($.CONSTANT37, $._DeepMatcher$($.CONSTANT37, 100), null, null, false);
-  $.expect($.CONSTANT37, $._IsSameAs$($.CONSTANT37), null, null, false);
-  $.expect($.CONSTANT37, $._DeepMatcher$($.CONSTANT37, 100), null, null, false);
-  $.expect($.CONSTANT37, $._IsSameAs$($.CONSTANT37), null, null, false);
+  $.expect($.CONSTANT36, $._DeepMatcher$($.CONSTANT36, 100), null, null, false);
+  $.expect($.CONSTANT36, $._IsSameAs$($.CONSTANT36), null, null, false);
+  $.expect($.CONSTANT36, $._DeepMatcher$($.CONSTANT36, 100), null, null, false);
+  $.expect($.CONSTANT36, $._IsSameAs$($.CONSTANT36), null, null, false);
   var c = $.Box$(0, 0, 1, 1);
-  $.expect(c, $._DeepMatcher$($.CONSTANT37, 100), null, null, false);
-  $.expect(c, $._IsNot$($.wrapMatcher($._IsSameAs$($.CONSTANT37))), null, null, false);
+  $.expect(c, $._DeepMatcher$($.CONSTANT36, 100), null, null, false);
+  $.expect(c, $._IsNot$($.wrapMatcher($._IsSameAs$($.CONSTANT36))), null, null, false);
 };
 
 $.TestBox__testSizeLocation = function() {
@@ -14623,8 +14629,8 @@ $._testSilly = function(values, doThrow) {
   msg = t1.join$1(t1, " to ");
   t1 = $.getInterceptor$asx(msg);
   if (t1.get$isEmpty(msg) !== true)
-    msg = t1.concat$1(msg, " to ");
-  $._drTest($.concat$1$s(msg, doThrow === true ? "throw sorry" : "obj"), $._returnSilly(values, finalVal, doThrow), finalVal, doThrow);
+    msg = t1.$add(msg, " to ");
+  $._drTest($.$add$ns(msg, doThrow === true ? "throw sorry" : "obj"), $._returnSilly(values, finalVal, doThrow), finalVal, doThrow);
 };
 
 $._returnSilly = function(values, finalVal, doThrow) {
@@ -14966,7 +14972,7 @@ $.ExpandIterable$ = function(_iterable, _f, S, T) {
 };
 
 $.ExpandIterator$ = function(_iterator, _f, S, T) {
-  var t1 = new $.ExpandIterator(_iterator, _f, $.CONSTANT31, null);
+  var t1 = new $.ExpandIterator(_iterator, _f, $.CONSTANT42, null);
   $.setRuntimeTypeInfo(t1, [S, T]);
   return t1;
 };
@@ -18999,26 +19005,26 @@ $.CONSTANT48 = new $.EventStreamProvider("error");
 $.CONSTANT55 = Isolate.makeConstantList(["caption", "col", "colgroup", "tbody", "td", "tfoot", "th", "thead", "tr"]);
 $.CONSTANT45 = new $.ConstantMap(9, {caption: null, col: null, colgroup: null, tbody: null, td: null, tfoot: null, th: null, thead: null, tr: null}, $.CONSTANT55);
 $.CONSTANT18 = new $.EventArgs();
-$.CONSTANT41 = new $.TestListBase(false);
+$.CONSTANT40 = new $.TestListBase(false);
 $.CONSTANT5 = new $.ShapeType("Rect");
 $.CONSTANT56 = new $._ArgumentError("ArgumentError");
 $.CONSTANT7 = new $.Throws($.CONSTANT56);
 $.CONSTANT57 = new $._UnsupportedError("UnsupportedError");
 $.CONSTANT47 = new $.EventStreamProvider("click");
-$.CONSTANT37 = new $.Box(0, 0, 1, 1);
+$.CONSTANT36 = new $.Box(0, 0, 1, 1);
 $.CONSTANT3 = new $.Duration(0);
 $.CONSTANT58 = new $.Coordinate(0, 0);
-$.CONSTANT33 = new $.Coordinate(1, 0);
+$.CONSTANT32 = new $.Coordinate(1, 0);
 $.CONSTANT21 = new $.EventStreamProvider("mousedown");
 $.JSInt_methods = $.JSInt.prototype;
 $.CONSTANT = new $.NullThrownError();
 $.CONSTANT59 = new $.Tuple("\n", $.CONSTANT52);
-$.CONSTANT35 = new $.Vector(10, 10);
+$.CONSTANT34 = new $.Vector(10, 10);
 $.CONSTANT60 = Isolate.makeConstantList(["body", "head", "caption", "td", "th", "colgroup", "col", "tr", "tbody", "tfoot", "thead", "track"]);
-$.CONSTANT38 = new $.Coordinate(2, 2);
-$.CONSTANT31 = new $.EmptyIterator();
-$.CONSTANT34 = new $.Vector(10, 0);
-$.CONSTANT36 = new $.Vector(2, 2);
+$.CONSTANT37 = new $.Coordinate(2, 2);
+$.CONSTANT33 = new $.Vector(10, 0);
+$.CONSTANT42 = new $.EmptyIterator();
+$.CONSTANT35 = new $.Vector(2, 2);
 $.CONSTANT43 = new $.Throws($.CONSTANT57);
 $.CONSTANT6 = new $._IsNull();
 $.CONSTANT8 = new $._IsNotNull();
@@ -19027,10 +19033,10 @@ $.CONSTANT16 = new $._IsFalse();
 $.CONSTANT11 = $.createRuntimeType('String');
 $.CONSTANT61 = Isolate.makeConstantList(["  ", " ", ""]);
 $.CONSTANT62 = new $.Tuple("  \n \n", $.CONSTANT61);
-$.CONSTANT42 = new $.TestListBase(true);
+$.CONSTANT41 = new $.TestListBase(true);
 $.CONSTANT9 = new $.Throws(null);
 $.CONSTANT25 = new $._ReturnsNormally();
-$.CONSTANT39 = new $.Throws($.CONSTANT53);
+$.CONSTANT38 = new $.Throws($.CONSTANT53);
 $.CONSTANT63 = Isolate.makeConstantList(["test"]);
 $.CONSTANT50 = new $.Object();
 $.CONSTANT10 = $.createRuntimeType('bool');
@@ -19041,13 +19047,13 @@ $.CONSTANT64 = new $.Tuple("test", $.CONSTANT63);
 $.CONSTANT65 = new $.Tuple("test\ntest", $.CONSTANT51);
 $.CONSTANT66 = new $.Tuple("  \n  ", $.CONSTANT54);
 $.CONSTANT30 = Isolate.makeConstantList([$.CONSTANT64, $.CONSTANT65, $.CONSTANT59, $.CONSTANT66, $.CONSTANT62, $.CONSTANT62]);
-$.CONSTANT40 = new $.InvalidOperationError("Input contained a null item");
+$.CONSTANT39 = new $.InvalidOperationError("Input contained a null item");
 $.CONSTANT27 = Isolate.makeConstantList([0, 0, 360, 0, -1, 359, -361, 359, 721, 1]);
 $.CONSTANT49 = new $.EventStreamProvider("message");
 $.CONSTANT13 = $.createRuntimeType('$int');
 $.CONSTANT67 = new $._NullArgumentError("NullArgumentException");
 $.CONSTANT29 = new $.Throws($.CONSTANT67);
-$.CONSTANT32 = new $.Vector(1, -1);
+$.CONSTANT31 = new $.Vector(1, -1);
 $.CONSTANT28 = new $._Random();
 $.JSArray_methods = $.JSArray.prototype;
 $.CONSTANT22 = new $.EventStreamProvider("mouseup");
@@ -19445,12 +19451,6 @@ $.get$value$x = function(receiver) {
 };
 $.get$width$x = function(receiver) {
   return $.getInterceptor$x(receiver).get$width(receiver);
-};
-$.get$x$x = function(receiver) {
-  return $.getInterceptor$x(receiver).get$x(receiver);
-};
-$.get$y$x = function(receiver) {
-  return $.getInterceptor$x(receiver).get$y(receiver);
 };
 $.getBoundingClientRect$0$x = function(receiver) {
   return $.getInterceptor$x(receiver).getBoundingClientRect$0(receiver);
@@ -20042,7 +20042,7 @@ $.$defineNativeClass("DOMException", {"": "message=",
   }
 });
 
-$.$defineNativeClass("Element", {"": "$$dom_children:children=,id=,innerHtml:innerHTML},$$dom_attributes:attributes=,$$dom_clientHeight:clientHeight=,$$dom_clientLeft:clientLeft=,$$dom_clientTop:clientTop=,$$dom_clientWidth:clientWidth=,$$dom_firstElementChild:firstElementChild=,$$dom_lastElementChild:lastElementChild=,tagName=",
+$.$defineNativeClass("Element", {"": "$$dom_children:children=,id=,innerHtml:innerHTML},$$dom_attributes:attributes=,$$dom_clientHeight:clientHeight=,$$dom_clientLeft:clientLeft=,$$dom_clientTop:clientTop=,$$dom_clientWidth:clientWidth=,$$dom_firstElementChild:firstElementChild=,$$dom_lastElementChild:lastElementChild=,$$dom_offsetHeight:offsetHeight=,$$dom_offsetLeft:offsetLeft=,$$dom_offsetTop:offsetTop=,$$dom_offsetWidth:offsetWidth=,tagName=",
   get$attributes: function(receiver) {
     return $._ElementAttributeMap$(receiver);
   },
@@ -20055,6 +20055,10 @@ $.$defineNativeClass("Element", {"": "$$dom_children:children=,id=,innerHtml:inn
   get$client: function(receiver) {
     var t1 = $.getInterceptor$x(receiver);
     return $.Rect$(t1.get$$$dom_clientLeft(receiver), t1.get$$$dom_clientTop(receiver), t1.get$$$dom_clientWidth(receiver), t1.get$$$dom_clientHeight(receiver));
+  },
+  get$offset: function(receiver) {
+    var t1 = $.getInterceptor$x(receiver);
+    return $.Rect$(t1.get$$$dom_offsetLeft(receiver), t1.get$$$dom_offsetTop(receiver), t1.get$$$dom_offsetWidth(receiver), t1.get$$$dom_offsetHeight(receiver));
   },
   $$dom_getAttribute$1: function(receiver, $name) {
     return receiver.getAttribute($name);
@@ -21037,18 +21041,6 @@ $.$defineNativeClass("HTMLMeterElement", {"": "value=",
 });
 
 $.$defineNativeClass("MouseEvent", {"": "$$dom_clientX:clientX=,$$dom_clientY:clientY=",
-  get$clientX: function(receiver) {
-    return $.get$client$x(receiver).x;
-  },
-  get$clientY: function(receiver) {
-    return $.get$client$x(receiver).y;
-  },
-  get$offsetX: function(receiver) {
-    return $.get$x$x($.get$offset$x(receiver));
-  },
-  get$offsetY: function(receiver) {
-    return $.get$y$x($.get$offset$x(receiver));
-  },
   get$client: function(receiver) {
     var t1 = $.getInterceptor$x(receiver);
     return $.Point$(t1.get$$$dom_clientX(receiver), t1.get$$$dom_clientY(receiver));

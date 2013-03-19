@@ -24,9 +24,10 @@ $$.NavDemo = {"": "StageWrapper;_count,canvas,stage,rootThing,_invalidatedEventS
     }
   },
   _canvas_mouseDown$1: function(e) {
-    var t1, hits;
-    t1 = $.getInterceptor$x(e);
-    hits = $.RetainedUtil__hitTest(this.stage.rootThing, $.Coordinate$(t1.get$offsetX(e), t1.get$offsetY(e)));
+    var t1, t2, hits;
+    t1 = $.get$offset$x(e);
+    t2 = $.getInterceptor$x(t1);
+    hits = $.RetainedUtil__hitTest(this.stage.rootThing, $.Coordinate$(t2.get$x(t1), t2.get$y(t1)));
     t1 = $.getInterceptor$asx(hits);
     if ($.$gt$n(t1.get$length(hits), 0) === true)
       this._itemClick$1(t1.get$first(hits));
@@ -7436,12 +7437,6 @@ $.get$userAgent$x = function(receiver) {
 $.get$width$x = function(receiver) {
   return $.getInterceptor$x(receiver).get$width(receiver);
 };
-$.get$x$x = function(receiver) {
-  return $.getInterceptor$x(receiver).get$x(receiver);
-};
-$.get$y$x = function(receiver) {
-  return $.getInterceptor$x(receiver).get$y(receiver);
-};
 $.getBoundingClientRect$0$x = function(receiver) {
   return $.getInterceptor$x(receiver).getBoundingClientRect$0(receiver);
 };
@@ -7851,7 +7846,11 @@ $.$defineNativeClass("DOMException", {
   }
 });
 
-$.$defineNativeClass("Element", {"": "id=",
+$.$defineNativeClass("Element", {"": "id=,$$dom_offsetHeight:offsetHeight=,$$dom_offsetLeft:offsetLeft=,$$dom_offsetTop:offsetTop=,$$dom_offsetWidth:offsetWidth=",
+  get$offset: function(receiver) {
+    var t1 = $.getInterceptor$x(receiver);
+    return $.Rect$(t1.get$$$dom_offsetLeft(receiver), t1.get$$$dom_offsetTop(receiver), t1.get$$$dom_offsetWidth(receiver), t1.get$$$dom_offsetHeight(receiver));
+  },
   getBoundingClientRect$0: function(receiver) {
     return receiver.getBoundingClientRect();
   },
@@ -8016,12 +8015,6 @@ $.$defineNativeClass("MediaStream", {"": "id=",
 $.$defineNativeClass("HTMLMetaElement", {"": "name="});
 
 $.$defineNativeClass("MouseEvent", {"": "$$dom_clientX:clientX=,$$dom_clientY:clientY=",
-  get$offsetX: function(receiver) {
-    return $.get$x$x($.get$offset$x(receiver));
-  },
-  get$offsetY: function(receiver) {
-    return $.get$y$x($.get$offset$x(receiver));
-  },
   get$client: function(receiver) {
     var t1 = $.getInterceptor$x(receiver);
     return $.Point$(t1.get$$$dom_clientX(receiver), t1.get$$$dom_clientY(receiver));
