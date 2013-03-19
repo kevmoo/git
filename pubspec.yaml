@@ -5,7 +5,7 @@ description: A collection of (mostly) general libraries to make working with Dar
 homepage: https://github.com/kevmoo/bot.dart
 documentation: http://kevmoo.github.com/bot.dart
 environment:
-  sdk: '>=0.4.2+4.r20157'
+  sdk: '>=0.4.2+5.r20193'
 dependencies:
   unittest: '>=0.4.2'
   args: '>=0.4.2'
