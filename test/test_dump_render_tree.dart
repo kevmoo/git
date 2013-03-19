@@ -11,7 +11,7 @@ void main() {
   group('DumpRenderTree', () {
     browserTests.forEach((file) {
       test(file, () {
-        _runDrt(file);
+        return _runDrt(file);
       });
     });
   });
