@@ -43,10 +43,10 @@ void _unittestParserConfig(ArgParser parser) {
 }
 
 class _HopTestConfiguration implements unittest.Configuration {
-  final Completer<bool> _completer;
+  final Completer<bool> _completer = new Completer<bool>();
   final TaskContext _context;
 
-  _HopTestConfiguration(this._context) : this._completer = new Completer<bool>();
+  _HopTestConfiguration(this._context);
 
   Future<bool> get future => _completer.future;
 
