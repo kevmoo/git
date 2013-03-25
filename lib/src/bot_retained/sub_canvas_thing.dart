@@ -9,6 +9,6 @@ class SubCanvasThing extends Thing {
   @override
   void drawOverride(CanvasRenderingContext2D ctx) {
     final rect = new Rect(0,0,width,height);
-    ctx.drawImageAtScale(_canvas, rect);
+    ctx.drawImageToRect(_canvas, rect);
   }
 }

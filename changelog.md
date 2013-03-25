@@ -1,6 +1,6 @@
 # Changelog - Dart Bag of Tricks
 
-## 0.16.1 *pre-release* (SDK 0.4.2.8 r20259)
+## 0.16.1 *pre-release* (SDK 0.4.3.0 r20424)
 
 ## 0.16.0 2013-03-19 (SDK 0.4.2.5 r20193)
 

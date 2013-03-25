@@ -92,7 +92,7 @@ class CanvasUtil {
     final sourceRect = new Rect(sourceBox.left, sourceBox.top,
         sourceBox.width, sourceBox.height);
 
-    ctx.drawImageAtScale(img, targetRect, sourceRect: sourceRect);
+    ctx.drawImageToRect(img, targetRect, sourceRect: sourceRect);
   }
 
   static void ellipse(CanvasRenderingContext2D ctx,
