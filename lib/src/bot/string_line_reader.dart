@@ -11,7 +11,20 @@ class StringLineReader {
 
   int get position => _position;
 
-  String readNextLine() {
+  String readNextLine() => _peekOrReadNextLine(true);
+
+  String peekNextLine() => _peekOrReadNextLine(false);
+
+  String readToEnd() {
+    if(_position == null) {
+      return null;
+    }
+    final value = source.substring(position, source.length);
+    _position = null;
+    return value;
+  }
+
+  String _peekOrReadNextLine(bool updatePosition) {
     if(_position == null) {
       return null;
     }
@@ -20,7 +33,9 @@ class StringLineReader {
     if(nextLF < 0) {
       // no more new lines, return what's left and set postion = null
       final value = source.substring(position, source.length);
-      _position = null;
+      if(updatePosition) {
+        _position = null;
+      }
       return value;
     }
 
@@ -30,17 +45,10 @@ class StringLineReader {
     final value = isWinNL ? source.substring(_position, nextLF-1) :
       source.substring(_position, nextLF);
 
-    _position = nextLF + 1;
-
-    return value;
-  }
-
-  String readToEnd() {
-    if(_position == null) {
-      return null;
+    if(updatePosition) {
+      _position = nextLF + 1;
     }
-    final value = source.substring(position, source.length);
-    _position = null;
+
     return value;
   }
 }
