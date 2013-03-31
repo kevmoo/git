@@ -1,10 +1,23 @@
 part of hop_tasks;
 
 const _listFlag = 'list';
+const _summaryFlag = 'summary';
+const _summaryAll = 'all';
+const _summaryFail = 'fail';
+const _summaryPass = 'pass';
 
 Task createUnitTestTask(Action1<unittest.Configuration> unitTestAction) {
   return new Task.async((TaskContext ctx) {
-    final config = new _HopTestConfiguration(ctx);
+
+    final summaryFlag = ctx.arguments[_summaryFlag];
+
+    final passSummary =
+        (summaryFlag == _summaryAll || summaryFlag == _summaryPass);
+
+    final failSummary =
+        (summaryFlag == _summaryAll || summaryFlag == _summaryFail);
+
+    final config = new _HopTestConfiguration(ctx, failSummary, passSummary);
     unitTestAction(config);
 
     if(!ctx.arguments.rest.isEmpty) {
@@ -40,13 +53,19 @@ Task createUnitTestTask(Action1<unittest.Configuration> unitTestAction) {
 void _unittestParserConfig(ArgParser parser) {
   parser.addFlag(_listFlag, abbr: 'l', defaultsTo: false,
       help: "Just list the test case names. Don't run them. Any filter is still applied.");
+  parser.addOption(_summaryFlag, abbr: 's',
+      help: 'Summarize the results of individual tests.',
+      allowed: [_summaryAll, _summaryFail, _summaryPass],
+      allowMultiple: false);
 }
 
 class _HopTestConfiguration implements unittest.Configuration {
   final Completer<bool> _completer = new Completer<bool>();
   final TaskContext _context;
+  final bool failSummary;
+  final bool passSummary;
 
-  _HopTestConfiguration(this._context);
+  _HopTestConfiguration(this._context, this.failSummary, this.passSummary);
 
   Future<bool> get future => _completer.future;
 
@@ -114,6 +133,22 @@ ${testCase.stackTrace}''');
               String uncaughtError) {
     final bool success = failed == 0 && errors == 0 && uncaughtError == null;
     final message = "$passed PASSED, $failed FAILED, $errors ERRORS";
+
+
+    if(passSummary) {
+      final summaryCtx = _context.getSubLogger('PASS');
+      results.where((tc) => tc.result == unittest.PASS).forEach((tc) {
+        summaryCtx.info(tc.description);
+      });
+    }
+
+    if(failSummary) {
+      final summaryCtx = _context.getSubLogger('FAIL');
+      results.where((tc) => tc.result == unittest.FAIL).forEach((tc) {
+        summaryCtx.severe(tc.description);
+      });
+    }
+
     if(success) {
       _context.info(message);
     } else {
