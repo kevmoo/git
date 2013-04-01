@@ -11,6 +11,8 @@ class StringLineReader {
 
   int get position => _position;
 
+  bool get eof => _position == null;
+
   String readNextLine() => _peekOrReadNextLine(true);
 
   String peekNextLine() => _peekOrReadNextLine(false);
