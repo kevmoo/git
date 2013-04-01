@@ -26,6 +26,19 @@ abstract class Sequence<E> extends Enumerable<E> {
   @override
   Iterator<E> get iterator => new _SequenceIterator(this);
 
+  bool itemsEqual(Sequence other) {
+    requireArgumentNotNull(other, 'other');
+    if(other.length != this.length) {
+      return false;
+    }
+    for(int i = 0; i < length; i++) {
+      if(other[i] != this[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   /**
    * Returns an object wraps [this] and implements [List].
    *
