@@ -34,20 +34,28 @@ $$.ListIterator = {"": "Object;_iterable,_length,_index,_current",
   }
 };
 
-$$.JSFunction = {"": "Object;",
+$$.Interceptor = {"": "Object;",
+  $eq: function(receiver, other) {
+    return receiver === other;
+  },
+  toString$0: function(receiver) {
+    return "Instance of '" + $.S($.Primitives_objectTypeName(receiver)) + "'";
+  }
+};
+
+$$.JSFunction = {"": "Interceptor;",
   toString$0: function(receiver) {
     return "Closure";
   }
 };
 
-$$.JSBool = {"": "Object;",
+$$.JSBool = {"": "Interceptor;",
   toString$0: function(receiver) {
     return String(receiver);
-  },
-  $isbool: true
+  }
 };
 
-$$.JSNull = {"": "Object;",
+$$.JSNull = {"": "Interceptor;",
   $eq: function(receiver, other) {
     return null == other;
   },
@@ -56,7 +64,7 @@ $$.JSNull = {"": "Object;",
   }
 };
 
-$$.JSArray = {"": "Object;",
+$$.JSArray = {"": "Interceptor;",
   join$1: function(receiver, separator) {
     var t1, list, i, t2;
     t1 = receiver.length;
@@ -82,6 +90,8 @@ $$.JSArray = {"": "Object;",
   get$iterator: function(receiver) {
     return $.ListIterator$(receiver);
   },
+  $asList: null,
+  $asCollection: null,
   $isList: true,
   $isCollection: true
 };
@@ -135,12 +145,12 @@ $$.Closure = {"": "Object;",
 
 $$.Null = {"": "Object;"};
 
-$$.JSNumber = {"": "Object;",
+$$.JSNumber = {"": "Interceptor;",
   toString$0: function(receiver) {
     if (receiver === 0 && (1 / receiver) < 0)
       return "-0.0";
     else
-      return String(receiver);
+      return "" + (receiver);
   },
   $add: function(receiver, other) {
     if (!(typeof other === "number"))
@@ -167,7 +177,7 @@ $$.JSInt = {"": "JSNumber;", $is$int: true, $isnum: true};
 
 $$.JSDouble = {"": "JSNumber;", $isnum: true};
 
-$$.JSString = {"": "Object;",
+$$.JSString = {"": "Interceptor;",
   codeUnitAt$1: function(receiver, index) {
     if (index < 0)
       throw $.$$throw($.RangeError$value(index));
@@ -238,21 +248,19 @@ $$._ExceptionImplementation = {"": "Object;message",
 };
 
 $$.Object = {"": ";",
-  $eq: function(receiver, other) {
-    return receiver === other;
+  $eq: function(_, other) {
+    return this === other;
   },
-  toString$0: function(receiver) {
-    return "Instance of '" + $.S($.Primitives_objectTypeName(receiver)) + "'";
+  toString$0: function(_) {
+    return "Instance of '" + $.S($.Primitives_objectTypeName(this)) + "'";
   }
 };
 
 $$.StringBuffer = {"": "Object;_contents",
   write$1: function(obj) {
-    var str;
     if (typeof obj !== "string")
       return this.write$1$bailout(1, obj);
-    str = obj;
-    this._contents = this._contents + str;
+    this._contents = this._contents + obj;
   },
   write$1$bailout: function(state0, obj) {
     var str = typeof obj === "string" ? obj : $.S(obj);
@@ -318,7 +326,7 @@ $$.AffineTransform = {"": "Object;_scX<,_shY<,_shX<,_scY<,_tX<,_tY<",
     return this;
   },
   concatenate$1: function(tx) {
-    var m0, m1, t1, t2, t3, m00, m10, t4, t5, t6;
+    var m0, m1, t1, t2, t3;
     m0 = this._scX;
     m1 = this._shX;
     this._scX = $.$add$ns($.$mul$n(tx._scX, m0), $.$mul$n(tx._shY, m1));
@@ -331,25 +339,25 @@ $$.AffineTransform = {"": "Object;_scX<,_shY<,_shX<,_scY<,_tX<,_tY<",
     if (typeof m1 !== "number")
       throw $.iae(m1);
     this._tX = t1 + (t2 * m0 + t3 * m1);
-    m00 = this._shY;
-    m10 = this._scY;
-    this._shY = $.$add$ns($.$mul$n(tx._scX, m00), $.$mul$n(tx._shY, m10));
-    this._scY = $.$add$ns($.$mul$n(tx._shX, m00), $.$mul$n(tx._scY, m10));
-    t4 = this._tY;
-    t5 = tx._tX;
-    if (typeof m00 !== "number")
-      throw $.iae(m00);
-    t6 = tx._tY;
-    if (typeof m10 !== "number")
-      throw $.iae(m10);
-    this._tY = t4 + (t5 * m00 + t6 * m10);
+    m0 = this._shY;
+    m1 = this._scY;
+    this._shY = $.$add$ns($.$mul$n(tx._scX, m0), $.$mul$n(tx._shY, m1));
+    this._scY = $.$add$ns($.$mul$n(tx._shX, m0), $.$mul$n(tx._scY, m1));
+    t3 = this._tY;
+    t2 = tx._tX;
+    if (typeof m0 !== "number")
+      throw $.iae(m0);
+    t1 = tx._tY;
+    if (typeof m1 !== "number")
+      throw $.iae(m1);
+    this._tY = t3 + (t2 * m0 + t1 * m1);
     return this;
   },
   rotate$3: function(_, theta, x, y) {
     return this.concatenate$1($.AffineTransform$(1, 0, 0, 1, 0, 0).setToRotation$3(theta, x, y));
   },
   translate$2: function(_, dx, dy) {
-    var t1, t2, t3, t4, t5, t6;
+    var t1, t2, t3;
     t1 = this._tX;
     t2 = this._scX;
     if (typeof t2 !== "number")
@@ -358,14 +366,14 @@ $$.AffineTransform = {"": "Object;_scX<,_shY<,_shX<,_scY<,_tX<,_tY<",
     if (typeof t3 !== "number")
       throw $.iae(t3);
     this._tX = t1 + (dx * t2 + dy * t3);
-    t4 = this._tY;
-    t5 = this._shY;
-    if (typeof t5 !== "number")
-      throw $.iae(t5);
-    t6 = this._scY;
-    if (typeof t6 !== "number")
-      throw $.iae(t6);
-    this._tY = t4 + (dx * t5 + dy * t6);
+    t3 = this._tY;
+    t2 = this._shY;
+    if (typeof t2 !== "number")
+      throw $.iae(t2);
+    t1 = this._scY;
+    if (typeof t1 !== "number")
+      throw $.iae(t1);
+    this._tY = t3 + (dx * t2 + dy * t1);
     return this;
   },
   setToRotation$3: function(theta, x, y) {
@@ -517,9 +525,14 @@ $.S = function(value) {
   var res;
   if (typeof value === "string")
     return value;
-  if (typeof value === "number" && value !== 0 || typeof value === "boolean")
-    return String(value);
-  if (value == null)
+  if (typeof value === "number") {
+    if (value !== 0)
+      return "" + (value);
+  } else if (true === value)
+    return "true";
+  else if (false === value)
+    return "false";
+  else if (value == null)
     return "null";
   res = $.toString$0(value);
   if (!(typeof res === "string"))
@@ -572,7 +585,7 @@ $.checkNum = function(value) {
 $.$$throw = function(ex) {
   var wrapper;
   if (ex == null)
-    ex = $.CONSTANT;
+    ex = $.C_NullThrownError;
   wrapper = $.DartError$(ex);
   if (!!Error.captureStackTrace)
     Error.captureStackTrace(wrapper, $.$$throw);
@@ -802,7 +815,7 @@ $.dynamicBind = function(obj, $name, methods, $arguments) {
   } else
     method = null;
   if (method == null)
-    method = $.lookupDynamicClass(hasOwnPropertyFunction, methods, $.getTypeNameOf($.CONSTANT0));
+    method = $.lookupDynamicClass(hasOwnPropertyFunction, methods, $.getTypeNameOf($.C_Object));
   if (method == null)
     (function(){throw new TypeError($name + " is not a function");})();
   else {
@@ -842,7 +855,7 @@ $.dynamicFunction = function($name) {
   if (f != null && !!f.methods)
     return f.methods;
   methods = {};
-  dartMethod = Object.getPrototypeOf($.CONSTANT0)[$name];
+  dartMethod = Object.getPrototypeOf($.C_Object)[$name];
   if (dartMethod != null)
     methods["Object"] = dartMethod;
   bind = function() {return $.dynamicBind.call$4(this, $name, methods, Array.prototype.slice.call(arguments));};
@@ -986,11 +999,11 @@ $.dynamicBind.call$4 = $.dynamicBind;
 $.dynamicBind.$name = "dynamicBind";
 $.num = {builtin$cls: "num"};
 $.String = {builtin$cls: "String"};
-$.CONSTANT0 = new $.Object();
-$.CONSTANT = new $.NullThrownError();
-$.JSArray_methods = $.JSArray.prototype;
-$.JSNull_methods = $.JSNull.prototype;
+$.C_Object = new $.Object();
+$.C_NullThrownError = new $.NullThrownError();
 $.JSInt_methods = $.JSInt.prototype;
+$.JSNull_methods = $.JSNull.prototype;
+$.JSArray_methods = $.JSArray.prototype;
 $.Primitives_hashCodeSeed = 0;
 $._getTypeNameOf = null;
 $.$add$ns = function(receiver, a0) {
