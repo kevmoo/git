@@ -7,12 +7,11 @@ import 'test_shared.dart' as shared;
 import 'test_dump_render_tree.dart' as drt;
 
 main() {
-  final config = new VMConfiguration();
-  testCore(config);
+  testCore(new VMConfiguration());
 }
 
 void testCore(Configuration config) {
-  configure(config);
+  unittestConfiguration = config;
   groupSep = ' - ';
 
   shared.main();
