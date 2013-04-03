@@ -2,7 +2,7 @@
 
 ## 0.16.2 2013-04-03 (SDK 0.4.4+4 r20810)
 
-* [Changes Since v0.16.0](https://github.com/kevmoo/bot.dart/compare/v0.16.1...v0.16.2)
+* [Changes Since v0.16.1](https://github.com/kevmoo/bot.dart/compare/v0.16.1...v0.16.2)
 
 ### bot
 * `Sequence` learned `itemsEqual`
