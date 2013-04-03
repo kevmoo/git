@@ -1,5 +1,13 @@
 # Changelog - Dart Bag of Tricks
 
+## 0.16.2 2013-04-03 (SDK 0.4.4+4 r20810)
+
+* [Changes Since v0.16.0](https://github.com/kevmoo/bot.dart/compare/v0.16.1...v0.16.2)
+
+### bot
+* `Sequence` learned `itemsEqual`
+* `StringLineReader` learned `bool get eof` and `String peekNextLine()`
+
 ## 0.16.1 2013-03-25 (SDK 0.4.3+1 r20444)
 
 * [Changes Since v0.16.0](https://github.com/kevmoo/bot.dart/compare/v0.16.0...v0.16.1)
