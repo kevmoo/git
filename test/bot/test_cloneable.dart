@@ -23,25 +23,23 @@ class TestCloneable implements Cloneable<TestCloneable> {
   String toString() => 'TestCloneable: ${_id}';
 
   static void run(){
-    test('Cloneable', _test);
-  }
+    test('Cloneable', () {
+      logMessage("hi!");
+      var val = new TestCloneable();
 
-  static void _test(){
-    var val = new TestCloneable();
+      expect(val, equals(val));
+      expect(val, same(val));
 
-    expect(val, equals(val));
-    expect(val, same(val));
+      var val2 = new TestCloneable();
 
-    var val2 = new TestCloneable();
+      expect(val2.id == val.id, isFalse);
+      expect(val2 == val, isFalse);
+      expect(val2, isNot(same(val)));
 
-    expect(val2.id == val.id, isFalse);
-    expect(val2 == val, isFalse);
-    expect(val2, isNot(same(val)));
-
-    var clone = val.clone();
-    expect(clone.id, equals(val.id));
-    expect(clone, equals(val));
-    expect(val, isNot(same(clone)));
-
+      var clone = val.clone();
+      expect(clone.id, equals(val.id));
+      expect(clone, equals(val));
+      expect(val, isNot(same(clone)));
+    });
   }
 }
