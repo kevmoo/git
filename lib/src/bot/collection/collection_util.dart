@@ -22,7 +22,7 @@ class CollectionUtil {
       $(source.expand(func));
 
   static int count(Iterable source, Func1<dynamic, bool> test) {
-    return source.reduce(0, (int previous, dynamic element) {
+    return source.fold(0, (int previous, dynamic element) {
       if(test(element)) {
         return previous + 1;
       } else {

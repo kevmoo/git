@@ -113,12 +113,6 @@ class _SequenceList<E> extends Sequence<E> implements List<E> {
   }
 
   @override
-  void addLast(E value) {
-    throw new UnsupportedError(
-        "Cannot add to an unmodifiable list");
-  }
-
-  @override
   void addAll(Iterable<E> iterable) {
     throw new UnsupportedError(
         "Cannot add to an unmodifiable list");
