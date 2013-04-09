@@ -13,7 +13,7 @@ part 'events/test_events.dart';
 
 part 'collection/test_collection_util.dart';
 part 'collection/test_enumerable.dart';
-part 'collection/test_list_base.dart';
+part 'collection/test_sequence.dart';
 part 'collection/test_number_enumerable.dart';
 part 'collection/test_array_2d.dart';
 
@@ -36,7 +36,7 @@ void main() {
   group('bot', (){
     TestTuple.run();
     TestEnumerable.run();
-    TestListBase.run();
+    TestSequence.run();
     TestNumberEnumerable.run();
     TestCollectionUtil.run();
     TestArray2d.run();

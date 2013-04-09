@@ -1,14 +1,14 @@
 part of test_bot;
 
-class TestListBase extends Sequence<int> {
+class TestSequence extends Sequence<int> {
   static final int _length = 5;
-  static final TestListBase instance = const TestListBase();
-  static final TestListBase flipped = const TestListBase(true);
+  static final TestSequence instance = const TestSequence();
+  static final TestSequence flipped = const TestSequence(true);
   static final Sequence<int> empty = const ReadOnlyCollection.empty();
 
   final bool flip;
 
-  const TestListBase([this.flip = false]);
+  const TestSequence([this.flip = false]);
 
   /**
    * Returns the number of elements in this collection.
