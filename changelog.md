@@ -1,5 +1,11 @@
 # Changelog - Dart Bag of Tricks
 
+## 0.16.3 2013-04-09 (SDK 0.4.5+1 r21094)
+
+* [Changes Since v0.16.1](https://github.com/kevmoo/bot.dart/compare/v0.16.2...v0.16.3)
+
+* Tiny cleanup. Moved to latest SDK rev.
+
 ## 0.16.2 2013-04-03 (SDK 0.4.4+4 r20810)
 
 * [Changes Since v0.16.1](https://github.com/kevmoo/bot.dart/compare/v0.16.1...v0.16.2)
