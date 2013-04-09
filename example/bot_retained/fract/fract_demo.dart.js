@@ -85,7 +85,9 @@ $$.JSArray = {"": "Interceptor;",
     return receiver[index];
   },
   toString$0: function(receiver) {
-    return $.ToString_collectionToString(receiver);
+    var result = $.StringBuffer$("");
+    $.ToString__emitCollection(receiver, result, $.List_List($));
+    return result.toString$0(result);
   },
   get$iterator: function(receiver) {
     return $.ListIterator$(receiver);
@@ -402,19 +404,542 @@ $$.AffineTransform = {"": "Object;_scX<,_shY<,_shX<,_scY<,_tX<,_tY<",
   }
 };
 
+$$._HTMLElement = {"": "Element;"};
+
+$$.AnchorElement = {"": "Element;",
+  toString$0: function(receiver) {
+    return receiver.toString();
+  }
+};
+
+$$.AreaElement = {"": "Element;"};
+
+$$.AudioElement = {"": "MediaElement;"};
+
+$$.BRElement = {"": "Element;"};
+
+$$.BaseElement = {"": "Element;"};
+
+$$.BodyElement = {"": "Element;"};
+
+$$.ButtonElement = {"": "Element;"};
+
+$$.CanvasElement = {"": "Element;",
+  getContext$2: function(receiver, contextId, attrs) {
+    var t1 = $ === attrs;
+    if (t1)
+      attrs = null;
+    if (!t1)
+      return receiver.getContext(contextId, $.convertDartToNative_Dictionary(attrs));
+    return receiver.getContext(contextId);
+  },
+  getContext$1: function($receiver, contextId) {
+    return this.getContext$2($receiver, contextId, $);
+  },
+  get$context2d: function(receiver) {
+    return this.getContext$1(receiver, "2d");
+  }
+};
+
+$$.CanvasGradient = {"": "Interceptor;"};
+
+$$.CanvasPattern = {"": "Interceptor;"};
+
+$$.CanvasRenderingContext = {"": "Interceptor;"};
+
+$$.CanvasRenderingContext2D = {"": "CanvasRenderingContext;lineWidth},strokeStyle}",
+  beginPath$0: function(receiver) {
+    return receiver.beginPath();
+  },
+  lineTo$2: function(receiver, x, y) {
+    return receiver.lineTo(x,y);
+  },
+  moveTo$2: function(receiver, x, y) {
+    return receiver.moveTo(x,y);
+  },
+  restore$0: function(receiver) {
+    return receiver.restore();
+  },
+  save$0: function(receiver) {
+    return receiver.save();
+  },
+  stroke$0: function(receiver) {
+    return receiver.stroke();
+  },
+  transform$6: function(receiver, m11, m12, m21, m22, dx, dy) {
+    return receiver.transform(m11,m12,m21,m22,dx,dy);
+  }
+};
+
+$$.ContentElement = {"": "Element;"};
+
+$$.DListElement = {"": "Element;"};
+
+$$.DataListElement = {"": "Element;"};
+
+$$.DetailsElement = {"": "Element;"};
+
+$$.DivElement = {"": "Element;"};
+
+$$.Document = {"": "Node;"};
+
+$$.DomError = {"": "Interceptor;"};
+
+$$.DomException = {"": "Interceptor;",
+  toString$0: function(receiver) {
+    return receiver.toString();
+  }
+};
+
+$$.Element = {"": "Node;"};
+
+$$.EmbedElement = {"": "Element;"};
+
+$$.ErrorEvent = {"": "Event;"};
+
+$$.Event = {"": "Interceptor;"};
+
+$$.EventException = {"": "Interceptor;",
+  toString$0: function(receiver) {
+    return receiver.toString();
+  }
+};
+
+$$.EventTarget = {"": "Interceptor;"};
+
+$$.FieldSetElement = {"": "Element;"};
+
+$$.FileError = {"": "Interceptor;"};
+
+$$.FileException = {"": "Interceptor;",
+  toString$0: function(receiver) {
+    return receiver.toString();
+  }
+};
+
+$$.FormElement = {"": "Element;"};
+
+$$.HRElement = {"": "Element;"};
+
+$$.HeadElement = {"": "Element;"};
+
+$$.HeadingElement = {"": "Element;"};
+
+$$.HtmlDocument = {"": "Document;"};
+
+$$.HtmlElement = {"": "Element;"};
+
+$$.HttpRequestException = {"": "Interceptor;",
+  toString$0: function(receiver) {
+    return receiver.toString();
+  }
+};
+
+$$.IFrameElement = {"": "Element;"};
+
+$$.ImageElement = {"": "Element;"};
+
+$$.InputElement = {"": "Element;"};
+
+$$.KeygenElement = {"": "Element;"};
+
+$$.LIElement = {"": "Element;"};
+
+$$.LabelElement = {"": "Element;"};
+
+$$.LegendElement = {"": "Element;"};
+
+$$.LinkElement = {"": "Element;"};
+
+$$.MapElement = {"": "Element;"};
+
+$$.MediaElement = {"": "Element;"};
+
+$$.MediaError = {"": "Interceptor;"};
+
+$$.MediaKeyError = {"": "Interceptor;"};
+
+$$.MenuElement = {"": "Element;"};
+
+$$.MetaElement = {"": "Element;"};
+
+$$.MeterElement = {"": "Element;"};
+
+$$.ModElement = {"": "Element;"};
+
+$$.NavigatorUserMediaError = {"": "Interceptor;"};
+
+$$.Node = {"": "EventTarget;"};
+
+$$.OListElement = {"": "Element;"};
+
+$$.ObjectElement = {"": "Element;"};
+
+$$.OptGroupElement = {"": "Element;"};
+
+$$.OptionElement = {"": "Element;"};
+
+$$.OutputElement = {"": "Element;"};
+
+$$.ParagraphElement = {"": "Element;"};
+
+$$.ParamElement = {"": "Element;"};
+
+$$.PositionError = {"": "Interceptor;"};
+
+$$.PreElement = {"": "Element;"};
+
+$$.ProgressElement = {"": "Element;"};
+
+$$.QuoteElement = {"": "Element;"};
+
+$$.RangeException = {"": "Interceptor;",
+  toString$0: function(receiver) {
+    return receiver.toString();
+  }
+};
+
+$$.ScriptElement = {"": "Element;"};
+
+$$.SelectElement = {"": "Element;"};
+
+$$.ShadowElement = {"": "Element;"};
+
+$$.SourceElement = {"": "Element;"};
+
+$$.SpanElement = {"": "Element;"};
+
+$$.SpeechRecognitionError = {"": "Event;"};
+
+$$.StyleElement = {"": "Element;"};
+
+$$.TableCaptionElement = {"": "Element;"};
+
+$$.TableCellElement = {"": "Element;"};
+
+$$.TableColElement = {"": "Element;"};
+
+$$.TableElement = {"": "Element;"};
+
+$$.TableRowElement = {"": "Element;"};
+
+$$.TableSectionElement = {"": "Element;"};
+
+$$.TemplateElement = {"": "Element;"};
+
+$$.TextAreaElement = {"": "Element;"};
+
+$$.TitleElement = {"": "Element;"};
+
+$$.TrackElement = {"": "Element;"};
+
+$$.UListElement = {"": "Element;"};
+
+$$.UnknownElement = {"": "Element;"};
+
+$$.VideoElement = {"": "MediaElement;"};
+
+$$.XPathException = {"": "Interceptor;",
+  toString$0: function(receiver) {
+    return receiver.toString();
+  }
+};
+
+$$._HTMLAppletElement = {"": "Element;"};
+
+$$._HTMLBaseFontElement = {"": "Element;"};
+
+$$._HTMLDirectoryElement = {"": "Element;"};
+
+$$._HTMLFontElement = {"": "Element;"};
+
+$$._HTMLFrameElement = {"": "Element;"};
+
+$$._HTMLFrameSetElement = {"": "Element;"};
+
+$$._HTMLMarqueeElement = {"": "Element;"};
+
+$$.AElement = {"": "StyledElement;",
+  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
+};
+
+$$.AltGlyphElement = {"": "TextPositioningElement;"};
+
+$$.AnimateElement = {"": "AnimationElement;"};
+
+$$.AnimateMotionElement = {"": "AnimationElement;"};
+
+$$.AnimateTransformElement = {"": "AnimationElement;"};
+
+$$.AnimatedLength = {"": "Interceptor;"};
+
+$$.AnimatedLengthList = {"": "Interceptor;"};
+
+$$.AnimatedNumber = {"": "Interceptor;"};
+
+$$.AnimatedNumberList = {"": "Interceptor;"};
+
+$$.AnimatedTransformList = {"": "Interceptor;"};
+
+$$.AnimationElement = {"": "SvgElement;"};
+
+$$.CircleElement = {"": "StyledElement;",
+  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
+};
+
+$$.ClipPathElement = {"": "StyledElement;",
+  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
+};
+
+$$.DefsElement = {"": "StyledElement;",
+  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
+};
+
+$$.DescElement = {"": "StyledElement;"};
+
+$$.EllipseElement = {"": "StyledElement;",
+  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
+};
+
+$$.FEBlendElement = {"": "StyledElement;"};
+
+$$.FEColorMatrixElement = {"": "StyledElement;"};
+
+$$.FEComponentTransferElement = {"": "StyledElement;"};
+
+$$.FECompositeElement = {"": "StyledElement;"};
+
+$$.FEConvolveMatrixElement = {"": "StyledElement;"};
+
+$$.FEDiffuseLightingElement = {"": "StyledElement;"};
+
+$$.FEDisplacementMapElement = {"": "StyledElement;"};
+
+$$.FEDistantLightElement = {"": "SvgElement;"};
+
+$$.FEFloodElement = {"": "StyledElement;"};
+
+$$.FEFuncAElement = {"": "_SVGComponentTransferFunctionElement;"};
+
+$$.FEFuncBElement = {"": "_SVGComponentTransferFunctionElement;"};
+
+$$.FEFuncGElement = {"": "_SVGComponentTransferFunctionElement;"};
+
+$$.FEFuncRElement = {"": "_SVGComponentTransferFunctionElement;"};
+
+$$.FEGaussianBlurElement = {"": "StyledElement;"};
+
+$$.FEImageElement = {"": "StyledElement;"};
+
+$$.FEMergeElement = {"": "StyledElement;"};
+
+$$.FEMergeNodeElement = {"": "SvgElement;"};
+
+$$.FEMorphologyElement = {"": "StyledElement;"};
+
+$$.FEOffsetElement = {"": "StyledElement;"};
+
+$$.FEPointLightElement = {"": "SvgElement;"};
+
+$$.FESpecularLightingElement = {"": "StyledElement;"};
+
+$$.FESpotLightElement = {"": "SvgElement;"};
+
+$$.FETileElement = {"": "StyledElement;"};
+
+$$.FETurbulenceElement = {"": "StyledElement;"};
+
+$$.FilterElement = {"": "StyledElement;"};
+
+$$.ForeignObjectElement = {"": "StyledElement;",
+  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
+};
+
+$$.GElement = {"": "StyledElement;",
+  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
+};
+
+$$.ImageElement0 = {"": "StyledElement;",
+  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
+};
+
+$$.LineElement = {"": "StyledElement;",
+  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
+};
+
+$$.LinearGradientElement = {"": "_SVGGradientElement;"};
+
+$$.MarkerElement = {"": "StyledElement;"};
+
+$$.MaskElement = {"": "StyledElement;"};
+
+$$.MetadataElement = {"": "SvgElement;"};
+
+$$.PathElement = {"": "StyledElement;",
+  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
+};
+
+$$.PatternElement = {"": "StyledElement;"};
+
+$$.PolygonElement = {"": "StyledElement;",
+  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
+};
+
+$$.PolylineElement = {"": "StyledElement;",
+  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
+};
+
+$$.RadialGradientElement = {"": "_SVGGradientElement;"};
+
+$$.RectElement = {"": "StyledElement;",
+  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
+};
+
+$$.ScriptElement0 = {"": "SvgElement;"};
+
+$$.SetElement = {"": "AnimationElement;"};
+
+$$.StopElement = {"": "StyledElement;"};
+
+$$.StyleElement0 = {"": "SvgElement;"};
+
+$$.StyledElement = {"": "SvgElement;"};
+
+$$.SvgDocument = {"": "Document;"};
+
+$$.SvgElement = {"": "Element;"};
+
+$$.SvgException = {"": "Interceptor;",
+  toString$0: function(receiver) {
+    return receiver.toString();
+  }
+};
+
+$$.SvgSvgElement = {"": "StyledElement;",
+  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
+};
+
+$$.SwitchElement = {"": "StyledElement;",
+  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
+};
+
+$$.SymbolElement = {"": "StyledElement;"};
+
+$$.TSpanElement = {"": "TextPositioningElement;"};
+
+$$.TextContentElement = {"": "StyledElement;"};
+
+$$.TextElement = {"": "TextPositioningElement;",
+  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
+};
+
+$$.TextPathElement = {"": "TextContentElement;"};
+
+$$.TextPositioningElement = {"": "TextContentElement;"};
+
+$$.TitleElement0 = {"": "StyledElement;"};
+
+$$.UseElement = {"": "StyledElement;",
+  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
+    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
+  }
+};
+
+$$.ViewElement = {"": "SvgElement;"};
+
+$$._SVGAltGlyphDefElement = {"": "SvgElement;"};
+
+$$._SVGAltGlyphItemElement = {"": "SvgElement;"};
+
+$$._SVGAnimateColorElement = {"": "AnimationElement;"};
+
+$$._SVGComponentTransferFunctionElement = {"": "SvgElement;"};
+
+$$._SVGCursorElement = {"": "SvgElement;"};
+
+$$._SVGFEDropShadowElement = {"": "StyledElement;"};
+
+$$._SVGFontElement = {"": "SvgElement;"};
+
+$$._SVGFontFaceElement = {"": "SvgElement;"};
+
+$$._SVGFontFaceFormatElement = {"": "SvgElement;"};
+
+$$._SVGFontFaceNameElement = {"": "SvgElement;"};
+
+$$._SVGFontFaceSrcElement = {"": "SvgElement;"};
+
+$$._SVGFontFaceUriElement = {"": "SvgElement;"};
+
+$$._SVGGlyphElement = {"": "SvgElement;"};
+
+$$._SVGGlyphRefElement = {"": "StyledElement;"};
+
+$$._SVGGradientElement = {"": "StyledElement;"};
+
+$$._SVGHKernElement = {"": "SvgElement;"};
+
+$$._SVGMPathElement = {"": "SvgElement;"};
+
+$$._SVGMissingGlyphElement = {"": "StyledElement;"};
+
+$$._SVGTRefElement = {"": "TextPositioningElement;"};
+
+$$._SVGVKernElement = {"": "SvgElement;"};
+
+$$.RenderingContext = {"": "CanvasRenderingContext;"};
+
+$$.SqlError = {"": "Interceptor;"};
+
+$$.SqlException = {"": "Interceptor;"};
+
 // Bound closures
 Isolate.$finishClasses($$, $, null);
 $$ = null;
 
 $.main = function() {
   var ctx, tx, t1;
-  ctx = $.get$context2d$x($.query$1$x(document, "#content"));
+  ctx = $.get$context2d$x(document.querySelector("#content"));
   tx = $.AffineTransform$(1, 0, 0, 1, 0, 0);
   tx.scale$2(tx, 200, 200);
   tx.translate$2(tx, 0, 1.5);
   tx.rotate$3(tx, -1.5707963267948966, 2, 0);
-  $.CanvasUtil_transform(ctx, tx);
+  $.requireArgumentNotNull(ctx, "ctx");
+  $.requireArgumentNotNull(tx, "tx");
   t1 = $.getInterceptor$x(ctx);
+  t1.transform$6(ctx, tx.get$scaleX(), tx.get$shearY(), tx.get$shearX(), tx.get$scaleY(), tx.get$translateX(), tx.get$translateY());
   t1.set$lineWidth(ctx, 0.01);
   t1.set$strokeStyle(ctx, "black");
   t1.beginPath$0(ctx);
@@ -436,7 +961,9 @@ $.drawBranch = function(ctx, levels) {
   rightTx.translate$2(rightTx, 1, 0);
   rightTx.scale$2(rightTx, 0.62, 0.62);
   rightTx.rotate$3(rightTx, 1.0471975511965976, 0, 0);
-  $.CanvasUtil_transform(ctx, rightTx);
+  $.requireArgumentNotNull(ctx, "ctx");
+  $.requireArgumentNotNull(rightTx, "tx");
+  t1.transform$6(ctx, rightTx.get$scaleX(), rightTx.get$shearY(), rightTx.get$shearX(), rightTx.get$scaleY(), rightTx.get$translateX(), rightTx.get$translateY());
   t2 = levels - 1;
   $.drawBranch(ctx, t2);
   t1.restore$0(ctx);
@@ -445,7 +972,9 @@ $.drawBranch = function(ctx, levels) {
   rightTx.translate$2(rightTx, 1, 0);
   rightTx.scale$2(rightTx, 0.62, 0.62);
   rightTx.rotate$3(rightTx, -1.0471975511965976, 0, 0);
-  $.CanvasUtil_transform(ctx, rightTx);
+  $.requireArgumentNotNull(ctx, "ctx");
+  $.requireArgumentNotNull(rightTx, "tx");
+  t1.transform$6(ctx, rightTx.get$scaleX(), rightTx.get$shearY(), rightTx.get$shearX(), rightTx.get$scaleY(), rightTx.get$translateX(), rightTx.get$translateY());
   $.drawBranch(ctx, t2);
   t1.restore$0(ctx);
 };
@@ -463,7 +992,9 @@ $.drawBranch$bailout = function(state0, ctx, levels) {
   rightTx.translate$2(rightTx, 1, 0);
   rightTx.scale$2(rightTx, 0.62, 0.62);
   rightTx.rotate$3(rightTx, 1.0471975511965976, 0, 0);
-  $.CanvasUtil_transform(ctx, rightTx);
+  $.requireArgumentNotNull(ctx, "ctx");
+  $.requireArgumentNotNull(rightTx, "tx");
+  t2.transform$6(ctx, rightTx.get$scaleX(), rightTx.get$shearY(), rightTx.get$shearX(), rightTx.get$scaleY(), rightTx.get$translateX(), rightTx.get$translateY());
   $.drawBranch(ctx, t1.$sub(levels, 1));
   t2.restore$0(ctx);
   t2.save$0(ctx);
@@ -471,7 +1002,9 @@ $.drawBranch$bailout = function(state0, ctx, levels) {
   rightTx.translate$2(rightTx, 1, 0);
   rightTx.scale$2(rightTx, 0.62, 0.62);
   rightTx.rotate$3(rightTx, -1.0471975511965976, 0, 0);
-  $.CanvasUtil_transform(ctx, rightTx);
+  $.requireArgumentNotNull(ctx, "ctx");
+  $.requireArgumentNotNull(rightTx, "tx");
+  t2.transform$6(ctx, rightTx.get$scaleX(), rightTx.get$shearY(), rightTx.get$shearX(), rightTx.get$scaleY(), rightTx.get$translateX(), rightTx.get$translateY());
   $.drawBranch(ctx, t1.$sub(levels, 1));
   t2.restore$0(ctx);
 };
@@ -480,16 +1013,10 @@ $.ListIterator$ = function(iterable) {
   return new $.ListIterator(iterable, iterable.length, 0, null);
 };
 
-$.ToString_collectionToString = function(c) {
-  var result = $.StringBuffer$("");
-  $.ToString__emitCollection(c, result, $.List_List($));
-  return result.toString$0(result);
-};
-
 $.ToString__emitCollection = function(c, result, visiting) {
   var isList, t1, first, t2;
   visiting.push(c);
-  isList = typeof c === "object" && c !== null && (c.constructor === Array || !!c.$isList);
+  isList = typeof c === "object" && c !== null && (c.constructor === Array || !!$.getInterceptor(c).$isList);
   result.write$1(isList ? "[" : "{");
   for (t1 = $.get$iterator$a(c), first = true; t1.moveNext$0(); first = false) {
     t2 = t1.get$current();
@@ -504,9 +1031,9 @@ $.ToString__emitCollection = function(c, result, visiting) {
 };
 
 $.ToString__emitObject = function(o, result, visiting) {
-  if (typeof o === "object" && o !== null && (o.constructor === Array || !!o.$isCollection))
+  if (typeof o === "object" && o !== null && (o.constructor === Array || !!$.getInterceptor(o).$isCollection))
     if ($.ToString__containsRef(visiting, o))
-      result.write$1(typeof o === "object" && o !== null && (o.constructor === Array || !!o.$isList) ? "[...]" : "{...}");
+      result.write$1(typeof o === "object" && o !== null && (o.constructor === Array || !!$.getInterceptor(o).$isList) ? "[...]" : "{...}");
     else
       $.ToString__emitCollection(o, result, visiting);
   else
@@ -519,6 +1046,14 @@ $.ToString__containsRef = function(c, ref) {
     if (t1.get$current() === ref)
       return true;
   return false;
+};
+
+$.getNativeInterceptor = function(object) {
+  return object[$.dispatchPropertyName]();
+};
+
+$.setNativeInterceptor = function($prototype, $function) {
+  $prototype[$.dispatchPropertyName]=$function;
 };
 
 $.S = function(value) {
@@ -560,12 +1095,6 @@ $.Primitives_objectTypeName = function(object) {
   }
   t1 = $.getInterceptor$s($name);
   return t1.codeUnitAt$1($name, 0) === 36 ? t1.substring$1($name, 1) : $name;
-};
-
-$.Primitives_newFixedList = function($length) {
-  var result = new Array($length);
-  result.fixed$length = true;
-  return result;
 };
 
 $.iae = function(argument) {
@@ -761,10 +1290,6 @@ $.alternateTag = function(object, tag) {
   return;
 };
 
-$.callHasOwnProperty = function($function, object, property) {
-  return $function.call(object, property);
-};
-
 $.getFunctionForTypeNameOf = function() {
   if (typeof(navigator) !== "object")
     return $.typeNameInChrome;
@@ -783,14 +1308,10 @@ $.getFunctionForTypeNameOf = function() {
     return $.constructorNameFallback;
 };
 
-$.getTypeNameOf = function(obj) {
+$.toStringForNativeObject = function(obj) {
   if ($._getTypeNameOf == null)
     $._getTypeNameOf = $.getFunctionForTypeNameOf();
-  return $._getTypeNameOf.call$1(obj);
-};
-
-$.toStringForNativeObject = function(obj) {
-  return "Instance of " + $.getTypeNameOf(obj);
+  return "Instance of " + $._getTypeNameOf.call$1(obj);
 };
 
 $.hashCodeForNativeObject = function(object) {
@@ -802,10 +1323,12 @@ $.defineProperty = function(obj, property, value) {
 };
 
 $.dynamicBind = function(obj, $name, methods, $arguments) {
-  var hasOwnPropertyFunction, tag, method, secondTag, proto;
+  var hasOwnPropertyFunction, tag, method, secondTag, nameOfObjectClass, proto;
   hasOwnPropertyFunction = Object.prototype.hasOwnProperty;
-  if (!$.isDartObject(obj)) {
-    tag = $.getTypeNameOf(obj);
+  if (!((obj) instanceof ($.Object))) {
+    if ($._getTypeNameOf == null)
+      $._getTypeNameOf = $.getFunctionForTypeNameOf();
+    tag = $._getTypeNameOf.call$1(obj);
     method = $.dynamicBindLookup(hasOwnPropertyFunction, tag, methods);
     if (method == null) {
       secondTag = $.alternateTag(obj, tag);
@@ -814,64 +1337,96 @@ $.dynamicBind = function(obj, $name, methods, $arguments) {
     }
   } else
     method = null;
-  if (method == null)
-    method = $.lookupDynamicClass(hasOwnPropertyFunction, methods, $.getTypeNameOf($.C_Object));
+  if (method == null) {
+    if ($._getTypeNameOf == null)
+      $._getTypeNameOf = $.getFunctionForTypeNameOf();
+    nameOfObjectClass = $._getTypeNameOf.call$1($.C_Object);
+    method = hasOwnPropertyFunction.call(methods, nameOfObjectClass) ? methods[nameOfObjectClass] : null;
+  }
   if (method == null)
     (function(){throw new TypeError($name + " is not a function");})();
   else {
     proto = Object.getPrototypeOf(obj);
-    if (!$.callHasOwnProperty(hasOwnPropertyFunction, proto, $name))
-      $.defineProperty(proto, $name, method);
+    if (!hasOwnPropertyFunction.call(proto, $name) || proto === Object.prototype)
+      Object.defineProperty(proto, $name, {value: method, enumerable: false, writable: true, configurable: true});
   }
   return method.apply(obj, $arguments);
 };
 
-$.isDartObject = function(obj) {
-  return ((obj) instanceof ($.Object));
-};
-
 $.dynamicBindLookup = function(hasOwnPropertyFunction, tag, methods) {
-  var method, i, entry;
-  method = $.lookupDynamicClass(hasOwnPropertyFunction, methods, tag);
-  if (method == null && $._dynamicMetadata0() != null)
-    for (i = 0; i < $._dynamicMetadata0().length; ++i) {
-      entry = $._dynamicMetadata0()[i];
-      if ($.callHasOwnProperty(hasOwnPropertyFunction, entry.get$_set(), tag)) {
-        method = $.lookupDynamicClass(hasOwnPropertyFunction, methods, entry.get$_tag());
+  var method, t1, i, entry;
+  method = hasOwnPropertyFunction.call(methods, tag) ? methods[tag] : null;
+  if (method == null) {
+    if (typeof($dynamicMetadata) === "undefined")
+      $._dynamicMetadata([]);
+    t1 = $dynamicMetadata != null;
+  } else
+    t1 = false;
+  if (t1) {
+    i = 0;
+    while (true) {
+      if (typeof($dynamicMetadata) === "undefined")
+        $._dynamicMetadata([]);
+      if (!(i < $dynamicMetadata.length))
+        break;
+      if (typeof($dynamicMetadata) === "undefined")
+        $._dynamicMetadata([]);
+      entry = $dynamicMetadata[i];
+      if (hasOwnPropertyFunction.call(entry.get$_set(), tag)) {
+        t1 = entry.get$_tag();
+        method = hasOwnPropertyFunction.call(methods, t1) ? methods[t1] : null;
         if (method != null)
           break;
       }
+      ++i;
     }
+  }
   return method;
 };
 
-$.lookupDynamicClass = function(hasOwnPropertyFunction, methods, className) {
-  return $.callHasOwnProperty(hasOwnPropertyFunction, methods, className) ? methods[className] : null;
-};
-
 $.dynamicFunction = function($name) {
-  var f, methods, dartMethod, bind;
-  f = Object.prototype[$name];
+  var table, f, methods, bind;
+  table = $.dynamicFunctionTable;
+  if (table == null) {
+    table = {};
+    $.dynamicFunctionTable = table;
+  }
+  f = table[$name];
   if (f != null && !!f.methods)
     return f.methods;
   methods = {};
-  dartMethod = Object.getPrototypeOf($.C_Object)[$name];
-  if (dartMethod != null)
-    methods["Object"] = dartMethod;
   bind = function() {return $.dynamicBind.call$4(this, $name, methods, Array.prototype.slice.call(arguments));};
   bind.methods = methods;
-  $.defineProperty(Object.prototype, $name, bind);
+  Object.defineProperty(Object.prototype, $name, {value: bind, enumerable: false, writable: true, configurable: true});
+  Object.defineProperty(table, $name, {value: bind, enumerable: false, writable: true, configurable: true});
   return methods;
+};
+
+$.defineNativeMethods = function(tag, interceptorClass) {
+  var methods = interceptorClass.prototype;
+  $.dynamicFunction($.dispatchPropertyName)[tag]=function(){return methods};
+};
+
+$.defineNativeMethodsNonleaf = function(tag, interceptorClass) {
+  var methods, method;
+  methods = interceptorClass.prototype;
+  method = $.dispatchPropertyName;
+  $.dynamicFunction(method)[tag]=function(){if(Object.getPrototypeOf(this).hasOwnProperty(method))return methods;return $._redispatchGetNativeInterceptorHook(method,this);};
+};
+
+$.defineNativeMethodsFinish = function() {
+  var t1, t2;
+  t1 = $.dispatchPropertyName;
+  t2 = Object.getPrototypeOf($.C_Interceptor);
+  Object.prototype[t1]=function(){if (Object.getPrototypeOf(this) === Object.prototype)return t2;return $._redispatchGetNativeInterceptorHook(t1,this);};
+};
+
+$._redispatchGetNativeInterceptorHook = function($name, receiver) {
+  return $.dynamicFunctionTable[$name].call(receiver);
 };
 
 $.MetaInfo$ = function(_tag, _tags, _set) {
   return new $.MetaInfo(_tag, _tags, _set);
-};
-
-$._dynamicMetadata0 = function() {
-  if (typeof($dynamicMetadata) === "undefined")
-    $._dynamicMetadata([]);
-  return $dynamicMetadata;
 };
 
 $._dynamicMetadata = function(table) {
@@ -921,14 +1476,17 @@ $._ExceptionImplementation$ = function(message) {
 };
 
 $.List_List = function($length) {
-  var t1 = $ === $length;
+  var t1, result;
+  t1 = $ === $length;
   if (t1)
     $length = null;
   if (t1)
     return new Array(0);
   if (!(typeof $length === "number" && Math.floor($length) === $length) || $length < 0)
     throw $.$$throw($.ArgumentError$("Length must be a positive integer: " + $.S($length) + "."));
-  return $.Primitives_newFixedList($length);
+  result = new Array($length);
+  result.fixed$length = true;
+  return result;
 };
 
 $.StringBuffer$ = function($content) {
@@ -971,12 +1529,6 @@ $._metaRequireArgumentNotNullOrEmpty = function(argName) {
     throw $.$$throw($.InvalidOperationError$("That's just sad. Give me a good argName"));
 };
 
-$.CanvasUtil_transform = function(ctx, tx) {
-  $.requireArgumentNotNull(ctx, "ctx");
-  $.requireArgumentNotNull(tx, "tx");
-  $.transform$6$x(ctx, tx.get$scaleX(), tx.get$shearY(), tx.get$shearX(), tx.get$scaleY(), tx.get$translateX(), tx.get$translateY());
-};
-
 $.$$throw.call$1 = $.$$throw;
 $.$$throw.$name = "$$throw";
 $.DartError_toStringWrapper.call$0 = $.DartError_toStringWrapper;
@@ -997,15 +1549,20 @@ $.constructorNameFallback.call$1 = $.constructorNameFallback;
 $.constructorNameFallback.$name = "constructorNameFallback";
 $.dynamicBind.call$4 = $.dynamicBind;
 $.dynamicBind.$name = "dynamicBind";
+$._redispatchGetNativeInterceptorHook.call$2 = $._redispatchGetNativeInterceptorHook;
+$._redispatchGetNativeInterceptorHook.$name = "_redispatchGetNativeInterceptorHook";
 $.num = {builtin$cls: "num"};
 $.String = {builtin$cls: "String"};
 $.C_Object = new $.Object();
 $.C_NullThrownError = new $.NullThrownError();
 $.JSInt_methods = $.JSInt.prototype;
-$.JSNull_methods = $.JSNull.prototype;
+$.C_Interceptor = new $.Interceptor();
 $.JSArray_methods = $.JSArray.prototype;
+$.JSNull_methods = $.JSNull.prototype;
+$.dispatchPropertyName = "_zzyzx";
 $.Primitives_hashCodeSeed = 0;
 $._getTypeNameOf = null;
+$.dynamicFunctionTable = null;
 $.$add$ns = function(receiver, a0) {
   if (typeof receiver == "number" && typeof a0 == "number")
     return receiver + a0;
@@ -1034,14 +1591,8 @@ $.get$context2d$x = function(receiver) {
 $.get$iterator$a = function(receiver) {
   return $.getInterceptor$a(receiver).get$iterator(receiver);
 };
-$.query$1$x = function(receiver, a0) {
-  return $.getInterceptor$x(receiver).query$1(receiver, a0);
-};
 $.toString$0 = function(receiver) {
   return $.getInterceptor(receiver).toString$0(receiver);
-};
-$.transform$6$x = function(receiver, a0, a1, a2, a3, a4, a5) {
-  return $.getInterceptor$x(receiver).transform$6(receiver, a0, a1, a2, a3, a4, a5);
 };
 $.getInterceptor = function(receiver) {
   if (typeof receiver == "number") {
@@ -1059,11 +1610,17 @@ $.getInterceptor = function(receiver) {
     return $.JSBool.prototype;
   if (receiver.constructor == Array)
     return $.JSArray.prototype;
-  return receiver;
+  if (typeof receiver != "object")
+    return receiver;
+  if (receiver instanceof $.Object)
+    return receiver;
+  if (Object.getPrototypeOf(receiver) === Object.prototype)
+    return $.Interceptor.prototype;
+  return $.getNativeInterceptor(receiver);
 };
 $.getInterceptor$a = function(receiver) {
   if (receiver == null)
-    return void 0;
+    return receiver;
   if (receiver.constructor == Array)
     return $.JSArray.prototype;
   return receiver;
@@ -1072,7 +1629,7 @@ $.getInterceptor$n = function(receiver) {
   if (typeof receiver == "number")
     return $.JSNumber.prototype;
   if (receiver == null)
-    return void 0;
+    return receiver;
   return receiver;
 };
 $.getInterceptor$ns = function(receiver) {
@@ -1081,41 +1638,28 @@ $.getInterceptor$ns = function(receiver) {
   if (typeof receiver == "string")
     return $.JSString.prototype;
   if (receiver == null)
-    return void 0;
+    return receiver;
   return receiver;
 };
 $.getInterceptor$s = function(receiver) {
   if (typeof receiver == "string")
     return $.JSString.prototype;
   if (receiver == null)
-    return void 0;
+    return receiver;
   return receiver;
 };
 $.getInterceptor$x = function(receiver) {
   if (receiver == null)
-    return void 0;
-  return receiver;
+    return receiver;
+  if (typeof receiver != "object")
+    return receiver;
+  if (receiver instanceof $.Object)
+    return receiver;
+  if (Object.getPrototypeOf(receiver) === Object.prototype)
+    return $.Interceptor.prototype;
+  return $.getNativeInterceptor(receiver);
 };
-var $ = null;
-Isolate = Isolate.$finishIsolateConstructor(Isolate);
-var $ = new Isolate();
 // Native classes
-$.$defineNativeClass = function(cls, desc) {
-  var fields = desc[''];
-  var fields_array = fields ? fields.split(',') : [];
-  for (var i = 0; i < fields_array.length; i++) {
-    $.$generateAccessor(fields_array[i], desc);
-  }
-  var hasOwnProperty = Object.prototype.hasOwnProperty;
-  for (var method in desc) {
-    if (method) {
-      if (hasOwnProperty.call(desc, method)) {
-        $.dynamicFunction(method)[cls] = desc[method];
-      }
-    }
-  }
-};
-
 (function(table) {
   for (var key in table)
     $.defineProperty(Object.prototype, key, table[key]);
@@ -1131,216 +1675,401 @@ $.$defineNativeClass = function(cls, desc) {
   }
 });
 
-$.$defineNativeClass("HTMLAnchorElement", {
-  toString$0: function(receiver) {
-    return receiver.toString();
-  }
-});
+$.defineNativeMethodsNonleaf("HTMLElement", $._HTMLElement);
 
-$.$defineNativeClass("HTMLCanvasElement", {
-  getContext$2: function(receiver, contextId, attrs) {
-    var t1 = $ === attrs;
-    if (t1)
-      attrs = null;
-    if (!t1)
-      return this._getContext_1$2(receiver, contextId, $.convertDartToNative_Dictionary(attrs));
-    return this._getContext_2$1(receiver, contextId);
-  },
-  getContext$1: function($receiver, contextId) {
-    return this.getContext$2($receiver, contextId, $);
-  },
-  _getContext_1$2: function(receiver, contextId, attrs) {
-    return receiver.getContext(contextId,attrs);
-  },
-  _getContext_2$1: function(receiver, contextId) {
-    return receiver.getContext(contextId);
-  },
-  get$context2d: function(receiver) {
-    return this.getContext$1(receiver, "2d");
-  }
-});
+$.defineNativeMethods("HTMLAnchorElement", $.AnchorElement);
 
-$.$defineNativeClass("CanvasRenderingContext2D", {"": "lineWidth},strokeStyle}",
-  beginPath$0: function(receiver) {
-    return receiver.beginPath();
-  },
-  lineTo$2: function(receiver, x, y) {
-    return receiver.lineTo(x,y);
-  },
-  moveTo$2: function(receiver, x, y) {
-    return receiver.moveTo(x,y);
-  },
-  restore$0: function(receiver) {
-    return receiver.restore();
-  },
-  save$0: function(receiver) {
-    return receiver.save();
-  },
-  stroke$0: function(receiver) {
-    return receiver.stroke();
-  },
-  transform$6: function(receiver, m11, m12, m21, m22, dx, dy) {
-    return receiver.transform(m11,m12,m21,m22,dx,dy);
-  }
-});
+$.defineNativeMethods("HTMLAreaElement", $.AreaElement);
 
-$.$defineNativeClass("Document", {
-  query$1: function(receiver, selectors) {
-    return receiver.querySelector(selectors);
-  }
-});
+$.defineNativeMethods("HTMLAudioElement", $.AudioElement);
 
-$.$defineNativeClass("DOMException", {
-  toString$0: function(receiver) {
-    return receiver.toString();
-  }
-});
+$.defineNativeMethods("HTMLBRElement", $.BRElement);
 
-$.$defineNativeClass("EventException", {
-  toString$0: function(receiver) {
-    return receiver.toString();
-  }
-});
+$.defineNativeMethods("HTMLBaseElement", $.BaseElement);
 
-$.$defineNativeClass("FileException", {
-  toString$0: function(receiver) {
-    return receiver.toString();
-  }
-});
+$.defineNativeMethods("HTMLBodyElement", $.BodyElement);
 
-$.$defineNativeClass("XMLHttpRequestException", {
-  toString$0: function(receiver) {
-    return receiver.toString();
-  }
-});
+$.defineNativeMethods("HTMLButtonElement", $.ButtonElement);
 
-$.$defineNativeClass("RangeException", {
-  toString$0: function(receiver) {
-    return receiver.toString();
-  }
-});
+$.defineNativeMethods("HTMLCanvasElement", $.CanvasElement);
 
-$.$defineNativeClass("XPathException", {
-  toString$0: function(receiver) {
-    return receiver.toString();
-  }
-});
+$.defineNativeMethods("CanvasGradient", $.CanvasGradient);
 
-$.$defineNativeClass("SVGAElement", {
-  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
-    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-  }
-});
+$.defineNativeMethods("CanvasPattern", $.CanvasPattern);
 
-$.$defineNativeClass("SVGCircleElement", {
-  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
-    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-  }
-});
+$.defineNativeMethodsNonleaf("CanvasRenderingContext", $.CanvasRenderingContext);
 
-$.$defineNativeClass("SVGClipPathElement", {
-  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
-    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-  }
-});
+$.defineNativeMethods("CanvasRenderingContext2D", $.CanvasRenderingContext2D);
 
-$.$defineNativeClass("SVGDefsElement", {
-  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
-    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-  }
-});
+$.defineNativeMethods("HTMLContentElement", $.ContentElement);
 
-$.$defineNativeClass("SVGEllipseElement", {
-  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
-    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-  }
-});
+$.defineNativeMethods("HTMLDListElement", $.DListElement);
 
-$.$defineNativeClass("SVGForeignObjectElement", {
-  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
-    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-  }
-});
+$.defineNativeMethods("HTMLDataListElement", $.DataListElement);
 
-$.$defineNativeClass("SVGGElement", {
-  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
-    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-  }
-});
+$.defineNativeMethods("HTMLDetailsElement", $.DetailsElement);
 
-$.$defineNativeClass("SVGImageElement", {
-  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
-    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-  }
-});
+$.defineNativeMethods("HTMLDivElement", $.DivElement);
 
-$.$defineNativeClass("SVGLineElement", {
-  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
-    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-  }
-});
+$.defineNativeMethodsNonleaf("Document", $.Document);
 
-$.$defineNativeClass("SVGPathElement", {
-  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
-    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-  }
-});
+$.defineNativeMethods("DOMError", $.DomError);
 
-$.$defineNativeClass("SVGPolygonElement", {
-  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
-    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-  }
-});
+$.defineNativeMethods("DOMException", $.DomException);
 
-$.$defineNativeClass("SVGPolylineElement", {
-  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
-    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-  }
-});
+$.defineNativeMethodsNonleaf("Element", $.Element);
 
-$.$defineNativeClass("SVGRectElement", {
-  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
-    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-  }
-});
+$.defineNativeMethods("HTMLEmbedElement", $.EmbedElement);
 
-$.$defineNativeClass("SVGException", {
-  toString$0: function(receiver) {
-    return receiver.toString();
-  }
-});
+$.defineNativeMethods("ErrorEvent", $.ErrorEvent);
 
-$.$defineNativeClass("SVGSVGElement", {
-  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
-    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-  }
-});
+$.defineNativeMethodsNonleaf("Event", $.Event);
 
-$.$defineNativeClass("SVGSwitchElement", {
-  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
-    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-  }
-});
+$.defineNativeMethods("EventException", $.EventException);
 
-$.$defineNativeClass("SVGTextElement", {
-  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
-    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-  }
-});
+$.defineNativeMethodsNonleaf("EventTarget", $.EventTarget);
 
-$.$defineNativeClass("SVGUseElement", {
-  transform$6: function($receiver, arg0, arg1, arg2, arg3, arg4, arg5) {
-    return this.transform.call$6(arg0, arg1, arg2, arg3, arg4, arg5);
-  }
-});
+$.defineNativeMethods("HTMLFieldSetElement", $.FieldSetElement);
 
-// 28 dynamic classes.
-// 30 classes
-// 1 !leaf
+$.defineNativeMethods("FileError", $.FileError);
+
+$.defineNativeMethods("FileException", $.FileException);
+
+$.defineNativeMethods("HTMLFormElement", $.FormElement);
+
+$.defineNativeMethods("HTMLHRElement", $.HRElement);
+
+$.defineNativeMethods("HTMLHeadElement", $.HeadElement);
+
+$.defineNativeMethods("HTMLHeadingElement", $.HeadingElement);
+
+$.defineNativeMethods("HTMLDocument", $.HtmlDocument);
+
+$.defineNativeMethods("HTMLHtmlElement", $.HtmlElement);
+
+$.defineNativeMethods("XMLHttpRequestException", $.HttpRequestException);
+
+$.defineNativeMethods("HTMLIFrameElement", $.IFrameElement);
+
+$.defineNativeMethods("HTMLImageElement", $.ImageElement);
+
+$.defineNativeMethods("HTMLInputElement", $.InputElement);
+
+$.defineNativeMethods("HTMLKeygenElement", $.KeygenElement);
+
+$.defineNativeMethods("HTMLLIElement", $.LIElement);
+
+$.defineNativeMethods("HTMLLabelElement", $.LabelElement);
+
+$.defineNativeMethods("HTMLLegendElement", $.LegendElement);
+
+$.defineNativeMethods("HTMLLinkElement", $.LinkElement);
+
+$.defineNativeMethods("HTMLMapElement", $.MapElement);
+
+$.defineNativeMethodsNonleaf("HTMLMediaElement", $.MediaElement);
+
+$.defineNativeMethods("MediaError", $.MediaError);
+
+$.defineNativeMethods("MediaKeyError", $.MediaKeyError);
+
+$.defineNativeMethods("HTMLMenuElement", $.MenuElement);
+
+$.defineNativeMethods("HTMLMetaElement", $.MetaElement);
+
+$.defineNativeMethods("HTMLMeterElement", $.MeterElement);
+
+$.defineNativeMethods("HTMLModElement", $.ModElement);
+
+$.defineNativeMethods("NavigatorUserMediaError", $.NavigatorUserMediaError);
+
+$.defineNativeMethodsNonleaf("Node", $.Node);
+
+$.defineNativeMethods("HTMLOListElement", $.OListElement);
+
+$.defineNativeMethods("HTMLObjectElement", $.ObjectElement);
+
+$.defineNativeMethods("HTMLOptGroupElement", $.OptGroupElement);
+
+$.defineNativeMethods("HTMLOptionElement", $.OptionElement);
+
+$.defineNativeMethods("HTMLOutputElement", $.OutputElement);
+
+$.defineNativeMethods("HTMLParagraphElement", $.ParagraphElement);
+
+$.defineNativeMethods("HTMLParamElement", $.ParamElement);
+
+$.defineNativeMethods("PositionError", $.PositionError);
+
+$.defineNativeMethods("HTMLPreElement", $.PreElement);
+
+$.defineNativeMethods("HTMLProgressElement", $.ProgressElement);
+
+$.defineNativeMethods("HTMLQuoteElement", $.QuoteElement);
+
+$.defineNativeMethods("RangeException", $.RangeException);
+
+$.defineNativeMethods("HTMLScriptElement", $.ScriptElement);
+
+$.defineNativeMethods("HTMLSelectElement", $.SelectElement);
+
+$.defineNativeMethods("HTMLShadowElement", $.ShadowElement);
+
+$.defineNativeMethods("HTMLSourceElement", $.SourceElement);
+
+$.defineNativeMethods("HTMLSpanElement", $.SpanElement);
+
+$.defineNativeMethods("SpeechRecognitionError", $.SpeechRecognitionError);
+
+$.defineNativeMethods("HTMLStyleElement", $.StyleElement);
+
+$.defineNativeMethods("HTMLTableCaptionElement", $.TableCaptionElement);
+
+$.defineNativeMethods("HTMLTableCellElement", $.TableCellElement);
+
+$.defineNativeMethods("HTMLTableColElement", $.TableColElement);
+
+$.defineNativeMethods("HTMLTableElement", $.TableElement);
+
+$.defineNativeMethods("HTMLTableRowElement", $.TableRowElement);
+
+$.defineNativeMethods("HTMLTableSectionElement", $.TableSectionElement);
+
+$.defineNativeMethods("HTMLTemplateElement", $.TemplateElement);
+
+$.defineNativeMethods("HTMLTextAreaElement", $.TextAreaElement);
+
+$.defineNativeMethods("HTMLTitleElement", $.TitleElement);
+
+$.defineNativeMethods("HTMLTrackElement", $.TrackElement);
+
+$.defineNativeMethods("HTMLUListElement", $.UListElement);
+
+$.defineNativeMethods("HTMLUnknownElement", $.UnknownElement);
+
+$.defineNativeMethods("HTMLVideoElement", $.VideoElement);
+
+$.defineNativeMethods("XPathException", $.XPathException);
+
+$.defineNativeMethods("HTMLAppletElement", $._HTMLAppletElement);
+
+$.defineNativeMethods("HTMLBaseFontElement", $._HTMLBaseFontElement);
+
+$.defineNativeMethods("HTMLDirectoryElement", $._HTMLDirectoryElement);
+
+$.defineNativeMethods("HTMLFontElement", $._HTMLFontElement);
+
+$.defineNativeMethods("HTMLFrameElement", $._HTMLFrameElement);
+
+$.defineNativeMethods("HTMLFrameSetElement", $._HTMLFrameSetElement);
+
+$.defineNativeMethods("HTMLMarqueeElement", $._HTMLMarqueeElement);
+
+$.defineNativeMethods("SVGAElement", $.AElement);
+
+$.defineNativeMethods("SVGAltGlyphElement", $.AltGlyphElement);
+
+$.defineNativeMethods("SVGAnimateElement", $.AnimateElement);
+
+$.defineNativeMethods("SVGAnimateMotionElement", $.AnimateMotionElement);
+
+$.defineNativeMethods("SVGAnimateTransformElement", $.AnimateTransformElement);
+
+$.defineNativeMethods("SVGAnimatedLength", $.AnimatedLength);
+
+$.defineNativeMethods("SVGAnimatedLengthList", $.AnimatedLengthList);
+
+$.defineNativeMethods("SVGAnimatedNumber", $.AnimatedNumber);
+
+$.defineNativeMethods("SVGAnimatedNumberList", $.AnimatedNumberList);
+
+$.defineNativeMethods("SVGAnimatedTransformList", $.AnimatedTransformList);
+
+$.defineNativeMethodsNonleaf("SVGAnimationElement", $.AnimationElement);
+
+$.defineNativeMethods("SVGCircleElement", $.CircleElement);
+
+$.defineNativeMethods("SVGClipPathElement", $.ClipPathElement);
+
+$.defineNativeMethods("SVGDefsElement", $.DefsElement);
+
+$.defineNativeMethods("SVGDescElement", $.DescElement);
+
+$.defineNativeMethods("SVGEllipseElement", $.EllipseElement);
+
+$.defineNativeMethods("SVGFEBlendElement", $.FEBlendElement);
+
+$.defineNativeMethods("SVGFEColorMatrixElement", $.FEColorMatrixElement);
+
+$.defineNativeMethods("SVGFEComponentTransferElement", $.FEComponentTransferElement);
+
+$.defineNativeMethods("SVGFECompositeElement", $.FECompositeElement);
+
+$.defineNativeMethods("SVGFEConvolveMatrixElement", $.FEConvolveMatrixElement);
+
+$.defineNativeMethods("SVGFEDiffuseLightingElement", $.FEDiffuseLightingElement);
+
+$.defineNativeMethods("SVGFEDisplacementMapElement", $.FEDisplacementMapElement);
+
+$.defineNativeMethods("SVGFEDistantLightElement", $.FEDistantLightElement);
+
+$.defineNativeMethods("SVGFEFloodElement", $.FEFloodElement);
+
+$.defineNativeMethods("SVGFEFuncAElement", $.FEFuncAElement);
+
+$.defineNativeMethods("SVGFEFuncBElement", $.FEFuncBElement);
+
+$.defineNativeMethods("SVGFEFuncGElement", $.FEFuncGElement);
+
+$.defineNativeMethods("SVGFEFuncRElement", $.FEFuncRElement);
+
+$.defineNativeMethods("SVGFEGaussianBlurElement", $.FEGaussianBlurElement);
+
+$.defineNativeMethods("SVGFEImageElement", $.FEImageElement);
+
+$.defineNativeMethods("SVGFEMergeElement", $.FEMergeElement);
+
+$.defineNativeMethods("SVGFEMergeNodeElement", $.FEMergeNodeElement);
+
+$.defineNativeMethods("SVGFEMorphologyElement", $.FEMorphologyElement);
+
+$.defineNativeMethods("SVGFEOffsetElement", $.FEOffsetElement);
+
+$.defineNativeMethods("SVGFEPointLightElement", $.FEPointLightElement);
+
+$.defineNativeMethods("SVGFESpecularLightingElement", $.FESpecularLightingElement);
+
+$.defineNativeMethods("SVGFESpotLightElement", $.FESpotLightElement);
+
+$.defineNativeMethods("SVGFETileElement", $.FETileElement);
+
+$.defineNativeMethods("SVGFETurbulenceElement", $.FETurbulenceElement);
+
+$.defineNativeMethods("SVGFilterElement", $.FilterElement);
+
+$.defineNativeMethods("SVGForeignObjectElement", $.ForeignObjectElement);
+
+$.defineNativeMethods("SVGGElement", $.GElement);
+
+$.defineNativeMethods("SVGImageElement", $.ImageElement0);
+
+$.defineNativeMethods("SVGLineElement", $.LineElement);
+
+$.defineNativeMethods("SVGLinearGradientElement", $.LinearGradientElement);
+
+$.defineNativeMethods("SVGMarkerElement", $.MarkerElement);
+
+$.defineNativeMethods("SVGMaskElement", $.MaskElement);
+
+$.defineNativeMethods("SVGMetadataElement", $.MetadataElement);
+
+$.defineNativeMethods("SVGPathElement", $.PathElement);
+
+$.defineNativeMethods("SVGPatternElement", $.PatternElement);
+
+$.defineNativeMethods("SVGPolygonElement", $.PolygonElement);
+
+$.defineNativeMethods("SVGPolylineElement", $.PolylineElement);
+
+$.defineNativeMethods("SVGRadialGradientElement", $.RadialGradientElement);
+
+$.defineNativeMethods("SVGRectElement", $.RectElement);
+
+$.defineNativeMethods("SVGScriptElement", $.ScriptElement0);
+
+$.defineNativeMethods("SVGSetElement", $.SetElement);
+
+$.defineNativeMethods("SVGStopElement", $.StopElement);
+
+$.defineNativeMethods("SVGStyleElement", $.StyleElement0);
+
+$.defineNativeMethodsNonleaf("SVGStyledElement", $.StyledElement);
+
+$.defineNativeMethods("SVGDocument", $.SvgDocument);
+
+$.defineNativeMethodsNonleaf("SVGElement", $.SvgElement);
+
+$.defineNativeMethods("SVGException", $.SvgException);
+
+$.defineNativeMethods("SVGSVGElement", $.SvgSvgElement);
+
+$.defineNativeMethods("SVGSwitchElement", $.SwitchElement);
+
+$.defineNativeMethods("SVGSymbolElement", $.SymbolElement);
+
+$.defineNativeMethods("SVGTSpanElement", $.TSpanElement);
+
+$.defineNativeMethodsNonleaf("SVGTextContentElement", $.TextContentElement);
+
+$.defineNativeMethods("SVGTextElement", $.TextElement);
+
+$.defineNativeMethods("SVGTextPathElement", $.TextPathElement);
+
+$.defineNativeMethodsNonleaf("SVGTextPositioningElement", $.TextPositioningElement);
+
+$.defineNativeMethods("SVGTitleElement", $.TitleElement0);
+
+$.defineNativeMethods("SVGUseElement", $.UseElement);
+
+$.defineNativeMethods("SVGViewElement", $.ViewElement);
+
+$.defineNativeMethods("SVGAltGlyphDefElement", $._SVGAltGlyphDefElement);
+
+$.defineNativeMethods("SVGAltGlyphItemElement", $._SVGAltGlyphItemElement);
+
+$.defineNativeMethods("SVGAnimateColorElement", $._SVGAnimateColorElement);
+
+$.defineNativeMethodsNonleaf("SVGComponentTransferFunctionElement", $._SVGComponentTransferFunctionElement);
+
+$.defineNativeMethods("SVGCursorElement", $._SVGCursorElement);
+
+$.defineNativeMethods("SVGFEDropShadowElement", $._SVGFEDropShadowElement);
+
+$.defineNativeMethods("SVGFontElement", $._SVGFontElement);
+
+$.defineNativeMethods("SVGFontFaceElement", $._SVGFontFaceElement);
+
+$.defineNativeMethods("SVGFontFaceFormatElement", $._SVGFontFaceFormatElement);
+
+$.defineNativeMethods("SVGFontFaceNameElement", $._SVGFontFaceNameElement);
+
+$.defineNativeMethods("SVGFontFaceSrcElement", $._SVGFontFaceSrcElement);
+
+$.defineNativeMethods("SVGFontFaceUriElement", $._SVGFontFaceUriElement);
+
+$.defineNativeMethods("SVGGlyphElement", $._SVGGlyphElement);
+
+$.defineNativeMethods("SVGGlyphRefElement", $._SVGGlyphRefElement);
+
+$.defineNativeMethodsNonleaf("SVGGradientElement", $._SVGGradientElement);
+
+$.defineNativeMethods("SVGHKernElement", $._SVGHKernElement);
+
+$.defineNativeMethods("SVGMPathElement", $._SVGMPathElement);
+
+$.defineNativeMethods("SVGMissingGlyphElement", $._SVGMissingGlyphElement);
+
+$.defineNativeMethods("SVGTRefElement", $._SVGTRefElement);
+
+$.defineNativeMethods("SVGVKernElement", $._SVGVKernElement);
+
+$.defineNativeMethods("WebGLRenderingContext", $.RenderingContext);
+
+$.defineNativeMethods("SQLError", $.SqlError);
+
+$.defineNativeMethods("SQLException", $.SqlException);
+
+// 192 dynamic classes.
+// 192 classes
+// 14 !leaf
 (function() {
-  $.dynamicSetMetadata([["Document", "Document|HTMLDocument|SVGDocument"]]);
+  var v0_TextPositioningElement = "SVGAltGlyphElement|SVGTRefElement|SVGTSpanElement|SVGTextElement|SVGTextPositioningElement", v1__SVGGradientElement = "SVGGradientElement|SVGLinearGradientElement|SVGRadialGradientElement", v2_TextContentElement = [v0_TextPositioningElement, "SVGTextContentElement|SVGTextPathElement"].join("|"), v3_StyledElement = [v1__SVGGradientElement, v2_TextContentElement, "SVGAElement|SVGCircleElement|SVGClipPathElement|SVGDefsElement|SVGDescElement|SVGEllipseElement|SVGFEBlendElement|SVGFEColorMatrixElement|SVGFEComponentTransferElement|SVGFECompositeElement|SVGFEConvolveMatrixElement|SVGFEDiffuseLightingElement|SVGFEDisplacementMapElement|SVGFEDropShadowElement|SVGFEFloodElement|SVGFEGaussianBlurElement|SVGFEImageElement|SVGFEMergeElement|SVGFEMorphologyElement|SVGFEOffsetElement|SVGFESpecularLightingElement|SVGFETileElement|SVGFETurbulenceElement|SVGFilterElement|SVGForeignObjectElement|SVGGElement|SVGGlyphRefElement|SVGImageElement|SVGLineElement|SVGMarkerElement|SVGMaskElement|SVGMissingGlyphElement|SVGPathElement|SVGPatternElement|SVGPolygonElement|SVGPolylineElement|SVGRectElement|SVGSVGElement|SVGStopElement|SVGStyledElement|SVGSwitchElement|SVGSymbolElement|SVGTitleElement|SVGUseElement"].join("|"), v4__SVGComponentTransferFunctionElement = "SVGComponentTransferFunctionElement|SVGFEFuncAElement|SVGFEFuncBElement|SVGFEFuncGElement|SVGFEFuncRElement", v5_AnimationElement = "SVGAnimateColorElement|SVGAnimateElement|SVGAnimateMotionElement|SVGAnimateTransformElement|SVGAnimationElement|SVGSetElement", v6_SvgElement = [v3_StyledElement, v4__SVGComponentTransferFunctionElement, v5_AnimationElement, "SVGAltGlyphDefElement|SVGAltGlyphItemElement|SVGCursorElement|SVGElement|SVGFEDistantLightElement|SVGFEMergeNodeElement|SVGFEPointLightElement|SVGFESpotLightElement|SVGFontElement|SVGFontFaceElement|SVGFontFaceFormatElement|SVGFontFaceNameElement|SVGFontFaceSrcElement|SVGFontFaceUriElement|SVGGlyphElement|SVGHKernElement|SVGMPathElement|SVGMetadataElement|SVGScriptElement|SVGStyleElement|SVGVKernElement|SVGViewElement"].join("|"), v7_MediaElement = "HTMLAudioElement|HTMLMediaElement|HTMLVideoElement", v8_Element = [v6_SvgElement, v7_MediaElement, "Element|HTMLAnchorElement|HTMLAppletElement|HTMLAreaElement|HTMLBRElement|HTMLBaseElement|HTMLBaseFontElement|HTMLBodyElement|HTMLButtonElement|HTMLCanvasElement|HTMLContentElement|HTMLDListElement|HTMLDataListElement|HTMLDetailsElement|HTMLDirectoryElement|HTMLDivElement|HTMLElement|HTMLEmbedElement|HTMLFieldSetElement|HTMLFontElement|HTMLFormElement|HTMLFrameElement|HTMLFrameSetElement|HTMLHRElement|HTMLHeadElement|HTMLHeadingElement|HTMLHtmlElement|HTMLIFrameElement|HTMLImageElement|HTMLInputElement|HTMLKeygenElement|HTMLLIElement|HTMLLabelElement|HTMLLegendElement|HTMLLinkElement|HTMLMapElement|HTMLMarqueeElement|HTMLMenuElement|HTMLMetaElement|HTMLMeterElement|HTMLModElement|HTMLOListElement|HTMLObjectElement|HTMLOptGroupElement|HTMLOptionElement|HTMLOutputElement|HTMLParagraphElement|HTMLParamElement|HTMLPreElement|HTMLProgressElement|HTMLQuoteElement|HTMLScriptElement|HTMLSelectElement|HTMLShadowElement|HTMLSourceElement|HTMLSpanElement|HTMLStyleElement|HTMLTableCaptionElement|HTMLTableCellElement|HTMLTableColElement|HTMLTableElement|HTMLTableRowElement|HTMLTableSectionElement|HTMLTemplateElement|HTMLTextAreaElement|HTMLTitleElement|HTMLTrackElement|HTMLUListElement|HTMLUnknownElement"].join("|"), v9_Document = "Document|HTMLDocument|SVGDocument", v10_Node = [v8_Element, v9_Document, "Node"].join("|");
+  $.dynamicSetMetadata([["CanvasRenderingContext", "CanvasRenderingContext|CanvasRenderingContext2D|WebGLRenderingContext"], ["Document", v9_Document], ["SVGGradientElement", v1__SVGGradientElement], ["SVGTextPositioningElement", v0_TextPositioningElement], ["SVGTextContentElement", v2_TextContentElement], ["SVGStyledElement", v3_StyledElement], ["SVGComponentTransferFunctionElement", v4__SVGComponentTransferFunctionElement], ["SVGAnimationElement", v5_AnimationElement], ["SVGElement", v6_SvgElement], ["HTMLMediaElement", v7_MediaElement], ["Element", v8_Element], ["Event", "ErrorEvent|Event|SpeechRecognitionError"], ["Node", v10_Node], ["EventTarget", [v10_Node, "EventTarget"].join("|")]]);
 })();
 
+var $ = null;
+Isolate = Isolate.$finishIsolateConstructor(Isolate);
+var $ = new Isolate();
 // BEGIN invoke [main].
 if (typeof document !== "undefined" && document.readyState !== "complete") {
   document.addEventListener("readystatechange", function () {
