@@ -1,5 +1,7 @@
 part of bot;
 
+// TODO: look into new List mixin. Might have to give up this fight. :-/
+
 abstract class Sequence<E> extends Enumerable<E> {
   const Sequence();
 
@@ -26,6 +28,7 @@ abstract class Sequence<E> extends Enumerable<E> {
   @override
   Iterator<E> get iterator => new _SequenceIterator(this);
 
+  // TODO: ponder making the type Iterable and be smarter about length, etc.
   bool itemsEqual(Sequence other) {
     requireArgumentNotNull(other, 'other');
     if(other.length != this.length) {
