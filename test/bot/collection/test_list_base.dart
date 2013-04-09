@@ -31,11 +31,7 @@ class TestListBase extends Sequence<int> {
 
   static void run() {
     group('ListBase', (){
-      test('filter', _testFilter);
-      test('forEach', _testForEach);
       test('indexOf', _testIndexOf);
-      test('map', _testMap);
-      test('reduce', _testReduce);
       test('simple', _testSimple);
       test('last', _testLast);
     });
@@ -45,22 +41,9 @@ class TestListBase extends Sequence<int> {
     expect(instance.last, 1);
   }
 
-  static void _testReduce() {
-    expect(instance.reduce(0, (prev, element) => prev + element), 15);
-    expect(instance.reduce(1, (prev, element) => prev * element), 120);
-  }
-
   static void _testSimple() {
     expect(instance.length, equals(_length));
     expect(instance, orderedEquals([5,4,3,2,1]));
-  }
-
-  static void _testMap() {
-    Func1<int, int> dub = (i) => i * 2;
-
-    var list = instance.map(dub);
-    expect(list.length, equals(_length));
-    expect(list, orderedEquals([10, 8, 6, 4, 2]));
   }
 
   static void _testIndexOf() {
@@ -100,34 +83,5 @@ class TestListBase extends Sequence<int> {
     //
     expect(flipped.indexOf(0), equals(-1));
     expect(flipped.lastIndexOf(0), equals(-1));
-  }
-
-  static void _testForEach() {
-    int sum = 0;
-    instance.forEach((e) => sum += e);
-    expect(sum, equals(15));
-
-    sum = 0;
-    flipped.forEach((e) => sum += e);
-    expect(sum, equals(30));
-  }
-
-  static void _testFilter() {
-    var list = new List<int>.from(instance.where(_lt3));
-    expect(list, orderedEquals([2, 1]));
-
-    list = new List<int>.from(flipped.where(_lt3));
-    expect(list, orderedEquals([2, 1, 1, 2]));
-
-    list = new List<int>.from(flipped.where(_lt0));
-    expect(list, orderedEquals([]));
-  }
-
-  static bool _lt0(int a) => a < 0;
-  static bool _gt0(int a) => a > 0;
-  static bool _lt3(int a) => a < 3;
-
-  static ReadOnlyCollection<int> roc(List<int> source) {
-    return new ReadOnlyCollection(source);
   }
 }
