@@ -3,7 +3,7 @@ library tool.tasks.update_example_html;
 import 'dart:async';
 import 'dart:io';
 import 'package:bot/bot.dart';
-import 'package:bot/hop.dart';
+import 'package:hop/hop.dart';
 import 'package:html5lib/dom.dart';
 import 'package:html5lib/parser.dart';
 import 'package:html5lib/dom_parsing.dart';

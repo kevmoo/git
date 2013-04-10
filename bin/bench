@@ -1,9 +1,0 @@
-#!/usr/bin/env dart
-
-import 'package:bot/hop.dart';
-import 'package:bot/hop_tasks.dart';
-
-void main() {
-  final benchTask = createBenchTask();
-  ConsoleContext.runTaskAsProcess(benchTask);
-}

@@ -1,5 +1,9 @@
 # Changelog - Dart Bag of Tricks
 
+## 0.20.0-dev *pre-release*
+
+* The big [HOP](https://github.com/kevmoo/hop.dart) migration.
+
 ## 0.16.3+1 2013-04-09 (SDK 0.4.5+1 r21094)
 
 * [Changes Since v0.16.2](https://github.com/kevmoo/bot.dart/compare/v0.16.2...v0.16.3.1)
