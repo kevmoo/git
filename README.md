@@ -43,10 +43,6 @@ dependencies:
 
 # The libraries
 
-The Bag-of-Tricks is two sets of libraries: __bot__ and __hop__.
-
-# bot
-
 ## bot -- default library
 
  * No dependencies on 3rd-party libraries.
@@ -81,25 +77,8 @@ The Bag-of-Tricks is two sets of libraries: __bot__ and __hop__.
 
 ## bot_retained
   * A library for creating interactive content using HTML5 Canvas.
-  
-# hop
-
-## hop - core task runtime
-  * An object-oriented framework creating and reusing scripts in Dart.
-  * Easy to create command-line scripts.
-  * Define functionality in libraries. Add and update them with `pub`.
-  * Nice touches for free: bash command completion, help, helpful exit codes
-
-## hop_tasks
-  * A collection of tasks and task helpers.
-  * Unit tests
-  * dart2js
-  * dartdoc
-  * git
 
 # Authors
  * [Kevin Moore](https://github.com/kevmoo) ([+Kevin Moore](https://plus.google.com/110066012384188006594/), [@kevmoo](http://twitter.com/kevmoo))
  * [Andreas Köberle](https://github.com/eskimoblood) ([@eskimobloood](https://twitter.com/eskimobloood))
- * [Adam Singer](https://github.com/financeCoding) ([+Adam Singer](https://plus.google.com/104569492481999771226))
- * [Damon Douglas](https://github.com/damondouglas) ([+Damon Douglas](https://plus.google.com/u/0/108940381045821372455/))
  * _You? File bugs. Fork and Fix bugs. Let's build this community._
