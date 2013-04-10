@@ -58,7 +58,6 @@ Future<Document> _updateIndex(Document source) {
 
   // should only have h3 and h4 elements
   final botHeaders = new List<Element>();
-  final hopHeaders = new List<Element>();
   final otherHeaders = new List<Element>();
 
   for(final child in contentDiv.children) {
@@ -74,8 +73,6 @@ Future<Document> _updateIndex(Document source) {
 
       if(libName.startsWith('bot')) {
         botHeaders.add(child);
-      } else if(libName.startsWith('hop')) {
-        hopHeaders.add(child);
       } else {
         otherHeaders.add(child);
       }
@@ -100,7 +97,6 @@ Future<Document> _updateIndex(Document source) {
   };
 
   doSection('Dart Bag of Tricks', botHeaders);
-  doSection('Hop task system', hopHeaders);
   doSection('Dependencies', otherHeaders);
 
   return new Future<Document>.immediate(source);
