@@ -2,9 +2,9 @@ library harness_console;
 
 import 'package:unittest/unittest.dart';
 import 'package:unittest/vm_config.dart';
-import 'test_console.dart' as console;
-import 'test_shared.dart' as shared;
-import 'test_dump_render_tree.dart' as drt;
+
+import 'bot_io/_bot_io.dart' as bot_io;
+import 'bot_git/_bot_git.dart' as bot_git;
 
 main() {
   testCore(new VMConfiguration());
@@ -14,7 +14,6 @@ void testCore(Configuration config) {
   unittestConfiguration = config;
   groupSep = ' - ';
 
-  shared.main();
-  console.main();
-  drt.main();
+  bot_io.main();
+  bot_git.main();
 }

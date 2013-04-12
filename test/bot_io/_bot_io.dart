@@ -4,7 +4,7 @@ import 'dart:async';
 import 'package:unittest/unittest.dart';
 import 'package:args/args.dart';
 import 'package:logging/logging.dart';
-import 'package:bot/bot_io.dart';
+import 'package:bot_io/bot_io.dart';
 import 'package:bot/bot_test.dart';
 import 'completion_tests_args.dart';
 

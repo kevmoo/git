@@ -1,4 +1,4 @@
-name: bot
+name: bot_io
 version: 0.20.0-dev
 author: Kevin Moore <kevin@thinkpixellab.com>
 description: A collection of (mostly) general libraries to make working with Dart more productive.
@@ -8,11 +8,11 @@ environment:
   sdk: '>=0.4.5+1.r21094'
 dependencies:
   unittest: '>=0.4.5+1'
+  bot: '>=0.16.3+1'
   args: '>=0.4.5+1'
   logging: '>=0.4.5+1'
   pathos: '>=0.4.5+1'
   meta: '>=0.4.5+1'
 dev_dependencies:
   html5lib: '>=0.4.1'
-  browser: '>=0.4.5+1'
-  hop: any
+  hop: '>=0.20.0'
