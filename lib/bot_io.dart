@@ -1,11 +1,15 @@
 library bot_io;
 
 import 'dart:async';
+import 'dart:crypto' as crypto;
 import 'dart:math' as math;
 import 'dart:io';
+import 'dart:utf' as utf;
+
 import 'package:args/args.dart';
 import 'package:logging/logging.dart' as logging;
 import 'package:meta/meta.dart';
+import 'package:pathos/path.dart' as pathos;
 
 import 'package:bot/bot.dart';
 
@@ -13,6 +17,7 @@ part 'src/bot_io/ansi_color.dart';
 part 'src/bot_io/completion.dart';
 part 'src/bot_io/console.dart';
 part 'src/bot_io/directory_populater.dart';
+part 'src/bot_io/entity_validator.dart';
 part 'src/bot_io/io_helpers.dart';
 part 'src/bot_io/shell_string.dart';
 part 'src/bot_io/temp_dir.dart';
