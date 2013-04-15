@@ -1,52 +1,21 @@
 part of bot_io;
 
-abstract class EntityValidator {
-  Stream<String> getValidationErrors(FileSystemEntity entity);
+class EntityValidator {
 
-  Future<bool> validate(FileSystemEntity entity) =>
-      getValidationErrors(entity).isEmpty;
-}
+  static Stream<String> validateFileStringContent(File entity,
+      String targetContent) =>
+          validateFileContentSha(entity, _getStringSha1(targetContent));
 
-EntityValidator convertToValidator(dynamic value) {
-  if(value is EntityValidator) {
-    return value;
-  } else if(value is Map) {
-    return new DirectoryValidator(value);
-  } else if(value is String) {
-    return new FileValidator.stringContents(value);
-  } else {
-    throw 'Could not turn "$value" into an EntityValidator';
-  }
-}
-
-abstract class FileValidator extends EntityValidator {
-
-  factory FileValidator.stringContents(String content) {
-    return new _FileShaValidator(_getStringSha1(content));
-  }
-
-  factory FileValidator.contentSha1(String sha1) {
-    return new _FileShaValidator(sha1);
-  }
-}
-
-class _FileShaValidator extends EntityValidator implements FileValidator {
-  final String _sha1;
-  _FileShaValidator(this._sha1) {
-    assert(_sha1 != null);
-    assert(_sha1.length == 40);
-    // should assert this is a well formatted sha...but whatevs
-  }
-
-  @override
-  Stream<String> getValidationErrors(FileSystemEntity entity) {
+  static Stream<String> validateFileContentSha(File entity, String targetSha) {
     if(entity is! File) {
-      return new Stream.fromIterable(['Not a file: $entity']);
+      return new Stream.fromIterable(['entity is not a File']);
     }
+    assert(targetSha != null);
+    assert(targetSha.length == 40);
 
     var future = _getSha1String(entity)
         .then((String sha1) {
-          if(sha1 == _sha1) {
+          if(sha1 == targetSha) {
             return [];
           } else {
             return ['content does not match: $entity'];
@@ -55,26 +24,14 @@ class _FileShaValidator extends EntityValidator implements FileValidator {
 
     return _streamFromIterableFuture(future);
   }
-}
 
-class DirectoryValidator extends EntityValidator {
-  final Map<String, dynamic> _sourceMap;
-
-  DirectoryValidator(Map<String, dynamic> validators) :
-    _sourceMap = validators {
-    assert(validators != null);
-
-    // TODO: all keys are not null or empty
-    // TODO: all values are not null
-  }
-
-  @override
-  Stream<String> getValidationErrors(FileSystemEntity entity) {
+  static Stream<String> validateDirectoryFromMap(Directory entity,
+      Map<String, dynamic> map) {
     if(entity is! Directory) {
-      return new Stream.fromIterable(['Not a dir!']);
+      return new Stream.fromIterable(['entity is not a Directory']);
     }
 
-    final expectedItems = new Set.from(_sourceMap.keys);
+    final expectedItems = new Set.from(map.keys);
 
     return expandStream(entity.list(), (FileSystemEntity item) {
 
@@ -83,9 +40,7 @@ class DirectoryValidator extends EntityValidator {
 
       final expected = expectedItems.remove(relative);
       if(expected) {
-        final subValidator = convertToValidator(_sourceMap[relative]);
-
-        return subValidator.getValidationErrors(item);
+        return validate(item, map[relative]);
       } else {
         return new Stream.fromIterable(['Not expected: $item']);
       }
@@ -96,6 +51,17 @@ class DirectoryValidator extends EntityValidator {
         }));
     });
   }
+
+  static Stream<String> validate(FileSystemEntity entity, dynamic target) {
+    if(target is String) {
+      return validateFileStringContent(entity, target);
+    } else if(target is Map) {
+      return validateDirectoryFromMap(entity, target);
+    } else {
+      throw "Don't know how to deal with $target";
+    }
+  }
+
 }
 
 Stream expandStream(Stream source, Stream convert(input), {Stream onDone()}) {

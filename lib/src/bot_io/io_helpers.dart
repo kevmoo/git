@@ -10,8 +10,8 @@ class IoHelpers {
           if(!doesExist) {
             return new Future.immediate(false);
           } else {
-            final validator = new DirectoryValidator(content);
-            return validator.validate(dir);
+            return EntityValidator.validateDirectoryFromMap(dir, content)
+                .isEmpty;
           }
         });
   }
