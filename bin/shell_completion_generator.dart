@@ -32,7 +32,7 @@ void main() {
   final binNames = new List<String>();
   File templateFile;
 
-  new Future.immediate(options.script)
+  new Future.value(options.script)
     .then((String scriptPath) {
       if(scriptPath.isEmpty) {
         throw 'no script path provided';

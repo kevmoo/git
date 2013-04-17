@@ -8,7 +8,7 @@ class IoHelpers {
     return dir.exists()
         .then((bool doesExist) {
           if(!doesExist) {
-            return new Future.immediate(false);
+            return new Future.value(false);
           } else {
             return EntityValidator.validateDirectoryFromMap(dir, content)
                 .isEmpty;
