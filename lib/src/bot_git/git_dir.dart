@@ -252,7 +252,7 @@ class GitDir {
     }
 
     if(_gitWorkTree != null) {
-      list.insertRange(0, 1, '$_workTreeArg${_gitWorkTree.toNativePath()}');
+      list.insert(0, '$_workTreeArg${_gitWorkTree.toNativePath()}');
     }
 
     return Git.runGit(list, throwOnError: throwOnError, processWorkingDir: _processWorkingDir);

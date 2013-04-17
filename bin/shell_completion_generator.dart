@@ -72,8 +72,8 @@ void main() {
       // and a final newline
       print('');
     })
-    .catchError((AsyncError error) {
-      print(error.error);
+    .catchError((error) {
+      print(error);
       exit(1);
     });
 }

@@ -33,8 +33,7 @@ class Console {
     final headerInclude = includeHeader ? 1 : 0;
 
     final cells = new Array2d<String>(columns.length, source.length + headerInclude);
-    final maxWidths = new List<int>();
-    maxWidths.insertRange(0, columns.length, 0);
+    final maxWidths = new List<int>.filled(columns.length, 0);
 
     if(includeHeader) {
       // populate header first

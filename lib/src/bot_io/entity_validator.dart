@@ -1,6 +1,6 @@
 part of bot_io;
 
-class EntityValidator {
+abstract class EntityValidator {
 
   static Stream<String> validateFileStringContent(File entity,
       String targetContent) =>
@@ -62,6 +62,37 @@ class EntityValidator {
     }
   }
 
+  Stream<String> validateEntity(FileSystemEntity entity);
+}
+
+class EntityExistsValidator extends EntityValidator {
+  final FileSystemEntityType entityType;
+
+  EntityExistsValidator([this.entityType]);
+
+  @override
+  Stream<String> validateEntity(FileSystemEntity entity) {
+    return new Stream.fromIterable(_getValidation(entity));
+  }
+
+  List<String> _getValidation(FileSystemEntity entity) {
+    final theType = _getType(entity);
+    if(theType == null) {
+      return ['entity is nul'];
+    }
+  }
+
+  static FileSystemEntityType _getType(FileSystemEntity entity) {
+    if(entity is File) {
+      return FileSystemEntityType.FILE;
+    } else if(entity is Directory) {
+      return FileSystemEntityType.DIRECTORY;
+    } else if(entity is Link) {
+      return FileSystemEntityType.LINK;
+    } else {
+      return null;
+    }
+  }
 }
 
 Stream expandStream(Stream source, Stream convert(input), {Stream onDone()}) {
@@ -113,8 +144,8 @@ Stream _streamFromIterableFuture(Future<Iterable> future) {
         controller.add(value);
       }
     })
-    .catchError((AsyncError error) {
-      controller.addError(error.error, error.stackTrace);
+    .catchError((error) {
+      controller.addError(error, getAttachedStackTrace(error));
     })
     .whenComplete(() {
       controller.close();
