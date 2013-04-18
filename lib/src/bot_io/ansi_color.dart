@@ -16,12 +16,6 @@ class AnsiColor {
   static const AnsiColor BOLD = const AnsiColor._internal(null, 'bold', _srg: 1);
   static const AnsiColor RESET = const AnsiColor._internal(null, 'reset');
 
-  /**
-   * Use [foregroundId] instead.
-   */
-  @deprecated
-  int get id => foregroundId;
-
   final int foregroundId;
   final String name;
   final int _srg;
