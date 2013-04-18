@@ -2,48 +2,49 @@ part of test_bot_io;
 
 class TempDirTests {
 
-  static final _map = {'file1.txt': 'content',
-               'file2.txt': 'content2',
-               'empty dir': {
-               },
-               'dir1': {
-                 'dir1_file1.txt': 'and content some more'
-               }
-  };
+  static final _map = {
+                       'file1.txt': 'content',
+                       'file2.txt': 'content2',
+                       'empty dir': { },
+                       'dir1': {'dir1_file1.txt': 'and content some more'} };
 
-  static final mapFewer = {'file1.txt': 'content',
-               'empty dir': {
-                 },
-               'dir1': {
-                 'dir1_file1.txt': 'and content some more'
-               }
-               };
+  static final _mapFewer = {
+                           'file1.txt': 'content',
+                           'empty dir': { },
+                           'dir1': {'dir1_file1.txt': 'and content some more'}
+                           };
 
-  static final mapMore = {'file1.txt': 'content',
-               'file2.txt': 'content2',
-               'empty dir': {
-                 'file3.txt': 'content3'
-                 },
-               'dir1': {
-                 'dir1_file1.txt': 'and content some more'
-               }
-               };
+  static final _mapMore = {
+                          'file1.txt': 'content',
+                          'file2.txt': 'content2',
+                          'empty dir': { 'file3.txt': 'content3' },
+                           'dir1': { 'dir1_file1.txt': 'and content some more'}
+                          };
 
-  static final mapDiff = {'file1.txt': 'content_',
-               'file2.txt': 'content2',
-               'empty dir': {
-                 },
-               'dir1': {
-                 'dir1_file1.txt': 'and content some more'
-               }
-               };
+  static final _mapDiff = {
+                          'file1.txt': 'content_',
+                          'file2.txt': 'content2',
+                          'empty dir': { },
+                          'dir1': { 'dir1_file1.txt': 'and content some more'}
+                          };
 
   static void register() {
     test('good match', () => _testTempDirPopulate(_map, _map, true));
-    test('too few', () => _testTempDirPopulate(_map, mapFewer, false));
-    test('too many', () => _testTempDirPopulate(_map, mapMore, false));
-    test('different', () => _testTempDirPopulate(_map, mapDiff, false));
+    test('too few', () => _testTempDirPopulate(_map, _mapFewer, false));
+    test('too many', () => _testTempDirPopulate(_map, _mapMore, false));
+    test('different', () => _testTempDirPopulate(_map, _mapDiff, false));
     test('empty', () => _testTempDirPopulate(_map, {}, false));
+
+    test('empty to empty', () => _testTempDirPopulate({}, {}, true));
+
+    test('one file to one file', () => _testTempDirPopulate(
+        {'a.txt': 'a'}, {'a.txt': 'a'}, true));
+
+    test('same name, different content', () => _testTempDirPopulate(
+        {'a.txt': 'a'}, {'a.txt': 'b'}, false));
+
+    test('diff name, same content', () => _testTempDirPopulate(
+        {'a.txt': 'a'}, {'b.txt': 'a'}, false));
   }
 }
 
