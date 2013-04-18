@@ -1,7 +1,8 @@
 part of test_bot_io;
 
-Future _testTempDirPopulate() {
-  final map = {'file1.txt': 'content',
+class TempDirTests {
+
+  static final _map = {'file1.txt': 'content',
                'file2.txt': 'content2',
                'empty dir': {
                },
@@ -10,8 +11,7 @@ Future _testTempDirPopulate() {
                }
   };
 
-
-  final mapFewer = {'file1.txt': 'content',
+  static final mapFewer = {'file1.txt': 'content',
                'empty dir': {
                  },
                'dir1': {
@@ -19,7 +19,7 @@ Future _testTempDirPopulate() {
                }
                };
 
-  final mapMore = {'file1.txt': 'content',
+  static final mapMore = {'file1.txt': 'content',
                'file2.txt': 'content2',
                'empty dir': {
                  'file3.txt': 'content3'
@@ -29,7 +29,7 @@ Future _testTempDirPopulate() {
                }
                };
 
-  final mapDiff = {'file1.txt': 'content_',
+  static final mapDiff = {'file1.txt': 'content_',
                'file2.txt': 'content2',
                'empty dir': {
                  },
@@ -38,10 +38,16 @@ Future _testTempDirPopulate() {
                }
                };
 
-  final mapEmpty = {};
+  static void register() {
+    test('good match', () => _testTempDirPopulate(_map, _map, true));
+    test('too few', () => _testTempDirPopulate(_map, mapFewer, false));
+    test('too many', () => _testTempDirPopulate(_map, mapMore, false));
+    test('different', () => _testTempDirPopulate(_map, mapDiff, false));
+    test('empty', () => _testTempDirPopulate(_map, {}, false));
+  }
+}
 
-  final badMatchMaps = [mapFewer, mapMore, mapDiff, mapEmpty];
-
+Future _testTempDirPopulate(Map source, Map target, bool shouldWork) {
 
   TempDir tempDir = null;
 
@@ -52,25 +58,17 @@ Future _testTempDirPopulate() {
         tempDir = td;
 
 
-        final populater = new MapDirectoryPopulater(map);
+        final populater = new MapDirectoryPopulater(source);
         return tempDir.populate(populater);
       })
       .then((TempDir value) {
         expect(value, equals(tempDir));
-        return tempDir.verifyContents(map);
+        return tempDir.verifyContents(target);
       })
       .then((bool expectTrue) {
-        expect(expectTrue, isTrue, reason: 'should match the provided map');
-
-        return Future.forEach(badMatchMaps, (m) {
-          return tempDir.verifyContents(m)
-              .then((bool isMatch) {
-                expect(isMatch, isFalse);
-              });
-        });
+        expect(expectTrue, shouldWork, reason: 'should match the provided map');
       })
       .then((_) {
-
         tempDir.dispose();
         expect(tempDir.dir.existsSync(), isFalse, reason: 'Temp dir should be deleted');
         tempDir = null;

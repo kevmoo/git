@@ -13,7 +13,9 @@ part 'temp_dir_tests.dart';
 
 void main() {
   group('bot_io', () {
-    test('temp dir populate', _testTempDirPopulate);
+    group('temp dir and validate', () {
+      TempDirTests.register();
+    });
 
     _registerCompletionTests();
   });
