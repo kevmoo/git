@@ -45,6 +45,41 @@ class TempDirTests {
 
     test('diff name, same content', () => _testTempDirPopulate(
         {'a.txt': 'a'}, {'b.txt': 'a'}, false));
+
+    group('entity exists', () {
+
+      // TODO: test links
+
+      final dummyValues = new Map<FileSystemEntityType, dynamic>();
+      dummyValues[FileSystemEntityType.FILE] = 'file contents';
+      dummyValues[FileSystemEntityType.DIRECTORY] = {'dirfile.txt': 'txt'};
+
+      const entityTypes = const [FileSystemEntityType.DIRECTORY,
+                                 FileSystemEntityType.FILE,
+                                 FileSystemEntityType.LINK,
+                                 null];
+
+      dummyValues.forEach((type, value) {
+        entityTypes.forEach((testType) {
+
+          String testTypeStr = testType == null ? 'entity' : testType.toString();
+
+          test('$type is $testTypeStr', () {
+            final createMap = new Map();
+            createMap['entity'] = value;
+
+            final testMap = new Map();
+            testMap['entity'] = new EntityExistsValidator(testType);
+
+            return _testTempDirPopulate(createMap, testMap,
+                testType == null || testType == type);
+          });
+
+        });
+
+      });
+
+    });
   }
 }
 
@@ -57,7 +92,6 @@ Future _testTempDirPopulate(Map source, Map target, bool shouldWork) {
       .then((TempDir td) {
         assert(tempDir == null);
         tempDir = td;
-
 
         final populater = new MapDirectoryPopulater(source);
         return tempDir.populate(populater);

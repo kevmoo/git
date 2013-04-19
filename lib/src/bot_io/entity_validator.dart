@@ -53,7 +53,9 @@ abstract class EntityValidator {
   }
 
   static Stream<String> validate(FileSystemEntity entity, dynamic target) {
-    if(target is String) {
+    if(target is EntityValidator) {
+      return target.validateEntity(entity);
+    } else if(target is String) {
       return validateFileStringContent(entity, target);
     } else if(target is Map) {
       return validateDirectoryFromMap(entity, target);
@@ -65,32 +67,57 @@ abstract class EntityValidator {
   Stream<String> validateEntity(FileSystemEntity entity);
 }
 
-class EntityExistsValidator extends EntityValidator {
+class EntityExistsValidator implements EntityValidator {
   final FileSystemEntityType entityType;
 
-  EntityExistsValidator([this.entityType]);
+  EntityExistsValidator([this.entityType]) {
+    assert(entityType != FileSystemEntityType.NOT_FOUND);
+  }
 
   @override
   Stream<String> validateEntity(FileSystemEntity entity) {
-    return new Stream.fromIterable(_getValidation(entity));
+    assert(entity != null);
+    return _streamFromIterableFuture(_getValidation(entity));
   }
 
-  List<String> _getValidation(FileSystemEntity entity) {
-    final theType = _getType(entity);
-    if(theType == null) {
-      return ['entity is nul'];
+  Future<List<String>> _getValidation(FileSystemEntity entity) {
+    assert(entity != null);
+
+    final entType = _getType(entity);
+    if(entityType == null || entityType == entType) {
+      return _exists(entity)
+          .then((bool exists) {
+            if(exists) {
+              return [];
+            }
+            return ["$entity does not exist on disk"];
+          });
     }
+
+    return new Future.value(["Expected $entity to be $entityType,"
+                             " but it is $entType"]);
+  }
+
+  static Future<bool> _exists(FileSystemEntity entity) {
+    if(entity is Directory) {
+      return entity.exists();
+    } else if(entity is File) {
+      return entity.exists();
+    } else if(entity is Link) {
+      return entity.exists();
+    }
+    throw 'entity $entity is not supported';
   }
 
   static FileSystemEntityType _getType(FileSystemEntity entity) {
+    assert(entity != null);
     if(entity is File) {
       return FileSystemEntityType.FILE;
     } else if(entity is Directory) {
       return FileSystemEntityType.DIRECTORY;
-    } else if(entity is Link) {
-      return FileSystemEntityType.LINK;
     } else {
-      return null;
+      assert(entity is Link);
+      return FileSystemEntityType.LINK;
     }
   }
 }
@@ -152,7 +179,6 @@ Stream _streamFromIterableFuture(Future<Iterable> future) {
     });
 
   return controller.stream;
-
 }
 
 String _getStringSha1(String content) {

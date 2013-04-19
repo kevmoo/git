@@ -1,6 +1,7 @@
 library test_bot_io;
 
 import 'dart:async';
+import 'dart:io';
 import 'package:unittest/unittest.dart';
 import 'package:args/args.dart';
 import 'package:logging/logging.dart';
