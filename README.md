@@ -1,30 +1,26 @@
-![BOT!](https://raw.github.com/kevmoo/bot.dart/master/resource/logo.png)
+![BOT!](https://raw.github.com/kevmoo/bot_io.dart/master/resource/logo.png)
 # The Dart Bag-of-Tricks
 ## A collection of (mostly) general libraries to make working with [Dart](http://www.dartlang.org/) more productive.
 
 Starting by porting bits of the [PL javascript library](https://github.com/thinkpixellab/pl) and Google's [Closure javascript library](https://developers.google.com/closure/library/) to enable some interesting scenarios.
 
-[![](https://drone.io/kevmoo/bot.dart/status.png)](https://drone.io/kevmoo/bot.dart/latest)
+[![Build Status](https://drone.io/github.com/kevmoo/bot_io.dart/status.png)](https://drone.io/github.com/kevmoo/bot_io.dart/latest)
 
-# Projects using BOT
+# Projects using bot_io
 
-* [chrome.dart](https://github.com/dart-gde/chrome.dart) - Dart interop with chrome.* APIs for Chrome Packaged Apps
-* [Pop, Pop, Win!](https://github.com/dart-lang/pop-pop-win) - Minesweeper with balloons
-* [qr.dart](https://github.com/kevmoo/qr.dart) - Generate QR codes
-* [vote.dart](https://github.com/kevmoo/vote.dart) - Simulate, run, and calculate elections with different election methods
-* [Dart Widgets](https://github.com/kevmoo/widget.dart) - Reusable Web Components
+* [Hop: Dark Task Framework](https://github.com/kevmoo/hop.dart)
 
 # Try It Now
 
 The __Dart Bag-of-Tricks__ ( __BOT__ ) is hosted on [pub.dartlang.org](http://pub.dartlang.org/packages/bot). Add the __BOT__ package to your `pubspec.yaml` file, selecting a version range that works with your version of the SDK. _Always check the [BOT page](http://pub.dartlang.org/packages/bot) on pub to find the latest release._
 
-See the [changelog](https://github.com/kevmoo/bot.dart/blob/master/changelog.md) to find the version that works best for you.
+See the [changelog](https://github.com/kevmoo/bot_io.dart/blob/master/changelog.md) to find the version that works best for you.
 
-If you'd like to track bleeding edge developments, you can reference the the [GitHub repository](https://github.com/kevmoo/bot.dart) directly:
+If you'd like to track bleeding edge developments, you can reference the the [GitHub repository](https://github.com/kevmoo/bot_io.dart) directly:
 ```yaml
 dependencies:
   bot:
-    git: https://github.com/kevmoo/bot.dart.git
+    git: https://github.com/kevmoo/bot_io.dart.git
 ```
 
 # Versioning

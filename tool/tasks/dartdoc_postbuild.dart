@@ -110,12 +110,12 @@ Element _getAboutElement() {
     ..attributes['title'] = 'Dart Bag of Tricks';
 
   final logoLink = new Element.tag('a')
-    ..attributes['href'] = 'https://github.com/kevmoo/bot.dart'
+    ..attributes['href'] = 'https://github.com/kevmoo/bot_io.dart'
     ..children.add(logo);
 
   final ghLink = new Element.tag('a')
-  ..attributes['href'] = 'https://github.com/kevmoo/bot.dart'
-  ..innerHtml = 'github.com/kevmoo/bot.dart';
+  ..attributes['href'] = 'https://github.com/kevmoo/bot_io.dart'
+  ..innerHtml = 'github.com/kevmoo/bot_io.dart';
 
 
   return new Element.tag('div')
