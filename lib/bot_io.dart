@@ -19,6 +19,7 @@ part 'src/bot_io/console.dart';
 part 'src/bot_io/directory_populater.dart';
 part 'src/bot_io/entity_validator.dart';
 part 'src/bot_io/io_helpers.dart';
+part 'src/bot_io/sha_and_comparison.dart';
 part 'src/bot_io/shell_string.dart';
 part 'src/bot_io/temp_dir.dart';
 

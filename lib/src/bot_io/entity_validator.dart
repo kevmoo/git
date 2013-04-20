@@ -13,7 +13,7 @@ abstract class EntityValidator {
     assert(targetSha != null);
     assert(targetSha.length == 40);
 
-    var future = _getSha1String(entity)
+    var future = fileSha1Hex(entity)
         .then((String sha1) {
           if(sha1 == targetSha) {
             return [];
@@ -188,22 +188,3 @@ String _getStringSha1(String content) {
   final sha1Bytes = sha.close();
   return crypto.CryptoUtils.bytesToHex(sha1Bytes);
 }
-
-Future<List<int>> _getFileSha1(File source) {
-  final completer = new Completer<List<int>>();
-
-  final sha1 = new crypto.SHA1();
-
-  source.openRead()
-    .listen((List<int> data) {
-      sha1.add(data);
-    },
-    onDone: () {
-      completer.complete(sha1.close());
-    });
-
-  return completer.future;
-}
-
-Future<String> _getSha1String(File source) =>
-  _getFileSha1(source).then(crypto.CryptoUtils.bytesToHex);
