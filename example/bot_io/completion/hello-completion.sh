@@ -57,6 +57,6 @@ fi
 
 ###-end-hello.dart-completion-###
 
-## Generated 2013-03-02 00:41:19.959Z
-## By /Users/kevin/source/github/bot.dart/bin/shell-completion-generator
+## Generated 2013-04-20 19:10:04.794Z
+## By /Users/kevin/source/github/bot_io.dart/bin/shell-completion-generator
 
