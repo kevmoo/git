@@ -3,8 +3,9 @@ part of bot_io;
 abstract class EntityValidator {
 
   static Stream<String> validateFileStringContent(File entity,
-      String targetContent) =>
-          validateFileContentSha(entity, _getStringSha1(targetContent));
+      String targetContent) {
+    return validateFileContentSha(entity, _getStringSha1(targetContent));
+  }
 
   static Stream<String> validateFileContentSha(File entity, String targetSha) {
     if(entity is! File) {
@@ -122,6 +123,9 @@ class EntityExistsValidator implements EntityValidator {
   }
 }
 
+// TODO: move to bot?
+// TODO: should this use pause/resume? Maybe? Likely?
+// TODO: test!
 Stream expandStream(Stream source, Stream convert(input), {Stream onDone()}) {
   final controller = new StreamController();
 
@@ -150,6 +154,7 @@ Stream expandStream(Stream source, Stream convert(input), {Stream onDone()}) {
   return controller.stream;
 }
 
+// TODO: move to bot?
 Future _pipeStreamToController(StreamController controller, Stream input) {
   final completer = new Completer();
 
@@ -162,6 +167,7 @@ Future _pipeStreamToController(StreamController controller, Stream input) {
   return completer.future;
 }
 
+// TODO: move to bot?
 Stream _streamFromIterableFuture(Future<Iterable> future) {
   final controller = new StreamController();
 
