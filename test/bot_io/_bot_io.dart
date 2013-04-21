@@ -13,6 +13,7 @@ import 'completion_tests_args.dart';
 part 'completion_tests.dart';
 part 'temp_dir_tests.dart';
 part 'sha_file_tests.dart';
+part 'entity_populater_tests.dart';
 
 void main() {
   group('bot_io', () {
@@ -25,5 +26,7 @@ void main() {
     group('sha1 file tests', () {
       ShaFileTests.register();
     });
+
+    group('EntityPopulator', _registerEntityPopulaterTests);
   });
 }
