@@ -38,29 +38,24 @@ class MapDirectoryPopulater extends DirectoryPopulater {
     return Future.forEach(content.keys, (String key) {
       final v = content[key];
 
+      final newItemPath = pathos.join(dir.path, key);
+
       if(v is Map) {
-        return _createDirAndPopulate(dir, key, v);
+        return _createDirAndPopulate(newItemPath, v);
       } else if(v is String) {
-        return _createFile(dir, key, v);
+        return EntityPopulater.populate(newItemPath, v,
+            createParentDirectories: false, overwriteExisting: false);
       } else {
         throw 'value for $key was $v - expected Map or String';
       }
-    }).then((obj) {
+    }).then((_) {
       return dir;
     });
   }
 
-  static Future<File> _createFile(Directory parent, String name, String content) {
-    final filePath = new Path(parent.path).append(name);
-    final file = new File.fromPath(filePath);
-    assert(!file.existsSync());
-    return file.writeAsString(content);
-  }
-
   // TODO: should pass in a flag to check for directory existing...and what to do
-  static Future<Directory> _createDirAndPopulate(Directory parent, String name, Map<String, dynamic> content) {
-    final subDirPath = new Path(parent.path).append(name);
-    final subDir = new Directory.fromPath(subDirPath);
+  static Future<Directory> _createDirAndPopulate(String newItemPath, Map<String, dynamic> content) {
+    final subDir = new Directory(newItemPath);
     return subDir.create()
         .then((theNewDir) {
           assert(theNewDir == subDir);
