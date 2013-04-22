@@ -93,6 +93,7 @@ Future _testFileFromString(bool createParent, bool overwriteExisting,
             overwriteExisting: overwriteExisting);
       })
       .then((File file) {
+        expect(file.path, equals(absolutePath));
         expect(FileSystemEntity.typeSync(file.path, followLinks: false),
             FileSystemEntityType.FILE);
 
