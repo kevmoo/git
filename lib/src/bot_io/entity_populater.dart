@@ -6,18 +6,28 @@ abstract class EntityPopulater {
       {bool createParentDirectories: false, bool overwriteExisting: false}) {
 
     if(source is String) {
-      return _populateFileWithStringContent(path, source,
+      var stringStream = new Stream.fromIterable([source]);
+      var encoder = new StringEncoder();
+      source = encoder.bind(stringStream);
+    } else if(source is File) {
+      source = source.openRead();
+    }
+
+    if(source is Stream) {
+      return _populateFileWithStream(path, source,
           createParentDirectories: createParentDirectories,
           overwriteExisting: overwriteExisting);
     }
 
+    throw "Don't know how to populate from '$source'...yet?";
   }
 
   Future<FileSystemEntity> populatePath(String path,
       {bool createParentDirectories: false, bool overwriteExisting: false});
 
 
-  static Future<File> _populateFileWithStringContent(String path, String content,
+  static Future<File> _populateFileWithStream(String path,
+      Stream<List<int>> content,
       {bool createParentDirectories: false, bool overwriteExisting: false}) {
 
     final dirName = pathos.dirname(path);
@@ -59,7 +69,11 @@ abstract class EntityPopulater {
         })
         .then((_) {
           var file = new File(path);
-          return file.writeAsString(content);
+          return file.openWrite()
+              .addStream(content)
+              .then((_) {
+                return file;
+              });
         });
 
   }
