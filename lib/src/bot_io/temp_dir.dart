@@ -1,7 +1,9 @@
 part of bot_io;
 
-class TempDir extends DisposableImpl {
+class TempDir {
   final Directory dir;
+
+  bool _disposed = false;
 
   static Future<TempDir> create() {
     final startDir = new Directory('');
@@ -15,6 +17,8 @@ class TempDir extends DisposableImpl {
   }
 
   String get path => dir.path;
+
+  bool get isDisposed => _disposed;
 
   Future<TempDir> populate(DirectoryPopulater populater) {
     return populater.populate(dir)
@@ -34,10 +38,14 @@ class TempDir extends DisposableImpl {
 
   String toString() => "TempDir: $path";
 
-  @protected
-  void disposeInternal() {
-    assert(dir.existsSync());
-    dir.deleteSync(recursive: true);
-    assert(!dir.existsSync());
+  Future dispose() {
+    require(_disposed == false, 'Already disposed ore in the process of being'
+        ' disposed.');
+    _disposed = null;
+    return dir.delete(recursive: true)
+        .then((_) {
+          _disposed = true;
+          return null;
+        });
   }
 }

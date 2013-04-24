@@ -104,7 +104,9 @@ Future _testTempDirPopulate(Map source, Map target, bool shouldWork) {
         expect(expectTrue, shouldWork, reason: 'should match the provided map');
       })
       .then((_) {
-        tempDir.dispose();
+        return tempDir.dispose();
+      })
+      .then((_) {
         expect(tempDir.dir.existsSync(), isFalse, reason: 'Temp dir should be deleted');
         tempDir = null;
       });

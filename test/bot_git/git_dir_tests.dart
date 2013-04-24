@@ -158,7 +158,7 @@ Future _testPopulateBranch() {
       })
       .whenComplete(() {
         if(td1 != null) {
-          td1.dispose();
+          return td1.dispose();
         }
       });
 }
@@ -208,7 +208,7 @@ Future<Tuple<Commit, int>> _testPopulateBranchCore(GitDir gitDir, String branchN
     })
     .whenComplete(() {
       if(implTempDir != null) {
-        expect(implTempDir.isDisposed, true);
+        expect(implTempDir.isDisposed, true, reason: 'The temp dir $implTempDir should be disposed');
         expect(implTempDir.dir.existsSync(), false);
       }
     });
@@ -345,10 +345,13 @@ Future _testWriteObjects() {
       expect(hashes.length, equals(_initialContentMap.length));
 
 
-    }).whenComplete(() {
+    })
+    .whenComplete(() {
       if(tempGitDir != null) {
-        tempGitDir.dispose();
+        return tempGitDir.dispose();
       }
+    })
+    .whenComplete(() {
       if(tempContent != null) {
         tempContent.dispose();
       }

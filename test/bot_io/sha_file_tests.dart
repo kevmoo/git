@@ -55,7 +55,9 @@ class ShaFileTests {
           expect(shouldMatch, isTrue);
         })
         .then((_) {
-          tempDir.dispose();
+          return tempDir.dispose();
+        })
+        .then((_) {
           expect(tempDir.dir.existsSync(), isFalse, reason: 'Temp dir should be deleted');
           tempDir = null;
         });

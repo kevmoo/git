@@ -335,7 +335,7 @@ class GitDir {
         })
         .whenComplete(() {
           if(tempDirs != null) {
-            tempDirs.dispose();
+            return tempDirs.dispose();
           }
         });
   }
@@ -514,9 +514,8 @@ class _TempDirs {
 
   String toString() => [gitHostDir, gitWorkTreeDir].toString();
 
-  void dispose() {
-    gitHostDir.dispose();
-    gitWorkTreeDir.dispose();
+  Future dispose() {
+    return Future.wait([gitHostDir.dispose(), gitWorkTreeDir.dispose()]);
   }
 }
 
