@@ -1,6 +1,12 @@
 # Changelog - Dart Bag of Tricks - IO
 
-## 0.20.3-dev *pre-release* (SDK 0.4.7+5 r21658)
+## 0.21.0 2013-04-29 (SDK 0.5.1.0 r22072)
+
+## bot_io
+
+* **BREAKING** `TempDir.dispose` is now async -- returns a `Future`
+* **DEPRECATED** `DirectoryPopulater` and `MapDirecotryPopulater`
+* **NEW!** `EntityPopulater`
 
 ## 0.20.2 2013-04-20 (SDK 0.4.7+5 r21658)
 
