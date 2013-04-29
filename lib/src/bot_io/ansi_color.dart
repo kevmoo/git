@@ -29,7 +29,7 @@ class AnsiColor {
     if(isBold) {
       return this;
     } else {
-      return new AnsiColor._internal(foregroundId, name, _srg: 1);
+      return new AnsiColor._internal(foregroundId, name, srg: 1);
     }
   }
 

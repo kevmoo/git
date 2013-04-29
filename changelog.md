@@ -1,5 +1,13 @@
 # Changelog - Dart Bag of Tricks - IO
 
+## 0.21.0+2 2013-04-29 (SDK 0.5.1.0 r22072)
+
+## bot_io
+
+* Another oops in `AnsiColor`
+* Un-deprecated `DirectoryPopulater` and `MapDirecotryPopulater`
+    * `EntityPopulator` isn't there yet...
+
 ## 0.21.0+1 2013-04-29 (SDK 0.5.1.0 r22072)
 
 ## bot_io
