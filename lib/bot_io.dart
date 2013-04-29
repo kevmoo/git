@@ -28,7 +28,7 @@ part 'src/bot_io/temp_dir.dart';
  * When called, a listener is added to the root [Logger] and all output is
  * appended to a log file named "`new Options().script`.log".
  *
- * The format: [LogRecord.time] 'tab' [LogRecord.level] 'tab' [LogRecord.loggerName] 'tab' [LoggerRecord.message]
+ * The format: [LogRecord.time] 'tab' [LogRecord.level] 'tab' [LogRecord.loggerName] 'tab' [LogRecord.message]
  */
 void enableScriptLogListener() {
   if(_scriptLogListenerPath == null) {

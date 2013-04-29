@@ -22,7 +22,8 @@ class AnsiColor {
 
   bool get isBold => _srg == 1;
 
-  const AnsiColor._internal(this.foregroundId, this.name, {this._srg: 0});
+  const AnsiColor._internal(this.foregroundId, this.name, {int srg: 0}) :
+    this._srg = srg;
 
   AnsiColor asBold() {
     if(isBold) {
