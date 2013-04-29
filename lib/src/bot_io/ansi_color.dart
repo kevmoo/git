@@ -13,7 +13,7 @@ class AnsiColor {
   static const AnsiColor CYAN = const AnsiColor._internal(6, 'cyan');
   static const AnsiColor GRAY = const AnsiColor._internal(7, 'gray');
   static const AnsiColor LIGHT_RED = const AnsiColor._internal(91, 'light red');
-  static const AnsiColor BOLD = const AnsiColor._internal(null, 'bold', _srg: 1);
+  static const AnsiColor BOLD = const AnsiColor._internal(null, 'bold', srg: 1);
   static const AnsiColor RESET = const AnsiColor._internal(null, 'reset');
 
   final int foregroundId;

@@ -1,5 +1,11 @@
 # Changelog - Dart Bag of Tricks - IO
 
+## 0.21.0+1 2013-04-29 (SDK 0.5.1.0 r22072)
+
+## bot_io
+
+* Oops in `AnsiColor`
+
 ## 0.21.0 2013-04-29 (SDK 0.5.1.0 r22072)
 
 ## bot_io
