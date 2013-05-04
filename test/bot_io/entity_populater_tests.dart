@@ -97,9 +97,6 @@ Future _testFileFromString(bool createParent, bool overwriteExisting,
         expect(FileSystemEntity.typeSync(file.path, followLinks: false),
             FileSystemEntityType.FILE);
 
-        // TODO: actually check to see if the file is really a file
-        // ... and not a sym link
-
         return EntityValidator.validateFileStringContent(file, _fileContent)
             .isEmpty;
       })
