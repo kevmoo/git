@@ -14,9 +14,9 @@ abstract class EntityPopulater {
     }
 
     if(source is Stream) {
-      return _populateFileWithStream(path, source,
-          createParentDirectories: createParentDirectories,
-          overwriteExisting: overwriteExisting);
+      return _ensurePath(path, createParentDirectories: createParentDirectories,
+          overwriteExisting: overwriteExisting)
+          .then((_) => _populateFileWithStream(path, source));
     }
 
     throw "Don't know how to populate from '$source'...yet?";
@@ -25,9 +25,21 @@ abstract class EntityPopulater {
   Future<FileSystemEntity> populatePath(String path,
       {bool createParentDirectories: false, bool overwriteExisting: false});
 
-
+  /**
+   * We assume [_ensurePath] has been called first.
+   */
   static Future<File> _populateFileWithStream(String path,
-      Stream<List<int>> content,
+      Stream<List<int>> content) {
+
+    var file = new File(path);
+    return file.openWrite()
+        .addStream(content)
+        .then((_) {
+          return file;
+        });
+  }
+
+  static Future _ensurePath(String path,
       {bool createParentDirectories: false, bool overwriteExisting: false}) {
 
     final dirName = pathos.dirname(path);
@@ -66,16 +78,7 @@ abstract class EntityPopulater {
           if(!parentDirExists && createParentDirectories) {
             return parentDir.create(recursive: true);
           }
-        })
-        .then((_) {
-          var file = new File(path);
-          return file.openWrite()
-              .addStream(content)
-              .then((_) {
-                return file;
-              });
         });
-
   }
 }
 
