@@ -17,6 +17,10 @@ abstract class EntityPopulater {
       return _ensurePath(path, createParentDirectories: createParentDirectories,
           overwriteExisting: overwriteExisting)
           .then((_) => _populateFileWithStream(path, source));
+    } else if(source is Map) {
+      return _ensurePath(path, createParentDirectories: createParentDirectories,
+          overwriteExisting: overwriteExisting)
+          .then((_) => _populateDirWithMap(path, source));
     }
 
     throw "Don't know how to populate from '$source'...yet?";
@@ -37,6 +41,28 @@ abstract class EntityPopulater {
         .then((_) {
           return file;
         });
+  }
+
+  /**
+   * We assume [_ensurePath] has been called first.
+   */
+  static Future<Directory> _populateDirWithMap(String path,
+      Map<String, dynamic> content) {
+
+    var dir = new Directory(path);
+
+    // calling _ensurePath *should* ensure the parent dir is created
+    return dir.create(recursive: false)
+        .then((_) {
+          return Future.forEach(content.keys, (String entityName) {
+            // TODO: assert entityName has no path characters, right?
+
+            var entityPath = pathos.join(path, entityName);
+            return populate(entityPath, content[entityName]);
+
+          });
+        })
+        .then((_) => dir);
   }
 
   static Future _ensurePath(String path,
@@ -65,6 +91,9 @@ abstract class EntityPopulater {
                   case FileSystemEntityType.LINK:
                     final link = new Link(path);
                     return link.delete();
+                  case FileSystemEntityType.FILE:
+                    final file = new File(path);
+                    return file.delete();
                 }
 
               } else {

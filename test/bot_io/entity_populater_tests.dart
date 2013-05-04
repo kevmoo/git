@@ -4,9 +4,22 @@ const _entityTypes = const [null, FileSystemEntityType.FILE,
                             FileSystemEntityType.DIRECTORY,
                             FileSystemEntityType.LINK];
 
+const _dirMap = const {
+  'file.txt': 'content text',
+  'file2.txt': 'content 2 text',
+  'dir1' : const {
+    'subfile': 'subFileContent',
+    'emptySubSubDir': const {}
+  },
+  'emptySubDir': const {}
+};
+
 void _registerEntityPopulaterTests() {
   _registerEntityPopulaterTestsImpl(FileSystemEntityType.FILE,
       'String', 'test string content');
+
+  _registerEntityPopulaterTestsImpl(FileSystemEntityType.DIRECTORY,
+      'Map', _dirMap);
 }
 
 void _registerEntityPopulaterTestsImpl(FileSystemEntityType type,
