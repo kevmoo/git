@@ -7,7 +7,8 @@ abstract class EntityValidator {
     return validateFileContentSha(entity, _getStringSha1(targetContent));
   }
 
-  static Stream<String> validateFileContentSha(File entity, String targetSha) {
+  static Stream<String> validateFileContentSha(FileSystemEntity entity,
+      String targetSha) {
     if(entity is! File) {
       return new Stream.fromIterable(['entity is not a File']);
     }
@@ -26,7 +27,7 @@ abstract class EntityValidator {
     return _streamFromIterableFuture(future);
   }
 
-  static Stream<String> validateDirectoryFromMap(Directory entity,
+  static Stream<String> validateDirectoryFromMap(FileSystemEntity entity,
       Map<String, dynamic> map) {
     if(entity is! Directory) {
       return new Stream.fromIterable(['entity is not a Directory']);
