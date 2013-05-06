@@ -8,7 +8,7 @@ class IoHelpers {
     return dir.exists()
         .then((bool doesExist) {
           if(!doesExist) {
-            return new Future.value(false);
+            return false;
           } else {
             // Would rather be using .isEmpty here, but we have a
             // DARTBUG

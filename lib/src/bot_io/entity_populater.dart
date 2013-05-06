@@ -55,11 +55,9 @@ abstract class EntityPopulater {
       Stream<List<int>> content) {
 
     var file = new File(path);
-    return file.openWrite()
-        .addStream(content)
-        .then((_) {
-          return file;
-        });
+
+    return content.pipe(file.openWrite())
+      .then((_) => file);
   }
 
   /**
