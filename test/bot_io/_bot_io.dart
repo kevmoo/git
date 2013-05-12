@@ -14,6 +14,7 @@ part 'completion_tests.dart';
 part 'temp_dir_tests.dart';
 part 'sha_file_tests.dart';
 part 'entity_populater_tests.dart';
+part 'update_directory_tests.dart';
 
 void main() {
   group('bot_io', () {
@@ -27,6 +28,9 @@ void main() {
       ShaFileTests.register();
     });
 
-    group('EntityPopulator', _registerEntityPopulaterTests);
+    group('EntityPopulator', () {
+      _registerEntityPopulaterTests();
+      _registerUpdateDirectoryTests();
+    });
   });
 }

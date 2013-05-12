@@ -3,7 +3,8 @@ part of bot_io;
 abstract class EntityPopulater {
 
   static Future<FileSystemEntity> populate(String path, dynamic source,
-      {bool createParentDirectories: false, bool overwriteExisting: false}) {
+      {bool createParentDirectories: false, bool overwriteExisting: false,
+    bool leaveExistingDirs: false}) {
 
     if(source is String) {
       var stringStream = new Stream.fromIterable([source]);
@@ -15,19 +16,37 @@ abstract class EntityPopulater {
 
     if(source is Stream) {
       return _ensurePath(path, createParentDirectories: createParentDirectories,
-          overwriteExisting: overwriteExisting)
+          overwriteExisting: overwriteExisting,
+          leaveExistingDir: leaveExistingDirs)
           .then((_) => _populateFileWithStream(path, source));
     } else if(source is Map) {
       return _ensurePath(path, createParentDirectories: createParentDirectories,
-          overwriteExisting: overwriteExisting)
-          .then((_) => _populateDirWithMap(path, source));
+          overwriteExisting: overwriteExisting,
+          leaveExistingDir: leaveExistingDirs)
+          .then((_) => _populateDirWithMap(path, source, overwriteExisting,
+              leaveExistingDirs));
     }
 
     throw "Don't know how to populate from '$source'...yet?";
   }
 
-  Future<FileSystemEntity> populatePath(String path,
-      {bool createParentDirectories: false, bool overwriteExisting: false});
+  static Future<Directory> updateDirectory(String path,
+      Map<String, dynamic> source) {
+    assert(path != null);
+    assert(source != null);
+
+    var existingDir = new Directory(path);
+
+    return existingDir.exists()
+        .then((bool exists) {
+          if(!exists) {
+            throw new EntityPopulatorException._internal('Expected directory to'
+                ' exist at $path', path);
+          }
+
+          return _populateDirWithMap(path, source, true, true);
+        });
+  }
 
   /**
    * We assume [_ensurePath] has been called first.
@@ -66,7 +85,8 @@ abstract class EntityPopulater {
   }
 
   static Future _ensurePath(String path,
-      {bool createParentDirectories: false, bool overwriteExisting: false}) {
+      {bool createParentDirectories: false, bool overwriteExisting: false,
+    bool leaveExistingDir: false}) {
 
     final dirName = pathos.dirname(path);
     var parentDir = new Directory(dirName);
@@ -86,8 +106,12 @@ abstract class EntityPopulater {
               if(overwriteExisting) {
                 switch(existingType) {
                   case FileSystemEntityType.DIRECTORY:
-                    final dir = new Directory(path);
-                    return dir.delete(recursive: true);
+                    if(leaveExistingDir) {
+                      return;
+                    } else {
+                      final dir = new Directory(path);
+                      return dir.delete(recursive: true);
+                    }
                   case FileSystemEntityType.LINK:
                     final link = new Link(path);
                     return link.delete();
@@ -97,8 +121,8 @@ abstract class EntityPopulater {
                 }
 
               } else {
-                  throw new EntityPopulatorException._internal(
-                      'Existing entity.', path);
+                throw new EntityPopulatorException._internal(
+                    'Existing entity.', path);
               }
             }
 
@@ -124,4 +148,3 @@ class EntityPopulatorException implements Exception {
   String toString() => 'EntityPopulatorException: $message\t$targetPath';
 }
 
-// TOOD: create new EntityPopulatorException
