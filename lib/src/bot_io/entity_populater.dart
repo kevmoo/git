@@ -66,7 +66,8 @@ abstract class EntityPopulater {
    * We assume [_ensurePath] has been called first.
    */
   static Future<Directory> _populateDirWithMap(String path,
-      Map<String, dynamic> content) {
+      Map<String, dynamic> content, bool overwriteExisting,
+      bool leaveExistingDir) {
 
     var dir = new Directory(path);
 
@@ -77,7 +78,9 @@ abstract class EntityPopulater {
             // TODO: assert entityName has no path characters, right?
 
             var entityPath = pathos.join(path, entityName);
-            return populate(entityPath, content[entityName]);
+            return populate(entityPath, content[entityName],
+                overwriteExisting: overwriteExisting,
+                leaveExistingDirs: leaveExistingDir);
 
           });
         })
