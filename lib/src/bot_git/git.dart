@@ -27,13 +27,7 @@ class Git {
   static Future<ProcessResult> runGit(List<String> args,
       {bool throwOnError: true, String processWorkingDir}) {
 
-    final processOptions = new ProcessOptions();
-    if(processWorkingDir != null) {
-      final nativeDir = new Path(processWorkingDir).toNativePath();
-      processOptions.workingDirectory = nativeDir;
-    }
-
-    return Process.run('git', args, processOptions)
+    return Process.run('git', args, workingDirectory: processWorkingDir)
         .then((ProcessResult pr) {
           if(throwOnError) {
             _throwIfProcessFailed(pr, 'git', args);

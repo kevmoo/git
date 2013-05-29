@@ -115,6 +115,8 @@ abstract class EntityPopulater {
                       final dir = new Directory(path);
                       return dir.delete(recursive: true);
                     }
+                    // DARTBUG: http://dartbug.com/6563
+                    break;
                   case FileSystemEntityType.LINK:
                     final link = new Link(path);
                     return link.delete();
