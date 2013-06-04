@@ -1,11 +1,11 @@
 library bot_io;
 
 import 'dart:async';
-import 'dart:crypto' as crypto;
 import 'dart:math' as math;
 import 'dart:io';
 import 'dart:utf' as utf;
 
+import 'package:crypto/crypto.dart' as crypto;
 import 'package:args/args.dart';
 import 'package:logging/logging.dart' as logging;
 import 'package:meta/meta.dart';

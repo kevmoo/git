@@ -1,5 +1,10 @@
 # Changelog - Dart Bag of Tricks - IO
 
+## 0.21.2 2013-06-04 (SDK 0.5.13.1 r23552)
+
+# Fixes for SDK 0.5.13.1
+# Crypto moved to a pub package
+
 ## 0.21.1 2013-05-28 (SDK 0.5.11.1 r23200)
 
 # Fixes for SDK 0.5.11.1
