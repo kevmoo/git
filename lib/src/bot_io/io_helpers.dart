@@ -10,8 +10,11 @@ class IoHelpers {
           if(!doesExist) {
             return new Future.value(false);
           } else {
+            // Would rather be using .isEmpty here, but we have a
+            // DARTBUG
+            // https://code.google.com/p/dart/issues/detail?id=10163
             return EntityValidator.validateDirectoryFromMap(dir, content)
-                .isEmpty;
+                .length.then((length) => length == 0);
           }
         });
   }
