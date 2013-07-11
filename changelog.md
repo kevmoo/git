@@ -1,5 +1,10 @@
 # Changelog - Dart Bag of Tricks - IO
 
+## 0.21.3 2013-07-11 (SDK 0.6.3.3 r24898)
+
+# Work-around for https://code.google.com/p/dart/issues/detail?id=10163
+# Other tiny tweaks
+
 ## 0.21.2 2013-06-04 (SDK 0.5.13.1 r23552)
 
 # Fixes for SDK 0.5.13.1
