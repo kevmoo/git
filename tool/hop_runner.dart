@@ -19,9 +19,9 @@ void main() {
   //
   // Analyzer
   //
-  addTask('analyze_libs', createDartAnalyzerTask(_getLibs));
+  addTask('analyze_libs', createAnalyzerTask(_getLibs));
 
-  addTask('analyze_test_libs', createDartAnalyzerTask(
+  addTask('analyze_test_libs', createAnalyzerTask(
       ['test/harness_console.dart']));
 
   runHop();
