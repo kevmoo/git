@@ -3,7 +3,7 @@ library tool.tasks.dartdoc;
 import 'dart:async';
 import 'dart:io';
 import 'package:hop/hop.dart';
-import 'package:pathos/path.dart' as path;
+import 'package:path/path.dart' as path;
 import 'package:html5lib/dom.dart';
 
 import 'shared.dart';

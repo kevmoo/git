@@ -9,7 +9,7 @@ import 'package:crypto/crypto.dart' as crypto;
 import 'package:args/args.dart';
 import 'package:logging/logging.dart' as logging;
 import 'package:meta/meta.dart';
-import 'package:pathos/path.dart' as pathos;
+import 'package:path/path.dart' as pathos;
 
 import 'package:bot/bot.dart';
 

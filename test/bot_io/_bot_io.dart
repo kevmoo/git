@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:unittest/unittest.dart';
 import 'package:args/args.dart';
 import 'package:logging/logging.dart';
-import 'package:pathos/path.dart' as pathos;
+import 'package:path/path.dart' as pathos;
 import 'package:bot_io/bot_io.dart';
 import 'package:bot/bot_test.dart';
 import 'completion_tests_args.dart';
