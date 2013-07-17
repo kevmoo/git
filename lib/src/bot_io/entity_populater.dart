@@ -98,36 +98,36 @@ abstract class EntityPopulater {
                 'Parent directory does not exist', path);
           } else if(parentDirExists) {
 
-            // shouldn't there be an async version of this?
-            var existingType =
-                FileSystemEntity.typeSync(path, followLinks: false);
+            return FileSystemEntity.type(path, followLinks: false)
+                .then((FileSystemEntityType existingType) {
 
-            if(existingType != FileSystemEntityType.NOT_FOUND) {
+                  if(existingType != FileSystemEntityType.NOT_FOUND) {
 
-              if(overwriteExisting) {
-                switch(existingType) {
-                  case FileSystemEntityType.DIRECTORY:
-                    if(leaveExistingDir) {
-                      return;
+                    if(overwriteExisting) {
+                      switch(existingType) {
+                        case FileSystemEntityType.DIRECTORY:
+                          if(leaveExistingDir) {
+                            return;
+                          } else {
+                            final dir = new Directory(path);
+                            return dir.delete(recursive: true);
+                          }
+                          // DARTBUG: http://dartbug.com/6563
+                          break;
+                        case FileSystemEntityType.LINK:
+                          final link = new Link(path);
+                          return link.delete();
+                        case FileSystemEntityType.FILE:
+                          final file = new File(path);
+                          return file.delete();
+                      }
+
                     } else {
-                      final dir = new Directory(path);
-                      return dir.delete(recursive: true);
+                      throw new EntityPopulatorException._internal(
+                          'Existing entity.', path);
                     }
-                    // DARTBUG: http://dartbug.com/6563
-                    break;
-                  case FileSystemEntityType.LINK:
-                    final link = new Link(path);
-                    return link.delete();
-                  case FileSystemEntityType.FILE:
-                    final file = new File(path);
-                    return file.delete();
-                }
-
-              } else {
-                throw new EntityPopulatorException._internal(
-                    'Existing entity.', path);
-              }
-            }
+                  }
+                });
 
           }
 
