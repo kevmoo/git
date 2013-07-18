@@ -93,8 +93,7 @@ Future _testTempDirPopulate(Map source, Map target, bool shouldWork) {
         assert(tempDir == null);
         tempDir = td;
 
-        final populater = new MapDirectoryPopulater(source);
-        return tempDir.populate(populater);
+        return tempDir.populate(source);
       })
       .then((TempDir value) {
         expect(value, equals(tempDir));

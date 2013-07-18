@@ -103,17 +103,15 @@ abstract class EntityPopulater {
 
                   if(existingType != FileSystemEntityType.NOT_FOUND) {
 
+                    if(leaveExistingDir && existingType == FileSystemEntityType.DIRECTORY) {
+                      return;
+                    }
+
                     if(overwriteExisting) {
                       switch(existingType) {
                         case FileSystemEntityType.DIRECTORY:
-                          if(leaveExistingDir) {
-                            return;
-                          } else {
-                            final dir = new Directory(path);
-                            return dir.delete(recursive: true);
-                          }
-                          // DARTBUG: http://dartbug.com/6563
-                          break;
+                          final dir = new Directory(path);
+                          return dir.delete(recursive: true);
                         case FileSystemEntityType.LINK:
                           final link = new Link(path);
                           return link.delete();

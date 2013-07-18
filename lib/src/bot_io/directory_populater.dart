@@ -1,9 +1,11 @@
 part of bot_io;
 
+@deprecated
 abstract class DirectoryPopulater {
   Future<Directory> populate(Directory dir);
 }
 
+@deprecated
 class MapDirectoryPopulater extends DirectoryPopulater {
   final bool checkEmpty;
   final Map<String, dynamic> _contents;

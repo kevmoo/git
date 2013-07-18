@@ -85,7 +85,7 @@ Future _testGetCommits() {
 }
 
 Future _doPopulate(GitDir gd, TempDir td, Map<String, dynamic> contents, String commitMsg) {
-  return td.populate(new MapDirectoryPopulater(contents))
+  return td.populate(contents)
       .then((_) {
         // now add this new file
         return gd.runCommand(['add', '--all']);
@@ -198,9 +198,7 @@ Future<Tuple<Commit, int>> _testPopulateBranchCore(GitDir gitDir, String branchN
           // but this is for testing
           implTempDir = td;
 
-          final populater = new MapDirectoryPopulater(contents);
-
-          return td.populate(populater);
+          return td.populate(contents);
         }, commitMessage);
       })
     .then((Commit commit) {
@@ -328,8 +326,7 @@ Future _testWriteObjects() {
       tempContent = td;
 
       //logMessage('temp dir for content: $td');
-      final populater = new MapDirectoryPopulater(_initialContentMap);
-      return tempContent.populate(populater);
+      return tempContent.populate(_initialContentMap);
     }).then((TempDir dir) {
       expect(dir, equals(tempContent));
 

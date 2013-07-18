@@ -23,8 +23,7 @@ class ShaFileTests {
         .then((TempDir val) {
           tempDir = val;
 
-          final populater = new MapDirectoryPopulater(map);
-          return tempDir.populate(populater);
+          return tempDir.populate(map);
         })
         .then((TempDir val) {
           assert(val == tempDir);

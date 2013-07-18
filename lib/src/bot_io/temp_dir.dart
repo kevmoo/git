@@ -20,10 +20,13 @@ class TempDir {
 
   bool get isDisposed => _disposed;
 
-  Future<TempDir> populate(DirectoryPopulater populater) {
-    return populater.populate(dir)
+  Future<TempDir> populate(source) {
+    return EntityPopulater.populate(path, source,
+        createParentDirectories: false,
+        overwriteExisting: false,
+        leaveExistingDirs: true)
         .then((Directory outputDir) {
-          assert(dir == outputDir);
+          assert(path == outputDir.path);
           return this;
         });
   }
