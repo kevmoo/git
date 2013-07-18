@@ -1,5 +1,12 @@
 # Changelog - Dart Bag of Tricks - IO
 
+## 0.22.0 2013-07-18 (0.6.5.0 r25017)
+
+* Updated min SDK to 0.6.5
+* Moved from 'pathos' to 'path' package
+* **DEPRECATED** `DirectoryPopulater` and `MapDirectoryPopulater`
+* **BREAKING** `TempDir.populate` now takes the same inputs as `EntityPopulater.populate`
+
 ## 0.21.3 2013-07-11 (SDK 0.6.3.3 r24898)
 
 # Work-around for https://code.google.com/p/dart/issues/detail?id=10163
