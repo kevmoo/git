@@ -27,7 +27,7 @@ abstract class EntityPopulater {
               leaveExistingDirs));
     }
 
-    throw "Don't know how to populate from '$source'...yet?";
+    throw new Exception("Cannot populate from '$source'.");
   }
 
   static Future<Directory> updateDirectory(String path,
