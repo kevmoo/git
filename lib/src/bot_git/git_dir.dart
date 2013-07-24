@@ -5,12 +5,15 @@ class GitDir {
   static const _gitDirArg = '--git-dir=';
   static final RegExp _shaRegExp = new RegExp(r'^[a-f0-9]{40}$');
 
-  final Path _path;
-  final Path _gitWorkTree;
+  final String _path;
+  final String _gitWorkTree;
 
-  GitDir._raw(this._path, [this._gitWorkTree = null]);
+  GitDir._raw(this._path, [this._gitWorkTree = null]) {
+    assert(pathos.isAbsolute(this._path));
+    assert(_gitWorkTree == null || pathos.isAbsolute(this._gitWorkTree));
+  }
 
-  Path get path => _path;
+  String get path => _path;
 
   Future<int> getCommitCount([String branchName = 'HEAD']) {
     return runCommand(['rev-list', '--count', branchName])
@@ -252,7 +255,7 @@ class GitDir {
     }
 
     if(_gitWorkTree != null) {
-      list.insert(0, '$_workTreeArg${_gitWorkTree.toNativePath()}');
+      list.insert(0, '$_workTreeArg${_gitWorkTree}');
     }
 
     return Git.runGit(list, throwOnError: throwOnError, processWorkingDir: _processWorkingDir);
@@ -323,7 +326,7 @@ class GitDir {
           return tempDirs.gitDir.runCommand(['commit', '--verbose', '-m', commitMessage])
               .then((ProcessResult pr) {
                 // --verbose is not strictly needed, but nice for debugging
-                return tempDirs.gitDir.runCommand(['push', '--verbose', '--progress', path.toNativePath(), branchName]);
+                return tempDirs.gitDir.runCommand(['push', '--verbose', '--progress', path, branchName]);
               })
               .then((ProcessResult pr) {
                 // pr.stderr will have all of the info
@@ -356,16 +359,14 @@ class GitDir {
           tempWorkDir = value;
 
           // time for crazy clone tricks
-          final args = ['clone', '--shared', '--no-checkout', '--bare', path.toNativePath(), '.'];
+          final args = ['clone', '--shared', '--no-checkout', '--bare', path, '.'];
 
           return Git.runGit(args, processWorkingDir: tempGitHost.path);
       })
       .then((ProcessResult pr) {
-        final gitPath = new Path(tempGitHost.path);
-        final gitWorkingPath = new Path(tempWorkDir.path);
 
         // git init
-        return new GitDir._raw(gitPath, gitWorkingPath);
+        return new GitDir._raw(tempGitHost.path, tempWorkDir.path);
       })
       .then((GitDir value) {
         gd = value;
@@ -397,16 +398,14 @@ class GitDir {
           tempWorkDir = value;
 
           // time for crazy clone tricks
-          final args = ['clone', '--shared', '--branch', existingBranchName, '--bare', path.toNativePath(), '.'];
+          final args = ['clone', '--shared', '--branch', existingBranchName, '--bare', path, '.'];
 
           return Git.runGit(args, processWorkingDir: tempGitHost.path);
       })
       .then((ProcessResult pr) {
-        final gitPath = new Path(tempGitHost.path);
-        final gitWorkingPath = new Path(tempWorkDir.path);
 
         // git init
-        return new GitDir._raw(gitPath, gitWorkingPath);
+        return new GitDir._raw(tempGitHost.path, tempWorkDir.path);
       })
       .then((GitDir value) {
         gd = value;
@@ -459,10 +458,7 @@ class GitDir {
   }
 
   static Future<GitDir> fromExisting(String gitDirRoot) {
-    final path = new Path(gitDirRoot);
-
-    requireArgument(path.isCanonical, 'gitDirRoot', 'provided dir must be canonical - $gitDirRoot');
-    requireArgument(path.isAbsolute, 'gitDirRoot', 'provided dir must be absolute - $gitDirRoot');
+    final path = pathos.absolute(gitDirRoot);
 
     return Git.runGit(['rev-parse', '--git-dir'], processWorkingDir: path.toString())
         .then((ProcessResult pr) {

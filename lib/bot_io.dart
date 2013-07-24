@@ -35,7 +35,7 @@ void enableScriptLogListener() {
     final options = new Options();
 
     final script = options.script;
-    _scriptLogListenerPath = new Path(script).toNativePath() + '.log';
+    _scriptLogListenerPath = pathos.absolute(script) + '.log';
 
     final rootLogger = logging.Logger.root;
     rootLogger.level = logging.Level.ALL;

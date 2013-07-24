@@ -3,6 +3,7 @@ library test_bot_git;
 import 'dart:async';
 import 'dart:io';
 import 'package:unittest/unittest.dart';
+import 'package:path/path.dart' as pathos;
 import 'package:bot/bot.dart';
 import 'package:bot_test/bot_test.dart';
 import 'package:bot_io/bot_io.dart';

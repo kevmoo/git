@@ -14,6 +14,7 @@ class TempDir {
   TempDir._internal(this.dir) {
     assert(this.dir != null);
     assert(this.dir.existsSync());
+    assert(pathos.isAbsolute(this.dir.path));
   }
 
   String get path => dir.path;

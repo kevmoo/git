@@ -16,7 +16,7 @@ Options tryCompletion(ArgCompleter completer) {
   final options = new Options();
   final args = options.arguments;
 
-  final scriptName = new Path(options.script).filename;
+  final scriptName = pathos.basename(options.script);
   if(scriptName.isEmpty) {
     // should have a script name...weird...
     return options;

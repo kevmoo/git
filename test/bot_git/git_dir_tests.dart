@@ -332,7 +332,7 @@ Future _testWriteObjects() {
 
       // now we'll write files to the object store
       final paths = _initialContentMap.keys.map((String fileName) {
-        return new Path(tempContent.path).append(fileName).toNativePath();
+        return pathos.join(tempContent.path, fileName);
       }).toList();
 
       return gitDir.writeObjects(paths);
