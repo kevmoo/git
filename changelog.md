@@ -1,5 +1,10 @@
 # Changelog - Dart Bag of Tricks - IO
 
+## 0.23.0 2013-07-24 (SDK 0.6.9.2 r25388)
+
+* Latest SDK
+* **BREAKING** Moved `completion` into its own library.
+
 ## 0.22.0 2013-07-18 (0.6.5.0 r25017)
 
 * Updated min SDK to 0.6.5
