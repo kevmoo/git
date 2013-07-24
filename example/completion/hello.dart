@@ -3,11 +3,11 @@
 library bot_io.completion_sample;
 
 import 'dart:io';
-import 'package:bot_io/bot_io.dart';
+import 'package:bot_io/completion.dart';
 import 'package:args/args.dart';
 import 'package:logging/logging.dart' as logging;
 
-import '../../../test/bot_io/completion_tests_args.dart';
+import '../../test/completion/completion_tests_args.dart';
 
 void main() {
   /*

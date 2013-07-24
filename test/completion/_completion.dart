@@ -1,6 +1,11 @@
-part of test_bot_io;
+import 'package:unittest/unittest.dart';
+import 'completion_tests_args.dart';
+import 'package:args/args.dart';
+import 'package:logging/logging.dart';
 
-void _registerCompletionTests() {
+import 'package:bot_io/completion.dart';
+
+void main() {
   group('completion', () {
 
     group('hello world sample', () {

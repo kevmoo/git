@@ -1,4 +1,10 @@
-part of bot_io;
+library completion;
+
+import 'dart:io';
+import 'package:args/args.dart';
+import 'package:logging/logging.dart' as logging;
+import 'package:path/path.dart' as pathos;
+import 'package:bot/bot.dart';
 
 /**
  * The string 'completion' used to denote that arguments proivded to an app are for command

@@ -6,7 +6,6 @@ import 'dart:io';
 import 'dart:utf' as utf;
 
 import 'package:crypto/crypto.dart' as crypto;
-import 'package:args/args.dart';
 import 'package:logging/logging.dart' as logging;
 import 'package:meta/meta.dart';
 import 'package:path/path.dart' as pathos;
@@ -14,7 +13,6 @@ import 'package:path/path.dart' as pathos;
 import 'package:bot/bot.dart';
 
 part 'src/bot_io/ansi_color.dart';
-part 'src/bot_io/completion.dart';
 part 'src/bot_io/console.dart';
 part 'src/bot_io/directory_populater.dart';
 part 'src/bot_io/entity_populater.dart';
