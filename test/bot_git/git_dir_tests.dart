@@ -325,7 +325,6 @@ Future _testWriteObjects() {
       expect(td, isNotNull);
       tempContent = td;
 
-      //logMessage('temp dir for content: $td');
       return tempContent.populate(_initialContentMap);
     }).then((TempDir dir) {
       expect(dir, equals(tempContent));

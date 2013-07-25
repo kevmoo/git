@@ -81,64 +81,52 @@ Future _testEntityPopulator(FileSystemEntityType entityType,
   final entityRelativePath = parentDirExists ?
       entityName : pathos.join('parentDir', entityName);
 
+  return TempDir.then((dir) {
+    var absolutePath = pathos.join(dir.path, entityRelativePath);
 
-  TempDir tmpDir;
-  String absolutePath;
-
-  return TempDir.create()
-      .then((TempDir value) {
-        tmpDir = value;
-
-        absolutePath = pathos.join(tmpDir.path, entityRelativePath);
-
-        if(existingEntityType != null) {
-          switch(existingEntityType) {
-            case FileSystemEntityType.FILE:
-              var existing = new File(absolutePath);
-              return existing.writeAsString('existing content');
-            case FileSystemEntityType.DIRECTORY:
-              var existing = new Directory(absolutePath);
-              return existing.create();
-            case FileSystemEntityType.LINK:
-              var linkToFilePath = absolutePath + '.content';
-              var linkToFile = new File(linkToFilePath);
-              return linkToFile.writeAsString('link to file content')
-                  .then((File ltf) {
-                    var link = new Link(absolutePath);
-                    return link.create(linkToFilePath);
-                  });
-            default:
-              throw 'not impled yet: existing entity $existingEntityType';
-          }
+    return new Future(() {
+      if(existingEntityType != null) {
+        switch(existingEntityType) {
+          case FileSystemEntityType.FILE:
+            var existing = new File(absolutePath);
+            return existing.writeAsString('existing content');
+          case FileSystemEntityType.DIRECTORY:
+            var existing = new Directory(absolutePath);
+            return existing.create();
+          case FileSystemEntityType.LINK:
+            var linkToFilePath = absolutePath + '.content';
+            var linkToFile = new File(linkToFilePath);
+            return linkToFile.writeAsString('link to file content')
+                .then((File ltf) {
+                  var link = new Link(absolutePath);
+                  return link.create(linkToFilePath);
+                });
+          default:
+            throw 'not impled yet: existing entity $existingEntityType';
         }
-      })
-      .then((_) {
-        return EntityPopulater.populate(absolutePath, entityContent,
-            createParentDirectories: createParent,
-            overwriteExisting: overwriteExisting);
-      })
-      .then((FileSystemEntity entity) {
-        expect(entity.path, equals(absolutePath));
-        expect(FileSystemEntity.typeSync(entity.path, followLinks: false),
-            entityType);
+      }
+    })
+    .then((_) {
+      return EntityPopulater.populate(absolutePath, entityContent,
+          createParentDirectories: createParent,
+          overwriteExisting: overwriteExisting);
+    })
+    .then((FileSystemEntity entity) {
+      expect(entity.path, equals(absolutePath));
+      expect(FileSystemEntity.typeSync(entity.path, followLinks: false),
+          entityType);
 
-        return EntityValidator.validate(entity, entityContent)
-            .isEmpty;
-      })
-      .catchError((error) {
-        assert(error is EntityPopulatorException);
-        return false;
-      }, test: (error) {
-        return error is EntityPopulatorException;
-      })
-      .then((bool isSuccess) {
-        expect(isSuccess, expectedSuccess);
-      })
-      .whenComplete(() {
-        if(tmpDir != null) {
-          tmpDir.dispose();
-        }
-      });
+      return EntityValidator.validate(entity, entityContent)
+          .isEmpty;
+    })
+    .catchError((error) {
+      assert(error is EntityPopulatorException);
+      return false;
+    }, test: (error) {
+      return error is EntityPopulatorException;
+    })
+    .then((bool isSuccess) {
+      expect(isSuccess, expectedSuccess);
+    });
+  });
 }
-
-

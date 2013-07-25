@@ -5,6 +5,31 @@ class TempDir {
 
   bool _disposed = false;
 
+  /**
+   * An easy way to create and use a temporory directory as part of an
+   * asynchronous flow.
+   *
+   * The underlying [TempDir] will be disposed when the returned [Future]
+   * completes.
+   *
+   * The value returned by [func] (if any) will be returned by [then].
+   */
+  static Future then(Future func(Directory dir)) {
+    TempDir tmpDir;
+
+    return TempDir.create()
+        .then((value) {
+          tmpDir = value;
+
+          return func(tmpDir.dir);
+        })
+        .whenComplete(() {
+          if(tmpDir != null) {
+            return tmpDir.dispose();
+          }
+        });
+  }
+
   static Future<TempDir> create() {
     final startDir = new Directory('');
     return startDir.createTemp()
