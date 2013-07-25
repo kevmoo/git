@@ -345,80 +345,52 @@ class GitDir {
 
   // if branch does not exist, do simple clone, then checkout
   Future<_TempDirs> _getTempDirPairForNewBranch(String newBranchName) {
-    TempDir tempGitHost;
-    TempDir tempWorkDir;
-    GitDir gd;
+    _TempDirs td;
 
-    return TempDir.create()
-        .then((TempDir value) {
-          tempGitHost = value;
+    return _TempDirs.create()
+        .then((_TempDirs val) {
 
-          return TempDir.create();
-        })
-        .then((TempDir value) {
-          tempWorkDir = value;
+          td = val;
 
           // time for crazy clone tricks
           final args = ['clone', '--shared', '--no-checkout', '--bare', path, '.'];
 
-          return Git.runGit(args, processWorkingDir: tempGitHost.path);
+          return Git.runGit(args, processWorkingDir: td.gitHostDir.path);
       })
-      .then((ProcessResult pr) {
-
-        // git init
-        return new GitDir._raw(tempGitHost.path, tempWorkDir.path);
+      .then((ProcessResult _) {
+        return td.gitDir.runCommand(['checkout', '--orphan', newBranchName]);
       })
-      .then((GitDir value) {
-        gd = value;
-        return gd.runCommand(['checkout', '--orphan', newBranchName]);
-      })
-      .then((ProcessResult pr) {
+      .then((ProcessResult _) {
 
         // since we're checked out, need to clear out local content
-        return gd.runCommand(['rm', '-r', '-f', '.']);
+        return td.gitDir.runCommand(['rm', '-r', '-f', '.']);
       })
-      .then((ProcessResult pr) {
-        return new _TempDirs(gd, tempGitHost, tempWorkDir);
-      });
+      .then((ProcessResult _) => td);
   }
 
   // if branch exists, then clone to that branch, clear it out
   Future<_TempDirs> _getTempDirPair(String existingBranchName) {
-    TempDir tempGitHost;
-    TempDir tempWorkDir;
-    GitDir gd;
+    _TempDirs td;
 
-    return TempDir.create()
-        .then((TempDir value) {
-          tempGitHost = value;
+    return _TempDirs.create()
+        .then((_TempDirs val) {
 
-          return TempDir.create();
-        })
-        .then((TempDir value) {
-          tempWorkDir = value;
+          td = val;
 
           // time for crazy clone tricks
           final args = ['clone', '--shared', '--branch', existingBranchName, '--bare', path, '.'];
 
-          return Git.runGit(args, processWorkingDir: tempGitHost.path);
+          return Git.runGit(args, processWorkingDir: td.gitHostDir.path);
       })
-      .then((ProcessResult pr) {
-
-        // git init
-        return new GitDir._raw(tempGitHost.path, tempWorkDir.path);
+      .then((ProcessResult _) {
+        return td.gitDir.runCommand(['checkout']);
       })
-      .then((GitDir value) {
-        gd = value;
-        return gd.runCommand(['checkout']);
-      })
-      .then((ProcessResult pr) {
+      .then((ProcessResult _) {
 
         // since we're checked out, need to clear out local content
-        return gd.runCommand(['rm', '-r', '.']);
+        return td.gitDir.runCommand(['rm', '-r', '.']);
       })
-      .then((ProcessResult pr) {
-        return new _TempDirs(gd, tempGitHost, tempWorkDir);
-      });
+      .then((ProcessResult _) => td);
   }
 
   String get _processWorkingDir => _path.toString();
@@ -506,12 +478,29 @@ class _TempDirs {
   final TempDir gitHostDir;
   final TempDir gitWorkTreeDir;
 
+  static Future<_TempDirs> create() {
+    TempDir host, work;
+
+    return TempDir.create()
+        .then((TempDir val) {
+          host = val;
+
+          return TempDir.create();
+        })
+        .then((TempDir val) {
+          work = val;
+
+          var gd = new GitDir._raw(host.path, work.path);
+          return new _TempDirs(gd, host, work);
+        });
+  }
+
   _TempDirs(this.gitDir, this.gitHostDir, this.gitWorkTreeDir);
 
   String toString() => [gitHostDir, gitWorkTreeDir].toString();
 
   Future dispose() {
-    return Future.wait([gitHostDir.dispose(), gitWorkTreeDir.dispose()]);
+    return Future.forEach([gitHostDir, gitWorkTreeDir], (td) => td.dispose());
   }
 }
 
