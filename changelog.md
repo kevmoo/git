@@ -1,5 +1,10 @@
 # Changelog - Dart Bag of Tricks - IO
 
+## 0.23.1 2013-07-26 (SDK 0.6.9.2 r25388)
+
+* **NEW!** `TempDir.then` - for those times when you just want a directory.
+* Tiny updates to dependencies, refactoring in `bot_git`
+
 ## 0.23.0 2013-07-24 (SDK 0.6.9.2 r25388)
 
 * Latest SDK
