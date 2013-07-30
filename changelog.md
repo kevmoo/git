@@ -19,17 +19,17 @@
 
 ## 0.21.3 2013-07-11 (SDK 0.6.3.3 r24898)
 
-# Work-around for https://code.google.com/p/dart/issues/detail?id=10163
-# Other tiny tweaks
+* Work-around for https://code.google.com/p/dart/issues/detail?id=10163
+* Other tiny tweaks
 
 ## 0.21.2 2013-06-04 (SDK 0.5.13.1 r23552)
 
-# Fixes for SDK 0.5.13.1
-# Crypto moved to a pub package
+* Fixes for SDK 0.5.13.1
+* Crypto moved to a pub package
 
 ## 0.21.1 2013-05-28 (SDK 0.5.11.1 r23200)
 
-# Fixes for SDK 0.5.11.1
+* Fixes for SDK 0.5.11.1
 
 ## 0.21.0+2 2013-04-29 (SDK 0.5.1.0 r22072)
 
