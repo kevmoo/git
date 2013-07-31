@@ -6,7 +6,7 @@ import 'package:hop/hop.dart';
 import 'package:hop/hop_tasks.dart';
 import '../test/harness_console.dart' as test_console;
 
-import 'tasks/dartdoc_postbuild.dart' as dartdoc;
+import 'package:hop/src/hop_tasks_experimental.dart' as dartdoc;
 
 void main() {
   // Easy to enable hop-wide logging
@@ -14,7 +14,7 @@ void main() {
 
   addTask('test', createUnitTestTask(test_console.testCore));
 
-  addTask('docs', createDartDocTask(_getLibs, linkApi: true, postBuild: dartdoc.postBuild));
+  addTask('docs', createDartDocTask(_getLibs, linkApi: true, postBuild: dartdoc.createPostBuild(_cfg)));
 
   //
   // Analyzer
@@ -33,3 +33,8 @@ Future<List<String>> _getLibs() {
       .map((File file) => file.path)
       .toList();
 }
+
+const _libs = const ['bot_io', 'bot_git'];
+
+final _cfg = new dartdoc.DocsConfig('bot_io', 'https://github.com/kevmoo/bot_io.dart',
+    'logo.png', 333, 250, _libs.contains);
