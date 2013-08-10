@@ -5,7 +5,6 @@ library bot_io.completion_sample;
 import 'dart:io';
 import 'package:bot_io/completion.dart';
 import 'package:args/args.dart';
-import 'package:logging/logging.dart' as logging;
 
 import '../../test/completion/completion_tests_args.dart';
 
