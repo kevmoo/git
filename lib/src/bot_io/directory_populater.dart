@@ -19,7 +19,7 @@ class MapDirectoryPopulater extends DirectoryPopulater {
       return IoHelpers.isEmpty(dir)
           .then((bool isEmpty) {
             if(!isEmpty && !checkEmpty) {
-              throw 'target directory must be empty';
+              throw new ArgumentError('target directory must be empty');
             }
             return _populate(dir, _contents);
           });
@@ -46,7 +46,7 @@ class MapDirectoryPopulater extends DirectoryPopulater {
         return EntityPopulater.populate(newItemPath, v,
             createParentDirectories: false, overwriteExisting: false);
       } else {
-        throw 'value for $key was $v - expected Map or String';
+        throw new ArgumentError('value for $key was $v - expected Map or String');
       }
     }).then((_) {
       return dir;

@@ -16,6 +16,14 @@ void _metaRequireArgumentNotNullOrEmpty(String argName) {
   }
 }
 
+class GitError extends Error {
+  final String message;
+
+  GitError(this.message);
+
+  String toString() => message;
+}
+
 class Git {
   static const _shaRegexPattern = '[a-f0-9]{40}';
   static final _shaRegEx = new RegExp(r'^' + _shaRegexPattern + r'$');

@@ -305,7 +305,7 @@ class GitDir {
         })
         .then((ProcessResult pr) {
           if(pr.stdout.isEmpty) {
-            throw 'No files were added';
+            throw new GitError('No files were added');
           }
           // add new files to index
 
@@ -423,7 +423,7 @@ class GitDir {
     return IoHelpers.isEmpty(source)
         .then((bool isEmpty) {
           if(!isEmpty) {
-            throw 'source Directory is not empty';
+            throw new ArgumentError('source Directory is not empty - $source');
           }
           return _init(source);
         });
@@ -437,7 +437,7 @@ class GitDir {
           if(pr.stdout.trim() == '.git') {
             return new GitDir._raw(path);
           } else {
-            throw 'The provided value "$gitDirRoot" is not the root of a git directory';
+            throw new ArgumentError('The provided value "$gitDirRoot" is not the root of a git directory');
           }
         });
   }
@@ -446,7 +446,7 @@ class GitDir {
     return _isGitDir(source)
         .then((bool isGitDir) {
           if(isGitDir) {
-            throw 'Cannot init a directory that is already a git directory';
+            throw new ArgumentError('Cannot init a directory that is already a git directory');
           }
 
           return Git.runGit(['init', source.path]);

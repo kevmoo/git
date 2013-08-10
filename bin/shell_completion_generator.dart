@@ -35,11 +35,11 @@ void main() {
   new Future.value(options.script)
     .then((String scriptPath) {
       if(scriptPath.isEmpty) {
-        throw 'no script path provided';
+        throw new ArgumentError('no script path provided');
       }
 
       if(options.arguments.isEmpty) {
-        throw 'Provide the of at least of one command';
+        throw new ArgumentError('Provide the of at least of one command');
       }
 
       for(final binName in options.arguments) {

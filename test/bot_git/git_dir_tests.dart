@@ -168,7 +168,7 @@ Future _testPopulateBranchEmpty(GitDir gitDir, String branchName) {
       .then((value) {
         fail('empty content should fail!');
       }, onError: (error) {
-        expect(error, 'No files were added');
+        expect(error.message, 'No files were added');
         // no return - null - is okay
       });
 }

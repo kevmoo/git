@@ -62,7 +62,7 @@ abstract class EntityValidator {
     } else if(target is Map) {
       return validateDirectoryFromMap(entity, target);
     } else {
-      throw "Don't know how to deal with $target";
+      throw new ArgumentError("Don't know how to deal with $target");
     }
   }
 
@@ -108,7 +108,7 @@ class EntityExistsValidator implements EntityValidator {
     } else if(entity is Link) {
       return entity.exists();
     }
-    throw 'entity $entity is not supported';
+    throw new ArgumentError('entity $entity is not supported');
   }
 
   static FileSystemEntityType _getType(FileSystemEntity entity) {
