@@ -191,7 +191,7 @@ Stream _streamFromIterableFuture(Future<Iterable> future) {
 }
 
 String _getStringSha1(String content) {
-  final bytes = utf.encodeUtf8(content);
+  final bytes = UTF8.encode(content);
   final sha = new crypto.SHA1();
   sha.add(bytes);
   final sha1Bytes = sha.close();

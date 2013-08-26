@@ -8,8 +8,7 @@ abstract class EntityPopulater {
 
     if(source is String) {
       var stringStream = new Stream.fromIterable([source]);
-      var encoder = new StringEncoder();
-      source = encoder.bind(stringStream);
+      source = UTF8.encoder.bind(stringStream);
     } else if(source is File) {
       source = source.openRead();
     }
