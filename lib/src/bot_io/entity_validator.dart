@@ -33,9 +33,11 @@ abstract class EntityValidator {
       return new Stream.fromIterable(['entity is not a Directory']);
     }
 
+    Directory dir = entity;
+
     final expectedItems = new Set.from(map.keys);
 
-    return expandStream(entity.list(), (FileSystemEntity item) {
+    return expandStream(dir.list(), (FileSystemEntity item) {
 
       final relative = pathos.relative(item.path,
           from: entity.path);
