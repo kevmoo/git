@@ -25,8 +25,8 @@ class GitError extends Error {
 }
 
 class Git {
-  static const _shaRegexPattern = '[a-f0-9]{40}';
-  static final _shaRegEx = new RegExp(r'^' + _shaRegexPattern + r'$');
+  static const _SHA_REGEX_PATTERN = '[a-f0-9]{40}';
+  static final _shaRegEx = new RegExp(r'^' + _SHA_REGEX_PATTERN + r'$');
 
   static bool isValidSha(String value) {
     return _shaRegEx.hasMatch(value);
@@ -106,7 +106,7 @@ class Tag {
  * Represents the output from `git show-ref`
  */
 class CommitReference {
-  static final RegExp _lsRemoteRegExp = new RegExp('^(${Git._shaRegexPattern}) (.+)\$');
+  static final RegExp _lsRemoteRegExp = new RegExp('^(${Git._SHA_REGEX_PATTERN}) (.+)\$');
 
   final String sha;
   final String reference;
@@ -272,7 +272,7 @@ class Commit {
 
 class TreeEntry {
   static final _lsTreeLine = r'^([0-9]{6}) (blob|tree) ('
-      + Git._shaRegexPattern
+      + Git._SHA_REGEX_PATTERN
       + ')\t(\\S.*\\S)\$';
 
   static final _lsTreeRegEx = new RegExp(_lsTreeLine);
