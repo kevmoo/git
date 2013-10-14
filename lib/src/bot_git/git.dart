@@ -290,7 +290,7 @@ class TreeEntry {
   String name;
 
   TreeEntry(this.mode, this.type, this.sha, this.name) {
-    // TODO:
+    // TODO: enum or whitelist here
     requireArgumentContainsPattern(new RegExp(r'^[0-9]{6}$'), mode, 'mode');
 
     // TODO: enum or whitelist here
