@@ -382,8 +382,7 @@ List<String> _getArgsOptionCompletions(Option option) {
 
 String _helpfulToString(Object input) {
   if(input is Iterable) {
-    final items = (input as Iterable)
-        .map((item) => _helpfulToString(item))
+    final items = input.map((item) => _helpfulToString(item))
         .toList();
 
     if(items.isEmpty) {
