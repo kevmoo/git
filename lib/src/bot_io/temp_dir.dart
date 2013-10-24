@@ -30,9 +30,9 @@ class TempDir {
         });
   }
 
+  // TODO: ponder added optional 'template' param here
   static Future<TempDir> create() {
-    final startDir = new Directory('');
-    return startDir.createTemp()
+    return Directory.systemTemp.createTemp()
         .then((newDir) => new TempDir._internal(newDir));
   }
 
