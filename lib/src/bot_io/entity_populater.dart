@@ -103,7 +103,7 @@ abstract class EntityPopulater {
                   if(existingType != FileSystemEntityType.NOT_FOUND) {
 
                     if(leaveExistingDir && existingType == FileSystemEntityType.DIRECTORY) {
-                      return;
+                      return null;
                     }
 
                     if(overwriteExisting) {
@@ -124,7 +124,8 @@ abstract class EntityPopulater {
                           'Existing entity.', path);
                     }
                   }
-                });
+                })
+                .then((_) => null);
 
           }
 
