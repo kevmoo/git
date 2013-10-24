@@ -1,5 +1,9 @@
 # Changelog - Dart Bag of Tricks - IO
 
+## 0.23.3 2013-10-24 (SDK 0.8.6 r29156)
+
+* Updates for latest SDK
+
 ## 0.23.2 2013-08-26 (SDK 0.6.21.2 r26619)
 
 * Updates for latest SDK
