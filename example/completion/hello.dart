@@ -8,7 +8,7 @@ import 'package:args/args.dart';
 
 import '../../test/completion/completion_tests_args.dart';
 
-void main() {
+void main(List<String> args) {
   /*
    * It's nice to see what the completer is doing, but printing out debug
    * strings during completion isn't...smart
@@ -27,7 +27,7 @@ void main() {
   ArgResults argResult;
 
   try {
-    argResult = tryArgsCompletion(argParser);
+    argResult = tryArgsCompletion(args, argParser);
   } on FormatException catch (ex, stack) {
     // TODO: print color?
     print(ex.message);

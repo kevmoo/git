@@ -1,5 +1,10 @@
 # Changelog - Dart Bag of Tricks - IO
 
+## 0.24.0 2013-10-31 (SDK 0.8.9 r29656)
+
+* Updates for latest SDK
+* **BREAKING** changes to `tryCompletion` and the completion generator due to removal of `Options` from `dart:io`.
+
 ## 0.23.3 2013-10-24 (SDK 0.8.6 r29156)
 
 * Updates for latest SDK

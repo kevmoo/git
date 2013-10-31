@@ -7,7 +7,6 @@ import 'dart:io';
 
 import 'package:crypto/crypto.dart' as crypto;
 import 'package:logging/logging.dart' as logging;
-import 'package:meta/meta.dart';
 import 'package:path/path.dart' as pathos;
 
 import 'package:bot/bot.dart';
@@ -30,9 +29,8 @@ part 'src/bot_io/temp_dir.dart';
  */
 void enableScriptLogListener() {
   if(_scriptLogListenerPath == null) {
-    final options = new Options();
 
-    final script = options.script;
+    final script = Platform.script.toFilePath();
     _scriptLogListenerPath = pathos.absolute(script) + '.log';
 
     final rootLogger = logging.Logger.root;

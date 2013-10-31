@@ -1,8 +1,8 @@
 #!/usr/bin/env dart
 
-import 'dart:async';
 import 'dart:io';
 import 'package:bot/bot.dart';
+import 'package:path/path.dart' as pathos;
 
 const _binNameReplacement = '{{binName}}';
 const _funcNameReplacement = '{{funcName}}';
@@ -26,56 +26,60 @@ final _binNameMatch = new RegExp(r'^[a-zA-Z0-9]((\w|-|\.)*[a-zA-Z0-9])?$');
  * https://github.com/mklabs/node-tabtab/blob/master/lib/completion.sh
  */
 
-void main() {
-  final options = new Options();
+void main(List<String> arguments) {
+  try{
+    execute(arguments);
+  } catch (e) {
+    print(e);
+    exit(1);
+  }
+}
+
+void execute(List<String> arguments) {
 
   final binNames = new List<String>();
   File templateFile;
 
-  new Future.value(options.script)
-    .then((String scriptPath) {
-      if(scriptPath.isEmpty) {
-        throw new ArgumentError('no script path provided');
-      }
+  var scriptPath = Platform.script.toFilePath();
+  scriptPath = pathos.absolute(pathos.normalize(scriptPath));
 
-      if(options.arguments.isEmpty) {
-        throw new ArgumentError('Provide the of at least of one command');
-      }
+  if(scriptPath.isEmpty) {
+    throw new ArgumentError('no script path provided');
+  }
 
-      for(final binName in options.arguments) {
-        if(!_binNameMatch.hasMatch(binName)) {
-          final msg = 'The provided name - "$binName" - is invalid\n'
-              'It must match regex: ${_binNameMatch.pattern}';
-          throw msg;
-        }
-      }
+  if(arguments.isEmpty) {
+    throw new ArgumentError('Provide the name of at least of one command');
+  }
 
-      binNames.addAll(options.arguments);
+  for(final binName in arguments) {
+    if(!_binNameMatch.hasMatch(binName)) {
+      final msg = 'The provided name - "$binName" - is invalid\n'
+          'It must match regex: ${_binNameMatch.pattern}';
+      throw msg;
+    }
+  }
 
-      final prefix = Util.splitLines(_prefix)
-          .map((l) => '# $l'.trim())
-          .join('\n');
-      print(prefix);
+  binNames.addAll(arguments);
 
-      // empty line
-      print('');
+  final prefix = Util.splitLines(_prefix)
+      .map((l) => '# $l'.trim())
+      .join('\n');
+  print(prefix);
 
-      for(final binName in binNames) {
-        _printBinName(binName);
-      }
+  // empty line
+  print('');
 
-      final detailLines = ['Generated ${new DateTime.now().toUtc()}', 'By ${options.script}'];
+  for(final binName in binNames) {
+    _printBinName(binName);
+  }
 
-      final details = detailLines.map((l) => '## $l').join('\n');
-      print(details);
+  final detailLines = ['Generated ${new DateTime.now().toUtc()}', 'By ${scriptPath}'];
 
-      // and a final newline
-      print('');
-    })
-    .catchError((error) {
-      print(error);
-      exit(1);
-    });
+  final details = detailLines.map((l) => '## $l').join('\n');
+  print(details);
+
+  // and a final newline
+  print('');
 }
 
 void _printBinName(String binName) {

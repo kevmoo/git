@@ -180,8 +180,8 @@ Stream _streamFromIterableFuture(Future<Iterable> future) {
         controller.add(value);
       }
     })
-    .catchError((error) {
-      controller.addError(error, getAttachedStackTrace(error));
+    .catchError((error, stack) {
+      controller.addError(error, stack);
     })
     .whenComplete(() {
       controller.close();

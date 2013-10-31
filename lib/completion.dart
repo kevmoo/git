@@ -18,14 +18,12 @@ const _compPointVar = 'COMP_POINT';
 
 typedef List<String> ArgCompleter(List<String> args, String compLine, int compPoint);
 
-Options tryCompletion(ArgCompleter completer) {
-  final options = new Options();
-  final args = options.arguments;
+void tryCompletion(List<String> args, ArgCompleter completer) {
 
-  final scriptName = pathos.basename(options.script);
+  final scriptName = pathos.basename(Platform.script.toFilePath());
   if(scriptName.isEmpty) {
     // should have a script name...weird...
-    return options;
+    return;
   }
 
   _log('Checking for completion on script:\t$scriptName');
@@ -73,15 +71,13 @@ Options tryCompletion(ArgCompleter completer) {
   }
 
   _log('Completion params not found');
-
-  return options;
 }
 
-ArgResults tryArgsCompletion(ArgParser parser) {
-  final options = tryCompletion((List<String> args, String compLine, int compPoint) {
+ArgResults tryArgsCompletion(List<String> mainArgs, ArgParser parser) {
+  tryCompletion(mainArgs, (List<String> args, String compLine, int compPoint) {
     return getArgsCompletions(parser, args, compLine, compPoint);
   });
-  return parser.parse(options.arguments);
+  return parser.parse(mainArgs);
 }
 
 /*
