@@ -13,7 +13,6 @@ import 'package:bot/bot.dart';
 
 part 'src/bot_io/ansi_color.dart';
 part 'src/bot_io/console.dart';
-part 'src/bot_io/directory_populater.dart';
 part 'src/bot_io/entity_populater.dart';
 part 'src/bot_io/entity_validator.dart';
 part 'src/bot_io/io_helpers.dart';
