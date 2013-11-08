@@ -1,18 +1,18 @@
 name: bot_io
-version: 0.25.0-dev
+version: 0.25.0
 author: Kevin Moore <kevin@thinkpixellab.com>
 description: A collection of (mostly) general libraries to make working with Dart more productive.
 homepage: https://github.com/kevmoo/bot_io.dart
 documentation: http://kevmoo.github.io/bot_io.dart
 environment:
-  sdk: '>=0.8.10+4'
+  sdk: '>=0.8.10+6 <2.0.0'
 dependencies:
-  args: '>=0.8.10+4'
-  bot: '>=0.24.0'
-  crypto: '>=0.8.10+4'
-  logging: '>=0.8.10+4'
-  path: '>=0.8.9'
+  args: '>=0.9.0 <0.10.0'
+  bot: '>=0.25.0'
+  crypto: '>=0.9.0 <0.10.0'
+  logging: '>=0.9.0 <0.10.0'
+  path: '>=0.9.0 <0.10.0'
 dev_dependencies:
-  bot_test: '>=0.1.3'
+  bot_test: '>=0.1.5'
   hop: '>=0.27.0'
-  unittest: '>=0.8.10+4'
+  unittest: '>=0.9.0 <0.10.0'

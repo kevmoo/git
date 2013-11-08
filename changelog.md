@@ -1,5 +1,11 @@
 # Changelog - Dart Bag of Tricks - IO
 
+## 0.25.0 2013-11-07 (SDK 0.8.10+6 r30036)
+
+* Lastest SDK
+* Aligned with [Dart V1 Pubspec Recommendations](https://plus.google.com/+SethLadd/posts/9JQJVz78R97).
+* **BREAKING** Removal of deprecated `DirectoryPopulater` code.
+
 ## 0.24.0 2013-10-31 (SDK 0.8.9 r29656)
 
 * Updates for latest SDK
