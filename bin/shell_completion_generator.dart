@@ -4,9 +4,9 @@ import 'dart:io';
 import 'package:bot/bot.dart';
 import 'package:path/path.dart' as pathos;
 
-const _binNameReplacement = '{{binName}}';
-const _funcNameReplacement = '{{funcName}}';
-const _scriptDetailsReplacement = '{{details}}';
+const _BIN_NAME_REPLACEMENT = '{{binName}}';
+const _FUNC_NAME_REPLACEMENT = '{{funcName}}';
+const _SCRIPT_DETAILS_REPLACEMENT = '{{details}}';
 
 /*
  * Must be at least one char.
@@ -27,7 +27,7 @@ final _binNameMatch = new RegExp(r'^[a-zA-Z0-9]((\w|-|\.)*[a-zA-Z0-9])?$');
  */
 
 void main(List<String> arguments) {
-  try{
+  try {
     execute(arguments);
   } catch (e) {
     print(e);
@@ -61,7 +61,7 @@ void execute(List<String> arguments) {
 
   binNames.addAll(arguments);
 
-  final prefix = Util.splitLines(_prefix)
+  final prefix = Util.splitLines(_PREFIX)
       .map((l) => '# $l'.trim())
       .join('\n');
   print(prefix);
@@ -83,16 +83,16 @@ void execute(List<String> arguments) {
 }
 
 void _printBinName(String binName) {
-  var templateContents = _template.replaceAll(_binNameReplacement, binName);
+  var templateContents = _TEMPLATE.replaceAll(_BIN_NAME_REPLACEMENT, binName);
 
   var funcName = binName.replaceAll('.', '_');
   funcName = '__${funcName}_completion';
-  templateContents = templateContents.replaceAll(_funcNameReplacement, funcName);
+  templateContents = templateContents.replaceAll(_FUNC_NAME_REPLACEMENT, funcName);
 
   print(templateContents);
 }
 
-const _prefix = '''
+const _PREFIX = '''
 
 Installation:
 
@@ -107,7 +107,7 @@ You may also have a directory on your system that is configured
    /usr/local/etc/bash_completion.d/
 ''';
 
-const _template = r'''
+const _TEMPLATE = r'''
 ###-begin-{{binName}}-completion-###
 
 if type complete &>/dev/null; then

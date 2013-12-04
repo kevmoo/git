@@ -14,7 +14,7 @@ import 'package:bot/bot.dart';
  */
 const String COMPLETION_COMMAND_NAME = 'completion';
 
-const _compPointVar = 'COMP_POINT';
+const _COMP_POINT_VAR = 'COMP_POINT';
 
 typedef List<String> ArgCompleter(List<String> args, String compLine, int compPoint);
 
@@ -43,11 +43,11 @@ void tryCompletion(List<String> args, ArgCompleter completer) {
 
       // COMP_CWORD: number of words. Also might be nice
       // COMP_POINT: where the cursor is on the completion line
-      final compPointValue = env[_compPointVar];
+      final compPointValue = env[_COMP_POINT_VAR];
       require(compPointValue != null && !compPointValue.isEmpty,
-          'Environment variable $_compPointVar must be set and non-empty');
+          'Environment variable $_COMP_POINT_VAR must be set and non-empty');
       final compPoint = int.parse(compPointValue, onError: (val) {
-        throw new FormatException('Could not parse $_compPointVar value "$val" into an integer');
+        throw new FormatException('Could not parse $_COMP_POINT_VAR value "$val" into an integer');
       });
 
       final trimmedArgs = args.sublist(3);
