@@ -18,13 +18,13 @@ abstract class EntityValidator {
     var future = fileSha1Hex(entity)
         .then((String sha1) {
           if(sha1 == targetSha) {
-            return [];
+            return null;
           } else {
-            return ['content does not match: $entity'];
+            return 'content does not match: $entity';
           }
         });
 
-    return _streamFromIterableFuture(future);
+    return _oneOrNoneOnNull(future);
   }
 
   static Stream<String> validateDirectoryFromMap(FileSystemEntity entity,
@@ -81,10 +81,10 @@ class EntityExistsValidator implements EntityValidator {
   @override
   Stream<String> validateEntity(FileSystemEntity entity) {
     assert(entity != null);
-    return _streamFromIterableFuture(_getValidation(entity));
+    return _oneOrNoneOnNull(_getValidation(entity));
   }
 
-  Future<List<String>> _getValidation(FileSystemEntity entity) {
+  Future<String> _getValidation(FileSystemEntity entity) {
     assert(entity != null);
 
     final entType = _getType(entity);
@@ -92,14 +92,14 @@ class EntityExistsValidator implements EntityValidator {
       return _exists(entity)
           .then((bool exists) {
             if(exists) {
-              return [];
+              return null;
             }
-            return ["$entity does not exist on disk"];
+            return "$entity does not exist on disk";
           });
     }
 
-    return new Future.value(["Expected $entity to be $entityType,"
-                             " but it is $entType"]);
+    return new Future.value(
+        "Expected $entity to be $entityType, but it is $entType");
   }
 
   static Future<bool> _exists(FileSystemEntity entity) {
@@ -170,25 +170,8 @@ Future _pipeStreamToController(StreamController controller, Stream input) {
   return completer.future;
 }
 
-// TODO: move to bot?
-Stream _streamFromIterableFuture(Future<Iterable> future) {
-  final controller = new StreamController();
-
-  future
-    .then((Iterable values) {
-      for(var value in values) {
-        controller.add(value);
-      }
-    })
-    .catchError((error, stack) {
-      controller.addError(error, stack);
-    })
-    .whenComplete(() {
-      controller.close();
-    });
-
-  return controller.stream;
-}
+Stream _oneOrNoneOnNull(Future future) => new Stream.fromFuture(future)
+    .where((e) => e != null);
 
 String _getStringSha1(String content) {
   final bytes = UTF8.encode(content);
