@@ -187,20 +187,6 @@ class _StreamExpander<T, S> {
 
 }
 
-// TODO: move to bot?
-Future _pipeStreamToController(StreamController controller, Stream input) {
-  final completer = new Completer();
-
-  input.listen((data) {
-    print('got stream item ${input.hashCode}');
-    controller.add(data);
-  }, onDone: () {
-    completer.complete();
-  });
-
-  return completer.future;
-}
-
 Stream _oneOrNoneOnNull(Future future) => new Stream.fromFuture(future)
     .where((e) => e != null);
 
