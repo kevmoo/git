@@ -37,7 +37,7 @@ abstract class EntityValidator {
 
     final expectedItems = new Set.from(map.keys);
 
-    return expandStream(dir.list(), (FileSystemEntity item) {
+    return _expandStream(dir.list(), (FileSystemEntity item) {
 
       final relative = pathos.relative(item.path,
           from: entity.path);
@@ -127,34 +127,64 @@ class EntityExistsValidator implements EntityValidator {
 }
 
 // TODO: move to bot?
-// TODO: should this use pause/resume? Maybe? Likely?
-// TODO: test!
-Stream expandStream(Stream source, Stream convert(input), {Stream onDone()}) {
-  final controller = new StreamController();
+// TODO: test more, especially failure cases
+/**
+ * **DEPRECATED**. This should not be a top-level method. Will be removed.
+ */
+@deprecated
+Stream expandStream(Stream source, Stream convert(input), {Stream onDone()}) =>
+    _expandStream(source, convert, onDone: onDone);
 
-  Future itemFuture;
+Stream _expandStream(Stream source, Stream convert(input), {Stream onDone()}) {
 
-  source.listen((sourceItem) {
-    Stream subStream = convert(sourceItem);
-    Future next = _pipeStreamToController(controller, subStream);
-    if(itemFuture == null) {
-      itemFuture = next;
-    } else {
-      itemFuture = itemFuture.then((_) => next);
-    }
-  }, onDone: () {
-    Future next = _pipeStreamToController(controller, onDone());
-    if(itemFuture == null) {
-      itemFuture = next;
-    } else {
-      itemFuture = itemFuture.then((_) => next);
-    }
-    itemFuture.whenComplete(() {
-      controller.close();
+  var expander = new _StreamExpander(source, convert, onDone);
+  return expander.stream;
+}
+
+class _StreamExpander<T, S> {
+  final Func1<T, Stream<S>> _converter;
+  final Func<Stream<S>> _onDone;
+  final StreamIterator<T> _iterator;
+
+  final StreamController<S> _controller = new StreamController();
+
+  _StreamExpander(Stream<T> source, this._converter, [this._onDone]) :
+    this._iterator = new StreamIterator(source) {
+    _moveNext();
+  }
+
+  Stream<S> get stream => _controller.stream;
+
+  void _moveNext() {
+    // TODO: handle case where moveNext yields an error
+    _iterator.moveNext().then((bool hasNext) {
+      if(!hasNext) {
+        _finish();
+        return;
+      }
+
+      // TODO: handle case where convert throws
+      var subStream = _converter(_iterator.current);
+
+      _controller.addStream(subStream)
+        .then((_) => _moveNext());
     });
-  });
+  }
 
-  return controller.stream;
+  void _finish() {
+    if(_onDone != null) {
+      // TODO: handle case where onDone throws
+      _controller.addStream(_onDone())
+        .whenComplete(_close);
+    } else {
+      _close();
+    }
+  }
+
+  void _close() {
+    _controller.close();
+  }
+
 }
 
 // TODO: move to bot?
@@ -162,6 +192,7 @@ Future _pipeStreamToController(StreamController controller, Stream input) {
   final completer = new Completer();
 
   input.listen((data) {
+    print('got stream item ${input.hashCode}');
     controller.add(data);
   }, onDone: () {
     completer.complete();
