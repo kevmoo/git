@@ -126,8 +126,6 @@ class EntityExistsValidator implements EntityValidator {
   }
 }
 
-// TODO: move to bot?
-// TODO: test more, especially failure cases
 /**
  * **DEPRECATED**. This should not be a top-level method. Will be removed.
  */
@@ -135,6 +133,8 @@ class EntityExistsValidator implements EntityValidator {
 Stream expandStream(Stream source, Stream convert(input), {Stream onDone()}) =>
     _expandStream(source, convert, onDone: onDone);
 
+// TODO: move to bot?
+// TODO: test more, especially failure cases
 Stream _expandStream(Stream source, Stream convert(input), {Stream onDone()}) {
 
   var expander = new _StreamExpander(source, convert, onDone);
