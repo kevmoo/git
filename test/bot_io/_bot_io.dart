@@ -1,29 +1,24 @@
 library test_bot_io;
 
 import 'dart:async';
-import 'dart:io';
 import 'package:unittest/unittest.dart';
-import 'package:path/path.dart' as pathos;
 import 'package:bot_io/bot_io.dart';
 
-part 'temp_dir_tests.dart';
-part 'sha_file_tests.dart';
-part 'entity_populater_tests.dart';
-part 'update_directory_tests.dart';
+import 'temp_dir_tests.dart' as temp_dir;
+import 'update_directory_tests.dart' as update_directory;
+
+import 'sha_file_tests.dart' as sha;
+import 'entity_populater_tests.dart' as entity_populater;
 
 void main() {
   group('bot_io', () {
-    group('temp dir and validate', () {
-      TempDirTests.register();
-    });
+    group('temp dir and validate', temp_dir.main);
 
-    group('sha1 file tests', () {
-      ShaFileTests.register();
-    });
+    group('sha1 file tests', sha.main);
 
     group('EntityPopulator', () {
-      _registerEntityPopulaterTests();
-      _registerUpdateDirectoryTests();
+      entity_populater.main();
+      update_directory.main();
 
       test('expandStream', () {
         var inputs = [7, 11, 13, 17, 19];

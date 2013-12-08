@@ -1,86 +1,91 @@
-part of test_bot_io;
+library test.bot_io.temp_dir;
 
-class TempDirTests {
 
-  static final _map = {
-                       'file1.txt': 'content',
-                       'file2.txt': 'content2',
-                       'empty dir': { },
-                       'dir1': {'dir1_file1.txt': 'and content some more'} };
+import 'dart:async';
+import 'dart:io';
+import 'package:unittest/unittest.dart';
+import 'package:bot_io/bot_io.dart';
 
-  static final _mapFewer = {
-                           'file1.txt': 'content',
-                           'empty dir': { },
-                           'dir1': {'dir1_file1.txt': 'and content some more'}
-                           };
 
-  static final _mapMore = {
-                          'file1.txt': 'content',
-                          'file2.txt': 'content2',
-                          'empty dir': { 'file3.txt': 'content3' },
-                           'dir1': { 'dir1_file1.txt': 'and content some more'}
-                          };
 
-  static final _mapDiff = {
-                          'file1.txt': 'content_',
-                          'file2.txt': 'content2',
-                          'empty dir': { },
-                          'dir1': { 'dir1_file1.txt': 'and content some more'}
-                          };
+final _map = {
+   'file1.txt': 'content',
+   'file2.txt': 'content2',
+   'empty dir': { },
+   'dir1': {'dir1_file1.txt': 'and content some more'} };
 
-  static void register() {
-    test('good match', () => _testTempDirPopulate(_map, _map, true));
-    test('too few', () => _testTempDirPopulate(_map, _mapFewer, false));
-    test('too many', () => _testTempDirPopulate(_map, _mapMore, false));
-    test('different', () => _testTempDirPopulate(_map, _mapDiff, false));
-    test('empty', () => _testTempDirPopulate(_map, {}, false));
+final _mapFewer = {
+ 'file1.txt': 'content',
+ 'empty dir': { },
+ 'dir1': {'dir1_file1.txt': 'and content some more'}
+ };
 
-    test('empty to empty', () => _testTempDirPopulate({}, {}, true));
+final _mapMore = {
+    'file1.txt': 'content',
+    'file2.txt': 'content2',
+    'empty dir': { 'file3.txt': 'content3' },
+     'dir1': { 'dir1_file1.txt': 'and content some more'}
+    };
 
-    test('one file to one file', () => _testTempDirPopulate(
-        {'a.txt': 'a'}, {'a.txt': 'a'}, true));
+final _mapDiff = {
+    'file1.txt': 'content_',
+    'file2.txt': 'content2',
+    'empty dir': { },
+    'dir1': { 'dir1_file1.txt': 'and content some more'}
+    };
 
-    test('same name, different content', () => _testTempDirPopulate(
-        {'a.txt': 'a'}, {'a.txt': 'b'}, false));
+void main() {
+  test('good match', () => _testTempDirPopulate(_map, _map, true));
+  test('too few', () => _testTempDirPopulate(_map, _mapFewer, false));
+  test('too many', () => _testTempDirPopulate(_map, _mapMore, false));
+  test('different', () => _testTempDirPopulate(_map, _mapDiff, false));
+  test('empty', () => _testTempDirPopulate(_map, {}, false));
 
-    test('diff name, same content', () => _testTempDirPopulate(
-        {'a.txt': 'a'}, {'b.txt': 'a'}, false));
+  test('empty to empty', () => _testTempDirPopulate({}, {}, true));
 
-    group('entity exists', () {
+  test('one file to one file', () => _testTempDirPopulate(
+      {'a.txt': 'a'}, {'a.txt': 'a'}, true));
 
-      // TODO: test links
+  test('same name, different content', () => _testTempDirPopulate(
+      {'a.txt': 'a'}, {'a.txt': 'b'}, false));
 
-      final dummyValues = new Map<FileSystemEntityType, dynamic>();
-      dummyValues[FileSystemEntityType.FILE] = 'file contents';
-      dummyValues[FileSystemEntityType.DIRECTORY] = {'dirfile.txt': 'txt'};
+  test('diff name, same content', () => _testTempDirPopulate(
+      {'a.txt': 'a'}, {'b.txt': 'a'}, false));
 
-      const entityTypes = const [FileSystemEntityType.DIRECTORY,
-                                 FileSystemEntityType.FILE,
-                                 FileSystemEntityType.LINK,
-                                 null];
+  group('entity exists', () {
 
-      dummyValues.forEach((type, value) {
-        entityTypes.forEach((testType) {
+    // TODO: test links
 
-          String testTypeStr = testType == null ? 'entity' : testType.toString();
+    final dummyValues = new Map<FileSystemEntityType, dynamic>();
+    dummyValues[FileSystemEntityType.FILE] = 'file contents';
+    dummyValues[FileSystemEntityType.DIRECTORY] = {'dirfile.txt': 'txt'};
 
-          test('$type is $testTypeStr', () {
-            final createMap = new Map();
-            createMap['entity'] = value;
+    const entityTypes = const [FileSystemEntityType.DIRECTORY,
+                               FileSystemEntityType.FILE,
+                               FileSystemEntityType.LINK,
+                               null];
 
-            final testMap = new Map();
-            testMap['entity'] = new EntityExistsValidator(testType);
+    dummyValues.forEach((type, value) {
+      entityTypes.forEach((testType) {
 
-            return _testTempDirPopulate(createMap, testMap,
-                testType == null || testType == type);
-          });
+        String testTypeStr = testType == null ? 'entity' : testType.toString();
 
+        test('$type is $testTypeStr', () {
+          final createMap = new Map();
+          createMap['entity'] = value;
+
+          final testMap = new Map();
+          testMap['entity'] = new EntityExistsValidator(testType);
+
+          return _testTempDirPopulate(createMap, testMap,
+              testType == null || testType == type);
         });
 
       });
 
     });
-  }
+
+  });
 }
 
 Future _testTempDirPopulate(Map source, Map target, bool shouldWork) {

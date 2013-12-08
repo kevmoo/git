@@ -1,6 +1,14 @@
-part of test_bot_git;
+library test.bot_git.git_dir;
 
-void registerGitDirTests() {
+import 'dart:async';
+import 'dart:io';
+import 'package:unittest/unittest.dart';
+import 'package:path/path.dart' as pathos;
+import 'package:bot/bot.dart';
+import 'package:bot_io/bot_io.dart';
+import 'package:bot_io/bot_git.dart';
+
+void main() {
   group('GitDir', () {
     test('populateBranch', _testPopulateBranch);
     test('writeObjects', _testWriteObjects);

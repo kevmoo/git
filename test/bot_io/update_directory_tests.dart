@@ -1,6 +1,11 @@
-part of test_bot_io;
+library test.bot_io.update_directory;
 
-void _registerUpdateDirectoryTests() {
+import 'dart:async';
+import 'package:unittest/unittest.dart';
+import 'package:path/path.dart' as pathos;
+import 'package:bot_io/bot_io.dart';
+
+void main() {
 
   var m1 = {
             'foo':'foo',

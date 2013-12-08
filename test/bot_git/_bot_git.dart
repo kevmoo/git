@@ -1,19 +1,14 @@
 library test_bot_git;
 
-import 'dart:async';
-import 'dart:io';
 import 'package:unittest/unittest.dart';
-import 'package:path/path.dart' as pathos;
-import 'package:bot/bot.dart';
-import 'package:bot_io/bot_io.dart';
 import 'package:bot_io/bot_git.dart';
 
-part 'git_dir_tests.dart';
+import 'git_dir_tests.dart' as git_dir;
 
 void main() {
   group('bot_git', () {
 
-    registerGitDirTests();
+    git_dir.main();
 
     test('valid sha', () {
       final good = 'bcd1284d805951a16e765cea5b2273a464ee2d86';

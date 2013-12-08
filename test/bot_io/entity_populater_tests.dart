@@ -1,4 +1,10 @@
-part of test_bot_io;
+library test.bot_io.entity_populater;
+
+import 'dart:async';
+import 'dart:io';
+import 'package:unittest/unittest.dart';
+import 'package:path/path.dart' as pathos;
+import 'package:bot_io/bot_io.dart';
 
 const _entityTypes = const [null, FileSystemEntityType.FILE,
                             FileSystemEntityType.DIRECTORY,
@@ -14,7 +20,7 @@ const _dirMap = const {
   'emptySubDir': const {}
 };
 
-void _registerEntityPopulaterTests() {
+void main() {
   _registerEntityPopulaterTestsImpl(FileSystemEntityType.FILE,
       'String', 'test string content');
 
