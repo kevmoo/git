@@ -11,6 +11,12 @@ import 'package:path/path.dart' as pathos;
 
 import 'package:bot/bot.dart';
 
+/**
+ * **DEPRECATED**. Import this directly from the `bot` package.
+ */
+@deprecated
+export 'package:bot/bot.dart' show expandStream;
+
 part 'src/bot_io/ansi_color.dart';
 part 'src/bot_io/console.dart';
 part 'src/bot_io/entity_populater.dart';
