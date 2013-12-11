@@ -7,7 +7,7 @@ documentation: http://kevmoo.github.io/bot_io.dart
 environment:
   sdk: '>=1.0.0 <2.0.0'
 dependencies:
-  args: '>=0.9.0 <0.10.0'
+  args: '>=0.9.0 <0.11.0'
   bot: '>=0.26.0'
   crypto: '>=0.9.0 <0.10.0'
   logging: '>=0.9.0 <0.10.0'
