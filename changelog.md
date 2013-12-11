@@ -1,5 +1,11 @@
 # Changelog - Dart Bag of Tricks - IO
 
+## 0.25.1 2013-12-10 (SDK 1.0.2.1 r30821)
+
+* **DEPRECATED** `expandStream`. You likely weren't using it anyway. If you were, it's in `bot` now.
+* A bunch of test clean-up.
+* Dependency tweaks.
+
 ## 0.25.0 2013-11-07 (SDK 0.8.10+6 r30036)
 
 * Lastest SDK
