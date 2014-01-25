@@ -146,6 +146,6 @@ class EntityPopulatorException implements Exception {
   }
 
   @override
-  String toString() => 'EntityPopulatorException: $message\t$targetPath';
+  String toString() => '$runtimeType: $message\t$targetPath';
 }
 
