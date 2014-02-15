@@ -1,10 +1,11 @@
 library bot_git;
 
-import 'dart:async';
-import 'dart:io';
-import 'package:path/path.dart' as pathos;
-import 'package:bot/bot.dart';
-import 'package:bot_io/bot_io.dart';
-
-part 'src/git.dart';
-part 'src/git_dir.dart';
+export 'src/branch_reference.dart';
+export 'src/commit.dart';
+export 'src/commit_reference.dart';
+export 'src/git.dart';
+export 'src/git_dir.dart';
+export 'src/git_error.dart';
+export 'src/tag.dart';
+export 'src/top_level.dart';
+export 'src/tree_entry.dart';

@@ -1,7 +1,7 @@
 name: git
-version: 0.1.0-dev
+version: 0.1.0
 author: Kevin Moore <github@j832.com>
-description: A collection of (mostly) general libraries to make working with Dart more productive.
+description: A dart wrapper around the git command line
 homepage: https://github.com/kevmoo/git.dart
 environment:
   sdk: '>=1.0.0 <2.0.0'

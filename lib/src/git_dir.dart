@@ -1,4 +1,19 @@
-part of bot_git;
+library git.git_dir;
+
+import 'dart:async';
+import 'dart:io';
+import 'package:path/path.dart' as p;
+import 'package:bot/bot.dart';
+import 'package:bot_io/bot_io.dart';
+
+import 'branch_reference.dart';
+import 'commit.dart';
+import 'commit_reference.dart';
+import 'git_error.dart';
+import 'tag.dart';
+import 'top_level.dart';
+import 'tree_entry.dart';
+import 'util.dart';
 
 class GitDir {
   static const _workTreeArg = '--work-tree=';
@@ -9,8 +24,8 @@ class GitDir {
   final String _gitWorkTree;
 
   GitDir._raw(this._path, [this._gitWorkTree = null]) {
-    assert(pathos.isAbsolute(this._path));
-    assert(_gitWorkTree == null || pathos.isAbsolute(this._gitWorkTree));
+    assert(p.isAbsolute(this._path));
+    assert(_gitWorkTree == null || p.isAbsolute(this._gitWorkTree));
   }
 
   String get path => _path;
@@ -165,7 +180,7 @@ class GitDir {
             return null;
           }
 
-          assert(Git.isValidSha(newCommitSha));
+          assert(isValidSha(newCommitSha));
 
           final targetBranchRef = 'refs/heads/$branchName';
 
@@ -215,7 +230,7 @@ class GitDir {
     return runCommand(args)
         .then((ProcessResult pr) {
           final sha = pr.stdout.trim();
-          assert(Git.isValidSha(sha));
+          assert(isValidSha(sha));
           return sha;
         });
   }
@@ -258,7 +273,7 @@ class GitDir {
       list.insert(0, '$_workTreeArg${_gitWorkTree}');
     }
 
-    return Git.runGit(list, throwOnError: throwOnError, processWorkingDir: _processWorkingDir);
+    return runGit(list, throwOnError: throwOnError, processWorkingDir: _processWorkingDir);
   }
 
   Future<bool> isWorkingTreeClean() {
@@ -355,7 +370,7 @@ class GitDir {
           // time for crazy clone tricks
           final args = ['clone', '--shared', '--no-checkout', '--bare', path, '.'];
 
-          return Git.runGit(args, processWorkingDir: td.gitHostDir.path);
+          return runGit(args, processWorkingDir: td.gitHostDir.path);
       })
       .then((ProcessResult _) {
         return td.gitDir.runCommand(['checkout', '--orphan', newBranchName]);
@@ -380,7 +395,7 @@ class GitDir {
           // time for crazy clone tricks
           final args = ['clone', '--shared', '--branch', existingBranchName, '--bare', path, '.'];
 
-          return Git.runGit(args, processWorkingDir: td.gitHostDir.path);
+          return runGit(args, processWorkingDir: td.gitHostDir.path);
       })
       .then((ProcessResult _) {
         return td.gitDir.runCommand(['checkout']);
@@ -430,9 +445,9 @@ class GitDir {
   }
 
   static Future<GitDir> fromExisting(String gitDirRoot) {
-    final path = pathos.absolute(gitDirRoot);
+    final path = p.absolute(gitDirRoot);
 
-    return Git.runGit(['rev-parse', '--git-dir'], processWorkingDir: path.toString())
+    return runGit(['rev-parse', '--git-dir'], processWorkingDir: path.toString())
         .then((ProcessResult pr) {
           if(pr.stdout.trim() == '.git') {
             return new GitDir._raw(path);
@@ -449,7 +464,7 @@ class GitDir {
             throw new ArgumentError('Cannot init a directory that is already a git directory');
           }
 
-          return Git.runGit(['init', source.path]);
+          return runGit(['init', source.path]);
         })
         .then((ProcessResult pr) {
 
@@ -464,7 +479,7 @@ class GitDir {
 
     // using rev-parse because it will fail in many scenarios
     // including if the directory provided is a bare repository
-    return Git.runGit(['rev-parse'],
+    return runGit(['rev-parse'],
         throwOnError: false, processWorkingDir: dir.path)
         .then((ProcessResult pr) {
           // if exitCode is 0, status worked...which means this is a git dir

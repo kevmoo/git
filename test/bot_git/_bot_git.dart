@@ -2,6 +2,7 @@ library test_bot_git;
 
 import 'package:unittest/unittest.dart';
 import 'package:git/git.dart';
+import 'package:git/src/util.dart';
 
 import 'git_dir_tests.dart' as git_dir;
 
@@ -12,9 +13,9 @@ void main() {
 
     test('valid sha', () {
       final good = 'bcd1284d805951a16e765cea5b2273a464ee2d86';
-      expect(Git.isValidSha(good), true);
+      expect(isValidSha(good), true);
 
-      expect(() => Git.isValidSha(null), throwsArgumentError);
+      expect(() => isValidSha(null), throwsArgumentError);
       expect(() => requireArgumentValidSha1(null, 'null'), throwsArgumentError);
 
       final bad = ['', ' ', '',
@@ -33,7 +34,7 @@ void main() {
 bcd1284d805951a16e765cea5b2273a464ee2d86'''];
 
       bad.forEach((v) {
-        expect(Git.isValidSha(v), isFalse, reason: "'$v' should be bad");
+        expect(isValidSha(v), isFalse, reason: "'$v' should be bad");
 
         expect(() => requireArgumentValidSha1(v, 'v'), throwsArgumentError);
 
