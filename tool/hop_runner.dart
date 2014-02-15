@@ -14,7 +14,8 @@ void main(List<String> args) {
 
   addTask('test', createUnitTestTask(test_console.testCore));
 
-  addTask('docs', createDartDocTask(_getLibs, linkApi: true, postBuild: dartdoc.createPostBuild(_cfg)));
+  addTask('docs', createDartDocTask(_getLibs, linkApi: true,
+      postBuild: dartdoc.createPostBuild(_cfg)));
 
   //
   // Analyzer
@@ -34,7 +35,8 @@ Future<List<String>> _getLibs() {
       .toList();
 }
 
-const _libs = const ['bot_io', 'bot_git'];
+const _LIBS = const ['git'];
 
-final _cfg = new dartdoc.DocsConfig('bot_io', 'https://github.com/kevmoo/bot_io.dart',
-    'logo.png', 333, 250, _libs.contains);
+final _cfg = new dartdoc.DocsConfig('git',
+    'https://github.com/kevmoo/bot_io.dart', 'logo.png', 333, 250,
+        _LIBS.contains);

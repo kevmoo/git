@@ -6,5 +6,5 @@ import 'package:path/path.dart' as pathos;
 import 'package:bot/bot.dart';
 import 'package:bot_io/bot_io.dart';
 
-part 'src/bot_git/git.dart';
-part 'src/bot_git/git_dir.dart';
+part 'src/git.dart';
+part 'src/git_dir.dart';
