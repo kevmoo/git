@@ -435,13 +435,12 @@ class GitDir {
     }
 
     // else, verify it's empty
-    return IoHelpers.isEmpty(source)
-        .then((bool isEmpty) {
-          if(!isEmpty) {
-            throw new ArgumentError('source Directory is not empty - $source');
-          }
-          return _init(source);
-        });
+    return source.list().isEmpty.then((bool isEmpty) {
+      if(!isEmpty) {
+        throw new ArgumentError('source Directory is not empty - $source');
+      }
+      return _init(source);
+    });
   }
 
   static Future<GitDir> fromExisting(String gitDirRoot) {
