@@ -15,9 +15,8 @@ class BranchReference extends CommitReference {
     return new BranchReference._internal(sha, reference, branchName);
   }
 
-  BranchReference._internal(String sha, String reference, this.branchName) :
-    super(sha, reference);
+  BranchReference._internal(String sha, String reference, this.branchName):
+      super(sha, reference);
 
-  String toString() =>
-      'BranchReference: $branchName  $sha  ($reference)';
+  String toString() => 'BranchReference: $branchName  $sha  ($reference)';
 }

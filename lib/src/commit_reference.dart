@@ -42,6 +42,5 @@ class CommitReference {
   BranchReference toBranchReference() =>
       new BranchReference(this.sha, this.reference);
 
-  String toString() =>
-      'GitReference: $reference  $sha';
+  String toString() => 'GitReference: $reference  $sha';
 }

@@ -13,14 +13,14 @@ void requireArgumentValidSha1(String value, String argName) {
   _metaRequireArgumentNotNullOrEmpty(argName);
   requireArgumentNotNullOrEmpty(value, argName);
 
-  if(!isValidSha(value)) {
+  if (!isValidSha(value)) {
     final message = 'Not a valid SHA1 value: $value';
     throw new DetailedArgumentError(argName, message);
   }
 }
 
 void _metaRequireArgumentNotNullOrEmpty(String argName) {
-  if(argName == null || argName.length == 0) {
+  if (argName == null || argName.length == 0) {
     throw new InvalidOperationError("That's just sad. Give me a good argName");
   }
 }

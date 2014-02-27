@@ -23,7 +23,7 @@ Future _testGetCommits() {
   final commitText = const ['', ' \t leading white space is okay, too', 'first', 'second', 'third', 'forth'];
 
   final msgFromText = (String txt) {
-    if(!txt.isEmpty && txt.trim() == txt) {
+    if (!txt.isEmpty && txt.trim() == txt) {
       return 'Commit for $txt\n\nnice\n\nhuh?';
     } else {
       return txt;
@@ -117,7 +117,7 @@ Future _testPopulateBranch() {
   TempDir implTempDir;
 
   final sillyMasterBanchContent = const {
-    'master.md':'test file'
+    'master.md': 'test file'
   };
 
   final testContent1 = const {

@@ -24,7 +24,7 @@ class Tag {
 
     String lastLine = slr.readNextLine();
 
-    while(!lastLine.isEmpty) {
+    while (!lastLine.isEmpty) {
       final match = headerRegExp.allMatches(lastLine).single;
       assert(match.groupCount == 2);
       final header = match.group(1);

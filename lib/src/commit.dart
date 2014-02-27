@@ -17,7 +17,7 @@ class Commit {
       this.parents = new ReadOnlyCollection<String>(parents) {
 
     requireArgumentValidSha1(this.treeSha, 'treeSha');
-    for(final parent in parents) {
+    for (final parent in parents) {
       requireArgumentValidSha1(parent, 'parents');
     }
 
@@ -37,7 +37,7 @@ class Commit {
 
     Map<String, Commit> commits = new Map<String, Commit>();
 
-    while(slr.position != null && slr.position < content.length) {
+    while (slr.position != null && slr.position < content.length) {
       final tuple = _parse(slr, true);
       commits[tuple.item1] = tuple.item2;
     }
@@ -54,7 +54,7 @@ class Commit {
     final int startSpot = slr.position;
     String lastLine = slr.readNextLine();
 
-    while(!lastLine.isEmpty) {
+    while (!lastLine.isEmpty) {
       final match = headerRegExp.allMatches(lastLine).single;
       assert(match.groupCount == 2);
       final header = match.group(1);
@@ -70,12 +70,12 @@ class Commit {
 
     String message;
 
-    if(isRevParse) {
+    if (isRevParse) {
       final msgLines = new List<String>();
       lastLine = slr.readNextLine();
 
       const revParseMessagePrefix = '    ';
-      while(lastLine != null && lastLine.startsWith(revParseMessagePrefix)) {
+      while (lastLine != null && lastLine.startsWith(revParseMessagePrefix)) {
         msgLines.add(lastLine.substring(revParseMessagePrefix.length));
         lastLine = slr.readNextLine();
       }
@@ -97,7 +97,7 @@ class Commit {
     final commitSha = headers.containsKey('commit') ? headers['commit'].single : null;
 
     var parents = headers['parent'];
-    if(parents == null) {
+    if (parents == null) {
       parents = [];
     }
 
@@ -105,6 +105,7 @@ class Commit {
 
     final content = slr.source.substring(startSpot, endSpot);
 
-    return new Tuple(commitSha, new Commit._internal(treeSha, author, committer, message, content, parents));
+    return new Tuple(commitSha, new Commit._internal(treeSha, author, committer,
+        message, content, parents));
   }
 }

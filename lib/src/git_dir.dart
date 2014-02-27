@@ -103,14 +103,14 @@ class GitDir {
         });
   }
 
-  Future<List<CommitReference>> showRef({bool heads:false, bool tags:false}) {
+  Future<List<CommitReference>> showRef({bool heads: false, bool tags: false}) {
     final args = ['show-ref'];
 
-    if(heads) {
+    if (heads) {
       args.add('--heads');
     }
 
-    if(tags) {
+    if (tags) {
       args.add('--tags');
     }
 
