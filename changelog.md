@@ -1,6 +1,8 @@
 # Changelog - git
 
-## 0.2.0 pre-release
+## 0.2.0
+ * Supporting next release of `bot_io`
+ * Fixed `hop_runner`
  * Removed deprecated `Git` class.
 
 ## 0.1.0 2014-02-15 (SDK 1.2.0-dev.5.7 32688)
