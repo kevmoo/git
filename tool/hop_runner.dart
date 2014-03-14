@@ -7,7 +7,7 @@ import 'package:hop/hop_tasks.dart';
 import '../test/harness_console.dart' as test_console;
 
 void main(List<String> args) {
-  addTask('test', createUnitTestTask(test_console.testCore));
+  addTask('test', createUnitTestTask(test_console.main));
 
   addTask('analyze_libs', createAnalyzerTask(_getLibs));
 
