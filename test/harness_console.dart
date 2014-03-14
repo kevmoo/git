@@ -2,10 +2,12 @@ library harness_console;
 
 import 'package:unittest/unittest.dart';
 
-import 'bot_git/_bot_git.dart' as bot_git;
+import 'parse_test.dart' as parse;
+import 'git_dir_test.dart' as git_dir;
 
 void main() {
   groupSep = ' - ';
 
-  bot_git.main();
+  group('git_dir', git_dir.main);
+  group('parse', parse.main);
 }

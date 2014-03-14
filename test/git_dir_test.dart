@@ -1,4 +1,4 @@
-library test.bot_git.git_dir;
+library git.git_dir_test;
 
 import 'dart:async';
 import 'dart:io';
