@@ -290,7 +290,7 @@ class GitDir {
    *
    * If no content is added to the directory, an [Error] is thrown.
    */
-  Future<Commit> populateBranch(String branchName, PopulateTempDir populator, String commitMessage) {
+  Future<Commit> populateBranch(String branchName, Future populator(TempDir td), String commitMessage) {
     // TODO: ponder restricting branch names
     // see http://stackoverflow.com/questions/12093748/how-do-i-check-for-valid-git-branch-names/12093994#12093994
 
@@ -521,4 +521,5 @@ class _TempDirs {
 /**
  * A method that populates a [TempDir] asynchronously.
  */
+@deprecated
 typedef Future PopulateTempDir(TempDir dir);
