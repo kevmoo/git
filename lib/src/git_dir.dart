@@ -16,8 +16,8 @@ import 'tree_entry.dart';
 import 'util.dart';
 
 class GitDir {
-  static const _workTreeArg = '--work-tree=';
-  static const _gitDirArg = '--git-dir=';
+  static const _WORK_TREE_ARG = '--work-tree=';
+  static const _GIT_DIR_ARG = '--git-dir=';
   static final RegExp _shaRegExp = new RegExp(r'^[a-f0-9]{40}$');
 
   final String _path;
@@ -265,12 +265,12 @@ class GitDir {
 
     for(final arg in list) {
       requireArgumentNotNullOrEmpty(arg, 'args');
-      requireArgument(!arg.contains(_workTreeArg), 'args', 'Cannot contain $_workTreeArg');
-      requireArgument(!arg.contains(_gitDirArg), 'args', 'Cannot contain $_gitDirArg');
+      requireArgument(!arg.contains(_WORK_TREE_ARG), 'args', 'Cannot contain $_WORK_TREE_ARG');
+      requireArgument(!arg.contains(_GIT_DIR_ARG), 'args', 'Cannot contain $_GIT_DIR_ARG');
     }
 
     if(_gitWorkTree != null) {
-      list.insert(0, '$_workTreeArg${_gitWorkTree}');
+      list.insert(0, '$_WORK_TREE_ARG${_gitWorkTree}');
     }
 
     return runGit(list, throwOnError: throwOnError, processWorkingDir: _processWorkingDir);
