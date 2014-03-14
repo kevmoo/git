@@ -3,16 +3,75 @@ library git.git_dir_test;
 import 'dart:async';
 import 'dart:io';
 import 'package:unittest/unittest.dart';
-import 'package:path/path.dart' as pathos;
+
 import 'package:bot/bot.dart';
 import 'package:bot_io/bot_io.dart';
+import 'package:path/path.dart' as p;
 import 'package:git/git.dart';
 
 void main() {
-  group('GitDir', () {
-    test('populateBranch', _testPopulateBranch);
-    test('writeObjects', _testWriteObjects);
-    test('getCommits', _testGetCommits);
+  test('populateBranch', _testPopulateBranch);
+  test('getCommits', _testGetCommits);
+  test('writeObjects', () {
+    var _initialContentMap = {
+      'file1.txt': 'content1',
+      'file2.txt': 'content2'
+    };
+
+    TempDir tempContent;
+
+    GitDir gitDir;
+    TempDir tempGitDir;
+
+    return _getTempGit()
+      .then((Tuple items) {
+
+        tempGitDir = items.item1;
+        gitDir = items.item2;
+
+        // verify the new _gitDir has no branches
+        return gitDir.getBranchNames();
+      })
+      .then((List<String> branches) {
+
+        // branches should be an empty list
+        expect(branches, isNotNull);
+        expect(branches, isEmpty);
+
+        // now create a new temp for the file contents
+        return TempDir.create();
+      }).then((TempDir td) {
+        expect(tempContent, isNull);
+        expect(td, isNotNull);
+        tempContent = td;
+
+        return tempContent.populate(_initialContentMap);
+      }).then((TempDir dir) {
+        expect(dir, equals(tempContent));
+
+        // now we'll write files to the object store
+        final paths = _initialContentMap.keys.map((String fileName) {
+          return p.join(tempContent.path, fileName);
+        }).toList();
+
+        return gitDir.writeObjects(paths);
+      }).then((Map<String, String> hashes) {
+
+        // the returned hash should be cool
+        expect(hashes.length, equals(_initialContentMap.length));
+
+
+      })
+      .whenComplete(() {
+        if(tempGitDir != null) {
+          return tempGitDir.dispose();
+        }
+      })
+      .whenComplete(() {
+        if(tempContent != null) {
+          return tempContent.dispose();
+        }
+      });
   });
 }
 
@@ -20,9 +79,9 @@ Future _testGetCommits() {
   TempDir td;
   GitDir gd;
 
-  final commitText = const ['', ' \t leading white space is okay, too', 'first', 'second', 'third', 'forth'];
+  var commitText = const ['', ' \t leading white space is okay, too', 'first', 'second', 'third', 'forth'];
 
-  final msgFromText = (String txt) {
+  var msgFromText = (String txt) {
     if (!txt.isEmpty && txt.trim() == txt) {
       return 'Commit for $txt\n\nnice\n\nhuh?';
     } else {
@@ -181,8 +240,8 @@ Future _testPopulateBranchEmpty(GitDir gitDir, String branchName) {
       });
 }
 
-Future<Tuple<Commit, int>> _testPopulateBranchCore(GitDir gitDir, String branchName,
-                               Map<String, dynamic> contents, String commitMessage) {
+Future<Tuple<Commit, int>> _testPopulateBranchCore(GitDir gitDir,
+    String branchName, Map<String, dynamic> contents, String commitMessage) {
   int originalCommitCount;
   TempDir implTempDir;
 
@@ -221,7 +280,7 @@ Future<Tuple<Commit, int>> _testPopulateBranchCore(GitDir gitDir, String branchN
 }
 
 Future _testPopulateBranchWithContent(GitDir gitDir, String branchName,
-                               Map<String, dynamic> contents, String commitMessage) {
+    Map<String, dynamic> contents, String commitMessage) {
 
   int originalCommitCount;
 
@@ -270,7 +329,7 @@ Future _testPopulateBranchWithContent(GitDir gitDir, String branchName,
 }
 
 Future _testPopulateBranchWithDupeContent(GitDir gitDir, String branchName,
-                               Map<String, dynamic> contents, String commitMessage) {
+    Map<String, dynamic> contents, String commitMessage) {
 
   int originalCommitCount;
 
@@ -293,72 +352,6 @@ Future _testPopulateBranchWithDupeContent(GitDir gitDir, String branchName,
     })
     .then((int newCommitCount) {
       expect(newCommitCount, originalCommitCount, reason: 'no change in commit count');
-    });
-}
-
-Future _testWriteObjects() {
-  final file1Name = 'file1.txt';
-  final file2Name = 'file2.txt';
-
-  final Map<String, dynamic> _initialContentMap = new Map<String, dynamic>();
-  _initialContentMap[file1Name] = 'content1';
-  _initialContentMap[file2Name] = 'content2';
-
-  final Map<String, String> fileHashes = new Map<String, String>();
-
-  TempDir tempContent;
-
-  GitDir gitDir;
-  TempDir tempGitDir;
-
-  return _getTempGit()
-    .then((Tuple items) {
-
-      tempGitDir = items.item1;
-      gitDir = items.item2;
-
-      // verify the new _gitDir has no branches
-      return gitDir.getBranchNames();
-    })
-    .then((List<String> branches) {
-
-      // branches should be an empty list
-      expect(branches, isNotNull);
-      expect(branches, isEmpty);
-
-      // now create a new temp for the file contents
-      return TempDir.create();
-    }).then((TempDir td) {
-      expect(tempContent, isNull);
-      expect(td, isNotNull);
-      tempContent = td;
-
-      return tempContent.populate(_initialContentMap);
-    }).then((TempDir dir) {
-      expect(dir, equals(tempContent));
-
-      // now we'll write files to the object store
-      final paths = _initialContentMap.keys.map((String fileName) {
-        return pathos.join(tempContent.path, fileName);
-      }).toList();
-
-      return gitDir.writeObjects(paths);
-    }).then((Map<String, String> hashes) {
-
-      // the returned hash should be cool
-      expect(hashes.length, equals(_initialContentMap.length));
-
-
-    })
-    .whenComplete(() {
-      if(tempGitDir != null) {
-        return tempGitDir.dispose();
-      }
-    })
-    .whenComplete(() {
-      if(tempContent != null) {
-        tempContent.dispose();
-      }
     });
 }
 
