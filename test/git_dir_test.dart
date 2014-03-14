@@ -2,84 +2,85 @@ library git.git_dir_test;
 
 import 'dart:async';
 import 'dart:io';
-import 'package:unittest/unittest.dart';
 
 import 'package:bot/bot.dart';
 import 'package:bot_io/bot_io.dart';
 import 'package:path/path.dart' as p;
+import 'package:scheduled_test/descriptor.dart' as d;
+import 'package:scheduled_test/scheduled_test.dart';
 import 'package:git/git.dart';
 
 void main() {
   test('populateBranch', _testPopulateBranch);
   test('getCommits', _testGetCommits);
   test('writeObjects', () {
-    var _initialContentMap = {
+
+    GitDir gitDir;
+
+    schedule(() {
+      return _getGitTemp().then((value) {
+        gitDir = value;
+      });
+    });
+
+    currentSchedule.onComplete.schedule(() {
+      var dir = new Directory(gitDir.path);
+      return dir.delete(recursive: true);
+    });
+
+    schedule(() {
+      expect(gitDir.getBranchNames(), completion([]),
+          reason: 'Should start with zero commits');
+    });
+
+    Directory tempDir;
+    schedule(() {
+      return Directory.systemTemp
+          .createTemp('hop_docgen-test-')
+          .then((dir) {
+        tempDir = dir;
+        d.defaultRoot = tempDir.path;
+      });
+    });
+
+    currentSchedule.onComplete.schedule(() {
+      d.defaultRoot = null;
+      return tempDir.delete(recursive: true);
+    });
+
+    var initialContentMap = {
       'file1.txt': 'content1',
       'file2.txt': 'content2'
     };
 
-    TempDir tempContent;
+    schedule(() {
+      return _doDescriptorPopulate(d.defaultRoot, initialContentMap);
+    });
 
-    GitDir gitDir;
-    TempDir tempGitDir;
+    schedule(() {
+      var paths = initialContentMap.keys.map((String fileName) {
+        return p.join(d.defaultRoot, fileName);
+      }).toList();
 
-    return _getTempGit()
-      .then((Tuple items) {
+      return gitDir.writeObjects(paths).then((hashes) {
+        expect(hashes.length, equals(initialContentMap.length));
+        expect(hashes.keys, unorderedEquals(paths));
 
-        tempGitDir = items.item1;
-        gitDir = items.item2;
+        expect(paths[0], endsWith('file1.txt'));
+        expect(hashes,
+            containsPair(paths[0], 'dd954e7a4e1a62ff90c5a0709dce5928716535c1'));
 
-        // verify the new _gitDir has no branches
-        return gitDir.getBranchNames();
-      })
-      .then((List<String> branches) {
-
-        // branches should be an empty list
-        expect(branches, isNotNull);
-        expect(branches, isEmpty);
-
-        // now create a new temp for the file contents
-        return TempDir.create();
-      }).then((TempDir td) {
-        expect(tempContent, isNull);
-        expect(td, isNotNull);
-        tempContent = td;
-
-        return tempContent.populate(_initialContentMap);
-      }).then((TempDir dir) {
-        expect(dir, equals(tempContent));
-
-        // now we'll write files to the object store
-        final paths = _initialContentMap.keys.map((String fileName) {
-          return p.join(tempContent.path, fileName);
-        }).toList();
-
-        return gitDir.writeObjects(paths);
-      }).then((Map<String, String> hashes) {
-
-        // the returned hash should be cool
-        expect(hashes.length, equals(_initialContentMap.length));
-
-
-      })
-      .whenComplete(() {
-        if(tempGitDir != null) {
-          return tempGitDir.dispose();
-        }
-      })
-      .whenComplete(() {
-        if(tempContent != null) {
-          return tempContent.dispose();
-        }
+        expect(paths[1], endsWith('file2.txt'));
+        expect(hashes,
+            containsPair(paths[1], 'db00fd65b218578127ea51f3dffac701f12f486a'));
       });
+    });
   });
 }
 
-Future _testGetCommits() {
-  TempDir td;
-  GitDir gd;
-
-  var commitText = const ['', ' \t leading white space is okay, too', 'first', 'second', 'third', 'forth'];
+void _testGetCommits() {
+  var commitText = const ['', ' \t leading white space is okay, too', 'first',
+      'second', 'third', 'forth'];
 
   var msgFromText = (String txt) {
     if (!txt.isEmpty && txt.trim() == txt) {
@@ -89,70 +90,82 @@ Future _testGetCommits() {
     }
   };
 
-  return _getTempGit()
-      .then((tuple) {
-        td = tuple.item1;
-        gd = tuple.item2;
+  GitDir gitDir;
 
+  schedule(() {
+    return _getGitTemp().then((value) {
+      gitDir = value;
 
-        return Future.forEach(commitText, (String commitStr) {
-          final fileMap = {};
-          fileMap['$commitStr.txt'] = '$commitStr content';
+      return gitDir.getBranchNames();
+    }).then((branches) {
+      expect(branches, []);
+    });
+  });
 
-          return _doPopulate(gd, td, fileMap, msgFromText(commitStr));
-        });
-      })
-      .then((_) {
+  currentSchedule.onComplete.schedule(() {
+    var dir = new Directory(gitDir.path);
+    return dir.delete(recursive: true);
+  });
 
-        return gd.getCommitCount();
-      })
-      .then((int commitCount) {
-        expect(commitCount, commitText.length);
+  schedule(() {
+    return Future.forEach(commitText, (String commitStr) {
+      final fileMap = {};
+      fileMap['$commitStr.txt'] = '$commitStr content';
 
-        return gd.getCommits();
-      })
-      .then((Map<String, Commit> commits) {
-        expect(commits, hasLength(commitText.length));
+      return _doDescriptorGitCommit(gitDir, fileMap, msgFromText(commitStr));
+    });
+  });
 
-        final commitMessages = commitText.map(msgFromText).toList();
+  schedule(() {
+    expect(gitDir.getCommitCount(), completion(commitText.length));
+  });
 
-        final indexMap = new Map<int, Tuple<String, Commit>>();
+  Map<String, Commit> commits;
 
-        commits.forEach((commitSha, Commit commit) {
-          // index into the text for the message of this commit
-          int commitMessageIndex = null;
-          for(var i = 0; i < commitMessages.length; i++) {
-            if(commitMessages[i] == commit.message) {
-              commitMessageIndex = i;
-              break;
-            }
-          }
+  schedule(() {
+    return gitDir.getCommits().then((value) {
+      commits = value;
+    });
+  });
 
-          expect(commitMessageIndex, isNotNull, reason: 'a matching message should be found');
+  schedule(() {
+    expect(commits, hasLength(commitText.length));
 
-          expect(indexMap.containsKey(commitMessageIndex), isFalse);
-          indexMap[commitMessageIndex] = new Tuple(commitSha, commit);
-        });
+    var commitMessages = commitText.map(msgFromText).toList();
 
-        indexMap.forEach((int index, Tuple<String, Commit> shaCommitTuple) {
+    var indexMap = <int, Tuple<String, Commit>>{};
 
-          if(index > 0) {
-            expect(shaCommitTuple.item2.parents, unorderedEquals([indexMap[index-1].item1]));
-          } else {
-            expect(shaCommitTuple.item2.parents, hasLength(0));
-          }
-        });
-
-      })
-      .whenComplete((){
-        if(td != null) {
-          td.dispose();
+    commits.forEach((commitSha, Commit commit) {
+      // index into the text for the message of this commit
+      int commitMessageIndex = null;
+      for(var i = 0; i < commitMessages.length; i++) {
+        if(commitMessages[i] == commit.message) {
+          commitMessageIndex = i;
+          break;
         }
-      });
+      }
+
+      expect(commitMessageIndex, isNotNull,
+          reason: 'a matching message should be found');
+
+      expect(indexMap.containsKey(commitMessageIndex), isFalse);
+      indexMap[commitMessageIndex] = new Tuple(commitSha, commit);
+    });
+
+    indexMap.forEach((int index, Tuple<String, Commit> shaCommitTuple) {
+      if(index > 0) {
+        expect(shaCommitTuple.item2.parents,
+            unorderedEquals([indexMap[index-1].item1]));
+      } else {
+        expect(shaCommitTuple.item2.parents, hasLength(0));
+      }
+    });
+
+  });
 }
 
-Future _doPopulate(GitDir gd, TempDir td, Map<String, dynamic> contents, String commitMsg) {
-  return td.populate(contents)
+Future _doDescriptorGitCommit(GitDir gd, Map<String, dynamic> contents, String commitMsg) {
+  return _doDescriptorPopulate(gd.path, contents)
       .then((_) {
         // now add this new file
         return gd.runCommand(['add', '--all']);
@@ -168,89 +181,95 @@ Future _doPopulate(GitDir gd, TempDir td, Map<String, dynamic> contents, String 
       });
 }
 
-Future _testPopulateBranch() {
+Future _doDescriptorPopulate(String dirPath, Map<String, dynamic> contents) {
+  return Future.forEach(contents.keys, (String name) {
+    var value = contents[name];
 
-  TempDir td1;
-  GitDir gd1;
+    if (value is String) {
+      return d.file(name, value).create(dirPath);
+    } else {
+      throw new UnsupportedError('We cannot party with $value');
+    }
+  });
+}
 
-  TempDir implTempDir;
-
-  final sillyMasterBanchContent = const {
+void _testPopulateBranch() {
+  var initialMasterBranchContent = const {
     'master.md': 'test file'
   };
 
-  final testContent1 = const {
+  var testContent1 = const {
     'file1.txt': 'file 1 contents',
     'file2.txt': 'file 2 contents',
     'file3.txt': 'not around very long'
   };
 
-  final testContent2 = const {
+  var testContent2 = const {
     'file1.txt': 'file 1 contents',
     'file2.txt': 'file 2 contents changed',
     'file4.txt': 'sorry, file3'
   };
 
-  final testBranchName = 'the_test_branch';
+  var testBranchName = 'the_test_branch';
 
-  Commit returnedCommit;
+  GitDir gd1;
 
-  return _getTempGit()
-      .then((tuple) {
-        td1 = tuple.item1;
-        gd1 = tuple.item2;
+  schedule(() {
+    return _getGitTemp().then((value) {
+      gd1 = value;
+    });
+  });
 
-        // let's commit some stuff into this new git dir in the master branch
-        // just to be safe
-        return _doPopulate(gd1, td1, sillyMasterBanchContent, 'master files');
-      })
-      .then((_) {
-        // no branches or files
-        return _testPopulateBranchEmpty(gd1, testBranchName);
-      })
-      .then((_) {
-        return _testPopulateBranchWithContent(gd1, testBranchName, testContent1, 'first commit!');
-      })
-      .then((_) {
-        return _testPopulateBranchWithContent(gd1, testBranchName, testContent2, 'second commit');
-      })
-      .then((_) {
-        return _testPopulateBranchWithDupeContent(gd1, testBranchName, testContent2, 'same content');
-      })
-      .then((_) {
-        return _testPopulateBranchWithContent(gd1, testBranchName, testContent1, '3rd commit, content 1');
-      })
-      .then((_) {
-        return _testPopulateBranchEmpty(gd1, testBranchName);
-      })
-      .whenComplete(() {
-        if(td1 != null) {
-          return td1.dispose();
-        }
-      });
+  currentSchedule.onComplete.schedule(() {
+    var dir = new Directory(gd1.path);
+    return dir.delete(recursive: true);
+  });
+
+  schedule(() {
+    return _doDescriptorGitCommit(gd1, initialMasterBranchContent, 'master files');
+  });
+
+  schedule(() {
+    _testPopulateBranchEmpty(gd1, testBranchName);
+  });
+
+  schedule(() {
+    return _testPopulateBranchWithContent(gd1, testBranchName, testContent1, 'first commit!');
+  });
+
+  schedule(() {
+    return _testPopulateBranchWithContent(gd1, testBranchName, testContent2, 'second commit');
+  });
+
+  schedule(() {
+    return _testPopulateBranchWithDupeContent(gd1, testBranchName, testContent2, 'same content');
+  });
+
+  schedule(() {
+    return _testPopulateBranchWithContent(gd1, testBranchName, testContent1, '3rd commit, content 1');
+  });
+
+  schedule(() {
+    _testPopulateBranchEmpty(gd1, testBranchName);
+  });
 }
 
-Future _testPopulateBranchEmpty(GitDir gitDir, String branchName) {
-  return _testPopulateBranchCore(gitDir, branchName, {}, 'empty?')
-      .then((value) {
-        fail('empty content should fail!');
-      }, onError: (error) {
-        expect(error.message, 'No files were added');
-        // no return - null - is okay
-      });
+void _testPopulateBranchEmpty(GitDir gitDir, String branchName) {
+  expect(_testPopulateBranchCore(gitDir, branchName, {}, 'empty?'),
+      throwsA(predicate((error) {
+    return error.message == 'No files were added';
+  })));
 }
 
 Future<Tuple<Commit, int>> _testPopulateBranchCore(GitDir gitDir,
     String branchName, Map<String, dynamic> contents, String commitMessage) {
   int originalCommitCount;
-  TempDir implTempDir;
 
-  BranchReference branchRef;
+  Directory tempDir;
 
   // figure out how many commits exist for the provided branch
   return gitDir.getBranchReference(branchName)
-      .then((BranchReference value) {
-        branchRef = value;
+      .then((BranchReference branchRef) {
         if(branchRef == null) {
           return 0;
         } else {
@@ -263,18 +282,17 @@ Future<Tuple<Commit, int>> _testPopulateBranchCore(GitDir gitDir,
         return gitDir.populateBranch(branchName, (TempDir td) {
           // strictly speaking, users of this API should not hold on to the TempDir
           // but this is for testing
-          implTempDir = td;
+          tempDir = td.dir;
 
-          return td.populate(contents);
+          return _doDescriptorPopulate(tempDir.path, contents);
         }, commitMessage);
       })
     .then((Commit commit) {
       return new Tuple(commit, originalCommitCount);
     })
     .whenComplete(() {
-      if(implTempDir != null) {
-        expect(implTempDir.isDisposed, true, reason: 'The temp dir $implTempDir should be disposed');
-        expect(implTempDir.dir.existsSync(), false);
+      if(tempDir != null) {
+        expect(tempDir.existsSync(), false);
       }
     });
 }
@@ -355,40 +373,9 @@ Future _testPopulateBranchWithDupeContent(GitDir gitDir, String branchName,
     });
 }
 
-Future<Tuple<TempDir, GitDir>> _getTempGit() {
-  TempDir _tempGitDir;
-  GitDir gitDir;
-
-  return TempDir.create()
-    .then((TempDir tempDir) {
-      expect(_tempGitDir , isNull);
-      _tempGitDir = tempDir;
-
-      // is not git dir
-      return GitDir.isGitDir(_tempGitDir.path);
-    })
-    .then((bool isGitDir) {
-      expect(isGitDir, false);
-
-      // initialize a new git dir
-      return GitDir.init(_tempGitDir.dir);
-    })
-    .then((GitDir gd) {
-      expect(gd, isNotNull);
-      gitDir = gd;
-
-      // is a git dir now
-      return GitDir.isGitDir(_tempGitDir.path);
-    })
-    .then((bool isGitDir) {
-      expect(isGitDir, true);
-
-      // is clean
-      return gitDir.isWorkingTreeClean();
-    })
-    .then((bool isWorkingTreeClean) {
-      expect(isWorkingTreeClean, true);
-
-      return new Tuple<TempDir, GitDir>(_tempGitDir, gitDir);
-    });
+Future<GitDir> _getGitTemp() {
+  return Directory.systemTemp.createTemp('git_test-')
+      .then((dir) {
+    return GitDir.init(dir);
+  });
 }
