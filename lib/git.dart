@@ -1,4 +1,4 @@
-library bot_git;
+library git;
 
 export 'src/branch_reference.dart';
 export 'src/commit.dart';
