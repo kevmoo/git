@@ -285,11 +285,26 @@ class GitDir {
   // TODO: TEST: someone puts in no content at all
 
   /**
-   * If the content provided matches the content in the specificed [branchName], then
-   * `null` is returned.
+   * Updates the named branch with the content add by calling [populater].
    *
-   * If no content is added to the directory, an [Error] is thrown.
+   * [populater] is called with a temporary [Directory] instance that should
+   * be populated with the desired content.
+   *
+   * If the content provided matches the content in the specificed [branchName],
+   * then no [Commit] is created and `null` is returned.
+   *
+   * If no content is added to the directory, an error is thrown.
    */
+  Future<Commit> updateBranch(String branchName, Future populater(Directory td),
+      String commitMessage) => populateBranch(branchName,
+          (TempDir td) => populater(td.dir), commitMessage);
+
+  /**
+   * **DEPRECATED**.
+   *
+   * Use [updateBranch] instead.
+   */
+  @deprecated
   Future<Commit> populateBranch(String branchName, Future populator(TempDir td), String commitMessage) {
     // TODO: ponder restricting branch names
     // see http://stackoverflow.com/questions/12093748/how-do-i-check-for-valid-git-branch-names/12093994#12093994

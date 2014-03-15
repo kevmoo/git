@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:bot/bot.dart';
-import 'package:bot_io/bot_io.dart';
 import 'package:path/path.dart' as p;
 import 'package:scheduled_test/descriptor.dart' as d;
 import 'package:scheduled_test/scheduled_test.dart';
@@ -279,10 +278,10 @@ Future<Tuple<Commit, int>> _testPopulateBranchCore(GitDir gitDir,
       .then((int value) {
         originalCommitCount = value;
 
-        return gitDir.populateBranch(branchName, (TempDir td) {
+        return gitDir.updateBranch(branchName, (Directory td) {
           // strictly speaking, users of this API should not hold on to the TempDir
           // but this is for testing
-          tempDir = td.dir;
+          tempDir = td;
 
           return _doDescriptorPopulate(tempDir.path, contents);
         }, commitMessage);
