@@ -1,11 +1,16 @@
 # Changelog - git
 
-## 0.2.0
+## v0.2.1 - 2014-03-16
+ * **Deprecated** `PopulateTempDir` typedef.
+ * **Deprecated** `GitDir.populateBranch` - moving away from `TempDir` from `bot_io`
+ * **NEW!** `GitDir.updateBranch` like `populateBranch`, but exposes a `Directory`
+
+## v0.2.0 - 2014-03-04
  * Supporting next release of `bot_io`
  * Fixed `hop_runner`
  * Removed deprecated `Git` class.
 
-## 0.1.0 2014-02-15 (SDK 1.2.0-dev.5.7 32688)
+## v0.1.0 - 2014-02-15
  * First release
  * Maintains 100% compatibility with the `bot_git` library from the `bot_io`
    package as of release `0.25.1+2`.
