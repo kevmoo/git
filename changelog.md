@@ -1,5 +1,8 @@
 # Changelog - git
 
+## v0.2.1+1 - 2014-03-16
+ * Moved `scheduled_test` dependency to `dev_dependencies`
+
 ## v0.2.1 - 2014-03-16
  * **Deprecated** `PopulateTempDir` typedef.
  * **Deprecated** `GitDir.populateBranch` - moving away from `TempDir` from `bot_io`
