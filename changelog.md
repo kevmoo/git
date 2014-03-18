@@ -1,5 +1,10 @@
 # Changelog - git
 
+## v0.3.0 - 2014-03-17
+ * **BREAKING** `PopulateTempDir` typedef.
+ * **BREAKING** `GitDir.populateBranch` - moving away from `TempDir` from `bot_io`
+ * Removed a number of package dependencies
+
 ## v0.2.1+1 - 2014-03-16
  * Moved `scheduled_test` dependency to `dev_dependencies`
 
