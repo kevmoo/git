@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:io';
 import 'package:path/path.dart' as p;
 import 'package:bot/bot.dart';
-import 'package:bot_io/bot_io.dart';
 
 import 'branch_reference.dart';
 import 'commit.dart';
@@ -134,7 +133,8 @@ class GitDir {
           return runCommand(['show-ref', '--verify', pr.stdout.trim()]);
         })
         .then((ProcessResult pr) {
-          return CommitReference.fromShowRefOutput(pr.stdout).single.toBranchReference();
+          return CommitReference.fromShowRefOutput(pr.stdout).single
+              .toBranchReference();
         });
   }
 
@@ -160,7 +160,8 @@ class GitDir {
   }
 
   /**
-   * Returns the SHA for the new commit if one is created. `null` if the branch is not updated.
+   * Returns the SHA for the new commit if one is created. `null` if the branch
+   * is not updated.
    */
   Future<String> createOrUpdateBranch(String branchName, String treeSha,
                               String commitMessage) {
@@ -192,16 +193,19 @@ class GitDir {
   }
 
   /**
-   * Returns the SHA for the new commit if one is created. `null` if the branch is not updated.
+   * Returns the SHA for the new commit if one is created. `null` if the branch
+   * is not updated.
    */
-  Future<String> _updateBranch(String targetBranchSha, String treeSha, String commitMessage) {
+  Future<String> _updateBranch(String targetBranchSha, String treeSha,
+      String commitMessage) {
     return getCommit(targetBranchSha)
         .then((Commit commitObj) {
           if(commitObj.treeSha == treeSha) {
             return null;
           }
 
-          return commitTree(treeSha, commitMessage, parentCommitShas: [targetBranchSha]);
+          return commitTree(treeSha, commitMessage,
+              parentCommitShas: [targetBranchSha]);
         });
   }
 
@@ -210,11 +214,13 @@ class GitDir {
    *
    * See [git-commit-tree](http://git-scm.com/docs/git-commit-tree)
    */
-  Future<String> commitTree(String treeSha, String commitMessage, {List<String> parentCommitShas}) {
+  Future<String> commitTree(String treeSha, String commitMessage,
+      {List<String> parentCommitShas}) {
     requireArgumentValidSha1(treeSha, 'treeSha');
 
     requireArgumentNotNullOrEmpty(commitMessage, 'commitMessage');
-    requireArgument(commitMessage.trim() == commitMessage, 'commitMessage', 'Value cannot start or end with whitespace.');
+    requireArgument(commitMessage.trim() == commitMessage, 'commitMessage',
+        'Value cannot start or end with whitespace.');
 
     if(parentCommitShas == null) {
       parentCommitShas = [];
@@ -296,16 +302,7 @@ class GitDir {
    * If no content is added to the directory, an error is thrown.
    */
   Future<Commit> updateBranch(String branchName, Future populater(Directory td),
-      String commitMessage) => populateBranch(branchName,
-          (TempDir td) => populater(td.dir), commitMessage);
-
-  /**
-   * **DEPRECATED**.
-   *
-   * Use [updateBranch] instead.
-   */
-  @deprecated
-  Future<Commit> populateBranch(String branchName, Future populator(TempDir td), String commitMessage) {
+      String commitMessage) {
     // TODO: ponder restricting branch names
     // see http://stackoverflow.com/questions/12093748/how-do-i-check-for-valid-git-branch-names/12093994#12093994
 
@@ -326,7 +323,7 @@ class GitDir {
         .then((_TempDirs value) {
           tempDirs = value;
 
-          return populator(tempDirs.gitWorkTreeDir);
+          return populater(tempDirs.gitWorkTreeDir);
         })
         .then((_) {
 
@@ -353,10 +350,12 @@ class GitDir {
           }
 
           // Time to commit.
-          return tempDirs.gitDir.runCommand(['commit', '--verbose', '-m', commitMessage])
+          return tempDirs.gitDir.runCommand(['commit', '--verbose', '-m',
+                                             commitMessage])
               .then((ProcessResult pr) {
                 // --verbose is not strictly needed, but nice for debugging
-                return tempDirs.gitDir.runCommand(['push', '--verbose', '--progress', path, branchName]);
+                return tempDirs.gitDir.runCommand(['push', '--verbose',
+                    '--progress', path, branchName]);
               })
               .then((ProcessResult pr) {
                 // pr.stderr will have all of the info
@@ -383,7 +382,8 @@ class GitDir {
           td = val;
 
           // time for crazy clone tricks
-          final args = ['clone', '--shared', '--no-checkout', '--bare', path, '.'];
+          var args = ['clone', '--shared', '--no-checkout', '--bare', path,
+                      '.'];
 
           return runGit(args, processWorkingDir: td.gitHostDir.path);
       })
@@ -408,7 +408,8 @@ class GitDir {
           td = val;
 
           // time for crazy clone tricks
-          final args = ['clone', '--shared', '--branch', existingBranchName, '--bare', path, '.'];
+          var args = ['clone', '--shared', '--branch', existingBranchName,
+                      '--bare', path, '.'];
 
           return runGit(args, processWorkingDir: td.gitHostDir.path);
       })
@@ -466,7 +467,8 @@ class GitDir {
           if(pr.stdout.trim() == '.git') {
             return new GitDir._raw(path);
           } else {
-            throw new ArgumentError('The provided value "$gitDirRoot" is not the root of a git directory');
+            throw new ArgumentError('The provided value "$gitDirRoot" is not '
+                'the root of a git directory');
           }
         });
   }
@@ -475,7 +477,8 @@ class GitDir {
     return _isGitDir(source)
         .then((bool isGitDir) {
           if(isGitDir) {
-            throw new ArgumentError('Cannot init a directory that is already a git directory');
+            throw new ArgumentError('Cannot init a directory that is already a '
+                'git directory');
           }
 
           return runGit(['init', source.path]);
@@ -504,19 +507,19 @@ class GitDir {
 
 class _TempDirs {
   final GitDir gitDir;
-  final TempDir gitHostDir;
-  final TempDir gitWorkTreeDir;
+  final Directory gitHostDir;
+  final Directory gitWorkTreeDir;
 
   static Future<_TempDirs> create() {
-    TempDir host, work;
+    Directory host, work;
 
-    return TempDir.create()
-        .then((TempDir val) {
+    return _createTempDir()
+        .then((Directory val) {
           host = val;
 
-          return TempDir.create();
+          return _createTempDir();
         })
-        .then((TempDir val) {
+        .then((Directory val) {
           work = val;
 
           var gd = new GitDir._raw(host.path, work.path);
@@ -529,12 +532,10 @@ class _TempDirs {
   String toString() => [gitHostDir, gitWorkTreeDir].toString();
 
   Future dispose() {
-    return Future.forEach([gitHostDir, gitWorkTreeDir], (td) => td.dispose());
+    return Future.forEach([gitHostDir, gitWorkTreeDir],
+        (Directory dir) => dir.delete(recursive: true));
   }
 }
 
-/**
- * A method that populates a [TempDir] asynchronously.
- */
-@deprecated
-typedef Future PopulateTempDir(TempDir dir);
+Future<Directory> _createTempDir() =>
+    Directory.systemTemp.createTemp('git_dir-');
