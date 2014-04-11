@@ -1,5 +1,5 @@
 name: git
-version: 0.3.0
+version: 0.3.0+1
 author: Kevin Moore <github@j832.com>
 description: A dart wrapper around the git command line
 homepage: https://github.com/kevmoo/git.dart
@@ -11,4 +11,4 @@ dependencies:
 dev_dependencies:
   hop: '>=0.30.2 <0.31.0'
   hop_docgen: '>=0.1.0 <0.2.0'
-  scheduled_test: '>=0.10.0 <0.11.0'
+  scheduled_test: '>=0.10.0 <0.12.0'
