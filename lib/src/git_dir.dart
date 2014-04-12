@@ -264,22 +264,26 @@ class GitDir {
         });
   }
 
-  Future<ProcessResult> runCommand(Iterable<String> args, [bool throwOnError = true]) {
+  Future<ProcessResult> runCommand(Iterable<String> args,
+      [bool throwOnError = true]) {
     requireArgumentNotNull(args, 'args');
 
     final list = args.toList();
 
     for(final arg in list) {
       requireArgumentNotNullOrEmpty(arg, 'args');
-      requireArgument(!arg.contains(_WORK_TREE_ARG), 'args', 'Cannot contain $_WORK_TREE_ARG');
-      requireArgument(!arg.contains(_GIT_DIR_ARG), 'args', 'Cannot contain $_GIT_DIR_ARG');
+      requireArgument(!arg.contains(_WORK_TREE_ARG), 'args',
+          'Cannot contain $_WORK_TREE_ARG');
+      requireArgument(!arg.contains(_GIT_DIR_ARG), 'args',
+          'Cannot contain $_GIT_DIR_ARG');
     }
 
     if(_gitWorkTree != null) {
       list.insert(0, '$_WORK_TREE_ARG${_gitWorkTree}');
     }
 
-    return runGit(list, throwOnError: throwOnError, processWorkingDir: _processWorkingDir);
+    return runGit(list, throwOnError: throwOnError,
+        processWorkingDir: _processWorkingDir);
   }
 
   Future<bool> isWorkingTreeClean() {

@@ -94,7 +94,8 @@ class Commit {
     final treeSha = headers['tree'].single;
     final author = headers['author'].single;
     final committer = headers['committer'].single;
-    final commitSha = headers.containsKey('commit') ? headers['commit'].single : null;
+    final commitSha =
+        headers.containsKey('commit') ? headers['commit'].single : null;
 
     var parents = headers['parent'];
     if (parents == null) {

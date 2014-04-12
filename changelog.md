@@ -1,4 +1,6 @@
-# Changelog - git
+## v0.4.0 - 2014-04-74
+ * Made fields on `TreeEntry` final.
+ * A lot of source clean up.
 
 ## v0.3.0 - 2014-03-17
  * **BREAKING** `PopulateTempDir` typedef.

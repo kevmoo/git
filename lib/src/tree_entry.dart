@@ -15,12 +15,12 @@ class TreeEntry {
    *
    * See this this [post on stackoverflow](http://stackoverflow.com/questions/737673/how-to-read-the-mode-field-of-git-ls-trees-output)
    */
-  String mode;
+  final String mode;
 
   // TODO: enum for type?
-  String type;
-  String sha;
-  String name;
+  final String type;
+  final String sha;
+  final String name;
 
   TreeEntry(this.mode, this.type, this.sha, this.name) {
     // TODO: enum or whitelist here

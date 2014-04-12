@@ -9,7 +9,8 @@ import 'util.dart';
  * Represents the output from `git show-ref`
  */
 class CommitReference {
-  static final RegExp _lsRemoteRegExp = new RegExp('^($SHA_REGEX_PATTERN) (.+)\$');
+  static final RegExp _lsRemoteRegExp =
+      new RegExp('^($SHA_REGEX_PATTERN) (.+)\$');
 
   final String sha;
   final String reference;
@@ -35,7 +36,6 @@ class CommitReference {
           assert(match.groupCount == 2);
 
           return new CommitReference(match[1], match[2]);
-
         }).toList();
   }
 
