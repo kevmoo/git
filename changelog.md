@@ -1,4 +1,9 @@
-## v0.4.0 - 2014-04-74
+## v0.4.1 - 2014-05-06
+
+ * Tweaks to `Commit` to stop using deperecated APIs from `bot`.
+ * Updated constraint on `bot` package.
+
+## v0.4.0 - 2014-04-12
  * Made fields on `TreeEntry` final.
  * A lot of source clean up.
 

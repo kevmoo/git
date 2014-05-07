@@ -1,5 +1,7 @@
 library git.commit;
 
+import 'dart:collection';
+
 import 'package:bot/bot.dart';
 
 import 'util.dart';
@@ -10,11 +12,11 @@ class Commit {
   final String committer;
   final String message;
   final String content;
-  final ReadOnlyCollection<String> parents;
+  final List<String> parents;
 
-  Commit._internal(this.treeSha, this.author, this.committer, this.message,
-      this.content, Iterable<String> parents) :
-      this.parents = new ReadOnlyCollection<String>(parents) {
+  Commit._(this.treeSha, this.author, this.committer, this.message,
+      this.content, List<String> parents) :
+      this.parents = new UnmodifiableListView<String>(parents) {
 
     requireArgumentValidSha1(this.treeSha, 'treeSha');
     for (final parent in parents) {
@@ -26,8 +28,8 @@ class Commit {
   }
 
   static Commit parse(String content) {
-    final slr = new StringLineReader(content);
-    final tuple = _parse(slr, false);
+    var stringLineReader = new StringLineReader(content);
+    var tuple = _parse(stringLineReader, false);
     assert(tuple.item1 == null);
     return tuple.item2;
   }
@@ -49,18 +51,18 @@ class Commit {
     assert(slr != null);
     assert(slr.position != null);
 
-    final headers = new Map<String, List<String>>();
+    var headers = new Map<String, List<String>>();
 
-    final int startSpot = slr.position;
-    String lastLine = slr.readNextLine();
+    var startSpot = slr.position;
+    var lastLine = slr.readNextLine();
 
     while (!lastLine.isEmpty) {
-      final match = headerRegExp.allMatches(lastLine).single;
+      var match = headerRegExp.allMatches(lastLine).single;
       assert(match.groupCount == 2);
-      final header = match.group(1);
-      final value = match.group(2);
+      var header = match.group(1);
+      var value = match.group(2);
 
-      final list = headers.putIfAbsent(header, () => new List<String>());
+      var list = headers.putIfAbsent(header, () => new List<String>());
       list.add(value);
 
       lastLine = slr.readNextLine();
@@ -84,17 +86,17 @@ class Commit {
     } else {
       message = slr.readToEnd();
       assert(message.endsWith('\n'));
-      final originalMessageLength = message.length;
+      var originalMessageLength = message.length;
       message = message.trim();
       // message should be trimmed by git, so the only diff after trim
       // should be 1 character - the removed new line
       assert(message.length + 1 == originalMessageLength);
     }
 
-    final treeSha = headers['tree'].single;
-    final author = headers['author'].single;
-    final committer = headers['committer'].single;
-    final commitSha =
+    var treeSha = headers['tree'].single;
+    var author = headers['author'].single;
+    var committer = headers['committer'].single;
+    var commitSha =
         headers.containsKey('commit') ? headers['commit'].single : null;
 
     var parents = headers['parent'];
@@ -102,11 +104,11 @@ class Commit {
       parents = [];
     }
 
-    final int endSpot = slr.position;
+    var endSpot = slr.position;
 
-    final content = slr.source.substring(startSpot, endSpot);
+    var content = slr.source.substring(startSpot, endSpot);
 
-    return new Tuple(commitSha, new Commit._internal(treeSha, author, committer,
+    return new Tuple(commitSha, new Commit._(treeSha, author, committer,
         message, content, parents));
   }
 }
