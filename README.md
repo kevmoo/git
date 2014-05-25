@@ -1,5 +1,5 @@
 #git
-### A dart wrapper around the git command line
+### A dart wrapper around the Git command line
 
 [![Build Status](https://drone.io/github.com/kevmoo/git.dart/status.png)](https://drone.io/github.com/kevmoo/git.dart/latest)
 

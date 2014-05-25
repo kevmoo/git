@@ -1,3 +1,7 @@
+## v0.4.1+1
+
+* Updated `hop` and added `hop_unittest` dev dependencies.
+
 ## v0.4.1 - 2014-05-06
 
  * Tweaks to `Commit` to stop using deperecated APIs from `bot`.
