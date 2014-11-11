@@ -4,9 +4,8 @@ import 'package:bot/bot.dart';
 import 'util.dart';
 
 class TreeEntry {
-  static final _lsTreeLine = r'^([0-9]{6}) (blob|tree) ('
-      + SHA_REGEX_PATTERN
-      + ')\t(\\S.*\\S)\$';
+  static final _lsTreeLine =
+      r'^([0-9]{6}) (blob|tree) (' + SHA_REGEX_PATTERN + ')\t(\\S.*\\S)\$';
 
   static final _lsTreeRegEx = new RegExp(_lsTreeLine);
 
@@ -49,7 +48,8 @@ class TreeEntry {
     // last line should be empty
     assert(lines.last.length == 0);
 
-    return lines.sublist(0, lines.length-1)
+    return lines
+        .sublist(0, lines.length - 1)
         .map((line) => new TreeEntry.fromLsTree(line))
         .toList();
   }

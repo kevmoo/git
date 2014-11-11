@@ -15,9 +15,8 @@ class Commit {
   final List<String> parents;
 
   Commit._(this.treeSha, this.author, this.committer, this.message,
-      this.content, List<String> parents) :
-      this.parents = new UnmodifiableListView<String>(parents) {
-
+      this.content, List<String> parents)
+      : this.parents = new UnmodifiableListView<String>(parents) {
     requireArgumentValidSha1(this.treeSha, 'treeSha');
     for (final parent in parents) {
       requireArgumentValidSha1(parent, 'parents');
@@ -96,8 +95,8 @@ class Commit {
     var treeSha = headers['tree'].single;
     var author = headers['author'].single;
     var committer = headers['committer'].single;
-    var commitSha =
-        headers.containsKey('commit') ? headers['commit'].single : null;
+    var commitSha = headers
+        .containsKey('commit') ? headers['commit'].single : null;
 
     var parents = headers['parent'];
     if (parents == null) {
@@ -108,7 +107,7 @@ class Commit {
 
     var content = slr.source.substring(startSpot, endSpot);
 
-    return new Tuple(commitSha, new Commit._(treeSha, author, committer,
-        message, content, parents));
+    return new Tuple(commitSha,
+        new Commit._(treeSha, author, committer, message, content, parents));
   }
 }

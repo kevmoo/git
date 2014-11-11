@@ -12,31 +12,34 @@ void main() {
     expect(() => isValidSha(null), throwsArgumentError);
     expect(() => requireArgumentValidSha1(null, 'null'), throwsArgumentError);
 
-    final bad = ['', ' ', '',
-                 ' bcd1284d805951a16e765cea5b2273a464ee2d86',
-                 'bbcd1284d805951a16e765cea5b2273a464ee2d86',
-                 'bbcd1284d8059 1a16e765cea5b2273a464ee2d86',
-                 'bbcd1284d8059z1a16e765cea5b2273a464ee2d86',
-                 'cd1284d805951a16e765cea5b2273a464ee2d86',
-                 // newline after
-                 '''bcd1284d805951a16e765cea5b2273a464ee2d86
+    final bad = [
+      '',
+      ' ',
+      '',
+      ' bcd1284d805951a16e765cea5b2273a464ee2d86',
+      'bbcd1284d805951a16e765cea5b2273a464ee2d86',
+      'bbcd1284d8059 1a16e765cea5b2273a464ee2d86',
+      'bbcd1284d8059z1a16e765cea5b2273a464ee2d86',
+      'cd1284d805951a16e765cea5b2273a464ee2d86',
+      // newline after
+      '''bcd1284d805951a16e765cea5b2273a464ee2d86
 ''',
+      
 
 // newline before
-'''
+      '''
 
-bcd1284d805951a16e765cea5b2273a464ee2d86'''];
+bcd1284d805951a16e765cea5b2273a464ee2d86'''
+    ];
 
     bad.forEach((v) {
       expect(isValidSha(v), isFalse, reason: "'$v' should be bad");
 
       expect(() => requireArgumentValidSha1(v, 'v'), throwsArgumentError);
-
     });
   });
 
   test('parse show-ref output', () {
-
     final parsed = CommitReference.fromShowRefOutput(_showRefOutput);
 
     expect(parsed.length, 6);
@@ -56,7 +59,8 @@ bcd1284d805951a16e765cea5b2273a464ee2d86'''];
   });
 }
 
-const _showRefOutput = '''ff1c31c454c4128a98dcd610d203820eeeb91923 HEAD
+const _showRefOutput =
+    '''ff1c31c454c4128a98dcd610d203820eeeb91923 HEAD
 b430c0d6dffb95a0c90ca9eb2c13bf02cbc724ce refs/heads/fluid_demo
 35d56f63bead3019f13e7a8c48cb55f5fb88feb8 refs/remotes/origin/husl
 6dc275e3a498c0364d510b16f46fe9660eb554b0 refs/remotes/origin/master
@@ -64,7 +68,8 @@ eecbbc64a5a23275ad7c3e6a8585df662f193b70 refs/tags/v0.1.0
 9f8592560f357a4d371bd3e77147e9f8369237c5 refs/tags/v0.1.0^{}
 ''';
 
-const _lsTreeOutput = '''100644 blob bcd1284d805951a16e765cea5b2273a464ee2d86\t.gitignore
+const _lsTreeOutput =
+    '''100644 blob bcd1284d805951a16e765cea5b2273a464ee2d86\t.gitignore
 100644 blob 406ca1bc6e6fa26433413a38e2ef30059c6ae3fa\t.project
 100644 blob b784bd239d7c69237cb206664be975392825dc48\tLICENSE
 100644 blob d9df26a686f48d565bea5d4c23174f02f3a1ca1c\tREADME.md

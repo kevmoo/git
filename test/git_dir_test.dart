@@ -13,7 +13,6 @@ void main() {
   test('populateBranch', _testPopulateBranch);
   test('getCommits', _testGetCommits);
   test('writeObjects', () {
-
     GitDir gitDir;
 
     schedule(() {
@@ -34,9 +33,7 @@ void main() {
 
     Directory tempDir;
     schedule(() {
-      return Directory.systemTemp
-          .createTemp('hop_docgen-test-')
-          .then((dir) {
+      return Directory.systemTemp.createTemp('hop_docgen-test-').then((dir) {
         tempDir = dir;
         d.defaultRoot = tempDir.path;
       });
@@ -47,10 +44,7 @@ void main() {
       return tempDir.delete(recursive: true);
     });
 
-    var initialContentMap = {
-      'file1.txt': 'content1',
-      'file2.txt': 'content2'
-    };
+    var initialContentMap = {'file1.txt': 'content1', 'file2.txt': 'content2'};
 
     schedule(() {
       return _doDescriptorPopulate(d.defaultRoot, initialContentMap);
@@ -78,8 +72,14 @@ void main() {
 }
 
 void _testGetCommits() {
-  var commitText = const ['', ' \t leading white space is okay, too', 'first',
-      'second', 'third', 'forth'];
+  var commitText = const [
+    '',
+    ' \t leading white space is okay, too',
+    'first',
+    'second',
+    'third',
+    'forth'
+  ];
 
   var msgFromText = (String txt) {
     if (!txt.isEmpty && txt.trim() == txt) {
@@ -137,8 +137,8 @@ void _testGetCommits() {
     commits.forEach((commitSha, Commit commit) {
       // index into the text for the message of this commit
       int commitMessageIndex = null;
-      for(var i = 0; i < commitMessages.length; i++) {
-        if(commitMessages[i] == commit.message) {
+      for (var i = 0; i < commitMessages.length; i++) {
+        if (commitMessages[i] == commit.message) {
           commitMessageIndex = i;
           break;
         }
@@ -152,32 +152,36 @@ void _testGetCommits() {
     });
 
     indexMap.forEach((int index, Tuple<String, Commit> shaCommitTuple) {
-      if(index > 0) {
-        expect(shaCommitTuple.item2.parents,
-            unorderedEquals([indexMap[index-1].item1]));
+      if (index > 0) {
+        expect(shaCommitTuple.item2.parents, unorderedEquals([
+          indexMap[index - 1].item1
+        ]));
       } else {
         expect(shaCommitTuple.item2.parents, hasLength(0));
       }
     });
-
   });
 }
 
-Future _doDescriptorGitCommit(GitDir gd, Map<String, dynamic> contents, String commitMsg) {
-  return _doDescriptorPopulate(gd.path, contents)
-      .then((_) {
-        // now add this new file
-        return gd.runCommand(['add', '--all']);
-      })
-      .then((ProcessResult pr) {
-        // now commit these silly files
-        final args = ['commit', '--cleanup=verbatim', '--no-edit', '--allow-empty-message'];
-        if(!commitMsg.isEmpty) {
-          args.addAll(['-m', commitMsg]);
-        }
+Future _doDescriptorGitCommit(GitDir gd, Map<String, dynamic> contents,
+    String commitMsg) {
+  return _doDescriptorPopulate(gd.path, contents).then((_) {
+    // now add this new file
+    return gd.runCommand(['add', '--all']);
+  }).then((ProcessResult pr) {
+    // now commit these silly files
+    final args = [
+      'commit',
+      '--cleanup=verbatim',
+      '--no-edit',
+      '--allow-empty-message'
+    ];
+    if (!commitMsg.isEmpty) {
+      args.addAll(['-m', commitMsg]);
+    }
 
-        return gd.runCommand(args);
-      });
+    return gd.runCommand(args);
+  });
 }
 
 Future _doDescriptorPopulate(String dirPath, Map<String, dynamic> contents) {
@@ -193,9 +197,7 @@ Future _doDescriptorPopulate(String dirPath, Map<String, dynamic> contents) {
 }
 
 void _testPopulateBranch() {
-  var initialMasterBranchContent = const {
-    'master.md': 'test file'
-  };
+  var initialMasterBranchContent = const {'master.md': 'test file'};
 
   var testContent1 = const {
     'file1.txt': 'file 1 contents',
@@ -225,7 +227,8 @@ void _testPopulateBranch() {
   });
 
   schedule(() {
-    return _doDescriptorGitCommit(gd1, initialMasterBranchContent, 'master files');
+    return _doDescriptorGitCommit(
+        gd1, initialMasterBranchContent, 'master files');
   });
 
   schedule(() {
@@ -233,19 +236,23 @@ void _testPopulateBranch() {
   });
 
   schedule(() {
-    return _testPopulateBranchWithContent(gd1, testBranchName, testContent1, 'first commit!');
+    return _testPopulateBranchWithContent(
+        gd1, testBranchName, testContent1, 'first commit!');
   });
 
   schedule(() {
-    return _testPopulateBranchWithContent(gd1, testBranchName, testContent2, 'second commit');
+    return _testPopulateBranchWithContent(
+        gd1, testBranchName, testContent2, 'second commit');
   });
 
   schedule(() {
-    return _testPopulateBranchWithDupeContent(gd1, testBranchName, testContent2, 'same content');
+    return _testPopulateBranchWithDupeContent(
+        gd1, testBranchName, testContent2, 'same content');
   });
 
   schedule(() {
-    return _testPopulateBranchWithContent(gd1, testBranchName, testContent1, '3rd commit, content 1');
+    return _testPopulateBranchWithContent(
+        gd1, testBranchName, testContent1, '3rd commit, content 1');
   });
 
   schedule(() {
@@ -254,8 +261,8 @@ void _testPopulateBranch() {
 }
 
 void _testPopulateBranchEmpty(GitDir gitDir, String branchName) {
-  expect(_testPopulateBranchCore(gitDir, branchName, {}, 'empty?'),
-      throwsA(predicate((error) {
+  expect(_testPopulateBranchCore(gitDir, branchName, {}, 'empty?'), throwsA(
+      predicate((error) {
     return error.message == 'No files were added';
   })));
 }
@@ -267,38 +274,35 @@ Future<Tuple<Commit, int>> _testPopulateBranchCore(GitDir gitDir,
   Directory tempDir;
 
   // figure out how many commits exist for the provided branch
-  return gitDir.getBranchReference(branchName)
+  return gitDir
+      .getBranchReference(branchName)
       .then((BranchReference branchRef) {
-        if(branchRef == null) {
-          return 0;
-        } else {
-          return gitDir.getCommitCount(branchRef.reference);
-        }
-      })
-      .then((int value) {
-        originalCommitCount = value;
+    if (branchRef == null) {
+      return 0;
+    } else {
+      return gitDir.getCommitCount(branchRef.reference);
+    }
+  }).then((int value) {
+    originalCommitCount = value;
 
-        return gitDir.updateBranch(branchName, (Directory td) {
-          // strictly speaking, users of this API should not hold on to the TempDir
-          // but this is for testing
-          tempDir = td;
+    return gitDir.updateBranch(branchName, (Directory td) {
+      // strictly speaking, users of this API should not hold on to the TempDir
+      // but this is for testing
+      tempDir = td;
 
-          return _doDescriptorPopulate(tempDir.path, contents);
-        }, commitMessage);
-      })
-    .then((Commit commit) {
-      return new Tuple(commit, originalCommitCount);
-    })
-    .whenComplete(() {
-      if(tempDir != null) {
-        expect(tempDir.existsSync(), false);
-      }
-    });
+      return _doDescriptorPopulate(tempDir.path, contents);
+    }, commitMessage);
+  }).then((Commit commit) {
+    return new Tuple(commit, originalCommitCount);
+  }).whenComplete(() {
+    if (tempDir != null) {
+      expect(tempDir.existsSync(), false);
+    }
+  });
 }
 
 Future _testPopulateBranchWithContent(GitDir gitDir, String branchName,
     Map<String, dynamic> contents, String commitMessage) {
-
   int originalCommitCount;
 
   BranchReference branchRef;
@@ -306,75 +310,69 @@ Future _testPopulateBranchWithContent(GitDir gitDir, String branchName,
 
   // figure out how many commits exist for the provided branch
   return _testPopulateBranchCore(gitDir, branchName, contents, commitMessage)
-    .then((Tuple<Commit, int> pair) {
-      returnedCommit = pair.item1;
-      originalCommitCount = pair.item2;
+      .then((Tuple<Commit, int> pair) {
+    returnedCommit = pair.item1;
+    originalCommitCount = pair.item2;
 
-      if(originalCommitCount == 0) {
-        expect(returnedCommit.parents, isEmpty, reason: 'This should be the first commit');
-      } else {
-        expect(returnedCommit.parents, hasLength(1));
-      }
+    if (originalCommitCount == 0) {
+      expect(returnedCommit.parents, isEmpty,
+          reason: 'This should be the first commit');
+    } else {
+      expect(returnedCommit.parents, hasLength(1));
+    }
 
-      expect(returnedCommit, isNotNull, reason: 'Commit should not be null');
-      expect(returnedCommit.message, commitMessage);
+    expect(returnedCommit, isNotNull, reason: 'Commit should not be null');
+    expect(returnedCommit.message, commitMessage);
 
-      // new check to see if things are updated it gd1
-      return gitDir.getBranchReference(branchName);
-    })
-    .then((BranchReference br) {
-      expect(br, isNotNull);
-      branchRef = br;
+    // new check to see if things are updated it gd1
+    return gitDir.getBranchReference(branchName);
+  }).then((BranchReference br) {
+    expect(br, isNotNull);
+    branchRef = br;
 
-      return gitDir.getCommit(br.reference);
-    })
-    .then((Commit commit) {
+    return gitDir.getCommit(br.reference);
+  }).then((Commit commit) {
+    expect(commit.content, returnedCommit.content,
+        reason: 'content of queried commit should what was returned');
 
-      expect(commit.content, returnedCommit.content,
-          reason: 'content of queried commit should what was returned');
+    return gitDir.lsTree(commit.treeSha);
+  }).then((List<TreeEntry> entries) {
+    expect(entries.map((te) => te.name), unorderedEquals(contents.keys));
 
-      return gitDir.lsTree(commit.treeSha);
-    })
-    .then((List<TreeEntry> entries) {
-      expect(entries.map((te) => te.name), unorderedEquals(contents.keys));
-
-      return gitDir.getCommitCount(branchRef.reference);
-    })
-    .then((int newCommitCount) {
-      expect(newCommitCount, originalCommitCount+1);
-    });
+    return gitDir.getCommitCount(branchRef.reference);
+  }).then((int newCommitCount) {
+    expect(newCommitCount, originalCommitCount + 1);
+  });
 }
 
 Future _testPopulateBranchWithDupeContent(GitDir gitDir, String branchName,
     Map<String, dynamic> contents, String commitMessage) {
-
   int originalCommitCount;
 
   // figure out how many commits exist for the provided branch
   return _testPopulateBranchCore(gitDir, branchName, contents, commitMessage)
-    .then((Tuple<Commit, int> pair) {
-      var returnedCommit = pair.item1;
-      originalCommitCount = pair.item2;
+      .then((Tuple<Commit, int> pair) {
+    var returnedCommit = pair.item1;
+    originalCommitCount = pair.item2;
 
-      expect(returnedCommit, isNull);
-      expect(originalCommitCount > 0, true, reason: 'must have had some original content');
+    expect(returnedCommit, isNull);
+    expect(originalCommitCount > 0, true,
+        reason: 'must have had some original content');
 
-      // new check to see if things are updated it gd1
-      return gitDir.getBranchReference(branchName);
-    })
-    .then((BranchReference br) {
-      expect(br, isNotNull);
+    // new check to see if things are updated it gd1
+    return gitDir.getBranchReference(branchName);
+  }).then((BranchReference br) {
+    expect(br, isNotNull);
 
-      return gitDir.getCommitCount(br.reference);
-    })
-    .then((int newCommitCount) {
-      expect(newCommitCount, originalCommitCount, reason: 'no change in commit count');
-    });
+    return gitDir.getCommitCount(br.reference);
+  }).then((int newCommitCount) {
+    expect(newCommitCount, originalCommitCount,
+        reason: 'no change in commit count');
+  });
 }
 
 Future<GitDir> _getGitTemp() {
-  return Directory.systemTemp.createTemp('git_test-')
-      .then((dir) {
+  return Directory.systemTemp.createTemp('git_test-').then((dir) {
     return GitDir.init(dir);
   });
 }
