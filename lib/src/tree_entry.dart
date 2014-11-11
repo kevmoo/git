@@ -9,11 +9,9 @@ class TreeEntry {
 
   static final _lsTreeRegEx = new RegExp(_lsTreeLine);
 
-  /**
-   * All numbers.
-   *
-   * See this this [post on stackoverflow](http://stackoverflow.com/questions/737673/how-to-read-the-mode-field-of-git-ls-trees-output)
-   */
+  /// All numbers.
+  ///
+  /// See this this [post on stackoverflow](http://stackoverflow.com/questions/737673/how-to-read-the-mode-field-of-git-ls-trees-output)
   final String mode;
 
   // TODO: enum for type?

@@ -36,11 +36,9 @@ class GitDir {
     });
   }
 
-  /**
-   * [rev] should probably be a sha1 to a commit.
-   * But GIT lets you do other things.
-   * See http://git-scm.com/docs/gitrevisions.html
-   */
+  /// [rev] should probably be a sha1 to a commit.
+  /// But GIT lets you do other things.
+  /// See http://git-scm.com/docs/gitrevisions.html
   Future<Commit> getCommit(String rev) {
     return runCommand(['cat-file', '-p', rev]).then((ProcessResult pr) {
       return Commit.parse(pr.stdout);
@@ -146,10 +144,8 @@ class GitDir {
     });
   }
 
-  /**
-   * Returns the SHA for the new commit if one is created. `null` if the branch
-   * is not updated.
-   */
+  /// Returns the SHA for the new commit if one is created. `null` if the branch
+  /// is not updated.
   Future<String> createOrUpdateBranch(
       String branchName, String treeSha, String commitMessage) {
     requireArgumentNotNullOrEmpty(branchName, 'branchName');
@@ -178,10 +174,8 @@ class GitDir {
     });
   }
 
-  /**
-   * Returns the SHA for the new commit if one is created. `null` if the branch
-   * is not updated.
-   */
+  /// Returns the SHA for the new commit if one is created. `null` if the branch
+  /// is not updated.
   Future<String> _updateBranch(
       String targetBranchSha, String treeSha, String commitMessage) {
     return getCommit(targetBranchSha).then((Commit commitObj) {
@@ -195,11 +189,9 @@ class GitDir {
     });
   }
 
-  /**
-   * Returns the `SHA1` for the new commit.
-   *
-   * See [git-commit-tree](http://git-scm.com/docs/git-commit-tree)
-   */
+  /// Returns the `SHA1` for the new commit.
+  ///
+  /// See [git-commit-tree](http://git-scm.com/docs/git-commit-tree)
   Future<String> commitTree(
       String treeSha, String commitMessage, {List<String> parentCommitShas}) {
     requireArgumentValidSha1(treeSha, 'treeSha');
@@ -227,11 +219,9 @@ class GitDir {
   }
 
   // TODO: should be renamed writeBlob?
-  /**
-   * Given a list of [paths], write those files to the object store
-   * and return a [Map] where the key is the input path and the value is
-   * the SHA of the newly written object.
-   */
+  /// Given a list of [paths], write those files to the object store
+  /// and return a [Map] where the key is the input path and the value is
+  /// the SHA of the newly written object.
   Future<Map<String, String>> writeObjects(List<String> paths) {
     final args = ['hash-object', '-t', 'blob', '-w', '--no-filters', '--'];
     args.addAll(paths);
@@ -278,17 +268,15 @@ class GitDir {
   // TODO: TEST: someone puts a git dir when populated
   // TODO: TEST: someone puts in no content at all
 
-  /**
-   * Updates the named branch with the content add by calling [populater].
-   *
-   * [populater] is called with a temporary [Directory] instance that should
-   * be populated with the desired content.
-   *
-   * If the content provided matches the content in the specificed [branchName],
-   * then no [Commit] is created and `null` is returned.
-   *
-   * If no content is added to the directory, an error is thrown.
-   */
+  /// Updates the named branch with the content add by calling [populater].
+  ///
+  /// [populater] is called with a temporary [Directory] instance that should
+  /// be populated with the desired content.
+  ///
+  /// If the content provided matches the content in the specificed [branchName],
+  /// then no [Commit] is created and `null` is returned.
+  ///
+  /// If no content is added to the directory, an error is thrown.
   Future<Commit> updateBranch(
       String branchName, Future populater(Directory td), String commitMessage) {
     // TODO: ponder restricting branch names
@@ -412,11 +400,9 @@ class GitDir {
     });
   }
 
-  /**
-   * [allowContent] if true, doesn't check to see if the directory is empty
-   *
-   * Will fail if the source is a git directory (either at the root or a sub directory)
-   */
+  /// [allowContent] if true, doesn't check to see if the directory is empty
+  ///
+  /// Will fail if the source is a git directory (either at the root or a sub directory)
   static Future<GitDir> init(Directory source, {bool allowContent: false}) {
     assert(source.existsSync());
 
