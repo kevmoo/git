@@ -25,8 +25,7 @@ void _throwIfProcessFailed(ProcessResult pr, String process,
     List<String> args) {
   assert(pr != null);
   if (pr.exitCode != 0) {
-    final message = '''
-
+    var message = '''
 stdout:
 ${pr.stdout}
 stderr:

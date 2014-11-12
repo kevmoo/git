@@ -11,7 +11,9 @@ import 'package:git/git.dart';
 
 void main() {
   test('populateBranch', _testPopulateBranch);
+
   test('getCommits', _testGetCommits);
+
   test('writeObjects', () {
     GitDir gitDir;
 

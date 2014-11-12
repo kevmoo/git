@@ -223,14 +223,14 @@ class GitDir {
   /// and return a [Map] where the key is the input path and the value is
   /// the SHA of the newly written object.
   Future<Map<String, String>> writeObjects(List<String> paths) {
-    final args = ['hash-object', '-t', 'blob', '-w', '--no-filters', '--'];
-    args.addAll(paths);
+    var args = ['hash-object', '-t', 'blob', '-w', '--no-filters', '--']
+      ..addAll(paths);
     return runCommand(args).then((ProcessResult pr) {
-      final val = pr.stdout.trim();
-      final shas = val.split(new RegExp(r'\s+'));
+      var val = pr.stdout.trim();
+      var shas = val.split(new RegExp(r'\s+'));
       assert(shas.length == paths.length);
       assert(shas.every((sha) => _shaRegExp.hasMatch(sha)));
-      final map = new Map<String, String>();
+      var map = new Map<String, String>();
       for (var i = 0; i < shas.length; i++) {
         map[paths[i]] = shas[i];
       }
@@ -355,7 +355,7 @@ class GitDir {
     }).then((ProcessResult _) {
 
       // since we're checked out, need to clear out local content
-      return td.gitDir.runCommand(['rm', '-r', '-f', '.']);
+      return td.gitDir.runCommand(['rm', '-r', '-f', '--ignore-unmatch', '.']);
     }).then((ProcessResult _) => td);
   }
 
