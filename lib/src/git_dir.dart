@@ -499,4 +499,4 @@ class _TempDirs {
 }
 
 Future<Directory> _createTempDir() =>
-    Directory.systemTemp.createTemp('git_dir-');
+    Directory.systemTemp.createTemp('git.GitDir.');
