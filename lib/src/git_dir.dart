@@ -359,7 +359,7 @@ class GitDir {
     }).then((ProcessResult _) => td);
   }
 
-  // if branch exists, then clone to that branch, clear it out
+  // if branch exists, then clone to that branch
   Future<_TempDirs> _getTempDirPair(String existingBranchName) {
     _TempDirs td;
 
@@ -378,13 +378,7 @@ class GitDir {
       ];
 
       return runGit(args, processWorkingDir: td.gitHostDir.path);
-    }).then((ProcessResult _) {
-      return td.gitDir.runCommand(['checkout']);
-    }).then((ProcessResult _) {
-
-      // since we're checked out, need to clear out local content
-      return td.gitDir.runCommand(['rm', '-r', '.']);
-    }).then((ProcessResult _) => td);
+    }).then((_) => td);
   }
 
   String get _processWorkingDir => _path.toString();
