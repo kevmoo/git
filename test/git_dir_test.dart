@@ -18,14 +18,9 @@ void main() {
     GitDir gitDir;
 
     schedule(() {
-      return _getGitTemp().then((value) {
+      return _createTempGitDir().then((value) {
         gitDir = value;
       });
-    });
-
-    currentSchedule.onComplete.schedule(() {
-      var dir = new Directory(gitDir.path);
-      return dir.delete(recursive: true);
     });
 
     schedule(() {
@@ -35,15 +30,10 @@ void main() {
 
     Directory tempDir;
     schedule(() {
-      return Directory.systemTemp.createTemp('hop_docgen-test-').then((dir) {
+      return _createTempDir().then((dir) {
         tempDir = dir;
         d.defaultRoot = tempDir.path;
       });
-    });
-
-    currentSchedule.onComplete.schedule(() {
-      d.defaultRoot = null;
-      return tempDir.delete(recursive: true);
     });
 
     var initialContentMap = {'file1.txt': 'content1', 'file2.txt': 'content2'};
@@ -94,18 +84,13 @@ void _testGetCommits() {
   GitDir gitDir;
 
   schedule(() {
-    return _getGitTemp().then((value) {
+    return _createTempGitDir().then((value) {
       gitDir = value;
 
       return gitDir.getBranchNames();
     }).then((branches) {
       expect(branches, []);
     });
-  });
-
-  currentSchedule.onComplete.schedule(() {
-    var dir = new Directory(gitDir.path);
-    return dir.delete(recursive: true);
   });
 
   schedule(() {
@@ -218,14 +203,9 @@ void _testPopulateBranch() {
   GitDir gd1;
 
   schedule(() {
-    return _getGitTemp().then((value) {
+    return _createTempGitDir().then((value) {
       gd1 = value;
     });
-  });
-
-  currentSchedule.onComplete.schedule(() {
-    var dir = new Directory(gd1.path);
-    return dir.delete(recursive: true);
   });
 
   schedule(() {
@@ -373,8 +353,23 @@ Future _testPopulateBranchWithDupeContent(GitDir gitDir, String branchName,
   });
 }
 
-Future<GitDir> _getGitTemp() {
-  return Directory.systemTemp.createTemp('git_test-').then((dir) {
+Future<Directory> _createTempDir([bool scheduleDelete = true]) {
+  var ticks = new DateTime.now().toUtc().millisecondsSinceEpoch;
+  return Directory.systemTemp.createTemp('git.test.$ticks.').then((dir) {
+    currentSchedule.onComplete.schedule(() {
+      if(scheduleDelete) {
+        return dir.delete(recursive: true);
+      } else {
+        print('Not deleting $dir');
+      }
+    });
+
+    return dir;
+  });
+}
+
+Future<GitDir> _createTempGitDir([bool scheduleDelete = true]) {
+  return _createTempDir(scheduleDelete).then((dir) {
     return GitDir.init(dir);
   });
 }
