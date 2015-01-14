@@ -140,9 +140,8 @@ void _testGetCommits() {
 
     indexMap.forEach((int index, Tuple<String, Commit> shaCommitTuple) {
       if (index > 0) {
-        expect(shaCommitTuple.item2.parents, unorderedEquals([
-          indexMap[index - 1].item1
-        ]));
+        expect(shaCommitTuple.item2.parents,
+            unorderedEquals([indexMap[index - 1].item1]));
       } else {
         expect(shaCommitTuple.item2.parents, hasLength(0));
       }
@@ -150,8 +149,8 @@ void _testGetCommits() {
   });
 }
 
-Future _doDescriptorGitCommit(GitDir gd, Map<String, dynamic> contents,
-    String commitMsg) {
+Future _doDescriptorGitCommit(
+    GitDir gd, Map<String, dynamic> contents, String commitMsg) {
   return _doDescriptorPopulate(gd.path, contents).then((_) {
     // now add this new file
     return gd.runCommand(['add', '--all']);
@@ -357,7 +356,7 @@ Future<Directory> _createTempDir([bool scheduleDelete = true]) {
   var ticks = new DateTime.now().toUtc().millisecondsSinceEpoch;
   return Directory.systemTemp.createTemp('git.test.$ticks.').then((dir) {
     currentSchedule.onComplete.schedule(() {
-      if(scheduleDelete) {
+      if (scheduleDelete) {
         return dir.delete(recursive: true);
       } else {
         print('Not deleting $dir');

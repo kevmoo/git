@@ -24,7 +24,6 @@ void main() {
       // newline after
       '''bcd1284d805951a16e765cea5b2273a464ee2d86
 ''',
-      
 
 // newline before
       '''
@@ -59,8 +58,7 @@ bcd1284d805951a16e765cea5b2273a464ee2d86'''
   });
 }
 
-const _showRefOutput =
-    '''ff1c31c454c4128a98dcd610d203820eeeb91923 HEAD
+const _showRefOutput = '''ff1c31c454c4128a98dcd610d203820eeeb91923 HEAD
 b430c0d6dffb95a0c90ca9eb2c13bf02cbc724ce refs/heads/fluid_demo
 35d56f63bead3019f13e7a8c48cb55f5fb88feb8 refs/remotes/origin/husl
 6dc275e3a498c0364d510b16f46fe9660eb554b0 refs/remotes/origin/master

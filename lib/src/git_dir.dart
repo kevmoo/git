@@ -30,8 +30,8 @@ class GitDir {
   String get path => _path;
 
   Future<int> getCommitCount([String branchName = 'HEAD']) {
-    return runCommand(['rev-list', '--count', branchName])
-        .then((ProcessResult pr) {
+    return runCommand(['rev-list', '--count', branchName]).then(
+        (ProcessResult pr) {
       return int.parse(pr.stdout);
     });
   }
@@ -119,13 +119,13 @@ class GitDir {
         .then((ProcessResult pr) {
       return runCommand(['show-ref', '--verify', pr.stdout.trim()]);
     }).then((ProcessResult pr) {
-      return CommitReference
-          .fromShowRefOutput(pr.stdout).single.toBranchReference();
+      return CommitReference.fromShowRefOutput(pr.stdout).single
+          .toBranchReference();
     });
   }
 
-  Future<List<TreeEntry>> lsTree(
-      String treeish, {bool subTreesOnly: false, String path: null}) {
+  Future<List<TreeEntry>> lsTree(String treeish,
+      {bool subTreesOnly: false, String path: null}) {
     assert(treeish != null);
     final args = ['ls-tree'];
 
@@ -183,17 +183,16 @@ class GitDir {
         return null;
       }
 
-      return commitTree(treeSha, commitMessage, parentCommitShas: [
-        targetBranchSha
-      ]);
+      return commitTree(treeSha, commitMessage,
+          parentCommitShas: [targetBranchSha]);
     });
   }
 
   /// Returns the `SHA1` for the new commit.
   ///
   /// See [git-commit-tree](http://git-scm.com/docs/git-commit-tree)
-  Future<String> commitTree(
-      String treeSha, String commitMessage, {List<String> parentCommitShas}) {
+  Future<String> commitTree(String treeSha, String commitMessage,
+      {List<String> parentCommitShas}) {
     requireArgumentValidSha1(treeSha, 'treeSha');
 
     requireArgumentNotNullOrEmpty(commitMessage, 'commitMessage');
@@ -223,8 +222,14 @@ class GitDir {
   /// and return a [Map] where the key is the input path and the value is
   /// the SHA of the newly written object.
   Future<Map<String, String>> writeObjects(List<String> paths) {
-    var args = ['hash-object', '-t', 'blob', '-w', '--no-filters', '--']
-      ..addAll(paths);
+    var args = [
+      'hash-object',
+      '-t',
+      'blob',
+      '-w',
+      '--no-filters',
+      '--'
+    ]..addAll(paths);
     return runCommand(args).then((ProcessResult pr) {
       var val = pr.stdout.trim();
       var shas = val.split(new RegExp(r'\s+'));
@@ -238,26 +243,26 @@ class GitDir {
     });
   }
 
-  Future<ProcessResult> runCommand(
-      Iterable<String> args, [bool throwOnError = true]) {
+  Future<ProcessResult> runCommand(Iterable<String> args,
+      [bool throwOnError = true]) {
     requireArgumentNotNull(args, 'args');
 
     final list = args.toList();
 
     for (final arg in list) {
       requireArgumentNotNullOrEmpty(arg, 'args');
-      requireArgument(!arg
-          .contains(_WORK_TREE_ARG), 'args', 'Cannot contain $_WORK_TREE_ARG');
-      requireArgument(!arg
-          .contains(_GIT_DIR_ARG), 'args', 'Cannot contain $_GIT_DIR_ARG');
+      requireArgument(!arg.contains(_WORK_TREE_ARG),
+          'args', 'Cannot contain $_WORK_TREE_ARG');
+      requireArgument(
+          !arg.contains(_GIT_DIR_ARG), 'args', 'Cannot contain $_GIT_DIR_ARG');
     }
 
     if (_gitWorkTree != null) {
       list.insert(0, '$_WORK_TREE_ARG${_gitWorkTree}');
     }
 
-    return runGit(list, throwOnError: throwOnError,
-        processWorkingDir: _processWorkingDir);
+    return runGit(list,
+        throwOnError: throwOnError, processWorkingDir: _processWorkingDir);
   }
 
   Future<bool> isWorkingTreeClean() {
@@ -416,10 +421,8 @@ class GitDir {
   static Future<GitDir> fromExisting(String gitDirRoot) {
     final path = p.absolute(gitDirRoot);
 
-    return runGit([
-      'rev-parse',
-      '--git-dir'
-    ], processWorkingDir: path.toString()).then((ProcessResult pr) {
+    return runGit(['rev-parse', '--git-dir'],
+        processWorkingDir: path.toString()).then((ProcessResult pr) {
       if (pr.stdout.trim() == '.git') {
         return new GitDir._raw(path);
       } else {
@@ -450,10 +453,9 @@ class GitDir {
 
     // using rev-parse because it will fail in many scenarios
     // including if the directory provided is a bare repository
-    return runGit([
-      'rev-parse'
-    ], throwOnError: false, processWorkingDir: dir.path)
-        .then((ProcessResult pr) {
+    return runGit(['rev-parse'],
+        throwOnError: false, processWorkingDir: dir.path).then(
+        (ProcessResult pr) {
       // if exitCode is 0, status worked...which means this is a git dir
       return pr.exitCode == 0;
     });

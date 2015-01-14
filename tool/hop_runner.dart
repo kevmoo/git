@@ -16,9 +16,8 @@ void main(List<String> args) {
 
   addTask('analyze_libs', createAnalyzerTask(_getLibs));
 
-  addTask('analyze_test_libs', createAnalyzerTask([
-    'test/harness_console.dart'
-  ]));
+  addTask(
+      'analyze_test_libs', createAnalyzerTask(['test/harness_console.dart']));
 
   runHop(args);
 }
