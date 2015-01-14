@@ -1,3 +1,7 @@
+## v0.4.1+2
+
+* Updated max version of `bot` dependency.
+
 ## v0.4.1+1
 
 * Updated `hop` and added `hop_unittest` dev dependencies.
