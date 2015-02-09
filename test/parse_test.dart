@@ -44,7 +44,7 @@ bcd1284d805951a16e765cea5b2273a464ee2d86'''
     expect(parsed.length, 6);
     parsed.forEach((t) {
       expect(t.sha, hasLength(40));
-      expect(t.reference.length, isNot(isEmpty));
+      expect(t.reference, isNot(isEmpty));
     });
   });
 
