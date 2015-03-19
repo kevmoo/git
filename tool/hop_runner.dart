@@ -4,15 +4,12 @@ import 'dart:async';
 import 'dart:io';
 import 'package:hop/hop.dart';
 import 'package:hop/hop_tasks.dart' hide createUnitTestTask;
-import 'package:hop_docgen/hop_docgen.dart';
 import 'package:hop_unittest/hop_unittest.dart';
 
 import '../test/harness_console.dart' as test_console;
 
 void main(List<String> args) {
   addTask('test', createUnitTestTask(test_console.main));
-
-  addTask('docs', createDocGenTask('../compiled_dartdoc_viewer'));
 
   addTask('analyze_libs', createAnalyzerTask(_getLibs));
 

@@ -10,6 +10,5 @@ dependencies:
   path: '>=1.0.0 <2.0.0'
 dev_dependencies:
   hop: '>=0.30.4+1 <0.32.0'
-  hop_docgen: '>=0.1.2+5 <0.2.0'
   hop_unittest: '>=0.1.0 <0.2.0'
   scheduled_test: '>=0.10.0 <0.12.0'
