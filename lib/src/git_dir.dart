@@ -30,8 +30,8 @@ class GitDir {
   String get path => _path;
 
   Future<int> getCommitCount([String branchName = 'HEAD']) {
-    return runCommand(['rev-list', '--count', branchName]).then(
-        (ProcessResult pr) {
+    return runCommand(['rev-list', '--count', branchName])
+        .then((ProcessResult pr) {
       return int.parse(pr.stdout);
     });
   }
@@ -251,8 +251,8 @@ class GitDir {
 
     for (final arg in list) {
       requireArgumentNotNullOrEmpty(arg, 'args');
-      requireArgument(!arg.contains(_WORK_TREE_ARG),
-          'args', 'Cannot contain $_WORK_TREE_ARG');
+      requireArgument(!arg.contains(_WORK_TREE_ARG), 'args',
+          'Cannot contain $_WORK_TREE_ARG');
       requireArgument(
           !arg.contains(_GIT_DIR_ARG), 'args', 'Cannot contain $_GIT_DIR_ARG');
     }
@@ -454,8 +454,8 @@ class GitDir {
     // using rev-parse because it will fail in many scenarios
     // including if the directory provided is a bare repository
     return runGit(['rev-parse'],
-        throwOnError: false, processWorkingDir: dir.path).then(
-        (ProcessResult pr) {
+            throwOnError: false, processWorkingDir: dir.path)
+        .then((ProcessResult pr) {
       // if exitCode is 0, status worked...which means this is a git dir
       return pr.exitCode == 0;
     });
