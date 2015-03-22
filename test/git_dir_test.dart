@@ -14,6 +14,51 @@ void main() {
 
   test('getCommits', _testGetCommits);
 
+  group('init', () {
+    test('allowContent:false with content fails', () {
+      Directory dir;
+
+      schedule(() {
+        return _createTempDir().then((value) {
+          dir = new Directory(value.path);
+        });
+      });
+
+      schedule(() {
+        var file = new File(p.join(dir.path, 'testfile.txt'));
+        file.writeAsStringSync('test content');
+      });
+
+      schedule(() {
+        expect(GitDir.init(dir, allowContent: false), throwsArgumentError);
+      });
+    });
+
+    group('existing git dir', () {
+      Directory dir;
+
+      setUp(() {
+        schedule(() {
+          return _createTempGitDir().then((value) {
+            dir = new Directory(value.path);
+          });
+        });
+      });
+
+      test('with allowContent:false fails', () {
+        schedule(() {
+          expect(GitDir.init(dir, allowContent: false), throwsArgumentError);
+        });
+      });
+
+      test('with allowContent:true fails', () {
+        schedule(() {
+          expect(GitDir.init(dir, allowContent: true), throwsArgumentError);
+        });
+      });
+    });
+  });
+
   test('writeObjects', () {
     GitDir gitDir;
 
