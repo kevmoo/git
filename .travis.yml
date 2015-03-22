@@ -1,0 +1,10 @@
+language: dart
+sudo: false
+dart:
+  - stable
+  - dev
+before_install:
+  - pub global activate dart_coveralls
+  - git config --global user.email "you@example.com"
+  - git config --global user.name "Your Name"
+script: ./tool/travis.sh
