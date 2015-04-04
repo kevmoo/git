@@ -106,14 +106,14 @@ class GitDir {
     return CommitReference.fromShowRefOutput(pr.stdout);
   }
 
-  Future<BranchReference> getCurrentBranch() {
-    return runCommand(['rev-parse', '--verify', '--symbolic-full-name', 'HEAD'])
-        .then((ProcessResult pr) {
-      return runCommand(['show-ref', '--verify', pr.stdout.trim()]);
-    }).then((ProcessResult pr) {
-      return CommitReference.fromShowRefOutput(pr.stdout).single
-          .toBranchReference();
-    });
+  Future<BranchReference> getCurrentBranch() async {
+    var pr = await runCommand(
+        const ['rev-parse', '--verify', '--symbolic-full-name', 'HEAD']);
+
+    pr = await runCommand(['show-ref', '--verify', pr.stdout.trim()]);
+
+    return CommitReference.fromShowRefOutput(pr.stdout).single
+        .toBranchReference();
   }
 
   Future<List<TreeEntry>> lsTree(String treeish,
