@@ -195,36 +195,37 @@ void _testGetCommits() {
 }
 
 Future _doDescriptorGitCommit(
-    GitDir gd, Map<String, dynamic> contents, String commitMsg) {
-  return _doDescriptorPopulate(gd.path, contents).then((_) {
-    // now add this new file
-    return gd.runCommand(['add', '--all']);
-  }).then((ProcessResult pr) {
-    // now commit these silly files
-    final args = [
-      'commit',
-      '--cleanup=verbatim',
-      '--no-edit',
-      '--allow-empty-message'
-    ];
-    if (!commitMsg.isEmpty) {
-      args.addAll(['-m', commitMsg]);
-    }
+    GitDir gd, Map<String, dynamic> contents, String commitMsg) async {
+  await _doDescriptorPopulate(gd.path, contents);
 
-    return gd.runCommand(args);
-  });
+  // now add this new file
+  await gd.runCommand(['add', '--all']);
+
+  // now commit these silly files
+  final args = [
+    'commit',
+    '--cleanup=verbatim',
+    '--no-edit',
+    '--allow-empty-message'
+  ];
+  if (!commitMsg.isEmpty) {
+    args.addAll(['-m', commitMsg]);
+  }
+
+  return gd.runCommand(args);
 }
 
-Future _doDescriptorPopulate(String dirPath, Map<String, dynamic> contents) {
-  return Future.forEach(contents.keys, (String name) {
+Future _doDescriptorPopulate(
+    String dirPath, Map<String, dynamic> contents) async {
+  for (var name in contents.keys) {
     var value = contents[name];
 
     if (value is String) {
-      return d.file(name, value).create(dirPath);
+      await d.file(name, value).create(dirPath);
     } else {
       throw new UnsupportedError('We cannot party with $value');
     }
-  });
+  }
 }
 
 void _testPopulateBranch() {
@@ -294,126 +295,115 @@ void _testPopulateBranchEmpty(GitDir gitDir, String branchName) {
 }
 
 Future<Tuple<Commit, int>> _testPopulateBranchCore(GitDir gitDir,
-    String branchName, Map<String, dynamic> contents, String commitMessage) {
-  int originalCommitCount;
-
-  Directory tempDir;
+    String branchName, Map<String, dynamic> contents,
+    String commitMessage) async {
 
   // figure out how many commits exist for the provided branch
-  return gitDir
-      .getBranchReference(branchName)
-      .then((BranchReference branchRef) {
-    if (branchRef == null) {
-      return 0;
-    } else {
-      return gitDir.getCommitCount(branchRef.reference);
-    }
-  }).then((int value) {
-    originalCommitCount = value;
+  var branchRef = await gitDir.getBranchReference(branchName);
 
-    return gitDir.updateBranch(branchName, (Directory td) {
+  int originalCommitCount;
+  if (branchRef == null) {
+    originalCommitCount = 0;
+  } else {
+    originalCommitCount = await gitDir.getCommitCount(branchRef.reference);
+  }
+
+  Directory tempDir;
+  try {
+    var commit = await gitDir.updateBranch(branchName, (Directory td) {
       // strictly speaking, users of this API should not hold on to the TempDir
       // but this is for testing
       tempDir = td;
 
       return _doDescriptorPopulate(tempDir.path, contents);
     }, commitMessage);
-  }).then((Commit commit) {
+
     return new Tuple(commit, originalCommitCount);
-  }).whenComplete(() {
+  } finally {
     if (tempDir != null) {
       expect(tempDir.existsSync(), false);
     }
-  });
+  }
 }
 
 Future _testPopulateBranchWithContent(GitDir gitDir, String branchName,
-    Map<String, dynamic> contents, String commitMessage) {
-  int originalCommitCount;
-
-  BranchReference branchRef;
-  Commit returnedCommit;
+    Map<String, dynamic> contents, String commitMessage) async {
 
   // figure out how many commits exist for the provided branch
-  return _testPopulateBranchCore(gitDir, branchName, contents, commitMessage)
-      .then((Tuple<Commit, int> pair) {
-    returnedCommit = pair.item1;
-    originalCommitCount = pair.item2;
+  var pair = await _testPopulateBranchCore(
+      gitDir, branchName, contents, commitMessage);
 
-    if (originalCommitCount == 0) {
-      expect(returnedCommit.parents, isEmpty,
-          reason: 'This should be the first commit');
-    } else {
-      expect(returnedCommit.parents, hasLength(1));
-    }
+  var returnedCommit = pair.item1;
+  var originalCommitCount = pair.item2;
 
-    expect(returnedCommit, isNotNull, reason: 'Commit should not be null');
-    expect(returnedCommit.message, commitMessage);
+  if (originalCommitCount == 0) {
+    expect(returnedCommit.parents, isEmpty,
+        reason: 'This should be the first commit');
+  } else {
+    expect(returnedCommit.parents, hasLength(1));
+  }
 
-    // new check to see if things are updated it gd1
-    return gitDir.getBranchReference(branchName);
-  }).then((BranchReference br) {
-    expect(br, isNotNull);
-    branchRef = br;
+  expect(returnedCommit, isNotNull, reason: 'Commit should not be null');
+  expect(returnedCommit.message, commitMessage);
 
-    return gitDir.getCommit(br.reference);
-  }).then((Commit commit) {
-    expect(commit.content, returnedCommit.content,
-        reason: 'content of queried commit should what was returned');
+  // new check to see if things are updated it gd1
+  var branchRef = await gitDir.getBranchReference(branchName);
+  expect(branchRef, isNotNull);
 
-    return gitDir.lsTree(commit.treeSha);
-  }).then((List<TreeEntry> entries) {
-    expect(entries.map((te) => te.name), unorderedEquals(contents.keys));
+  var commit = await gitDir.getCommit(branchRef.reference);
 
-    return gitDir.getCommitCount(branchRef.reference);
-  }).then((int newCommitCount) {
-    expect(newCommitCount, originalCommitCount + 1);
-  });
+  expect(commit.content, returnedCommit.content,
+      reason: 'content of queried commit should what was returned');
+
+  var entries = await gitDir.lsTree(commit.treeSha);
+
+  expect(entries.map((te) => te.name), unorderedEquals(contents.keys));
+
+  var newCommitCount = await gitDir.getCommitCount(branchRef.reference);
+  expect(newCommitCount, originalCommitCount + 1);
 }
 
 Future _testPopulateBranchWithDupeContent(GitDir gitDir, String branchName,
-    Map<String, dynamic> contents, String commitMessage) {
-  int originalCommitCount;
-
+    Map<String, dynamic> contents, String commitMessage) async {
   // figure out how many commits exist for the provided branch
-  return _testPopulateBranchCore(gitDir, branchName, contents, commitMessage)
-      .then((Tuple<Commit, int> pair) {
-    var returnedCommit = pair.item1;
-    originalCommitCount = pair.item2;
+  var pair = await _testPopulateBranchCore(
+      gitDir, branchName, contents, commitMessage);
 
-    expect(returnedCommit, isNull);
-    expect(originalCommitCount > 0, true,
-        reason: 'must have had some original content');
+  var returnedCommit = pair.item1;
+  var originalCommitCount = pair.item2;
 
-    // new check to see if things are updated it gd1
-    return gitDir.getBranchReference(branchName);
-  }).then((BranchReference br) {
-    expect(br, isNotNull);
+  expect(returnedCommit, isNull);
+  expect(originalCommitCount > 0, true,
+      reason: 'must have had some original content');
 
-    return gitDir.getCommitCount(br.reference);
-  }).then((int newCommitCount) {
-    expect(newCommitCount, originalCommitCount,
-        reason: 'no change in commit count');
-  });
+  // new check to see if things are updated it gd1
+  var br = await gitDir.getBranchReference(branchName);
+
+  expect(br, isNotNull);
+
+  var newCommitCount = await gitDir.getCommitCount(br.reference);
+
+  expect(newCommitCount, originalCommitCount,
+      reason: 'no change in commit count');
 }
 
-Future<Directory> _createTempDir([bool scheduleDelete = true]) {
+Future<Directory> _createTempDir([bool scheduleDelete = true]) async {
   var ticks = new DateTime.now().toUtc().millisecondsSinceEpoch;
-  return Directory.systemTemp.createTemp('git.test.$ticks.').then((dir) {
-    currentSchedule.onComplete.schedule(() {
-      if (scheduleDelete) {
-        return dir.delete(recursive: true);
-      } else {
-        print('Not deleting $dir');
-      }
-    });
 
-    return dir;
+  var dir = await Directory.systemTemp.createTemp('git.test.$ticks.');
+
+  currentSchedule.onComplete.schedule(() {
+    if (scheduleDelete) {
+      return dir.delete(recursive: true);
+    } else {
+      print('Not deleting $dir');
+    }
   });
+
+  return dir;
 }
 
-Future<GitDir> _createTempGitDir([bool scheduleDelete = true]) {
-  return _createTempDir(scheduleDelete).then((dir) {
-    return GitDir.init(dir);
-  });
+Future<GitDir> _createTempGitDir([bool scheduleDelete = true]) async {
+  var dir = await _createTempDir(scheduleDelete);
+  return GitDir.init(dir);
 }
