@@ -106,7 +106,6 @@ class GitDir {
     return CommitReference.fromShowRefOutput(pr.stdout);
   }
 
-  //TODO: needs test!
   Future<BranchReference> getCurrentBranch() {
     return runCommand(['rev-parse', '--verify', '--symbolic-full-name', 'HEAD'])
         .then((ProcessResult pr) {
@@ -136,58 +135,56 @@ class GitDir {
     return TreeEntry.fromLsTreeOutput(pr.stdout);
   }
 
-  //TODO: needs test!
   /// Returns the SHA for the new commit if one is created. `null` if the branch
   /// is not updated.
   Future<String> createOrUpdateBranch(
-      String branchName, String treeSha, String commitMessage) {
+      String branchName, String treeSha, String commitMessage) async {
     requireArgumentNotNullOrEmpty(branchName, 'branchName');
     requireArgumentValidSha1(treeSha, 'treeSha');
 
-    return getBranchReference(branchName)
-        .then((BranchReference targetBranchRef) {
-      if (targetBranchRef == null) {
-        return commitTree(treeSha, commitMessage);
-      } else {
-        return _updateBranch(targetBranchRef.sha, treeSha, commitMessage);
-      }
-    }).then((String newCommitSha) {
-      if (newCommitSha == null) {
-        return null;
-      }
+    var targetBranchRef = await getBranchReference(branchName);
 
-      assert(isValidSha(newCommitSha));
+    String newCommitSha;
 
-      final targetBranchRef = 'refs/heads/$branchName';
+    if (targetBranchRef == null) {
+      newCommitSha = await commitTree(treeSha, commitMessage);
+    } else {
+      newCommitSha =
+          await _updateBranch(targetBranchRef.sha, treeSha, commitMessage);
+    }
 
-      // TODO: if update-ref fails should we leave the new commit dangling?
-      // or at least log so the user can go clean up?
-      return runCommand(['update-ref', targetBranchRef, newCommitSha])
-          .then((ProcessResult pr) => newCommitSha);
-    });
+    if (newCommitSha == null) {
+      return null;
+    }
+
+    assert(isValidSha(newCommitSha));
+
+    targetBranchRef = 'refs/heads/$branchName';
+
+    // TODO: if update-ref fails should we leave the new commit dangling?
+    // or at least log so the user can go clean up?
+    await runCommand(['update-ref', targetBranchRef, newCommitSha]);
+    return newCommitSha;
   }
 
-  //TODO: Needs test!
   /// Returns the SHA for the new commit if one is created. `null` if the branch
   /// is not updated.
   Future<String> _updateBranch(
-      String targetBranchSha, String treeSha, String commitMessage) {
-    return getCommit(targetBranchSha).then((Commit commitObj) {
-      if (commitObj.treeSha == treeSha) {
-        return null;
-      }
+      String targetBranchSha, String treeSha, String commitMessage) async {
+    var commitObj = await getCommit(targetBranchSha);
+    if (commitObj.treeSha == treeSha) {
+      return null;
+    }
 
-      return commitTree(treeSha, commitMessage,
-          parentCommitShas: [targetBranchSha]);
-    });
+    return commitTree(treeSha, commitMessage,
+        parentCommitShas: [targetBranchSha]);
   }
 
-  //TODO: needs test!
   /// Returns the `SHA1` for the new commit.
   ///
   /// See [git-commit-tree](http://git-scm.com/docs/git-commit-tree)
   Future<String> commitTree(String treeSha, String commitMessage,
-      {List<String> parentCommitShas}) {
+      {List<String> parentCommitShas}) async {
     requireArgumentValidSha1(treeSha, 'treeSha');
 
     requireArgumentNotNullOrEmpty(commitMessage, 'commitMessage');
@@ -205,11 +202,10 @@ class GitDir {
       args.addAll(['-p', parentSha]);
     }
 
-    return runCommand(args).then((ProcessResult pr) {
-      final sha = pr.stdout.trim();
-      assert(isValidSha(sha));
-      return sha;
-    });
+    var pr = await runCommand(args);
+    final sha = pr.stdout.trim();
+    assert(isValidSha(sha));
+    return sha;
   }
 
   // TODO: should be renamed writeBlob?
@@ -260,7 +256,6 @@ class GitDir {
         throwOnError: throwOnError, processWorkingDir: _processWorkingDir);
   }
 
-  //TODO: needs test!
   Future<bool> isWorkingTreeClean() {
     return runCommand(['status', '--porcelain'])
         .then((ProcessResult pr) => pr.stdout.isEmpty);
@@ -371,16 +366,15 @@ class GitDir {
 
   String get _processWorkingDir => _path.toString();
 
-  //TODO: Needs test
-  static Future<bool> isGitDir(String path) {
+  static Future<bool> isGitDir(String path) async {
     final dir = new Directory(path);
-    return dir.exists().then((bool exists) {
-      if (exists) {
-        return _isGitDir(dir);
-      } else {
-        return false;
-      }
-    });
+
+    var exists = await dir.exists();
+    if (exists) {
+      return _isGitDir(dir);
+    } else {
+      return false;
+    }
   }
 
   /// [allowContent] if true, doesn't check to see if the directory is empty
