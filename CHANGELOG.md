@@ -1,3 +1,9 @@
+## v0.4.2
+
+* Migrated code to Dart 1.9 `async`.
+
+* Improved testing.
+
 ## v0.4.1+2
 
 * Updated max version of `bot` dependency.
