@@ -24,7 +24,7 @@ void main() {
     GitDir gitDir;
 
     schedule(() async {
-      gitDir = await _createTempGitDir(false);
+      gitDir = await _createTempGitDir();
     });
 
     schedule(() async {
@@ -93,6 +93,14 @@ void main() {
         schedule(() async {
           var value = await _createTempGitDir();
           dir = new Directory(value.path);
+        });
+      });
+
+      test('isWorkingTreeClean', () {
+        schedule(() async {
+          var gitDir = await GitDir.fromExisting(dir.path);
+          var isClean = await gitDir.isWorkingTreeClean();
+          expect(isClean, isTrue);
         });
       });
 
