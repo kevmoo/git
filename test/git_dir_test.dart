@@ -14,6 +14,59 @@ void main() {
 
   test('getCommits', _testGetCommits);
 
+  test('createOrUpdateBranch', () {
+    var initialMasterBranchContent = const {
+      'master.md': 'test file',
+      'lib/foo.txt': 'lib foo text',
+      'lib/bar.txt': 'lib bar text'
+    };
+
+    GitDir gitDir;
+
+    schedule(() async {
+      gitDir = await _createTempGitDir(false);
+    });
+
+    schedule(() async {
+      await _doDescriptorGitCommit(
+          gitDir, initialMasterBranchContent, 'master files');
+    });
+
+    // get the treeSha for the new lib directory
+    schedule(() async {
+      var branch = await gitDir.getCurrentBranch();
+
+      Commit commit = await gitDir.getCommit(branch.sha);
+
+      // sha for the new commit
+      var newSha = await gitDir.createOrUpdateBranch(
+          'test', commit.treeSha, 'copy of master');
+
+      // validate there is one commit on 'test'
+      // validate that the one commit has the right treeSha
+      // validate it has the right message
+
+      List treeItems = await gitDir.lsTree(newSha);
+      expect(treeItems, hasLength(2));
+
+      var libTreeEntry = treeItems.singleWhere((tree) => tree.name == 'lib');
+      expect(libTreeEntry.type, 'tree');
+
+      // do another update from the subtree sha
+      var nextCommit = await gitDir.createOrUpdateBranch(
+          'test', libTreeEntry.sha, 'just the lib content');
+
+      var testCommitCount = await gitDir.getCommitCount('test');
+      expect(testCommitCount, 2);
+
+      treeItems = await gitDir.lsTree(nextCommit);
+      expect(treeItems, hasLength(2));
+
+      expect(treeItems.map((tree) => tree.name),
+          unorderedEquals(['foo.txt', 'bar.txt']));
+    });
+  });
+
   group('init', () {
     test('allowContent:false with content fails', () {
       Directory dir;
