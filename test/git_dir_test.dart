@@ -18,10 +18,9 @@ void main() {
     test('allowContent:false with content fails', () {
       Directory dir;
 
-      schedule(() {
-        return _createTempDir().then((value) {
-          dir = new Directory(value.path);
-        });
+      schedule(() async {
+        var value = await _createTempDir();
+        dir = new Directory(value.path);
       });
 
       schedule(() {
@@ -38,10 +37,9 @@ void main() {
       Directory dir;
 
       setUp(() {
-        schedule(() {
-          return _createTempGitDir().then((value) {
-            dir = new Directory(value.path);
-          });
+        schedule(() async {
+          var value = await _createTempGitDir();
+          dir = new Directory(value.path);
         });
       });
 
@@ -69,23 +67,19 @@ void main() {
   test('writeObjects', () {
     GitDir gitDir;
 
-    schedule(() {
-      return _createTempGitDir().then((value) {
-        gitDir = value;
-      });
+    schedule(() async {
+      gitDir = await _createTempGitDir();
     });
 
-    schedule(() {
-      expect(gitDir.getBranchNames(), completion([]),
-          reason: 'Should start with zero commits');
+    schedule(() async {
+      var branches = await gitDir.getBranchNames();
+      expect(branches, isEmpty, reason: 'Should start with zero commits');
     });
 
     Directory tempDir;
-    schedule(() {
-      return _createTempDir().then((dir) {
-        tempDir = dir;
-        d.defaultRoot = tempDir.path;
-      });
+    schedule(() async {
+      tempDir = await _createTempDir();
+      d.defaultRoot = tempDir.path;
     });
 
     var initialContentMap = {'file1.txt': 'content1', 'file2.txt': 'content2'};
@@ -94,23 +88,22 @@ void main() {
       return _doDescriptorPopulate(d.defaultRoot, initialContentMap);
     });
 
-    schedule(() {
+    schedule(() async {
       var paths = initialContentMap.keys.map((String fileName) {
         return p.join(d.defaultRoot, fileName);
       }).toList();
 
-      return gitDir.writeObjects(paths).then((hashes) {
-        expect(hashes.length, equals(initialContentMap.length));
-        expect(hashes.keys, unorderedEquals(paths));
+      var hashes = await gitDir.writeObjects(paths);
+      expect(hashes.length, equals(initialContentMap.length));
+      expect(hashes.keys, unorderedEquals(paths));
 
-        expect(paths[0], endsWith('file1.txt'));
-        expect(hashes,
-            containsPair(paths[0], 'dd954e7a4e1a62ff90c5a0709dce5928716535c1'));
+      expect(paths[0], endsWith('file1.txt'));
+      expect(hashes,
+          containsPair(paths[0], 'dd954e7a4e1a62ff90c5a0709dce5928716535c1'));
 
-        expect(paths[1], endsWith('file2.txt'));
-        expect(hashes,
-            containsPair(paths[1], 'db00fd65b218578127ea51f3dffac701f12f486a'));
-      });
+      expect(paths[1], endsWith('file2.txt'));
+      expect(hashes,
+          containsPair(paths[1], 'db00fd65b218578127ea51f3dffac701f12f486a'));
     });
   });
 }
@@ -135,35 +128,31 @@ void _testGetCommits() {
 
   GitDir gitDir;
 
-  schedule(() {
-    return _createTempGitDir().then((value) {
-      gitDir = value;
+  schedule(() async {
+    gitDir = await _createTempGitDir();
 
-      return gitDir.getBranchNames();
-    }).then((branches) {
-      expect(branches, []);
-    });
+    var branches = await gitDir.getBranchNames();
+    expect(branches, []);
   });
 
-  schedule(() {
-    return Future.forEach(commitText, (String commitStr) {
+  schedule(() async {
+    for (var commitStr in commitText) {
       final fileMap = {};
       fileMap['$commitStr.txt'] = '$commitStr content';
 
-      return _doDescriptorGitCommit(gitDir, fileMap, msgFromText(commitStr));
-    });
+      await _doDescriptorGitCommit(gitDir, fileMap, msgFromText(commitStr));
+    }
   });
 
-  schedule(() {
-    expect(gitDir.getCommitCount(), completion(commitText.length));
+  schedule(() async {
+    var count = await gitDir.getCommitCount();
+    expect(count, commitText.length);
   });
 
   Map<String, Commit> commits;
 
-  schedule(() {
-    return gitDir.getCommits().then((value) {
-      commits = value;
-    });
+  schedule(() async {
+    commits = await gitDir.getCommits();
   });
 
   schedule(() {
@@ -254,14 +243,12 @@ void _testPopulateBranch() {
 
   GitDir gd1;
 
-  schedule(() {
-    return _createTempGitDir().then((value) {
-      gd1 = value;
-    });
+  schedule(() async {
+    gd1 = await _createTempGitDir();
   });
 
-  schedule(() {
-    return _doDescriptorGitCommit(
+  schedule(() async {
+    await _doDescriptorGitCommit(
         gd1, initialMasterBranchContent, 'master files');
   });
 
@@ -269,23 +256,23 @@ void _testPopulateBranch() {
     _testPopulateBranchEmpty(gd1, testBranchName);
   });
 
-  schedule(() {
-    return _testPopulateBranchWithContent(
+  schedule(() async {
+    await _testPopulateBranchWithContent(
         gd1, testBranchName, testContent1, 'first commit!');
   });
 
-  schedule(() {
-    return _testPopulateBranchWithContent(
+  schedule(() async {
+    await _testPopulateBranchWithContent(
         gd1, testBranchName, testContent2, 'second commit');
   });
 
-  schedule(() {
-    return _testPopulateBranchWithDupeContent(
+  schedule(() async {
+    await _testPopulateBranchWithDupeContent(
         gd1, testBranchName, testContent2, 'same content');
   });
 
-  schedule(() {
-    return _testPopulateBranchWithContent(
+  schedule(() async {
+    await _testPopulateBranchWithContent(
         gd1, testBranchName, testContent1, '3rd commit, content 1');
   });
 
