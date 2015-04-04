@@ -212,15 +212,15 @@ Future _doDescriptorGitCommit(
 }
 
 Future _doDescriptorPopulate(
-    String dirPath, Map<String, dynamic> contents) async {
+    String dirPath, Map<String, String> contents) async {
   for (var name in contents.keys) {
     var value = contents[name];
 
-    if (value is String) {
-      await d.file(name, value).create(dirPath);
-    } else {
-      throw new UnsupportedError('We cannot party with $value');
-    }
+    var fullPath = p.join(dirPath, name);
+
+    var file = new File(fullPath);
+    await file.create(recursive: true);
+    await file.writeAsString(value);
   }
 }
 
