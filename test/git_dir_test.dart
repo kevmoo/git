@@ -45,6 +45,13 @@ void main() {
         });
       });
 
+      test('isGitDir is true', () {
+        schedule(() async {
+          var isGitDir = await GitDir.isGitDir(dir.path);
+          expect(isGitDir, isTrue);
+        });
+      });
+
       test('with allowContent:false fails', () {
         schedule(() {
           expect(GitDir.init(dir, allowContent: false), throwsArgumentError);
