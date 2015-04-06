@@ -281,12 +281,7 @@ class GitDir {
     requireArgumentNotNullOrEmpty(branchName, 'branchName');
     requireArgumentNotNullOrEmpty(commitMessage, 'commitMessage');
 
-    _TempDirs tempDirs;
-    if (await getBranchReference(branchName) == null) {
-      tempDirs = await _getTempDirPairForNewBranch(branchName);
-    } else {
-      tempDirs = await _getTempDirPair(branchName);
-    }
+    _TempDirs tempDirs = await _getTempDirPair(branchName);
 
     try {
       await populater(tempDirs.gitWorkTreeDir);
@@ -330,37 +325,18 @@ class GitDir {
     }
   }
 
-  // if branch does not exist, do simple clone, then checkout
-  Future<_TempDirs> _getTempDirPairForNewBranch(String newBranchName) async {
-    var td = await _TempDirs.create();
-
-    // time for crazy clone tricks
-    var args = ['clone', '--shared', '--no-checkout', '--bare', path, '.'];
-    await runGit(args, processWorkingDir: td.gitHostDir.path);
-
-    await td.gitDir.runCommand(['checkout', '--orphan', newBranchName]);
-
-    // since we're checked out, need to clear out local content
-    await td.gitDir.runCommand(['rm', '-r', '-f', '--ignore-unmatch', '.']);
-    return td;
-  }
-
   // if branch exists, then clone to that branch
-  Future<_TempDirs> _getTempDirPair(String existingBranchName) async {
+  Future<_TempDirs> _getTempDirPair(String branchName) async {
     var td = await _TempDirs.create();
 
     // time for crazy clone tricks
-    var args = [
-      'clone',
-      '--shared',
-      '--branch',
-      existingBranchName,
-      '--bare',
-      path,
-      '.'
-    ];
+    var args = ['clone', '--shared', '--bare', path, '.'];
 
     await runGit(args, processWorkingDir: td.gitHostDir.path);
+
+    await td.gitDir
+        .runCommand(['symbolic-ref', 'HEAD', 'refs/heads/$branchName']);
+
     return td;
   }
 
