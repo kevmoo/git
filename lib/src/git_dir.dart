@@ -281,13 +281,35 @@ class GitDir {
     requireArgumentNotNullOrEmpty(branchName, 'branchName');
     requireArgumentNotNullOrEmpty(commitMessage, 'commitMessage');
 
-    _TempDirs tempDirs = await _getTempDirPair(branchName);
+    Directory tempContentRoot = await _createTempDir();
 
     try {
-      await populater(tempDirs.gitWorkTreeDir);
+      await populater(tempContentRoot);
+      var commit = await updateBranchWithDirectoryContents(
+          branchName, tempContentRoot.path, commitMessage);
+      return commit;
+    } finally {
+      await tempContentRoot.delete(recursive: true);
+    }
+  }
 
+  Future<Commit> updateBranchWithDirectoryContents(String branchName,
+      String sourceDirectoryPath, String commitMessage) async {
+    Directory tempGitRoot = await _createTempDir();
+
+    GitDir tempGitDir = new GitDir._raw(tempGitRoot.path, sourceDirectoryPath);
+
+    // time for crazy clone tricks
+    var args = ['clone', '--shared', '--bare', path, '.'];
+
+    await runGit(args, processWorkingDir: tempGitDir.path);
+
+    await tempGitDir
+        .runCommand(['symbolic-ref', 'HEAD', 'refs/heads/$branchName']);
+
+    try {
       // make sure there is something in the working three
-      var pr = await tempDirs.gitDir.runCommand(['ls-files', '--others']);
+      var pr = await tempGitDir.runCommand(['ls-files', '--others']);
 
       if (pr.stdout.isEmpty) {
         throw new GitError('No files were added');
@@ -295,10 +317,10 @@ class GitDir {
       // add new files to index
 
       // --verbose is not strictly needed, but nice for debugging
-      pr = await tempDirs.gitDir.runCommand(['add', '--all', '--verbose']);
+      pr = await tempGitDir.runCommand(['add', '--all', '--verbose']);
 
       // now to see if we have any changes here
-      pr = await tempDirs.gitDir.runCommand(['status', '--porcelain']);
+      pr = await tempGitDir.runCommand(['status', '--porcelain']);
 
       if (pr.stdout.isEmpty) {
         // no change in files! we should return a null result
@@ -306,11 +328,10 @@ class GitDir {
       }
 
       // Time to commit.
-      await tempDirs.gitDir
-          .runCommand(['commit', '--verbose', '-m', commitMessage]);
+      await tempGitDir.runCommand(['commit', '--verbose', '-m', commitMessage]);
 
       // --verbose is not strictly needed, but nice for debugging
-      await tempDirs.gitDir
+      await tempGitDir
           .runCommand(['push', '--verbose', '--progress', path, branchName]);
 
       // pr.stderr will have all of the info
@@ -319,25 +340,8 @@ class GitDir {
       // need to crack out the commit and return the value
       return getCommit('refs/heads/$branchName');
     } finally {
-      if (tempDirs != null) {
-        await tempDirs.dispose();
-      }
+      await tempGitRoot.delete(recursive: true);
     }
-  }
-
-  // if branch exists, then clone to that branch
-  Future<_TempDirs> _getTempDirPair(String branchName) async {
-    var td = await _TempDirs.create();
-
-    // time for crazy clone tricks
-    var args = ['clone', '--shared', '--bare', path, '.'];
-
-    await runGit(args, processWorkingDir: td.gitHostDir.path);
-
-    await td.gitDir
-        .runCommand(['symbolic-ref', 'HEAD', 'refs/heads/$branchName']);
-
-    return td;
   }
 
   String get _processWorkingDir => _path.toString();
@@ -408,30 +412,6 @@ class GitDir {
         throwOnError: false, processWorkingDir: dir.path);
 
     return pr.exitCode == 0;
-  }
-}
-
-class _TempDirs {
-  final GitDir gitDir;
-  final Directory gitHostDir;
-  final Directory gitWorkTreeDir;
-
-  static Future<_TempDirs> create() async {
-    var host = await _createTempDir();
-    var work = await _createTempDir();
-    var gd = new GitDir._raw(host.path, work.path);
-    return new _TempDirs(gd, host, work);
-  }
-
-  _TempDirs(this.gitDir, this.gitHostDir, this.gitWorkTreeDir);
-
-  String toString() => [gitHostDir, gitWorkTreeDir].toString();
-
-  Future dispose() {
-    return Future.forEach([
-      gitHostDir,
-      gitWorkTreeDir
-    ], (Directory dir) => dir.delete(recursive: true));
   }
 }
 
