@@ -1,3 +1,7 @@
+## v0.4.3
+
+* `GitDir` added `updateBranchWithDirectoryContents`.
+
 ## v0.4.2
 
 * Migrated code to Dart 1.9 `async`.
