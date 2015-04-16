@@ -3,16 +3,29 @@ library git.top_level;
 import 'dart:async';
 import 'dart:io';
 
+import 'package:which/which.dart';
+
 import 'util.dart';
+
+String _gitCache;
+
+Future<String> _getGit() async {
+  if (_gitCache == null) {
+    _gitCache = await which(gitBinName);
+  }
+  return _gitCache;
+}
 
 bool isValidSha(String value) => shaRegEx.hasMatch(value);
 
 Future<ProcessResult> runGit(List<String> args,
     {bool throwOnError: true, String processWorkingDir}) async {
-  var pr =
-      await Process.run(gitBinName, args, workingDirectory: processWorkingDir);
+  var git = await _getGit();
+
+  var pr = await Process.run(git, args, workingDirectory: processWorkingDir);
+
   if (throwOnError) {
-    _throwIfProcessFailed(pr, gitBinName, args);
+    _throwIfProcessFailed(pr, git, args);
   }
   return pr;
 }
@@ -27,6 +40,6 @@ ${pr.stdout}
 stderr:
 ${pr.stderr}''';
 
-    throw new ProcessException(gitBinName, args, message, pr.exitCode);
+    throw new ProcessException(process, args, message, pr.exitCode);
   }
 }
