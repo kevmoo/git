@@ -5,20 +5,16 @@ import 'dart:io';
 
 import 'util.dart';
 
-bool isValidSha(String value) {
-  return shaRegEx.hasMatch(value);
-}
+bool isValidSha(String value) => shaRegEx.hasMatch(value);
 
 Future<ProcessResult> runGit(List<String> args,
-    {bool throwOnError: true, String processWorkingDir}) {
-  return Process
-      .run('git', args, workingDirectory: processWorkingDir)
-      .then((ProcessResult pr) {
-    if (throwOnError) {
-      _throwIfProcessFailed(pr, 'git', args);
-    }
-    return pr;
-  });
+    {bool throwOnError: true, String processWorkingDir}) async {
+  var pr =
+      await Process.run(gitBinName, args, workingDirectory: processWorkingDir);
+  if (throwOnError) {
+    _throwIfProcessFailed(pr, gitBinName, args);
+  }
+  return pr;
 }
 
 void _throwIfProcessFailed(
@@ -31,6 +27,6 @@ ${pr.stdout}
 stderr:
 ${pr.stderr}''';
 
-    throw new ProcessException('git', args, message, pr.exitCode);
+    throw new ProcessException(gitBinName, args, message, pr.exitCode);
   }
 }
