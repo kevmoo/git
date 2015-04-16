@@ -22,7 +22,8 @@ Future<ProcessResult> runGit(List<String> args,
     {bool throwOnError: true, String processWorkingDir}) async {
   var git = await _getGit();
 
-  var pr = await Process.run(git, args, workingDirectory: processWorkingDir);
+  var pr = await Process.run(git, args,
+      workingDirectory: processWorkingDir, runInShell: true);
 
   if (throwOnError) {
     _throwIfProcessFailed(pr, git, args);

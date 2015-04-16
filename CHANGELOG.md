@@ -1,3 +1,7 @@
+## v0.4.4+1
+
+* Run `git` in the shell – trying to address issues on Windows.
+
 ## v0.4.4
 
 * Use `which` package to try harder to find `git` executable.
