@@ -1,3 +1,7 @@
+## v0.4.4
+
+* Use `which` package to try harder to find `git` executable.
+
 ## v0.4.3
 
 * `GitDir` added `updateBranchWithDirectoryContents`.
