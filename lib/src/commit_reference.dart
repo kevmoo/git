@@ -1,6 +1,6 @@
 library git.commit_reference;
 
-import 'package:bot/bot.dart';
+import 'dart:convert';
 
 import 'branch_reference.dart';
 import 'util.dart';
@@ -23,12 +23,9 @@ class CommitReference {
 
   static List<CommitReference> fromShowRefOutput(String input) {
     assert(input != null);
-    final lines = Util.splitLines(input).toList();
+    var lines = const LineSplitter().convert(input);
 
-    // last line should be empty
-    assert(lines.last.length == 0);
-
-    return lines.sublist(0, lines.length - 1).map((line) {
+    return lines.sublist(0, lines.length).map((line) {
       final match = _lsRemoteRegExp.allMatches(line).single;
       assert(match.groupCount == 2);
 

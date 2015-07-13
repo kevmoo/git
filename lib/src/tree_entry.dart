@@ -1,5 +1,7 @@
 library git.tree_entry;
 
+import 'dart:convert';
+
 import 'package:bot/bot.dart';
 import 'util.dart';
 
@@ -41,13 +43,10 @@ class TreeEntry {
   String toString() => "$mode $type $sha\t$name";
 
   static List<TreeEntry> fromLsTreeOutput(String output) {
-    final lines = Util.splitLines(output).toList();
-
-    // last line should be empty
-    assert(lines.last.length == 0);
+    var lines = const LineSplitter().convert(output);
 
     return lines
-        .sublist(0, lines.length - 1)
+        .sublist(0, lines.length)
         .map((line) => new TreeEntry.fromLsTree(line))
         .toList();
   }
