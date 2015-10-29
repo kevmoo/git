@@ -112,7 +112,9 @@ class GitDir {
 
     pr = await runCommand(['show-ref', '--verify', pr.stdout.trim()]);
 
-    return CommitReference.fromShowRefOutput(pr.stdout).single
+    return CommitReference
+        .fromShowRefOutput(pr.stdout)
+        .single
         .toBranchReference();
   }
 
@@ -213,14 +215,8 @@ class GitDir {
   /// and return a [Map] where the key is the input path and the value is
   /// the SHA of the newly written object.
   Future<Map<String, String>> writeObjects(List<String> paths) async {
-    var args = [
-      'hash-object',
-      '-t',
-      'blob',
-      '-w',
-      '--no-filters',
-      '--'
-    ]..addAll(paths);
+    var args = ['hash-object', '-t', 'blob', '-w', '--no-filters', '--']
+      ..addAll(paths);
 
     var pr = await runCommand(args);
     var val = pr.stdout.trim();

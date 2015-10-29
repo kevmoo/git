@@ -343,16 +343,17 @@ void _testPopulateBranch() {
 }
 
 void _testPopulateBranchEmpty(GitDir gitDir, String branchName) {
-  expect(_testPopulateBranchCore(gitDir, branchName, {}, 'empty?'), throwsA(
-      predicate((error) {
+  expect(_testPopulateBranchCore(gitDir, branchName, {}, 'empty?'),
+      throwsA(predicate((error) {
     return error.message == 'No files were added';
   })));
 }
 
-Future<Tuple<Commit, int>> _testPopulateBranchCore(GitDir gitDir,
-    String branchName, Map<String, dynamic> contents,
+Future<Tuple<Commit, int>> _testPopulateBranchCore(
+    GitDir gitDir,
+    String branchName,
+    Map<String, dynamic> contents,
     String commitMessage) async {
-
   // figure out how many commits exist for the provided branch
   var branchRef = await gitDir.getBranchReference(branchName);
 
@@ -383,7 +384,6 @@ Future<Tuple<Commit, int>> _testPopulateBranchCore(GitDir gitDir,
 
 Future _testPopulateBranchWithContent(GitDir gitDir, String branchName,
     Map<String, dynamic> contents, String commitMessage) async {
-
   // figure out how many commits exist for the provided branch
   var pair = await _testPopulateBranchCore(
       gitDir, branchName, contents, commitMessage);
