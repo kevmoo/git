@@ -1,3 +1,7 @@
+## v0.4.4+2
+
+* Internal refactoring.
+
 ## v0.4.4+1
 
 * Run `git` in the shell – trying to address issues on Windows.
