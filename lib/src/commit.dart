@@ -56,13 +56,16 @@ class Commit {
     var lastLine = slr.readNextLine();
 
     while (!lastLine.isEmpty) {
-      var match = headerRegExp.allMatches(lastLine).single;
-      assert(match.groupCount == 2);
-      var header = match.group(1);
-      var value = match.group(2);
+      var f = headerRegExp.allMatches(lastLine);
+      if (f.isNotEmpty) {
+        var match = f.single;
+        assert(match.groupCount == 2);
+        var header = match.group(1);
+        var value = match.group(2);
 
-      var list = headers.putIfAbsent(header, () => new List<String>());
-      list.add(value);
+        var list = headers.putIfAbsent(header, () => new List<String>());
+        list.add(value);
+      }
 
       lastLine = slr.readNextLine();
     }
