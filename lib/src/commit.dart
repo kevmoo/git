@@ -53,12 +53,15 @@ class Commit {
     var lastLine = slr.readNextLine();
 
     while (lastLine.isNotEmpty) {
-      final match = headerRegExp.allMatches(lastLine).single;
-      assert(match.groupCount == 2);
-      final header = match.group(1);
-      final value = match.group(2);
+      final allHeaderMatches = headerRegExp.allMatches(lastLine);
+      if (allHeaderMatches.isNotEmpty) {
+        final match = allHeaderMatches.single;
+        assert(match.groupCount == 2);
+        final header = match.group(1);
+        final value = match.group(2);
 
-      headers.putIfAbsent(header, () => <String>[]).add(value);
+        headers.putIfAbsent(header, () => <String>[]).add(value);
+      }
 
       lastLine = slr.readNextLine();
     }

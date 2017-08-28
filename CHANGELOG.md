@@ -1,3 +1,7 @@
+## 1.0.1
+
+- Improve logic of parsing commits.
+
 ## 1.0.0
 
 - A **LOT** of breaking changes.
