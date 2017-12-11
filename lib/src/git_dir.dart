@@ -22,7 +22,7 @@ class GitDir {
   final String _path;
   final String _gitWorkTree;
 
-  GitDir._raw(this._path, [this._gitWorkTree = null]) {
+  GitDir._raw(this._path, [this._gitWorkTree]) {
     assert(p.isAbsolute(this._path));
     assert(_gitWorkTree == null || p.isAbsolute(this._gitWorkTree));
   }

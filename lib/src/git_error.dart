@@ -5,5 +5,6 @@ class GitError extends Error {
 
   GitError(this.message);
 
+  @override
   String toString() => message;
 }

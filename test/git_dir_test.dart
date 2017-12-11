@@ -180,7 +180,7 @@ void _testGetCommits() {
   ];
 
   var msgFromText = (String txt) {
-    if (!txt.isEmpty && txt.trim() == txt) {
+    if (txt.isNotEmpty && txt.trim() == txt) {
       return 'Commit for $txt\n\nnice\n\nhuh?';
     } else {
       return txt;
@@ -225,7 +225,7 @@ void _testGetCommits() {
 
     commits.forEach((commitSha, Commit commit) {
       // index into the text for the message of this commit
-      int commitMessageIndex = null;
+      int commitMessageIndex;
       for (var i = 0; i < commitMessages.length; i++) {
         if (commitMessages[i] == commit.message) {
           commitMessageIndex = i;
@@ -265,7 +265,7 @@ Future _doDescriptorGitCommit(
     '--no-edit',
     '--allow-empty-message'
   ];
-  if (!commitMsg.isEmpty) {
+  if (commitMsg.isNotEmpty) {
     args.addAll(['-m', commitMsg]);
   }
 
