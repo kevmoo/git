@@ -1,5 +1,3 @@
-library git.commit;
-
 import 'dart:collection';
 
 import 'package:bot/bot.dart';

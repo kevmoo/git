@@ -1,5 +1,3 @@
-library git.tree_entry;
-
 import 'dart:convert';
 
 import 'package:bot/bot.dart';

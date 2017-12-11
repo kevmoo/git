@@ -1,5 +1,3 @@
-library git.commit_reference;
-
 import 'dart:convert';
 
 import 'branch_reference.dart';

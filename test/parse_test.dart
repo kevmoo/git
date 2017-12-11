@@ -1,5 +1,3 @@
-library git.parse_test;
-
 import 'package:test/test.dart';
 import 'package:git/git.dart';
 import 'package:git/src/util.dart';

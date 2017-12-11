@@ -1,5 +1,3 @@
-library git.top_level;
-
 import 'dart:async';
 import 'dart:io';
 

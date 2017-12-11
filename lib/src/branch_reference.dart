@@ -1,5 +1,3 @@
-library git.branch_reference;
-
 import 'commit_reference.dart';
 
 const _LOCAL_BRANCH_PREFIX = r'refs/heads/';

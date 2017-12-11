@@ -1,5 +1,3 @@
-library git.tag;
-
 import 'package:bot/bot.dart';
 
 import 'util.dart';
