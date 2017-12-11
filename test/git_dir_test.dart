@@ -46,7 +46,7 @@ void main() {
       // validate that the one commit has the right treeSha
       // validate it has the right message
 
-      List treeItems = await gitDir.lsTree(newSha);
+      var treeItems = await gitDir.lsTree(newSha);
       expect(treeItems, hasLength(2));
 
       var libTreeEntry = treeItems.singleWhere((tree) => tree.name == 'lib');
@@ -198,7 +198,7 @@ void _testGetCommits() {
 
   schedule(() async {
     for (var commitStr in commitText) {
-      final fileMap = {};
+      final fileMap = <String, String>{};
       fileMap['$commitStr.txt'] = '$commitStr content';
 
       await _doDescriptorGitCommit(gitDir, fileMap, msgFromText(commitStr));
@@ -252,7 +252,7 @@ void _testGetCommits() {
 }
 
 Future _doDescriptorGitCommit(
-    GitDir gd, Map<String, dynamic> contents, String commitMsg) async {
+    GitDir gd, Map<String, String> contents, String commitMsg) async {
   await _doDescriptorPopulate(gd.path, contents);
 
   // now add this new file
@@ -352,7 +352,7 @@ void _testPopulateBranchEmpty(GitDir gitDir, String branchName) {
 Future<Tuple<Commit, int>> _testPopulateBranchCore(
     GitDir gitDir,
     String branchName,
-    Map<String, dynamic> contents,
+    Map<String, String> contents,
     String commitMessage) async {
   // figure out how many commits exist for the provided branch
   var branchRef = await gitDir.getBranchReference(branchName);
@@ -383,7 +383,7 @@ Future<Tuple<Commit, int>> _testPopulateBranchCore(
 }
 
 Future _testPopulateBranchWithContent(GitDir gitDir, String branchName,
-    Map<String, dynamic> contents, String commitMessage) async {
+    Map<String, String> contents, String commitMessage) async {
   // figure out how many commits exist for the provided branch
   var pair = await _testPopulateBranchCore(
       gitDir, branchName, contents, commitMessage);
@@ -419,7 +419,7 @@ Future _testPopulateBranchWithContent(GitDir gitDir, String branchName,
 }
 
 Future _testPopulateBranchWithDupeContent(GitDir gitDir, String branchName,
-    Map<String, dynamic> contents, String commitMessage) async {
+    Map<String, String> contents, String commitMessage) async {
   // figure out how many commits exist for the provided branch
   var pair = await _testPopulateBranchCore(
       gitDir, branchName, contents, commitMessage);

@@ -31,7 +31,7 @@ class GitDir {
 
   Future<int> getCommitCount([String branchName = 'HEAD']) async {
     var pr = await runCommand(['rev-list', '--count', branchName]);
-    return int.parse(pr.stdout);
+    return int.parse(pr.stdout as String);
   }
 
   /// [rev] should probably be a sha1 to a commit.
@@ -39,12 +39,12 @@ class GitDir {
   /// See http://git-scm.com/docs/gitrevisions.html
   Future<Commit> getCommit(String rev) async {
     var pr = await runCommand(['cat-file', '-p', rev]);
-    return Commit.parse(pr.stdout);
+    return Commit.parse(pr.stdout as String);
   }
 
   Future<Map<String, Commit>> getCommits([String branchName = 'HEAD']) async {
     var pr = await runCommand(['rev-list', '--format=raw', branchName]);
-    return Commit.parseRawRevList(pr.stdout);
+    return Commit.parseRawRevList(pr.stdout as String);
   }
 
   Future<List<String>> getBranchNames() async {
@@ -74,7 +74,7 @@ class GitDir {
     return showRef(tags: true).then((List<CommitReference> refs) {
       final futures = refs.map((ref) {
         return runCommand(['cat-file', '-p', ref.sha]).then((ProcessResult pr) {
-          return Tag.parseCatFile(pr.stdout);
+          return Tag.parseCatFile(pr.stdout as String);
         });
       });
 
@@ -103,23 +103,24 @@ class GitDir {
     // otherwise, it should have worked fine...
     assert(pr.exitCode == 0);
 
-    return CommitReference.fromShowRefOutput(pr.stdout);
+    return CommitReference.fromShowRefOutput(pr.stdout as String);
   }
 
   Future<BranchReference> getCurrentBranch() async {
     var pr = await runCommand(
         const ['rev-parse', '--verify', '--symbolic-full-name', 'HEAD']);
 
-    pr = await runCommand(['show-ref', '--verify', pr.stdout.trim()]);
+    pr = await runCommand(
+        ['show-ref', '--verify', (pr.stdout as String).trim()]);
 
     return CommitReference
-        .fromShowRefOutput(pr.stdout)
+        .fromShowRefOutput(pr.stdout as String)
         .single
         .toBranchReference();
   }
 
   Future<List<TreeEntry>> lsTree(String treeish,
-      {bool subTreesOnly: false, String path: null}) async {
+      {bool subTreesOnly: false, String path}) async {
     assert(treeish != null);
     final args = ['ls-tree'];
 
@@ -134,7 +135,7 @@ class GitDir {
     }
 
     var pr = await runCommand(args);
-    return TreeEntry.fromLsTreeOutput(pr.stdout);
+    return TreeEntry.fromLsTreeOutput(pr.stdout as String);
   }
 
   /// Returns the SHA for the new commit if one is created. `null` if the branch
@@ -161,11 +162,11 @@ class GitDir {
 
     assert(isValidSha(newCommitSha));
 
-    targetBranchRef = 'refs/heads/$branchName';
+    var branchRef = 'refs/heads/$branchName';
 
     // TODO: if update-ref fails should we leave the new commit dangling?
     // or at least log so the user can go clean up?
-    await runCommand(['update-ref', targetBranchRef, newCommitSha]);
+    await runCommand(['update-ref', branchRef, newCommitSha]);
     return newCommitSha;
   }
 
@@ -205,7 +206,7 @@ class GitDir {
     }
 
     var pr = await runCommand(args);
-    final sha = pr.stdout.trim();
+    final sha = (pr.stdout as String).trim();
     assert(isValidSha(sha));
     return sha;
   }
@@ -219,7 +220,7 @@ class GitDir {
       ..addAll(paths);
 
     var pr = await runCommand(args);
-    var val = pr.stdout.trim();
+    var val = (pr.stdout as String).trim();
     var shas = val.split(new RegExp(r'\s+'));
     assert(shas.length == paths.length);
     assert(shas.every((sha) => _shaRegExp.hasMatch(sha)));
@@ -254,7 +255,7 @@ class GitDir {
 
   Future<bool> isWorkingTreeClean() {
     return runCommand(['status', '--porcelain'])
-        .then((ProcessResult pr) => pr.stdout.isEmpty);
+        .then((ProcessResult pr) => (pr.stdout as String).isEmpty);
   }
 
   // TODO: TEST: someone puts a git dir when populated
@@ -307,7 +308,7 @@ class GitDir {
       // make sure there is something in the working three
       var pr = await tempGitDir.runCommand(['ls-files', '--others']);
 
-      if (pr.stdout.isEmpty) {
+      if ((pr.stdout as String).isEmpty) {
         throw new GitError('No files were added');
       }
       // add new files to index
@@ -318,7 +319,7 @@ class GitDir {
       // now to see if we have any changes here
       pr = await tempGitDir.runCommand(['status', '--porcelain']);
 
-      if (pr.stdout.isEmpty) {
+      if ((pr.stdout as String).isEmpty) {
         // no change in files! we should return a null result
         return null;
       }
