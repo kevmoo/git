@@ -1,6 +1,6 @@
 library git.parse_test;
 
-import 'package:scheduled_test/scheduled_test.dart';
+import 'package:test/test.dart';
 import 'package:git/git.dart';
 import 'package:git/src/util.dart';
 

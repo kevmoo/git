@@ -5,8 +5,8 @@ import 'dart:io';
 
 import 'package:bot/bot.dart';
 import 'package:path/path.dart' as p;
-import 'package:scheduled_test/descriptor.dart' as d;
-import 'package:scheduled_test/scheduled_test.dart';
+import 'package:test_descriptor/test_descriptor.dart' as d;
+import 'package:test/test.dart';
 import 'package:git/git.dart';
 
 void main() {
@@ -14,162 +14,120 @@ void main() {
 
   test('getCommits', _testGetCommits);
 
-  test('createOrUpdateBranch', () {
+  test('createOrUpdateBranch', () async {
     var initialMasterBranchContent = const {
       'master.md': 'test file',
       'lib/foo.txt': 'lib foo text',
       'lib/bar.txt': 'lib bar text'
     };
 
-    GitDir gitDir;
+    var gitDir = await _createTempGitDir();
 
-    schedule(() async {
-      gitDir = await _createTempGitDir();
-    });
-
-    schedule(() async {
-      await _doDescriptorGitCommit(
-          gitDir, initialMasterBranchContent, 'master files');
-    });
+    await _doDescriptorGitCommit(
+        gitDir, initialMasterBranchContent, 'master files');
 
     // get the treeSha for the new lib directory
-    schedule(() async {
-      var branch = await gitDir.getCurrentBranch();
+    var branch = await gitDir.getCurrentBranch();
 
-      Commit commit = await gitDir.getCommit(branch.sha);
+    Commit commit = await gitDir.getCommit(branch.sha);
 
-      // sha for the new commit
-      var newSha = await gitDir.createOrUpdateBranch(
-          'test', commit.treeSha, 'copy of master');
+    // sha for the new commit
+    var newSha = await gitDir.createOrUpdateBranch(
+        'test', commit.treeSha, 'copy of master');
 
-      // validate there is one commit on 'test'
-      // validate that the one commit has the right treeSha
-      // validate it has the right message
+    // validate there is one commit on 'test'
+    // validate that the one commit has the right treeSha
+    // validate it has the right message
 
-      var treeItems = await gitDir.lsTree(newSha);
-      expect(treeItems, hasLength(2));
+    var treeItems = await gitDir.lsTree(newSha);
+    expect(treeItems, hasLength(2));
 
-      var libTreeEntry = treeItems.singleWhere((tree) => tree.name == 'lib');
-      expect(libTreeEntry.type, 'tree');
+    var libTreeEntry = treeItems.singleWhere((tree) => tree.name == 'lib');
+    expect(libTreeEntry.type, 'tree');
 
-      // do another update from the subtree sha
-      var nextCommit = await gitDir.createOrUpdateBranch(
-          'test', libTreeEntry.sha, 'just the lib content');
+    // do another update from the subtree sha
+    var nextCommit = await gitDir.createOrUpdateBranch(
+        'test', libTreeEntry.sha, 'just the lib content');
 
-      var testCommitCount = await gitDir.getCommitCount('test');
-      expect(testCommitCount, 2);
+    var testCommitCount = await gitDir.getCommitCount('test');
+    expect(testCommitCount, 2);
 
-      treeItems = await gitDir.lsTree(nextCommit);
-      expect(treeItems, hasLength(2));
+    treeItems = await gitDir.lsTree(nextCommit);
+    expect(treeItems, hasLength(2));
 
-      expect(treeItems.map((tree) => tree.name),
-          unorderedEquals(['foo.txt', 'bar.txt']));
-    });
+    expect(treeItems.map((tree) => tree.name),
+        unorderedEquals(['foo.txt', 'bar.txt']));
   });
 
   group('init', () {
-    test('allowContent:false with content fails', () {
-      Directory dir;
+    test('allowContent:false with content fails', () async {
+      var value = await _createTempDir();
+      var dir = new Directory(value.path);
 
-      schedule(() async {
-        var value = await _createTempDir();
-        dir = new Directory(value.path);
-      });
+      var file = new File(p.join(dir.path, 'testfile.txt'));
+      file.writeAsStringSync('test content');
 
-      schedule(() {
-        var file = new File(p.join(dir.path, 'testfile.txt'));
-        file.writeAsStringSync('test content');
-      });
-
-      schedule(() {
-        expect(GitDir.init(dir, allowContent: false), throwsArgumentError);
-      });
+      expect(GitDir.init(dir, allowContent: false), throwsArgumentError);
     });
 
     group('existing git dir', () {
       Directory dir;
 
-      setUp(() {
-        schedule(() async {
-          var value = await _createTempGitDir();
-          dir = new Directory(value.path);
-        });
+      setUp(() async {
+        var value = await _createTempGitDir();
+        dir = new Directory(value.path);
       });
 
-      test('isWorkingTreeClean', () {
-        schedule(() async {
-          var gitDir = await GitDir.fromExisting(dir.path);
-          var isClean = await gitDir.isWorkingTreeClean();
-          expect(isClean, isTrue);
-        });
+      test('isWorkingTreeClean', () async {
+        var gitDir = await GitDir.fromExisting(dir.path);
+        var isClean = await gitDir.isWorkingTreeClean();
+        expect(isClean, isTrue);
       });
 
-      test('isGitDir is true', () {
-        schedule(() async {
-          var isGitDir = await GitDir.isGitDir(dir.path);
-          expect(isGitDir, isTrue);
-        });
+      test('isGitDir is true', () async {
+        var isGitDir = await GitDir.isGitDir(dir.path);
+        expect(isGitDir, isTrue);
       });
 
       test('with allowContent:false fails', () {
-        schedule(() {
-          expect(GitDir.init(dir, allowContent: false), throwsArgumentError);
-        });
+        expect(GitDir.init(dir, allowContent: false), throwsArgumentError);
       });
 
       test('with allowContent:true fails', () {
-        schedule(() {
-          expect(GitDir.init(dir, allowContent: true), throwsArgumentError);
-        });
+        expect(GitDir.init(dir, allowContent: true), throwsArgumentError);
       });
     });
   });
 
-  test('writeObjects', () {
-    GitDir gitDir;
+  test('writeObjects', () async {
+    var gitDir = await _createTempGitDir();
 
-    schedule(() async {
-      gitDir = await _createTempGitDir();
-    });
-
-    schedule(() async {
-      var branches = await gitDir.getBranchNames();
-      expect(branches, isEmpty, reason: 'Should start with zero commits');
-    });
-
-    Directory tempDir;
-    schedule(() async {
-      tempDir = await _createTempDir();
-      d.defaultRoot = tempDir.path;
-    });
+    var branches = await gitDir.getBranchNames();
+    expect(branches, isEmpty, reason: 'Should start with zero commits');
 
     var initialContentMap = {'file1.txt': 'content1', 'file2.txt': 'content2'};
 
-    schedule(() {
-      return _doDescriptorPopulate(d.defaultRoot, initialContentMap);
-    });
+    await _doDescriptorPopulate(d.sandbox, initialContentMap);
 
-    schedule(() async {
-      var paths = initialContentMap.keys.map((String fileName) {
-        return p.join(d.defaultRoot, fileName);
-      }).toList();
+    var paths = initialContentMap.keys.map((String fileName) {
+      return p.join(d.sandbox, fileName);
+    }).toList();
 
-      var hashes = await gitDir.writeObjects(paths);
-      expect(hashes.length, equals(initialContentMap.length));
-      expect(hashes.keys, unorderedEquals(paths));
+    var hashes = await gitDir.writeObjects(paths);
+    expect(hashes.length, equals(initialContentMap.length));
+    expect(hashes.keys, unorderedEquals(paths));
 
-      expect(paths[0], endsWith('file1.txt'));
-      expect(hashes,
-          containsPair(paths[0], 'dd954e7a4e1a62ff90c5a0709dce5928716535c1'));
+    expect(paths[0], endsWith('file1.txt'));
+    expect(hashes,
+        containsPair(paths[0], 'dd954e7a4e1a62ff90c5a0709dce5928716535c1'));
 
-      expect(paths[1], endsWith('file2.txt'));
-      expect(hashes,
-          containsPair(paths[1], 'db00fd65b218578127ea51f3dffac701f12f486a'));
-    });
+    expect(paths[1], endsWith('file2.txt'));
+    expect(hashes,
+        containsPair(paths[1], 'db00fd65b218578127ea51f3dffac701f12f486a'));
   });
 }
 
-void _testGetCommits() {
+Future _testGetCommits() async {
   var commitText = const [
     '',
     ' \t leading white space is okay, too',
@@ -187,67 +145,53 @@ void _testGetCommits() {
     }
   };
 
-  GitDir gitDir;
+  var gitDir = await _createTempGitDir();
 
-  schedule(() async {
-    gitDir = await _createTempGitDir();
+  var branches = await gitDir.getBranchNames();
+  expect(branches, []);
 
-    var branches = await gitDir.getBranchNames();
-    expect(branches, []);
-  });
+  for (var commitStr in commitText) {
+    final fileMap = <String, String>{};
+    fileMap['$commitStr.txt'] = '$commitStr content';
 
-  schedule(() async {
-    for (var commitStr in commitText) {
-      final fileMap = <String, String>{};
-      fileMap['$commitStr.txt'] = '$commitStr content';
+    await _doDescriptorGitCommit(gitDir, fileMap, msgFromText(commitStr));
+  }
 
-      await _doDescriptorGitCommit(gitDir, fileMap, msgFromText(commitStr));
+  var count = await gitDir.getCommitCount();
+  expect(count, commitText.length);
+
+  var commits = await gitDir.getCommits();
+
+  expect(commits, hasLength(commitText.length));
+
+  var commitMessages = commitText.map(msgFromText).toList();
+
+  var indexMap = <int, Tuple<String, Commit>>{};
+
+  commits.forEach((commitSha, Commit commit) {
+    // index into the text for the message of this commit
+    int commitMessageIndex;
+    for (var i = 0; i < commitMessages.length; i++) {
+      if (commitMessages[i] == commit.message) {
+        commitMessageIndex = i;
+        break;
+      }
     }
+
+    expect(commitMessageIndex, isNotNull,
+        reason: 'a matching message should be found');
+
+    expect(indexMap.containsKey(commitMessageIndex), isFalse);
+    indexMap[commitMessageIndex] = new Tuple(commitSha, commit);
   });
 
-  schedule(() async {
-    var count = await gitDir.getCommitCount();
-    expect(count, commitText.length);
-  });
-
-  Map<String, Commit> commits;
-
-  schedule(() async {
-    commits = await gitDir.getCommits();
-  });
-
-  schedule(() {
-    expect(commits, hasLength(commitText.length));
-
-    var commitMessages = commitText.map(msgFromText).toList();
-
-    var indexMap = <int, Tuple<String, Commit>>{};
-
-    commits.forEach((commitSha, Commit commit) {
-      // index into the text for the message of this commit
-      int commitMessageIndex;
-      for (var i = 0; i < commitMessages.length; i++) {
-        if (commitMessages[i] == commit.message) {
-          commitMessageIndex = i;
-          break;
-        }
-      }
-
-      expect(commitMessageIndex, isNotNull,
-          reason: 'a matching message should be found');
-
-      expect(indexMap.containsKey(commitMessageIndex), isFalse);
-      indexMap[commitMessageIndex] = new Tuple(commitSha, commit);
-    });
-
-    indexMap.forEach((int index, Tuple<String, Commit> shaCommitTuple) {
-      if (index > 0) {
-        expect(shaCommitTuple.item2.parents,
-            unorderedEquals([indexMap[index - 1].item1]));
-      } else {
-        expect(shaCommitTuple.item2.parents, hasLength(0));
-      }
-    });
+  indexMap.forEach((int index, Tuple<String, Commit> shaCommitTuple) {
+    if (index > 0) {
+      expect(shaCommitTuple.item2.parents,
+          unorderedEquals([indexMap[index - 1].item1]));
+    } else {
+      expect(shaCommitTuple.item2.parents, hasLength(0));
+    }
   });
 }
 
@@ -285,7 +229,7 @@ Future _doDescriptorPopulate(
   }
 }
 
-void _testPopulateBranch() {
+Future _testPopulateBranch() async {
   var initialMasterBranchContent = const {'master.md': 'test file'};
 
   var testContent1 = const {
@@ -302,44 +246,25 @@ void _testPopulateBranch() {
 
   var testBranchName = 'the_test_branch';
 
-  GitDir gd1;
+  var gd1 = await _createTempGitDir();
 
-  schedule(() async {
-    gd1 = await _createTempGitDir();
-  });
+  await _doDescriptorGitCommit(gd1, initialMasterBranchContent, 'master files');
 
-  schedule(() async {
-    await _doDescriptorGitCommit(
-        gd1, initialMasterBranchContent, 'master files');
-  });
+  _testPopulateBranchEmpty(gd1, testBranchName);
 
-  schedule(() {
-    _testPopulateBranchEmpty(gd1, testBranchName);
-  });
+  await _testPopulateBranchWithContent(
+      gd1, testBranchName, testContent1, 'first commit!');
 
-  schedule(() async {
-    await _testPopulateBranchWithContent(
-        gd1, testBranchName, testContent1, 'first commit!');
-  });
+  await _testPopulateBranchWithContent(
+      gd1, testBranchName, testContent2, 'second commit');
 
-  schedule(() async {
-    await _testPopulateBranchWithContent(
-        gd1, testBranchName, testContent2, 'second commit');
-  });
+  await _testPopulateBranchWithDupeContent(
+      gd1, testBranchName, testContent2, 'same content');
 
-  schedule(() async {
-    await _testPopulateBranchWithDupeContent(
-        gd1, testBranchName, testContent2, 'same content');
-  });
+  await _testPopulateBranchWithContent(
+      gd1, testBranchName, testContent1, '3rd commit, content 1');
 
-  schedule(() async {
-    await _testPopulateBranchWithContent(
-        gd1, testBranchName, testContent1, '3rd commit, content 1');
-  });
-
-  schedule(() {
-    _testPopulateBranchEmpty(gd1, testBranchName);
-  });
+  _testPopulateBranchEmpty(gd1, testBranchName);
 }
 
 void _testPopulateBranchEmpty(GitDir gitDir, String branchName) {
@@ -447,9 +372,9 @@ Future<Directory> _createTempDir([bool scheduleDelete = true]) async {
 
   var dir = await Directory.systemTemp.createTemp('git.test.$ticks.');
 
-  currentSchedule.onComplete.schedule(() {
+  addTearDown(() async {
     if (scheduleDelete) {
-      return dir.delete(recursive: true);
+      await dir.delete(recursive: true);
     } else {
       print('Not deleting $dir');
     }
