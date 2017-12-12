@@ -1,5 +1,5 @@
 name: git
-version: 0.4.5-dev
+version: 0.4.4+3
 author: Kevin Moore <github@j832.com>
 description: A Dart wrapper around the Git command line
 homepage: https://github.com/kevmoo/git.dart
