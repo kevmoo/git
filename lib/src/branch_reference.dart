@@ -1,5 +1,3 @@
-library git.branch_reference;
-
 import 'commit_reference.dart';
 
 const _LOCAL_BRANCH_PREFIX = r'refs/heads/';
@@ -18,5 +16,6 @@ class BranchReference extends CommitReference {
   BranchReference._internal(String sha, String reference, this.branchName)
       : super(sha, reference);
 
+  @override
   String toString() => 'BranchReference: $branchName  $sha  ($reference)';
 }

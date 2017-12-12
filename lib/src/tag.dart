@@ -1,5 +1,3 @@
-library git.tag;
-
 import 'package:bot/bot.dart';
 
 import 'util.dart';
@@ -24,7 +22,7 @@ class Tag {
 
     String lastLine = slr.readNextLine();
 
-    while (!lastLine.isEmpty) {
+    while (lastLine.isNotEmpty) {
       final match = headerRegExp.allMatches(lastLine).single;
       assert(match.groupCount == 2);
       final header = match.group(1);

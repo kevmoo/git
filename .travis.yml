@@ -1,9 +1,17 @@
 language: dart
-sudo: false
 dart:
-  - stable
   - dev
-before_install:
-  - git config --global user.email "you@example.com"
-  - git config --global user.name "Your Name"
-script: ./tool/travis.sh
+  - stable
+
+dart_task:
+  - test
+  - dartfmt
+  - dartanalyzer
+
+# Only building master means that we don't run two builds for each pull request.
+branches:
+  only: [master]
+
+cache:
+ directories:
+   - $HOME/.pub-cache

@@ -1,5 +1,3 @@
-library git.tree_entry;
-
 import 'dart:convert';
 
 import 'package:bot/bot.dart';
@@ -40,6 +38,7 @@ class TreeEntry {
     return new TreeEntry(match[1], match[2], match[3], match[4]);
   }
 
+  @override
   String toString() => "$mode $type $sha\t$name";
 
   static List<TreeEntry> fromLsTreeOutput(String output) {

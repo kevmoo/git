@@ -1,5 +1,3 @@
-library git.commit;
-
 import 'dart:collection';
 
 import 'package:bot/bot.dart';
@@ -55,7 +53,7 @@ class Commit {
     var startSpot = slr.position;
     var lastLine = slr.readNextLine();
 
-    while (!lastLine.isEmpty) {
+    while (lastLine.isNotEmpty) {
       var match = headerRegExp.allMatches(lastLine).single;
       assert(match.groupCount == 2);
       var header = match.group(1);

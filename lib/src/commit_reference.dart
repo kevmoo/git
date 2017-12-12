@@ -1,5 +1,3 @@
-library git.commit_reference;
-
 import 'dart:convert';
 
 import 'branch_reference.dart';
@@ -36,5 +34,6 @@ class CommitReference {
   BranchReference toBranchReference() =>
       new BranchReference(this.sha, this.reference);
 
+  @override
   String toString() => 'GitReference: $reference  $sha';
 }
