@@ -2,7 +2,7 @@
 // https://github.com/kevmoo/bot.dart/commit/6badd135a5
 
 void requireArgument(bool truth, String argName, [String message]) {
-  _metaRequireArgumentNotNullOrEmpty(argName);
+  metaRequireArgumentNotNullOrEmpty(argName);
   if (!truth) {
     if (message == null || message.isEmpty) {
       message = 'value was invalid';
@@ -12,14 +12,14 @@ void requireArgument(bool truth, String argName, [String message]) {
 }
 
 void requireArgumentNotNull(argument, String argName) {
-  _metaRequireArgumentNotNullOrEmpty(argName);
+  metaRequireArgumentNotNullOrEmpty(argName);
   if (argument == null) {
     throw new ArgumentError.notNull(argName);
   }
 }
 
 void requireArgumentNotNullOrEmpty(String argument, String argName) {
-  _metaRequireArgumentNotNullOrEmpty(argName);
+  metaRequireArgumentNotNullOrEmpty(argName);
   if (argument == null) {
     throw new ArgumentError.notNull(argument);
   } else if (argument.length == 0) {
@@ -40,7 +40,7 @@ void requireArgumentContainsPattern(
   }
 }
 
-void _metaRequireArgumentNotNullOrEmpty(String argName) {
+void metaRequireArgumentNotNullOrEmpty(String argName) {
   if (argName == null || argName.length == 0) {
     throw new InvalidOperationError("That's just sad. Give me a good argName");
   }
