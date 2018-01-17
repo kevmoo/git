@@ -1,18 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:which/which.dart';
-
 import 'util.dart';
 
-String _gitCache;
-
-Future<String> _getGit() async {
-  if (_gitCache == null) {
-    _gitCache = await which(gitBinName);
-  }
-  return _gitCache;
-}
+Future<String> _getGit() async => gitBinName;
 
 bool isValidSha(String value) => shaRegEx.hasMatch(value);
 

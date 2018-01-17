@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:bot/bot.dart';
+import 'bot.dart';
 import 'util.dart';
 
 class TreeEntry {

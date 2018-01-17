@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:path/path.dart' as p;
-import 'package:bot/bot.dart';
 
+import 'bot.dart';
 import 'branch_reference.dart';
 import 'commit.dart';
 import 'commit_reference.dart';

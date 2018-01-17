@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:bot/bot.dart';
 import 'package:path/path.dart' as p;
 import 'package:test_descriptor/test_descriptor.dart' as d;
 import 'package:test/test.dart';
 import 'package:git/git.dart';
+import 'package:git/src/bot.dart';
 
 void main() {
   test('populateBranch', _testPopulateBranch);
