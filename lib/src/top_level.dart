@@ -3,19 +3,17 @@ import 'dart:io';
 
 import 'util.dart';
 
-Future<String> _getGit() async => gitBinName;
+final _shaRegEx = new RegExp(r'^' + SHA_REGEX_PATTERN + r'$');
 
-bool isValidSha(String value) => shaRegEx.hasMatch(value);
+bool isValidSha(String value) => _shaRegEx.hasMatch(value);
 
 Future<ProcessResult> runGit(List<String> args,
     {bool throwOnError: true, String processWorkingDir}) async {
-  var git = await _getGit();
-
-  var pr = await Process.run(git, args,
+  var pr = await Process.run('git', args,
       workingDirectory: processWorkingDir, runInShell: true);
 
   if (throwOnError) {
-    _throwIfProcessFailed(pr, git, args);
+    _throwIfProcessFailed(pr, 'git', args);
   }
   return pr;
 }
