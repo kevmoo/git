@@ -1,3 +1,7 @@
+## 0.5.0
+
+* Remove unsupported dependencies.
+
 ## 0.4.4+3
 
 * Strong-mode fixes.

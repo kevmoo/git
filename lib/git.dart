@@ -1,5 +1,3 @@
-library git;
-
 export 'src/branch_reference.dart';
 export 'src/commit.dart';
 export 'src/commit_reference.dart';
