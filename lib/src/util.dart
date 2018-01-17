@@ -3,9 +3,6 @@ import 'top_level.dart';
 
 const SHA_REGEX_PATTERN = '[a-f0-9]{40}';
 
-const gitBinName = 'git';
-
-final shaRegEx = new RegExp(r'^' + SHA_REGEX_PATTERN + r'$');
 
 final headerRegExp = new RegExp(r'^([a-z]+) (.+)$');
 
