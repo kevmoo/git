@@ -95,10 +95,7 @@ class Commit {
     var commitSha =
         headers.containsKey('commit') ? headers['commit'].single : null;
 
-    var parents = headers['parent'];
-    if (parents == null) {
-      parents = [];
-    }
+    var parents = headers['parent'] ?? [];
 
     var endSpot = slr.position;
 

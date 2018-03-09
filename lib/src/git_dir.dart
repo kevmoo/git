@@ -13,8 +13,8 @@ import 'tree_entry.dart';
 import 'util.dart';
 
 class GitDir {
-  static const _WORK_TREE_ARG = '--work-tree=';
-  static const _GIT_DIR_ARG = '--git-dir=';
+  static const _workTreeArg = '--work-tree=';
+  static const _gitDirArg = '--git-dir=';
   static final RegExp _shaRegExp = new RegExp(r'^[a-f0-9]{40}$');
 
   final String _path;
@@ -192,9 +192,7 @@ class GitDir {
     requireArgument(commitMessage.trim() == commitMessage, 'commitMessage',
         'Value cannot start or end with whitespace.');
 
-    if (parentCommitShas == null) {
-      parentCommitShas = [];
-    }
+    parentCommitShas ??= [];
 
     final args = ['commit-tree', treeSha, '-m', commitMessage];
 
@@ -221,7 +219,7 @@ class GitDir {
     var val = (pr.stdout as String).trim();
     var shas = val.split(new RegExp(r'\s+'));
     assert(shas.length == paths.length);
-    assert(shas.every((sha) => _shaRegExp.hasMatch(sha)));
+    assert(shas.every(_shaRegExp.hasMatch));
     var map = new Map<String, String>();
     for (var i = 0; i < shas.length; i++) {
       map[paths[i]] = shas[i];
@@ -237,14 +235,14 @@ class GitDir {
 
     for (final arg in list) {
       requireArgumentNotNullOrEmpty(arg, 'args');
-      requireArgument(!arg.contains(_WORK_TREE_ARG), 'args',
-          'Cannot contain $_WORK_TREE_ARG');
       requireArgument(
-          !arg.contains(_GIT_DIR_ARG), 'args', 'Cannot contain $_GIT_DIR_ARG');
+          !arg.contains(_workTreeArg), 'args', 'Cannot contain $_workTreeArg');
+      requireArgument(
+          !arg.contains(_gitDirArg), 'args', 'Cannot contain $_gitDirArg');
     }
 
     if (_gitWorkTree != null) {
-      list.insert(0, '$_WORK_TREE_ARG${_gitWorkTree}');
+      list.insert(0, '$_workTreeArg$_gitWorkTree');
     }
 
     return runGit(list,

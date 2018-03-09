@@ -6,7 +6,7 @@ import 'util.dart';
 /// Represents the output from `git show-ref`
 class CommitReference {
   static final RegExp _lsRemoteRegExp =
-      new RegExp('^($SHA_REGEX_PATTERN) (.+)\$');
+      new RegExp('^($shaRegexPattern) (.+)\$');
 
   final String sha;
   final String reference;

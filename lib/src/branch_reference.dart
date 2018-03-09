@@ -1,14 +1,14 @@
 import 'commit_reference.dart';
 
-const _LOCAL_BRANCH_PREFIX = r'refs/heads/';
+const _localBranchPrefix = r'refs/heads/';
 
 class BranchReference extends CommitReference {
   final String branchName;
 
   factory BranchReference(String sha, String reference) {
-    assert(reference.startsWith(_LOCAL_BRANCH_PREFIX));
+    assert(reference.startsWith(_localBranchPrefix));
 
-    var branchName = reference.substring(_LOCAL_BRANCH_PREFIX.length);
+    var branchName = reference.substring(_localBranchPrefix.length);
 
     return new BranchReference._internal(sha, reference, branchName);
   }

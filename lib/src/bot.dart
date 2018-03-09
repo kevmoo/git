@@ -22,7 +22,7 @@ void requireArgumentNotNullOrEmpty(String argument, String argName) {
   metaRequireArgumentNotNullOrEmpty(argName);
   if (argument == null) {
     throw new ArgumentError.notNull(argument);
-  } else if (argument.length == 0) {
+  } else if (argument.isEmpty) {
     throw new ArgumentError.value(
         argument, argName, 'cannot be an empty string');
   }
@@ -36,12 +36,12 @@ void requireArgumentContainsPattern(
   requireArgumentNotNull(argValue, argName);
   if (!argValue.contains(pattern)) {
     throw new ArgumentError.value(argValue, argName,
-        'The value "$argValue" does not contain the pattern "${pattern}"');
+        'The value "$argValue" does not contain the pattern "$pattern"');
   }
 }
 
 void metaRequireArgumentNotNullOrEmpty(String argName) {
-  if (argName == null || argName.length == 0) {
+  if (argName == null || argName.isEmpty) {
     throw new InvalidOperationError("That's just sad. Give me a good argName");
   }
 }
@@ -49,7 +49,7 @@ void metaRequireArgumentNotNullOrEmpty(String argName) {
 class InvalidOperationError implements Exception {
   final String message;
 
-  const InvalidOperationError([this.message = ""]);
+  const InvalidOperationError([this.message = '']);
 }
 
 class Tuple<T1, T2> {
@@ -64,7 +64,7 @@ class Tuple<T1, T2> {
   }
 
   @override
-  String toString() => "{item1: $item1, item2: $item2}";
+  String toString() => '{item1: $item1, item2: $item2}';
 
   @override
   int get hashCode => item1.hashCode ^ 37 * item2.hashCode;
