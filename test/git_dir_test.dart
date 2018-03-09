@@ -77,13 +77,13 @@ void main() {
       });
 
       test('isWorkingTreeClean', () async {
-        var gitDir = await GitDir.fromExisting(dir.path);
+        var gitDir = await GitDir.fromExisting(d.sandbox);
         var isClean = await gitDir.isWorkingTreeClean();
         expect(isClean, isTrue);
       });
 
       test('isGitDir is true', () async {
-        var isGitDir = await GitDir.isGitDir(dir.path);
+        var isGitDir = await GitDir.isGitDir(d.sandbox);
         expect(isGitDir, isTrue);
       });
 
@@ -365,23 +365,11 @@ Future _testPopulateBranchWithDupeContent(GitDir gitDir, String branchName,
       reason: 'no change in commit count');
 }
 
-Future<Directory> _createTempDir([bool scheduleDelete = true]) async {
-  var ticks = new DateTime.now().toUtc().millisecondsSinceEpoch;
-
-  var dir = await Directory.systemTemp.createTemp('git.test.$ticks.');
-
-  addTearDown(() async {
-    if (scheduleDelete) {
-      await dir.delete(recursive: true);
-    } else {
-      print('Not deleting $dir');
-    }
-  });
-
-  return dir;
+Future<Directory> _createTempDir() async {
+  return new Directory(d.sandbox);
 }
 
-Future<GitDir> _createTempGitDir([bool scheduleDelete = true]) async {
-  var dir = await _createTempDir(scheduleDelete);
+Future<GitDir> _createTempGitDir() async {
+  var dir = await _createTempDir();
   return GitDir.init(dir);
 }
