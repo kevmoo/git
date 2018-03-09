@@ -1,3 +1,7 @@
+## 0.5.1
+
+* `GitDir.fromExisting` added a `allowSubdirectory` parameter.
+
 ## 0.5.0
 
 * Remove unsupported dependencies.

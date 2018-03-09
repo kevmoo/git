@@ -82,6 +82,25 @@ void main() {
         expect(isClean, isTrue);
       });
 
+      group('GitDir.fromExisting', () {
+        setUp(() async {
+          await d.dir('sub').create();
+        });
+
+        test('fails for sub directories', () async {
+          expect(() => GitDir.fromExisting(p.join(d.sandbox, 'sub')),
+              throwsArgumentError);
+        });
+
+        test('succeeds for sub directories with `allowSubdirectory`', () async {
+          var gitDir = await GitDir.fromExisting(p.join(d.sandbox, 'sub'),
+              allowSubdirectory: true);
+
+          expect(gitDir.path, d.sandbox,
+              reason: 'The created `GitDir` will point to the root.');
+        });
+      });
+
       test('isGitDir is true', () async {
         var isGitDir = await GitDir.isGitDir(d.sandbox);
         expect(isGitDir, isTrue);

@@ -369,17 +369,32 @@ class GitDir {
     return _init(source);
   }
 
-  static Future<GitDir> fromExisting(String gitDirRoot) async {
+  /// If [allowSubdirectory] is true, a [GitDir] may be returned if [gitDirRoot]
+  /// is a subdirectory within a Git repository.
+  static Future<GitDir> fromExisting(String gitDirRoot,
+      {bool allowSubdirectory: false}) async {
+    allowSubdirectory ??= false;
     var path = p.absolute(gitDirRoot);
 
     var pr = await runGit(['rev-parse', '--git-dir'],
         processWorkingDir: path.toString());
-    if (pr.stdout.trim() == '.git') {
+
+    var returnedPath = (pr.stdout as String).trim();
+
+    if (returnedPath == '.git') {
       return new GitDir._raw(path);
-    } else {
-      throw new ArgumentError('The provided value "$gitDirRoot" is not '
-          'the root of a git directory');
     }
+
+    if (allowSubdirectory && p.basename(returnedPath) == '.git') {
+      returnedPath = p.dirname(returnedPath);
+
+      if (p.isWithin(returnedPath, path)) {
+        return new GitDir._raw(returnedPath);
+      }
+    }
+
+    throw new ArgumentError('The provided value "$gitDirRoot" is not '
+        'the root of a git directory');
   }
 
   static Future<GitDir> _init(Directory source) async {
