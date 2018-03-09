@@ -29,30 +29,29 @@ void main() {
 bcd1284d805951a16e765cea5b2273a464ee2d86'''
     ];
 
-    bad.forEach((v) {
+    for (var v in bad) {
       expect(isValidSha(v), isFalse, reason: "'$v' should be bad");
-
       expect(() => requireArgumentValidSha1(v, 'v'), throwsArgumentError);
-    });
+    }
   });
 
   test('parse show-ref output', () {
     final parsed = CommitReference.fromShowRefOutput(_showRefOutput);
 
     expect(parsed.length, 6);
-    parsed.forEach((t) {
+    for (var t in parsed) {
       expect(t.sha, hasLength(40));
       expect(t.reference, isNot(isEmpty));
-    });
+    }
   });
 
   test('TreeEntry.parse', () {
     final result = TreeEntry.fromLsTreeOutput(_lsTreeOutput);
     expect(result, hasLength(13));
     expect(result.first.name, '.gitignore');
-    result.forEach((v) {
+    for (var v in result) {
       expect(v, isNotNull);
-    });
+    }
   });
 }
 

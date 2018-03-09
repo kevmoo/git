@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'util.dart';
 
-final _shaRegEx = new RegExp(r'^' + SHA_REGEX_PATTERN + r'$');
+final _shaRegEx = new RegExp(r'^' + shaRegexPattern + r'$');
 
 bool isValidSha(String value) => _shaRegEx.hasMatch(value);
 

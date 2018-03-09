@@ -5,7 +5,7 @@ import 'util.dart';
 
 class TreeEntry {
   static final _lsTreeLine =
-      r'^([0-9]{6}) (blob|tree) (' + SHA_REGEX_PATTERN + ')\t(\\S.*\\S)\$';
+      r'^([0-9]{6}) (blob|tree) (' + shaRegexPattern + ')\t(\\S.*\\S)\$';
 
   static final _lsTreeRegEx = new RegExp(_lsTreeLine);
 
@@ -39,7 +39,7 @@ class TreeEntry {
   }
 
   @override
-  String toString() => "$mode $type $sha\t$name";
+  String toString() => '$mode $type $sha\t$name';
 
   static List<TreeEntry> fromLsTreeOutput(String output) {
     var lines = const LineSplitter().convert(output);
