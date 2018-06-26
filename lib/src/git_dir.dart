@@ -111,8 +111,7 @@ class GitDir {
     pr = await runCommand(
         ['show-ref', '--verify', (pr.stdout as String).trim()]);
 
-    return CommitReference
-        .fromShowRefOutput(pr.stdout as String)
+    return CommitReference.fromShowRefOutput(pr.stdout as String)
         .single
         .toBranchReference();
   }
