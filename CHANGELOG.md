@@ -1,3 +1,7 @@
+## 0.5.2
+
+* Drop support for Dart 1.
+
 ## 0.5.1
 
 * `GitDir.fromExisting` added a `allowSubdirectory` parameter.
