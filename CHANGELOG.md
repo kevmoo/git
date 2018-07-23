@@ -1,4 +1,6 @@
-## 0.5.2
+## 0.5.1+1
+
+* Support Dart 2 stable releases.
 
 * Drop support for Dart 1.
 
