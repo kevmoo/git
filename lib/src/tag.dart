@@ -15,9 +15,9 @@ class Tag {
   }
 
   static Tag parseCatFile(String content) {
-    final headers = new Map<String, List<String>>();
+    final headers = Map<String, List<String>>();
 
-    final slr = new StringLineReader(content);
+    final slr = StringLineReader(content);
 
     String lastLine = slr.readNextLine();
 
@@ -27,7 +27,7 @@ class Tag {
       final header = match.group(1);
       final value = match.group(2);
 
-      final list = headers.putIfAbsent(header, () => new List<String>());
+      final list = headers.putIfAbsent(header, () => List<String>());
       list.add(value);
 
       lastLine = slr.readNextLine();
@@ -38,6 +38,6 @@ class Tag {
     final tag = headers['tag'].single;
     final tagger = headers['tagger'].single;
 
-    return new Tag._internal(objectSha, type, tag, tagger);
+    return Tag._internal(objectSha, type, tag, tagger);
   }
 }

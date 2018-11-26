@@ -5,8 +5,7 @@ import 'util.dart';
 
 /// Represents the output from `git show-ref`
 class CommitReference {
-  static final RegExp _lsRemoteRegExp =
-      new RegExp('^($shaRegexPattern) (.+)\$');
+  static final RegExp _lsRemoteRegExp = RegExp('^($shaRegexPattern) (.+)\$');
 
   final String sha;
   final String reference;
@@ -27,12 +26,12 @@ class CommitReference {
       final match = _lsRemoteRegExp.allMatches(line).single;
       assert(match.groupCount == 2);
 
-      return new CommitReference(match[1], match[2]);
+      return CommitReference(match[1], match[2]);
     }).toList();
   }
 
   BranchReference toBranchReference() =>
-      new BranchReference(this.sha, this.reference);
+      BranchReference(this.sha, this.reference);
 
   @override
   String toString() => 'GitReference: $reference  $sha';

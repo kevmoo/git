@@ -7,42 +7,41 @@ void requireArgument(bool truth, String argName, [String message]) {
     if (message == null || message.isEmpty) {
       message = 'value was invalid';
     }
-    throw new ArgumentError(message);
+    throw ArgumentError(message);
   }
 }
 
 void requireArgumentNotNull(argument, String argName) {
   metaRequireArgumentNotNullOrEmpty(argName);
   if (argument == null) {
-    throw new ArgumentError.notNull(argName);
+    throw ArgumentError.notNull(argName);
   }
 }
 
 void requireArgumentNotNullOrEmpty(String argument, String argName) {
   metaRequireArgumentNotNullOrEmpty(argName);
   if (argument == null) {
-    throw new ArgumentError.notNull(argument);
+    throw ArgumentError.notNull(argument);
   } else if (argument.isEmpty) {
-    throw new ArgumentError.value(
-        argument, argName, 'cannot be an empty string');
+    throw ArgumentError.value(argument, argName, 'cannot be an empty string');
   }
 }
 
 void requireArgumentContainsPattern(
     Pattern pattern, String argValue, String argName) {
   if (pattern == null) {
-    throw new InvalidOperationError("That's just sad. No null pattern");
+    throw InvalidOperationError("That's just sad. No null pattern");
   }
   requireArgumentNotNull(argValue, argName);
   if (!argValue.contains(pattern)) {
-    throw new ArgumentError.value(argValue, argName,
+    throw ArgumentError.value(argValue, argName,
         'The value "$argValue" does not contain the pattern "$pattern"');
   }
 }
 
 void metaRequireArgumentNotNullOrEmpty(String argName) {
   if (argName == null || argName.isEmpty) {
-    throw new InvalidOperationError("That's just sad. Give me a good argName");
+    throw InvalidOperationError("That's just sad. Give me a good argName");
   }
 }
 
