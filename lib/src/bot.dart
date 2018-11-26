@@ -11,13 +11,6 @@ void requireArgument(bool truth, String argName, [String message]) {
   }
 }
 
-void requireArgumentNotNull(argument, String argName) {
-  metaRequireArgumentNotNullOrEmpty(argName);
-  if (argument == null) {
-    throw ArgumentError.notNull(argName);
-  }
-}
-
 void requireArgumentNotNullOrEmpty(String argument, String argName) {
   metaRequireArgumentNotNullOrEmpty(argName);
   if (argument == null) {
@@ -30,9 +23,9 @@ void requireArgumentNotNullOrEmpty(String argument, String argName) {
 void requireArgumentContainsPattern(
     Pattern pattern, String argValue, String argName) {
   if (pattern == null) {
-    throw const InvalidOperationError("That's just sad. No null pattern");
+    throw const _InvalidOperationError("That's just sad. No null pattern");
   }
-  requireArgumentNotNull(argValue, argName);
+  ArgumentError.checkNotNull(argValue, argName);
   if (!argValue.contains(pattern)) {
     throw ArgumentError.value(argValue, argName,
         'The value "$argValue" does not contain the pattern "$pattern"');
@@ -41,15 +34,15 @@ void requireArgumentContainsPattern(
 
 void metaRequireArgumentNotNullOrEmpty(String argName) {
   if (argName == null || argName.isEmpty) {
-    throw const InvalidOperationError(
+    throw const _InvalidOperationError(
         "That's just sad. Give me a good argName");
   }
 }
 
-class InvalidOperationError implements Exception {
+class _InvalidOperationError implements Exception {
   final String message;
 
-  const InvalidOperationError([this.message = '']);
+  const _InvalidOperationError([this.message = '']);
 }
 
 class Tuple<T1, T2> {
@@ -78,7 +71,7 @@ class StringLineReader {
   int _position = 0;
 
   StringLineReader(this.source) {
-    requireArgumentNotNull(source, 'source');
+    ArgumentError.checkNotNull(source, 'source');
   }
 
   int get position => _position;

@@ -5,7 +5,7 @@ description: A Dart wrapper around the Git command line
 homepage: https://github.com/kevmoo/git.dart
 
 environment:
-  sdk: '>=2.0.0 <3.0.0'
+  sdk: '>=2.1.0 <3.0.0'
 
 dependencies:
   path: ^1.0.0
