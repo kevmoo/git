@@ -21,8 +21,8 @@ class GitDir {
   final String _gitWorkTree;
 
   GitDir._raw(this._path, [this._gitWorkTree]) {
-    assert(p.isAbsolute(this._path));
-    assert(_gitWorkTree == null || p.isAbsolute(this._gitWorkTree));
+    assert(p.isAbsolute(_path));
+    assert(_gitWorkTree == null || p.isAbsolute(_gitWorkTree));
   }
 
   String get path => _path;
@@ -219,7 +219,7 @@ class GitDir {
     var shas = val.split(RegExp(r'\s+'));
     assert(shas.length == paths.length);
     assert(shas.every(_shaRegExp.hasMatch));
-    var map = Map<String, String>();
+    var map = <String, String>{};
     for (var i = 0; i < shas.length; i++) {
       map[paths[i]] = shas[i];
     }
@@ -273,7 +273,7 @@ class GitDir {
     requireArgumentNotNullOrEmpty(branchName, 'branchName');
     requireArgumentNotNullOrEmpty(commitMessage, 'commitMessage');
 
-    Directory tempContentRoot = await _createTempDir();
+    var tempContentRoot = await _createTempDir();
 
     try {
       await populater(tempContentRoot);
@@ -287,9 +287,9 @@ class GitDir {
 
   Future<Commit> updateBranchWithDirectoryContents(String branchName,
       String sourceDirectoryPath, String commitMessage) async {
-    Directory tempGitRoot = await _createTempDir();
+    var tempGitRoot = await _createTempDir();
 
-    GitDir tempGitDir = GitDir._raw(tempGitRoot.path, sourceDirectoryPath);
+    var tempGitDir = GitDir._raw(tempGitRoot.path, sourceDirectoryPath);
 
     // time for crazy clone tricks
     var args = ['clone', '--shared', '--bare', path, '.'];

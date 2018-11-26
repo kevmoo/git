@@ -27,7 +27,7 @@ void main() {
     // get the treeSha for the new lib directory
     var branch = await gitDir.getCurrentBranch();
 
-    Commit commit = await gitDir.getCommit(branch.sha);
+    var commit = await gitDir.getCommit(branch.sha);
 
     // sha for the new commit
     var newSha = await gitDir.createOrUpdateBranch(

@@ -15,11 +15,11 @@ class Tag {
   }
 
   static Tag parseCatFile(String content) {
-    final headers = Map<String, List<String>>();
+    final headers = <String, List<String>>{};
 
     final slr = StringLineReader(content);
 
-    String lastLine = slr.readNextLine();
+    var lastLine = slr.readNextLine();
 
     while (lastLine.isNotEmpty) {
       final match = headerRegExp.allMatches(lastLine).single;
@@ -27,7 +27,7 @@ class Tag {
       final header = match.group(1);
       final value = match.group(2);
 
-      final list = headers.putIfAbsent(header, () => List<String>());
+      final list = headers.putIfAbsent(header, () => <String>[]);
       list.add(value);
 
       lastLine = slr.readNextLine();
