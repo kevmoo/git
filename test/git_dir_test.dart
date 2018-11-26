@@ -60,9 +60,9 @@ void main() {
   group('init', () {
     test('allowContent:false with content fails', () async {
       var value = await _createTempDir();
-      var dir = new Directory(value.path);
+      var dir = Directory(value.path);
 
-      var file = new File(p.join(dir.path, 'testfile.txt'));
+      var file = File(p.join(dir.path, 'testfile.txt'));
       file.writeAsStringSync('test content');
 
       expect(GitDir.init(dir, allowContent: false), throwsArgumentError);
@@ -73,7 +73,7 @@ void main() {
 
       setUp(() async {
         var value = await _createTempGitDir();
-        dir = new Directory(value.path);
+        dir = Directory(value.path);
       });
 
       test('isWorkingTreeClean', () async {
@@ -199,7 +199,7 @@ Future _testGetCommits() async {
         reason: 'a matching message should be found');
 
     expect(indexMap.containsKey(commitMessageIndex), isFalse);
-    indexMap[commitMessageIndex] = new Tuple(commitSha, commit);
+    indexMap[commitMessageIndex] = Tuple(commitSha, commit);
   });
 
   indexMap.forEach((int index, Tuple<String, Commit> shaCommitTuple) {
@@ -240,7 +240,7 @@ Future _doDescriptorPopulate(
 
     var fullPath = p.join(dirPath, name);
 
-    var file = new File(fullPath);
+    var file = File(fullPath);
     await file.create(recursive: true);
     await file.writeAsString(value);
   }
@@ -316,7 +316,7 @@ Future<Tuple<Commit, int>> _testPopulateBranchCore(
       return _doDescriptorPopulate(tempDir.path, contents);
     }, commitMessage);
 
-    return new Tuple(commit, originalCommitCount);
+    return Tuple(commit, originalCommitCount);
   } finally {
     if (tempDir != null) {
       expect(tempDir.existsSync(), false);
@@ -385,7 +385,7 @@ Future _testPopulateBranchWithDupeContent(GitDir gitDir, String branchName,
 }
 
 Future<Directory> _createTempDir() async {
-  return new Directory(d.sandbox);
+  return Directory(d.sandbox);
 }
 
 Future<GitDir> _createTempGitDir() async {

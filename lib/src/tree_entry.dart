@@ -7,7 +7,7 @@ class TreeEntry {
   static final _lsTreeLine =
       r'^([0-9]{6}) (blob|tree) (' + shaRegexPattern + ')\t(\\S.*\\S)\$';
 
-  static final _lsTreeRegEx = new RegExp(_lsTreeLine);
+  static final _lsTreeRegEx = RegExp(_lsTreeLine);
 
   /// All numbers.
   ///
@@ -21,10 +21,10 @@ class TreeEntry {
 
   TreeEntry(this.mode, this.type, this.sha, this.name) {
     // TODO: enum or whitelist here
-    requireArgumentContainsPattern(new RegExp(r'^[0-9]{6}$'), mode, 'mode');
+    requireArgumentContainsPattern(RegExp(r'^[0-9]{6}$'), mode, 'mode');
 
     // TODO: enum or whitelist here
-    requireArgumentContainsPattern(new RegExp(r'^[a-z]+$'), type, 'type');
+    requireArgumentContainsPattern(RegExp(r'^[a-z]+$'), type, 'type');
     requireArgumentValidSha1(sha, 'sha');
 
     // TODO: how can we be more careful here? no paths? hmm...
@@ -35,7 +35,7 @@ class TreeEntry {
     // TODO: should catch and re-throw a descriptive error
     final match = _lsTreeRegEx.allMatches(value).single;
 
-    return new TreeEntry(match[1], match[2], match[3], match[4]);
+    return TreeEntry(match[1], match[2], match[3], match[4]);
   }
 
   @override
@@ -46,7 +46,7 @@ class TreeEntry {
 
     return lines
         .sublist(0, lines.length)
-        .map((line) => new TreeEntry.fromLsTree(line))
+        .map((line) => TreeEntry.fromLsTree(line))
         .toList();
   }
 }

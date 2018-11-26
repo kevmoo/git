@@ -15,7 +15,7 @@ import 'util.dart';
 class GitDir {
   static const _workTreeArg = '--work-tree=';
   static const _gitDirArg = '--git-dir=';
-  static final RegExp _shaRegExp = new RegExp(r'^[a-f0-9]{40}$');
+  static final RegExp _shaRegExp = RegExp(r'^[a-f0-9]{40}$');
 
   final String _path;
   final String _gitWorkTree;
@@ -81,7 +81,7 @@ class GitDir {
   }
 
   Future<List<CommitReference>> showRef(
-      {bool heads: false, bool tags: false}) async {
+      {bool heads = false, bool tags = false}) async {
     final args = ['show-ref'];
 
     if (heads) {
@@ -117,7 +117,7 @@ class GitDir {
   }
 
   Future<List<TreeEntry>> lsTree(String treeish,
-      {bool subTreesOnly: false, String path}) async {
+      {bool subTreesOnly = false, String path}) async {
     assert(treeish != null);
     final args = ['ls-tree'];
 
@@ -216,10 +216,10 @@ class GitDir {
 
     var pr = await runCommand(args);
     var val = (pr.stdout as String).trim();
-    var shas = val.split(new RegExp(r'\s+'));
+    var shas = val.split(RegExp(r'\s+'));
     assert(shas.length == paths.length);
     assert(shas.every(_shaRegExp.hasMatch));
-    var map = new Map<String, String>();
+    var map = Map<String, String>();
     for (var i = 0; i < shas.length; i++) {
       map[paths[i]] = shas[i];
     }
@@ -289,7 +289,7 @@ class GitDir {
       String sourceDirectoryPath, String commitMessage) async {
     Directory tempGitRoot = await _createTempDir();
 
-    GitDir tempGitDir = new GitDir._raw(tempGitRoot.path, sourceDirectoryPath);
+    GitDir tempGitDir = GitDir._raw(tempGitRoot.path, sourceDirectoryPath);
 
     // time for crazy clone tricks
     var args = ['clone', '--shared', '--bare', path, '.'];
@@ -304,7 +304,7 @@ class GitDir {
       var pr = await tempGitDir.runCommand(['ls-files', '--others']);
 
       if ((pr.stdout as String).isEmpty) {
-        throw new GitError('No files were added');
+        throw GitError('No files were added');
       }
       // add new files to index
 
@@ -339,7 +339,7 @@ class GitDir {
   String get _processWorkingDir => _path.toString();
 
   static Future<bool> isGitDir(String path) async {
-    final dir = new Directory(path);
+    final dir = Directory(path);
 
     var exists = await dir.exists();
     if (exists) {
@@ -353,7 +353,7 @@ class GitDir {
   ///
   /// Will fail if the source is a git directory (either at the root or a sub directory)
   static Future<GitDir> init(Directory source,
-      {bool allowContent: false}) async {
+      {bool allowContent = false}) async {
     assert(source.existsSync());
 
     if (allowContent == true) {
@@ -363,7 +363,7 @@ class GitDir {
     // else, verify it's empty
     var isEmpty = await source.list().isEmpty;
     if (!isEmpty) {
-      throw new ArgumentError('source Directory is not empty - $source');
+      throw ArgumentError('source Directory is not empty - $source');
     }
     return _init(source);
   }
@@ -371,7 +371,7 @@ class GitDir {
   /// If [allowSubdirectory] is true, a [GitDir] may be returned if [gitDirRoot]
   /// is a subdirectory within a Git repository.
   static Future<GitDir> fromExisting(String gitDirRoot,
-      {bool allowSubdirectory: false}) async {
+      {bool allowSubdirectory = false}) async {
     allowSubdirectory ??= false;
     var path = p.absolute(gitDirRoot);
 
@@ -381,25 +381,25 @@ class GitDir {
     var returnedPath = (pr.stdout as String).trim();
 
     if (returnedPath == '.git') {
-      return new GitDir._raw(path);
+      return GitDir._raw(path);
     }
 
     if (allowSubdirectory && p.basename(returnedPath) == '.git') {
       returnedPath = p.dirname(returnedPath);
 
       if (p.isWithin(returnedPath, path)) {
-        return new GitDir._raw(returnedPath);
+        return GitDir._raw(returnedPath);
       }
     }
 
-    throw new ArgumentError('The provided value "$gitDirRoot" is not '
+    throw ArgumentError('The provided value "$gitDirRoot" is not '
         'the root of a git directory');
   }
 
   static Future<GitDir> _init(Directory source) async {
     var isGitDir = await _isGitDir(source);
     if (isGitDir) {
-      throw new ArgumentError('Cannot init a directory that is already a '
+      throw ArgumentError('Cannot init a directory that is already a '
           'git directory');
     }
 

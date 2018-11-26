@@ -10,7 +10,7 @@ class BranchReference extends CommitReference {
 
     var branchName = reference.substring(_localBranchPrefix.length);
 
-    return new BranchReference._internal(sha, reference, branchName);
+    return BranchReference._internal(sha, reference, branchName);
   }
 
   BranchReference._internal(String sha, String reference, this.branchName)

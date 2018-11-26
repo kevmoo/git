@@ -13,7 +13,7 @@ class Commit {
 
   Commit._(this.treeSha, this.author, this.committer, this.message,
       this.content, List<String> parents)
-      : this.parents = new UnmodifiableListView<String>(parents) {
+      : this.parents = UnmodifiableListView<String>(parents) {
     requireArgumentValidSha1(this.treeSha, 'treeSha');
     for (final parent in parents) {
       requireArgumentValidSha1(parent, 'parents');
@@ -24,16 +24,16 @@ class Commit {
   }
 
   static Commit parse(String content) {
-    var stringLineReader = new StringLineReader(content);
+    var stringLineReader = StringLineReader(content);
     var tuple = _parse(stringLineReader, false);
     assert(tuple.item1 == null);
     return tuple.item2;
   }
 
   static Map<String, Commit> parseRawRevList(String content) {
-    final slr = new StringLineReader(content);
+    final slr = StringLineReader(content);
 
-    Map<String, Commit> commits = new Map<String, Commit>();
+    Map<String, Commit> commits = Map<String, Commit>();
 
     while (slr.position != null && slr.position < content.length) {
       final tuple = _parse(slr, true);
@@ -47,7 +47,7 @@ class Commit {
     assert(slr != null);
     assert(slr.position != null);
 
-    var headers = new Map<String, List<String>>();
+    var headers = Map<String, List<String>>();
 
     var startSpot = slr.position;
     var lastLine = slr.readNextLine();
@@ -58,7 +58,7 @@ class Commit {
       var header = match.group(1);
       var value = match.group(2);
 
-      var list = headers.putIfAbsent(header, () => new List<String>());
+      var list = headers.putIfAbsent(header, () => List<String>());
       list.add(value);
 
       lastLine = slr.readNextLine();
@@ -69,7 +69,7 @@ class Commit {
     String message;
 
     if (isRevParse) {
-      final msgLines = new List<String>();
+      final msgLines = List<String>();
       lastLine = slr.readNextLine();
 
       const revParseMessagePrefix = '    ';
@@ -101,7 +101,7 @@ class Commit {
 
     var content = slr.source.substring(startSpot, endSpot);
 
-    return new Tuple(commitSha,
-        new Commit._(treeSha, author, committer, message, content, parents));
+    return Tuple(commitSha,
+        Commit._(treeSha, author, committer, message, content, parents));
   }
 }
