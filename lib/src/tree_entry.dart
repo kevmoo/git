@@ -3,10 +3,11 @@ import 'dart:convert';
 import 'bot.dart';
 import 'util.dart';
 
-class TreeEntry {
-  static final _lsTreeLine =
-      r'^([0-9]{6}) (blob|tree) (' + shaRegexPattern + ')\t(\\S.*\\S)\$';
+const _lsTreeLine =
+// ignore: prefer_interpolation_to_compose_strings
+    r'^([0-9]{6}) (blob|tree) (' + shaRegexPattern + ')\t(\\S.*\\S)\$';
 
+class TreeEntry {
   static final _lsTreeRegEx = RegExp(_lsTreeLine);
 
   /// All numbers.

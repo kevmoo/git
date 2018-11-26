@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'util.dart';
 
+// ignore: prefer_interpolation_to_compose_strings
 final _shaRegEx = RegExp(r'^' + shaRegexPattern + r'$');
 
 bool isValidSha(String value) => _shaRegEx.hasMatch(value);

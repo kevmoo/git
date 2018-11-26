@@ -30,7 +30,7 @@ void requireArgumentNotNullOrEmpty(String argument, String argName) {
 void requireArgumentContainsPattern(
     Pattern pattern, String argValue, String argName) {
   if (pattern == null) {
-    throw InvalidOperationError("That's just sad. No null pattern");
+    throw const InvalidOperationError("That's just sad. No null pattern");
   }
   requireArgumentNotNull(argValue, argName);
   if (!argValue.contains(pattern)) {
@@ -41,7 +41,8 @@ void requireArgumentContainsPattern(
 
 void metaRequireArgumentNotNullOrEmpty(String argName) {
   if (argName == null || argName.isEmpty) {
-    throw InvalidOperationError("That's just sad. Give me a good argName");
+    throw const InvalidOperationError(
+        "That's just sad. Give me a good argName");
   }
 }
 

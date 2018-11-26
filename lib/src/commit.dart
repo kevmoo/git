@@ -13,8 +13,8 @@ class Commit {
 
   Commit._(this.treeSha, this.author, this.committer, this.message,
       this.content, List<String> parents)
-      : this.parents = UnmodifiableListView<String>(parents) {
-    requireArgumentValidSha1(this.treeSha, 'treeSha');
+      : parents = UnmodifiableListView<String>(parents) {
+    requireArgumentValidSha1(treeSha, 'treeSha');
     for (final parent in parents) {
       requireArgumentValidSha1(parent, 'parents');
     }
@@ -33,7 +33,7 @@ class Commit {
   static Map<String, Commit> parseRawRevList(String content) {
     final slr = StringLineReader(content);
 
-    Map<String, Commit> commits = Map<String, Commit>();
+    var commits = <String, Commit>{};
 
     while (slr.position != null && slr.position < content.length) {
       final tuple = _parse(slr, true);
@@ -47,7 +47,7 @@ class Commit {
     assert(slr != null);
     assert(slr.position != null);
 
-    var headers = Map<String, List<String>>();
+    var headers = <String, List<String>>{};
 
     var startSpot = slr.position;
     var lastLine = slr.readNextLine();
@@ -58,7 +58,7 @@ class Commit {
       var header = match.group(1);
       var value = match.group(2);
 
-      var list = headers.putIfAbsent(header, () => List<String>());
+      var list = headers.putIfAbsent(header, () => <String>[]);
       list.add(value);
 
       lastLine = slr.readNextLine();
@@ -69,7 +69,7 @@ class Commit {
     String message;
 
     if (isRevParse) {
-      final msgLines = List<String>();
+      final msgLines = <String>[];
       lastLine = slr.readNextLine();
 
       const revParseMessagePrefix = '    ';

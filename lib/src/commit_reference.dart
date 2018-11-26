@@ -11,7 +11,7 @@ class CommitReference {
   final String reference;
 
   CommitReference(this.sha, this.reference) {
-    requireArgumentValidSha1(this.sha, 'sha');
+    requireArgumentValidSha1(sha, 'sha');
 
     assert(reference != null);
     // TODO: probably a better way to verify...but this is fine for now
@@ -30,8 +30,7 @@ class CommitReference {
     }).toList();
   }
 
-  BranchReference toBranchReference() =>
-      BranchReference(this.sha, this.reference);
+  BranchReference toBranchReference() => BranchReference(sha, reference);
 
   @override
   String toString() => 'GitReference: $reference  $sha';
