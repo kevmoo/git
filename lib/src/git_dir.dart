@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:path/path.dart' as p;
 
 import 'bot.dart';
@@ -68,16 +69,15 @@ class GitDir {
   }
 
   // TODO: Test this! No tags. Many tags. Etc.
-  Future<List<Tag>> getTags() {
-    return showRef(tags: true).then((List<CommitReference> refs) {
-      final futures = refs.map((ref) {
-        return runCommand(['cat-file', '-p', ref.sha]).then((ProcessResult pr) {
-          return Tag.parseCatFile(pr.stdout as String);
-        });
-      });
+  Future<List<Tag>> getTags() async {
+    final refs = await showRef(tags: true);
 
-      return Future.wait(futures);
+    final futures = refs.map((ref) async {
+      final pr = await runCommand(['cat-file', '-p', ref.sha]);
+      return Tag.parseCatFile(pr.stdout as String);
     });
+
+    return Future.wait(futures);
   }
 
   Future<List<CommitReference>> showRef(
