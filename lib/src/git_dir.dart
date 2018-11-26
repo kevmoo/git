@@ -228,7 +228,7 @@ class GitDir {
 
   Future<ProcessResult> runCommand(Iterable<String> args,
       [bool throwOnError = true]) {
-    requireArgumentNotNull(args, 'args');
+    ArgumentError.checkNotNull(args, 'args');
 
     final list = args.toList();
 
