@@ -10,7 +10,7 @@ bool isValidSha(String value) => _shaRegEx.hasMatch(value);
 
 Future<ProcessResult> runGit(List<String> args,
     {bool throwOnError = true, String processWorkingDir}) async {
-  var pr = await Process.run('git', args,
+  final pr = await Process.run('git', args,
       workingDirectory: processWorkingDir, runInShell: true);
 
   if (throwOnError) {
@@ -23,7 +23,7 @@ void _throwIfProcessFailed(
     ProcessResult pr, String process, List<String> args) {
   assert(pr != null);
   if (pr.exitCode != 0) {
-    var message = '''
+    final message = '''
 stdout:
 ${pr.stdout}
 stderr:

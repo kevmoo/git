@@ -8,7 +8,7 @@ class BranchReference extends CommitReference {
   factory BranchReference(String sha, String reference) {
     assert(reference.startsWith(_localBranchPrefix));
 
-    var branchName = reference.substring(_localBranchPrefix.length);
+    final branchName = reference.substring(_localBranchPrefix.length);
 
     return BranchReference._internal(sha, reference, branchName);
   }

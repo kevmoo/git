@@ -43,7 +43,7 @@ class TreeEntry {
   String toString() => '$mode $type $sha\t$name';
 
   static List<TreeEntry> fromLsTreeOutput(String output) {
-    var lines = const LineSplitter().convert(output);
+    final lines = const LineSplitter().convert(output);
 
     return lines
         .sublist(0, lines.length)

@@ -20,7 +20,7 @@ class CommitReference {
 
   static List<CommitReference> fromShowRefOutput(String input) {
     assert(input != null);
-    var lines = const LineSplitter().convert(input);
+    final lines = const LineSplitter().convert(input);
 
     return lines.sublist(0, lines.length).map((line) {
       final match = _lsRemoteRegExp.allMatches(line).single;

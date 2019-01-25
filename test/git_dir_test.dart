@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:path/path.dart' as p;
-import 'package:test_descriptor/test_descriptor.dart' as d;
-import 'package:test/test.dart';
 import 'package:git/git.dart';
 import 'package:git/src/bot.dart';
+import 'package:path/path.dart' as p;
+import 'package:test/test.dart';
+import 'package:test_descriptor/test_descriptor.dart' as d;
 
 void main() {
   test('populateBranch', _testPopulateBranch);
@@ -13,24 +13,24 @@ void main() {
   test('getCommits', _testGetCommits);
 
   test('createOrUpdateBranch', () async {
-    var initialMasterBranchContent = const {
+    const initialMasterBranchContent = {
       'master.md': 'test file',
       'lib/foo.txt': 'lib foo text',
       'lib/bar.txt': 'lib bar text'
     };
 
-    var gitDir = await _createTempGitDir();
+    final gitDir = await _createTempGitDir();
 
     await _doDescriptorGitCommit(
         gitDir, initialMasterBranchContent, 'master files');
 
     // get the treeSha for the new lib directory
-    var branch = await gitDir.getCurrentBranch();
+    final branch = await gitDir.getCurrentBranch();
 
-    var commit = await gitDir.getCommit(branch.sha);
+    final commit = await gitDir.getCommit(branch.sha);
 
     // sha for the new commit
-    var newSha = await gitDir.createOrUpdateBranch(
+    final newSha = await gitDir.createOrUpdateBranch(
         'test', commit.treeSha, 'copy of master');
 
     // validate there is one commit on 'test'
@@ -40,14 +40,14 @@ void main() {
     var treeItems = await gitDir.lsTree(newSha);
     expect(treeItems, hasLength(2));
 
-    var libTreeEntry = treeItems.singleWhere((tree) => tree.name == 'lib');
+    final libTreeEntry = treeItems.singleWhere((tree) => tree.name == 'lib');
     expect(libTreeEntry.type, 'tree');
 
     // do another update from the subtree sha
-    var nextCommit = await gitDir.createOrUpdateBranch(
+    final nextCommit = await gitDir.createOrUpdateBranch(
         'test', libTreeEntry.sha, 'just the lib content');
 
-    var testCommitCount = await gitDir.getCommitCount('test');
+    final testCommitCount = await gitDir.getCommitCount('test');
     expect(testCommitCount, 2);
 
     treeItems = await gitDir.lsTree(nextCommit);
@@ -59,10 +59,10 @@ void main() {
 
   group('init', () {
     test('allowContent:false with content fails', () async {
-      var value = await _createTempDir();
-      var dir = Directory(value.path);
+      final value = _createTempDir();
+      final dir = Directory(value.path);
 
-      var file = File(p.join(dir.path, 'testfile.txt'));
+      final file = File(p.join(dir.path, 'testfile.txt'));
       file.writeAsStringSync('test content');
 
       expect(GitDir.init(dir, allowContent: false), throwsArgumentError);
@@ -72,13 +72,13 @@ void main() {
       Directory dir;
 
       setUp(() async {
-        var value = await _createTempGitDir();
+        final value = await _createTempGitDir();
         dir = Directory(value.path);
       });
 
       test('isWorkingTreeClean', () async {
-        var gitDir = await GitDir.fromExisting(d.sandbox);
-        var isClean = await gitDir.isWorkingTreeClean();
+        final gitDir = await GitDir.fromExisting(d.sandbox);
+        final isClean = await gitDir.isWorkingTreeClean();
         expect(isClean, isTrue);
       });
 
@@ -93,7 +93,7 @@ void main() {
         });
 
         test('succeeds for sub directories with `allowSubdirectory`', () async {
-          var gitDir = await GitDir.fromExisting(p.join(d.sandbox, 'sub'),
+          final gitDir = await GitDir.fromExisting(p.join(d.sandbox, 'sub'),
               allowSubdirectory: true);
 
           expect(gitDir.path, d.sandbox,
@@ -102,7 +102,7 @@ void main() {
       });
 
       test('isGitDir is true', () async {
-        var isGitDir = await GitDir.isGitDir(d.sandbox);
+        final isGitDir = await GitDir.isGitDir(d.sandbox);
         expect(isGitDir, isTrue);
       });
 
@@ -117,20 +117,23 @@ void main() {
   });
 
   test('writeObjects', () async {
-    var gitDir = await _createTempGitDir();
+    final gitDir = await _createTempGitDir();
 
-    var branches = await gitDir.getBranchNames();
+    final branches = await gitDir.getBranchNames();
     expect(branches, isEmpty, reason: 'Should start with zero commits');
 
-    var initialContentMap = {'file1.txt': 'content1', 'file2.txt': 'content2'};
+    final initialContentMap = {
+      'file1.txt': 'content1',
+      'file2.txt': 'content2'
+    };
 
     await _doDescriptorPopulate(d.sandbox, initialContentMap);
 
-    var paths = initialContentMap.keys.map((String fileName) {
-      return p.join(d.sandbox, fileName);
-    }).toList();
+    final paths = initialContentMap.keys
+        .map((fileName) => p.join(d.sandbox, fileName))
+        .toList();
 
-    var hashes = await gitDir.writeObjects(paths);
+    final hashes = await gitDir.writeObjects(paths);
     expect(hashes.length, equals(initialContentMap.length));
     expect(hashes.keys, unorderedEquals(paths));
 
@@ -145,7 +148,7 @@ void main() {
 }
 
 Future _testGetCommits() async {
-  var commitText = const [
+  const commitText = [
     '',
     ' \t leading white space is okay, too',
     'first',
@@ -154,17 +157,17 @@ Future _testGetCommits() async {
     'forth'
   ];
 
-  var msgFromText = (String txt) {
+  String msgFromText(String txt) {
     if (txt.isNotEmpty && txt.trim() == txt) {
       return 'Commit for $txt\n\nnice\n\nhuh?';
     } else {
       return txt;
     }
-  };
+  }
 
-  var gitDir = await _createTempGitDir();
+  final gitDir = await _createTempGitDir();
 
-  var branches = await gitDir.getBranchNames();
+  final branches = await gitDir.getBranchNames();
   expect(branches, []);
 
   for (var commitStr in commitText) {
@@ -174,18 +177,18 @@ Future _testGetCommits() async {
     await _doDescriptorGitCommit(gitDir, fileMap, msgFromText(commitStr));
   }
 
-  var count = await gitDir.getCommitCount();
+  final count = await gitDir.getCommitCount();
   expect(count, commitText.length);
 
-  var commits = await gitDir.getCommits();
+  final commits = await gitDir.getCommits();
 
   expect(commits, hasLength(commitText.length));
 
-  var commitMessages = commitText.map(msgFromText).toList();
+  final commitMessages = commitText.map(msgFromText).toList();
 
-  var indexMap = <int, Tuple<String, Commit>>{};
+  final indexMap = <int, Tuple<String, Commit>>{};
 
-  commits.forEach((commitSha, Commit commit) {
+  commits.forEach((commitSha, commit) {
     // index into the text for the message of this commit
     int commitMessageIndex;
     for (var i = 0; i < commitMessages.length; i++) {
@@ -202,7 +205,7 @@ Future _testGetCommits() async {
     indexMap[commitMessageIndex] = Tuple(commitSha, commit);
   });
 
-  indexMap.forEach((int index, Tuple<String, Commit> shaCommitTuple) {
+  indexMap.forEach((index, shaCommitTuple) {
     if (index > 0) {
       expect(shaCommitTuple.item2.parents,
           unorderedEquals([indexMap[index - 1].item1]));
@@ -236,34 +239,34 @@ Future _doDescriptorGitCommit(
 Future _doDescriptorPopulate(
     String dirPath, Map<String, String> contents) async {
   for (var name in contents.keys) {
-    var value = contents[name];
+    final value = contents[name];
 
-    var fullPath = p.join(dirPath, name);
+    final fullPath = p.join(dirPath, name);
 
-    var file = File(fullPath);
+    final file = File(fullPath);
     await file.create(recursive: true);
     await file.writeAsString(value);
   }
 }
 
 Future _testPopulateBranch() async {
-  var initialMasterBranchContent = const {'master.md': 'test file'};
+  const initialMasterBranchContent = {'master.md': 'test file'};
 
-  var testContent1 = const {
+  const testContent1 = {
     'file1.txt': 'file 1 contents',
     'file2.txt': 'file 2 contents',
     'file3.txt': 'not around very long'
   };
 
-  var testContent2 = const {
+  const testContent2 = {
     'file1.txt': 'file 1 contents',
     'file2.txt': 'file 2 contents changed',
     'file4.txt': 'sorry, file3'
   };
 
-  var testBranchName = 'the_test_branch';
+  const testBranchName = 'the_test_branch';
 
-  var gd1 = await _createTempGitDir();
+  final gd1 = await _createTempGitDir();
 
   await _doDescriptorGitCommit(gd1, initialMasterBranchContent, 'master files');
 
@@ -286,9 +289,7 @@ Future _testPopulateBranch() async {
 
 void _testPopulateBranchEmpty(GitDir gitDir, String branchName) {
   expect(_testPopulateBranchCore(gitDir, branchName, {}, 'empty?'),
-      throwsA(predicate((error) {
-    return error.message == 'No files were added';
-  })));
+      throwsA(predicate((error) => error.message == 'No files were added')));
 }
 
 Future<Tuple<Commit, int>> _testPopulateBranchCore(
@@ -297,7 +298,7 @@ Future<Tuple<Commit, int>> _testPopulateBranchCore(
     Map<String, String> contents,
     String commitMessage) async {
   // figure out how many commits exist for the provided branch
-  var branchRef = await gitDir.getBranchReference(branchName);
+  final branchRef = await gitDir.getBranchReference(branchName);
 
   int originalCommitCount;
   if (branchRef == null) {
@@ -308,7 +309,7 @@ Future<Tuple<Commit, int>> _testPopulateBranchCore(
 
   Directory tempDir;
   try {
-    var commit = await gitDir.updateBranch(branchName, (Directory td) {
+    final commit = await gitDir.updateBranch(branchName, (td) {
       // strictly speaking, users of this API should not hold on to the TempDir
       // but this is for testing
       tempDir = td;
@@ -327,11 +328,11 @@ Future<Tuple<Commit, int>> _testPopulateBranchCore(
 Future _testPopulateBranchWithContent(GitDir gitDir, String branchName,
     Map<String, String> contents, String commitMessage) async {
   // figure out how many commits exist for the provided branch
-  var pair = await _testPopulateBranchCore(
+  final pair = await _testPopulateBranchCore(
       gitDir, branchName, contents, commitMessage);
 
-  var returnedCommit = pair.item1;
-  var originalCommitCount = pair.item2;
+  final returnedCommit = pair.item1;
+  final originalCommitCount = pair.item2;
 
   if (originalCommitCount == 0) {
     expect(returnedCommit.parents, isEmpty,
@@ -344,51 +345,49 @@ Future _testPopulateBranchWithContent(GitDir gitDir, String branchName,
   expect(returnedCommit.message, commitMessage);
 
   // new check to see if things are updated it gd1
-  var branchRef = await gitDir.getBranchReference(branchName);
+  final branchRef = await gitDir.getBranchReference(branchName);
   expect(branchRef, isNotNull);
 
-  var commit = await gitDir.getCommit(branchRef.reference);
+  final commit = await gitDir.getCommit(branchRef.reference);
 
   expect(commit.content, returnedCommit.content,
       reason: 'content of queried commit should what was returned');
 
-  var entries = await gitDir.lsTree(commit.treeSha);
+  final entries = await gitDir.lsTree(commit.treeSha);
 
   expect(entries.map((te) => te.name), unorderedEquals(contents.keys));
 
-  var newCommitCount = await gitDir.getCommitCount(branchRef.reference);
+  final newCommitCount = await gitDir.getCommitCount(branchRef.reference);
   expect(newCommitCount, originalCommitCount + 1);
 }
 
 Future _testPopulateBranchWithDupeContent(GitDir gitDir, String branchName,
     Map<String, String> contents, String commitMessage) async {
   // figure out how many commits exist for the provided branch
-  var pair = await _testPopulateBranchCore(
+  final pair = await _testPopulateBranchCore(
       gitDir, branchName, contents, commitMessage);
 
-  var returnedCommit = pair.item1;
-  var originalCommitCount = pair.item2;
+  final returnedCommit = pair.item1;
+  final originalCommitCount = pair.item2;
 
   expect(returnedCommit, isNull);
   expect(originalCommitCount > 0, true,
       reason: 'must have had some original content');
 
   // new check to see if things are updated it gd1
-  var br = await gitDir.getBranchReference(branchName);
+  final br = await gitDir.getBranchReference(branchName);
 
   expect(br, isNotNull);
 
-  var newCommitCount = await gitDir.getCommitCount(br.reference);
+  final newCommitCount = await gitDir.getCommitCount(br.reference);
 
   expect(newCommitCount, originalCommitCount,
       reason: 'no change in commit count');
 }
 
-Future<Directory> _createTempDir() async {
-  return Directory(d.sandbox);
-}
+Directory _createTempDir() => Directory(d.sandbox);
 
 Future<GitDir> _createTempGitDir() async {
-  var dir = await _createTempDir();
+  final dir = _createTempDir();
   return GitDir.init(dir);
 }

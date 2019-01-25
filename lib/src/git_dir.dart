@@ -29,7 +29,7 @@ class GitDir {
   String get path => _path;
 
   Future<int> getCommitCount([String branchName = 'HEAD']) async {
-    var pr = await runCommand(['rev-list', '--count', branchName]);
+    final pr = await runCommand(['rev-list', '--count', branchName]);
     return int.parse(pr.stdout as String);
   }
 
@@ -37,22 +37,22 @@ class GitDir {
   /// But GIT lets you do other things.
   /// See http://git-scm.com/docs/gitrevisions.html
   Future<Commit> getCommit(String rev) async {
-    var pr = await runCommand(['cat-file', '-p', rev]);
+    final pr = await runCommand(['cat-file', '-p', rev]);
     return Commit.parse(pr.stdout as String);
   }
 
   Future<Map<String, Commit>> getCommits([String branchName = 'HEAD']) async {
-    var pr = await runCommand(['rev-list', '--format=raw', branchName]);
+    final pr = await runCommand(['rev-list', '--format=raw', branchName]);
     return Commit.parseRawRevList(pr.stdout as String);
   }
 
   Future<List<String>> getBranchNames() async {
-    var list = await getBranchReferences();
+    final list = await getBranchReferences();
     return list.map((br) => br.branchName).toList();
   }
 
   Future<BranchReference> getBranchReference(String branchName) async {
-    var list = await getBranchReferences();
+    final list = await getBranchReferences();
     final matches = list.where((b) => b.branchName == branchName).toList();
 
     assert(matches.length <= 1);
@@ -64,7 +64,7 @@ class GitDir {
   }
 
   Future<List<BranchReference>> getBranchReferences() async {
-    var refs = await showRef(heads: true);
+    final refs = await showRef(heads: true);
     return refs.map((cr) => cr.toBranchReference()).toList();
   }
 
@@ -92,7 +92,7 @@ class GitDir {
       args.add('--tags');
     }
 
-    var pr = await runCommand(args, false);
+    final pr = await runCommand(args, false);
     if (pr.exitCode == 1) {
       // no heads present, return empty collection
       return [];
@@ -131,7 +131,7 @@ class GitDir {
       args.add(path);
     }
 
-    var pr = await runCommand(args);
+    final pr = await runCommand(args);
     return TreeEntry.fromLsTreeOutput(pr.stdout as String);
   }
 
@@ -142,7 +142,7 @@ class GitDir {
     requireArgumentNotNullOrEmpty(branchName, 'branchName');
     requireArgumentValidSha1(treeSha, 'treeSha');
 
-    var targetBranchRef = await getBranchReference(branchName);
+    final targetBranchRef = await getBranchReference(branchName);
 
     String newCommitSha;
 
@@ -159,7 +159,7 @@ class GitDir {
 
     assert(isValidSha(newCommitSha));
 
-    var branchRef = 'refs/heads/$branchName';
+    final branchRef = 'refs/heads/$branchName';
 
     // TODO: if update-ref fails should we leave the new commit dangling?
     // or at least log so the user can go clean up?
@@ -171,7 +171,7 @@ class GitDir {
   /// is not updated.
   Future<String> _updateBranch(
       String targetBranchSha, String treeSha, String commitMessage) async {
-    var commitObj = await getCommit(targetBranchSha);
+    final commitObj = await getCommit(targetBranchSha);
     if (commitObj.treeSha == treeSha) {
       return null;
     }
@@ -200,7 +200,7 @@ class GitDir {
       args.addAll(['-p', parentSha]);
     }
 
-    var pr = await runCommand(args);
+    final pr = await runCommand(args);
     final sha = (pr.stdout as String).trim();
     assert(isValidSha(sha));
     return sha;
@@ -211,15 +211,15 @@ class GitDir {
   /// and return a [Map] where the key is the input path and the value is
   /// the SHA of the newly written object.
   Future<Map<String, String>> writeObjects(List<String> paths) async {
-    var args = ['hash-object', '-t', 'blob', '-w', '--no-filters', '--']
+    final args = ['hash-object', '-t', 'blob', '-w', '--no-filters', '--']
       ..addAll(paths);
 
-    var pr = await runCommand(args);
-    var val = (pr.stdout as String).trim();
-    var shas = val.split(RegExp(r'\s+'));
+    final pr = await runCommand(args);
+    final val = (pr.stdout as String).trim();
+    final shas = val.split(RegExp(r'\s+'));
     assert(shas.length == paths.length);
     assert(shas.every(_shaRegExp.hasMatch));
-    var map = <String, String>{};
+    final map = <String, String>{};
     for (var i = 0; i < shas.length; i++) {
       map[paths[i]] = shas[i];
     }
@@ -248,10 +248,8 @@ class GitDir {
         throwOnError: throwOnError, processWorkingDir: _processWorkingDir);
   }
 
-  Future<bool> isWorkingTreeClean() {
-    return runCommand(['status', '--porcelain'])
-        .then((ProcessResult pr) => (pr.stdout as String).isEmpty);
-  }
+  Future<bool> isWorkingTreeClean() => runCommand(['status', '--porcelain'])
+      .then((pr) => (pr.stdout as String).isEmpty);
 
   // TODO: TEST: someone puts a git dir when populated
   // TODO: TEST: someone puts in no content at all
@@ -265,19 +263,19 @@ class GitDir {
   /// then no [Commit] is created and `null` is returned.
   ///
   /// If no content is added to the directory, an error is thrown.
-  Future<Commit> updateBranch(String branchName, Future populater(Directory td),
-      String commitMessage) async {
+  Future<Commit> updateBranch(String branchName,
+      Future Function(Directory td) populater, String commitMessage) async {
     // TODO: ponder restricting branch names
     // see http://stackoverflow.com/questions/12093748/how-do-i-check-for-valid-git-branch-names/12093994#12093994
 
     requireArgumentNotNullOrEmpty(branchName, 'branchName');
     requireArgumentNotNullOrEmpty(commitMessage, 'commitMessage');
 
-    var tempContentRoot = await _createTempDir();
+    final tempContentRoot = await _createTempDir();
 
     try {
       await populater(tempContentRoot);
-      var commit = await updateBranchWithDirectoryContents(
+      final commit = await updateBranchWithDirectoryContents(
           branchName, tempContentRoot.path, commitMessage);
       return commit;
     } finally {
@@ -287,12 +285,12 @@ class GitDir {
 
   Future<Commit> updateBranchWithDirectoryContents(String branchName,
       String sourceDirectoryPath, String commitMessage) async {
-    var tempGitRoot = await _createTempDir();
+    final tempGitRoot = await _createTempDir();
 
-    var tempGitDir = GitDir._raw(tempGitRoot.path, sourceDirectoryPath);
+    final tempGitDir = GitDir._raw(tempGitRoot.path, sourceDirectoryPath);
 
     // time for crazy clone tricks
-    var args = ['clone', '--shared', '--bare', path, '.'];
+    final args = ['clone', '--shared', '--bare', path, '.'];
 
     await runGit(args, processWorkingDir: tempGitDir.path);
 
@@ -341,7 +339,7 @@ class GitDir {
   static Future<bool> isGitDir(String path) async {
     final dir = Directory(path);
 
-    var exists = await dir.exists();
+    final exists = await dir.exists();
     if (exists) {
       return _isGitDir(dir);
     } else {
@@ -361,7 +359,7 @@ class GitDir {
     }
 
     // else, verify it's empty
-    var isEmpty = await source.list().isEmpty;
+    final isEmpty = await source.list().isEmpty;
     if (!isEmpty) {
       throw ArgumentError('source Directory is not empty - $source');
     }
@@ -373,9 +371,9 @@ class GitDir {
   static Future<GitDir> fromExisting(String gitDirRoot,
       {bool allowSubdirectory = false}) async {
     allowSubdirectory ??= false;
-    var path = p.absolute(gitDirRoot);
+    final path = p.absolute(gitDirRoot);
 
-    var pr = await runGit(['rev-parse', '--git-dir'],
+    final pr = await runGit(['rev-parse', '--git-dir'],
         processWorkingDir: path.toString());
 
     var returnedPath = (pr.stdout as String).trim();
@@ -397,7 +395,7 @@ class GitDir {
   }
 
   static Future<GitDir> _init(Directory source) async {
-    var isGitDir = await _isGitDir(source);
+    final isGitDir = await _isGitDir(source);
     if (isGitDir) {
       throw ArgumentError('Cannot init a directory that is already a '
           'git directory');
@@ -415,7 +413,7 @@ class GitDir {
 
     // using rev-parse because it will fail in many scenarios
     // including if the directory provided is a bare repository
-    var pr = await runGit(['rev-parse'],
+    final pr = await runGit(['rev-parse'],
         throwOnError: false, processWorkingDir: dir.path);
 
     return pr.exitCode == 0;

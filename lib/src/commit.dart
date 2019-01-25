@@ -24,8 +24,8 @@ class Commit {
   }
 
   static Commit parse(String content) {
-    var stringLineReader = StringLineReader(content);
-    var tuple = _parse(stringLineReader, false);
+    final stringLineReader = StringLineReader(content);
+    final tuple = _parse(stringLineReader, false);
     assert(tuple.item1 == null);
     return tuple.item2;
   }
@@ -33,7 +33,7 @@ class Commit {
   static Map<String, Commit> parseRawRevList(String content) {
     final slr = StringLineReader(content);
 
-    var commits = <String, Commit>{};
+    final commits = <String, Commit>{};
 
     while (slr.position != null && slr.position < content.length) {
       final tuple = _parse(slr, true);
@@ -47,18 +47,18 @@ class Commit {
     assert(slr != null);
     assert(slr.position != null);
 
-    var headers = <String, List<String>>{};
+    final headers = <String, List<String>>{};
 
-    var startSpot = slr.position;
+    final startSpot = slr.position;
     var lastLine = slr.readNextLine();
 
     while (lastLine.isNotEmpty) {
-      var match = headerRegExp.allMatches(lastLine).single;
+      final match = headerRegExp.allMatches(lastLine).single;
       assert(match.groupCount == 2);
-      var header = match.group(1);
-      var value = match.group(2);
+      final header = match.group(1);
+      final value = match.group(2);
 
-      var list = headers.putIfAbsent(header, () => <String>[]);
+      final list = headers.putIfAbsent(header, () => <String>[]);
       list.add(value);
 
       lastLine = slr.readNextLine();
@@ -82,24 +82,24 @@ class Commit {
     } else {
       message = slr.readToEnd();
       assert(message.endsWith('\n'));
-      var originalMessageLength = message.length;
+      final originalMessageLength = message.length;
       message = message.trim();
       // message should be trimmed by git, so the only diff after trim
       // should be 1 character - the removed new line
       assert(message.length + 1 == originalMessageLength);
     }
 
-    var treeSha = headers['tree'].single;
-    var author = headers['author'].single;
-    var committer = headers['committer'].single;
-    var commitSha =
+    final treeSha = headers['tree'].single;
+    final author = headers['author'].single;
+    final committer = headers['committer'].single;
+    final commitSha =
         headers.containsKey('commit') ? headers['commit'].single : null;
 
-    var parents = headers['parent'] ?? [];
+    final parents = headers['parent'] ?? [];
 
-    var endSpot = slr.position;
+    final endSpot = slr.position;
 
-    var content = slr.source.substring(startSpot, endSpot);
+    final content = slr.source.substring(startSpot, endSpot);
 
     return Tuple(commitSha,
         Commit._(treeSha, author, committer, message, content, parents));

@@ -4,7 +4,7 @@ import 'package:git/src/util.dart';
 
 void main() {
   test('valid sha', () {
-    final good = 'bcd1284d805951a16e765cea5b2273a464ee2d86';
+    const good = 'bcd1284d805951a16e765cea5b2273a464ee2d86';
     expect(isValidSha(good), true);
 
     expect(() => isValidSha(null), throwsArgumentError);

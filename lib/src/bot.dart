@@ -52,9 +52,8 @@ class Tuple<T1, T2> {
   const Tuple(this.item1, this.item2);
 
   @override
-  bool operator ==(other) {
-    return other is Tuple && item1 == other.item1 && item2 == other.item2;
-  }
+  bool operator ==(other) =>
+      other is Tuple && item1 == other.item1 && item2 == other.item2;
 
   @override
   String toString() => '{item1: $item1, item2: $item2}';
