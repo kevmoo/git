@@ -2,7 +2,7 @@ name: git
 version: 0.5.2-dev
 author: Kevin Moore <github@j832.com>
 description: A Dart wrapper around the Git command line
-homepage: https://github.com/kevmoo/git.dart
+homepage: https://github.com/kevmoo/git
 
 environment:
   sdk: '>=2.1.0 <3.0.0'
