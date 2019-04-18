@@ -62,8 +62,7 @@ void main() {
       final value = _createTempDir();
       final dir = Directory(value.path);
 
-      final file = File(p.join(dir.path, 'testfile.txt'));
-      file.writeAsStringSync('test content');
+      File(p.join(dir.path, 'testfile.txt')).writeAsStringSync('test content');
 
       expect(GitDir.init(dir, allowContent: false), throwsArgumentError);
     });

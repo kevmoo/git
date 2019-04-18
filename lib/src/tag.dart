@@ -27,8 +27,7 @@ class Tag {
       final header = match.group(1);
       final value = match.group(2);
 
-      final list = headers.putIfAbsent(header, () => <String>[]);
-      list.add(value);
+      headers.putIfAbsent(header, () => <String>[]).add(value);
 
       lastLine = slr.readNextLine();
     }
