@@ -25,9 +25,9 @@ void main() {
         gitDir, initialMasterBranchContent, 'master files');
 
     // get the treeSha for the new lib directory
-    final branch = await gitDir.getCurrentBranch();
+    final branch = await gitDir.currentBranch();
 
-    final commit = await gitDir.commit(branch.sha);
+    final commit = await gitDir.commitFromRevision(branch.sha);
 
     // sha for the new commit
     final newSha = await gitDir.createOrUpdateBranch(
@@ -118,7 +118,7 @@ void main() {
   test('writeObjects', () async {
     final gitDir = await _createTempGitDir();
 
-    final branches = await gitDir.branchNames();
+    final branches = await gitDir.branches();
     expect(branches, isEmpty, reason: 'Should start with zero commits');
 
     final initialContentMap = {
@@ -166,8 +166,8 @@ Future _testGetCommits() async {
 
   final gitDir = await _createTempGitDir();
 
-  final branches = await gitDir.branchNames();
-  expect(branches, []);
+  final branches = await gitDir.branches();
+  expect(branches, isEmpty);
 
   for (var commitStr in commitText) {
     final fileMap = <String, String>{};
@@ -347,7 +347,7 @@ Future _testPopulateBranchWithContent(GitDir gitDir, String branchName,
   final branchRef = await gitDir.branchReference(branchName);
   expect(branchRef, isNotNull);
 
-  final commit = await gitDir.commit(branchRef.reference);
+  final commit = await gitDir.commitFromRevision(branchRef.reference);
 
   expect(commit.content, returnedCommit.content,
       reason: 'content of queried commit should what was returned');

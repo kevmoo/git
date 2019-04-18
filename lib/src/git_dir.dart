@@ -33,11 +33,11 @@ class GitDir {
     return int.parse(pr.stdout as String);
   }
 
-  /// [rev] should probably be a sha1 to a commit.
+  /// [revision] should probably be a sha1 to a commit.
   /// But GIT lets you do other things.
   /// See http://git-scm.com/docs/gitrevisions.html
-  Future<Commit> commit(String rev) async {
-    final pr = await runCommand(['cat-file', '-p', rev]);
+  Future<Commit> commitFromRevision(String revision) async {
+    final pr = await runCommand(['cat-file', '-p', revision]);
     return Commit.parse(pr.stdout as String);
   }
 
@@ -46,13 +46,8 @@ class GitDir {
     return Commit.parseRawRevList(pr.stdout as String);
   }
 
-  Future<List<String>> branchNames() async {
-    final list = await branchReferences();
-    return list.map((br) => br.branchName).toList();
-  }
-
   Future<BranchReference> branchReference(String branchName) async {
-    final list = await branchReferences();
+    final list = await branches();
     final matches = list.where((b) => b.branchName == branchName).toList();
 
     assert(matches.length <= 1);
@@ -63,7 +58,7 @@ class GitDir {
     }
   }
 
-  Future<List<BranchReference>> branchReferences() async {
+  Future<List<BranchReference>> branches() async {
     final refs = await showRef(heads: true);
     return refs.map((cr) => cr.toBranchReference()).toList();
   }
@@ -104,7 +99,7 @@ class GitDir {
     return CommitReference.fromShowRefOutput(pr.stdout as String);
   }
 
-  Future<BranchReference> getCurrentBranch() async {
+  Future<BranchReference> currentBranch() async {
     var pr = await runCommand(
         const ['rev-parse', '--verify', '--symbolic-full-name', 'HEAD']);
 
@@ -171,7 +166,7 @@ class GitDir {
   /// is not updated.
   Future<String> _updateBranch(
       String targetBranchSha, String treeSha, String commitMessage) async {
-    final commitObj = await commit(targetBranchSha);
+    final commitObj = await commitFromRevision(targetBranchSha);
     if (commitObj.treeSha == treeSha) {
       return null;
     }
@@ -339,7 +334,7 @@ class GitDir {
 
       // so we have this wonderful new commit, right?
       // need to crack out the commit and return the value
-      return commit('refs/heads/$branchName');
+      return commitFromRevision('refs/heads/$branchName');
     } finally {
       await tempGitRoot.delete(recursive: true);
     }
