@@ -27,7 +27,7 @@ void main() {
     // get the treeSha for the new lib directory
     final branch = await gitDir.getCurrentBranch();
 
-    final commit = await gitDir.getCommit(branch.sha);
+    final commit = await gitDir.commit(branch.sha);
 
     // sha for the new commit
     final newSha = await gitDir.createOrUpdateBranch(
@@ -47,7 +47,7 @@ void main() {
     final nextCommit = await gitDir.createOrUpdateBranch(
         'test', libTreeEntry.sha, 'just the lib content');
 
-    final testCommitCount = await gitDir.getCommitCount('test');
+    final testCommitCount = await gitDir.commitCount('test');
     expect(testCommitCount, 2);
 
     treeItems = await gitDir.lsTree(nextCommit);
@@ -60,19 +60,19 @@ void main() {
   group('init', () {
     test('allowContent:false with content fails', () async {
       final value = _createTempDir();
-      final dir = Directory(value.path);
 
-      File(p.join(dir.path, 'testfile.txt')).writeAsStringSync('test content');
+      File(p.join(value.path, 'testfile.txt'))
+          .writeAsStringSync('test content');
 
-      expect(GitDir.init(dir, allowContent: false), throwsArgumentError);
+      expect(GitDir.init(value.path, allowContent: false), throwsArgumentError);
     });
 
     group('existing git dir', () {
-      Directory dir;
+      String dir;
 
       setUp(() async {
         final value = await _createTempGitDir();
-        dir = Directory(value.path);
+        dir = value.path;
       });
 
       test('isWorkingTreeClean', () async {
@@ -118,7 +118,7 @@ void main() {
   test('writeObjects', () async {
     final gitDir = await _createTempGitDir();
 
-    final branches = await gitDir.getBranchNames();
+    final branches = await gitDir.branchNames();
     expect(branches, isEmpty, reason: 'Should start with zero commits');
 
     final initialContentMap = {
@@ -166,7 +166,7 @@ Future _testGetCommits() async {
 
   final gitDir = await _createTempGitDir();
 
-  final branches = await gitDir.getBranchNames();
+  final branches = await gitDir.branchNames();
   expect(branches, []);
 
   for (var commitStr in commitText) {
@@ -176,10 +176,10 @@ Future _testGetCommits() async {
     await _doDescriptorGitCommit(gitDir, fileMap, msgFromText(commitStr));
   }
 
-  final count = await gitDir.getCommitCount();
+  final count = await gitDir.commitCount();
   expect(count, commitText.length);
 
-  final commits = await gitDir.getCommits();
+  final commits = await gitDir.commits();
 
   expect(commits, hasLength(commitText.length));
 
@@ -297,13 +297,13 @@ Future<Tuple<Commit, int>> _testPopulateBranchCore(
     Map<String, String> contents,
     String commitMessage) async {
   // figure out how many commits exist for the provided branch
-  final branchRef = await gitDir.getBranchReference(branchName);
+  final branchRef = await gitDir.branchReference(branchName);
 
   int originalCommitCount;
   if (branchRef == null) {
     originalCommitCount = 0;
   } else {
-    originalCommitCount = await gitDir.getCommitCount(branchRef.reference);
+    originalCommitCount = await gitDir.commitCount(branchRef.reference);
   }
 
   Directory tempDir;
@@ -344,10 +344,10 @@ Future _testPopulateBranchWithContent(GitDir gitDir, String branchName,
   expect(returnedCommit.message, commitMessage);
 
   // new check to see if things are updated it gd1
-  final branchRef = await gitDir.getBranchReference(branchName);
+  final branchRef = await gitDir.branchReference(branchName);
   expect(branchRef, isNotNull);
 
-  final commit = await gitDir.getCommit(branchRef.reference);
+  final commit = await gitDir.commit(branchRef.reference);
 
   expect(commit.content, returnedCommit.content,
       reason: 'content of queried commit should what was returned');
@@ -356,7 +356,7 @@ Future _testPopulateBranchWithContent(GitDir gitDir, String branchName,
 
   expect(entries.map((te) => te.name), unorderedEquals(contents.keys));
 
-  final newCommitCount = await gitDir.getCommitCount(branchRef.reference);
+  final newCommitCount = await gitDir.commitCount(branchRef.reference);
   expect(newCommitCount, originalCommitCount + 1);
 }
 
@@ -374,11 +374,11 @@ Future _testPopulateBranchWithDupeContent(GitDir gitDir, String branchName,
       reason: 'must have had some original content');
 
   // new check to see if things are updated it gd1
-  final br = await gitDir.getBranchReference(branchName);
+  final br = await gitDir.branchReference(branchName);
 
   expect(br, isNotNull);
 
-  final newCommitCount = await gitDir.getCommitCount(br.reference);
+  final newCommitCount = await gitDir.commitCount(br.reference);
 
   expect(newCommitCount, originalCommitCount,
       reason: 'no change in commit count');
@@ -388,5 +388,5 @@ Directory _createTempDir() => Directory(d.sandbox);
 
 Future<GitDir> _createTempGitDir() async {
   final dir = _createTempDir();
-  return GitDir.init(dir);
+  return GitDir.init(dir.path);
 }

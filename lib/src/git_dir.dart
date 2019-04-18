@@ -28,7 +28,7 @@ class GitDir {
 
   String get path => _path;
 
-  Future<int> getCommitCount([String branchName = 'HEAD']) async {
+  Future<int> commitCount([String branchName = 'HEAD']) async {
     final pr = await runCommand(['rev-list', '--count', branchName]);
     return int.parse(pr.stdout as String);
   }
@@ -36,23 +36,23 @@ class GitDir {
   /// [rev] should probably be a sha1 to a commit.
   /// But GIT lets you do other things.
   /// See http://git-scm.com/docs/gitrevisions.html
-  Future<Commit> getCommit(String rev) async {
+  Future<Commit> commit(String rev) async {
     final pr = await runCommand(['cat-file', '-p', rev]);
     return Commit.parse(pr.stdout as String);
   }
 
-  Future<Map<String, Commit>> getCommits([String branchName = 'HEAD']) async {
+  Future<Map<String, Commit>> commits([String branchName = 'HEAD']) async {
     final pr = await runCommand(['rev-list', '--format=raw', branchName]);
     return Commit.parseRawRevList(pr.stdout as String);
   }
 
-  Future<List<String>> getBranchNames() async {
-    final list = await getBranchReferences();
+  Future<List<String>> branchNames() async {
+    final list = await branchReferences();
     return list.map((br) => br.branchName).toList();
   }
 
-  Future<BranchReference> getBranchReference(String branchName) async {
-    final list = await getBranchReferences();
+  Future<BranchReference> branchReference(String branchName) async {
+    final list = await branchReferences();
     final matches = list.where((b) => b.branchName == branchName).toList();
 
     assert(matches.length <= 1);
@@ -63,25 +63,25 @@ class GitDir {
     }
   }
 
-  Future<List<BranchReference>> getBranchReferences() async {
+  Future<List<BranchReference>> branchReferences() async {
     final refs = await showRef(heads: true);
     return refs.map((cr) => cr.toBranchReference()).toList();
   }
 
   // TODO: Test this! No tags. Many tags. Etc.
-  Future<List<Tag>> getTags() async {
+  Stream<Tag> tags() async* {
     final refs = await showRef(tags: true);
 
-    final futures = refs.map((ref) async {
+    for (var ref in refs) {
       final pr = await runCommand(['cat-file', '-p', ref.sha]);
-      return Tag.parseCatFile(pr.stdout as String);
-    });
-
-    return Future.wait(futures);
+      yield Tag.parseCatFile(pr.stdout as String);
+    }
   }
 
-  Future<List<CommitReference>> showRef(
-      {bool heads = false, bool tags = false}) async {
+  Future<List<CommitReference>> showRef({
+    bool heads = false,
+    bool tags = false,
+  }) async {
     final args = ['show-ref'];
 
     if (heads) {
@@ -92,7 +92,7 @@ class GitDir {
       args.add('--tags');
     }
 
-    final pr = await runCommand(args, false);
+    final pr = await runCommand(args, throwOnError: false);
     if (pr.exitCode == 1) {
       // no heads present, return empty collection
       return [];
@@ -142,7 +142,7 @@ class GitDir {
     requireArgumentNotNullOrEmpty(branchName, 'branchName');
     requireArgumentValidSha1(treeSha, 'treeSha');
 
-    final targetBranchRef = await getBranchReference(branchName);
+    final targetBranchRef = await branchReference(branchName);
 
     String newCommitSha;
 
@@ -171,7 +171,7 @@ class GitDir {
   /// is not updated.
   Future<String> _updateBranch(
       String targetBranchSha, String treeSha, String commitMessage) async {
-    final commitObj = await getCommit(targetBranchSha);
+    final commitObj = await commit(targetBranchSha);
     if (commitObj.treeSha == treeSha) {
       return null;
     }
@@ -183,8 +183,11 @@ class GitDir {
   /// Returns the `SHA1` for the new commit.
   ///
   /// See [git-commit-tree](http://git-scm.com/docs/git-commit-tree)
-  Future<String> commitTree(String treeSha, String commitMessage,
-      {List<String> parentCommitShas}) async {
+  Future<String> commitTree(
+    String treeSha,
+    String commitMessage, {
+    List<String> parentCommitShas,
+  }) async {
     requireArgumentValidSha1(treeSha, 'treeSha');
 
     requireArgumentNotNullOrEmpty(commitMessage, 'commitMessage');
@@ -226,8 +229,10 @@ class GitDir {
     return map;
   }
 
-  Future<ProcessResult> runCommand(Iterable<String> args,
-      [bool throwOnError = true]) {
+  Future<ProcessResult> runCommand(
+    Iterable<String> args, {
+    bool throwOnError = true,
+  }) {
     ArgumentError.checkNotNull(args, 'args');
 
     final list = args.toList();
@@ -263,8 +268,11 @@ class GitDir {
   /// then no [Commit] is created and `null` is returned.
   ///
   /// If no content is added to the directory, an error is thrown.
-  Future<Commit> updateBranch(String branchName,
-      Future Function(Directory td) populater, String commitMessage) async {
+  Future<Commit> updateBranch(
+    String branchName,
+    Future Function(Directory td) populater,
+    String commitMessage,
+  ) async {
     // TODO: ponder restricting branch names
     // see http://stackoverflow.com/questions/12093748/how-do-i-check-for-valid-git-branch-names/12093994#12093994
 
@@ -283,8 +291,11 @@ class GitDir {
     }
   }
 
-  Future<Commit> updateBranchWithDirectoryContents(String branchName,
-      String sourceDirectoryPath, String commitMessage) async {
+  Future<Commit> updateBranchWithDirectoryContents(
+    String branchName,
+    String sourceDirectoryPath,
+    String commitMessage,
+  ) async {
     final tempGitRoot = await _createTempDir();
 
     final tempGitDir = GitDir._raw(tempGitRoot.path, sourceDirectoryPath);
@@ -328,7 +339,7 @@ class GitDir {
 
       // so we have this wonderful new commit, right?
       // need to crack out the commit and return the value
-      return getCommit('refs/heads/$branchName');
+      return commit('refs/heads/$branchName');
     } finally {
       await tempGitRoot.delete(recursive: true);
     }
@@ -347,11 +358,15 @@ class GitDir {
     }
   }
 
-  /// [allowContent] if true, doesn't check to see if the directory is empty
+  /// [allowContent] if `true`, doesn't check to see if the directory is empty
   ///
-  /// Will fail if the source is a git directory (either at the root or a sub directory)
-  static Future<GitDir> init(Directory source,
-      {bool allowContent = false}) async {
+  /// Will fail if the source is a git directory
+  /// (either at the root or a sub directory).
+  static Future<GitDir> init(
+    String path, {
+    bool allowContent = false,
+  }) async {
+    final source = Directory(path);
     assert(source.existsSync());
 
     if (allowContent == true) {
@@ -368,8 +383,10 @@ class GitDir {
 
   /// If [allowSubdirectory] is true, a [GitDir] may be returned if [gitDirRoot]
   /// is a subdirectory within a Git repository.
-  static Future<GitDir> fromExisting(String gitDirRoot,
-      {bool allowSubdirectory = false}) async {
+  static Future<GitDir> fromExisting(
+    String gitDirRoot, {
+    bool allowSubdirectory = false,
+  }) async {
     allowSubdirectory ??= false;
     final path = p.absolute(gitDirRoot);
 

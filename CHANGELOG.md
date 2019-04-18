@@ -1,3 +1,7 @@
+## 1.0.0
+
+- A **LOT** of breaking changes.
+
 ## 0.5.1+1
 
 * Support Dart 2 stable releases.
