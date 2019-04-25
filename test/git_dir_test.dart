@@ -133,7 +133,7 @@ void main() {
         .toList();
 
     final hashes = await gitDir.writeObjects(paths);
-    expect(hashes.length, equals(initialContentMap.length));
+    expect(hashes, hasLength(initialContentMap.length));
     expect(hashes.keys, unorderedEquals(paths));
 
     expect(paths[0], endsWith('file1.txt'));
@@ -200,7 +200,7 @@ Future _testGetCommits() async {
     expect(commitMessageIndex, isNotNull,
         reason: 'a matching message should be found');
 
-    expect(indexMap.containsKey(commitMessageIndex), isFalse);
+    expect(indexMap, isNot(contains(commitMessageIndex)));
     indexMap[commitMessageIndex] = Tuple(commitSha, commit);
   });
 
@@ -375,7 +375,7 @@ Future _testPopulateBranchWithDupeContent(GitDir gitDir, String branchName,
   final originalCommitCount = pair.item2;
 
   expect(returnedCommit, isNull);
-  expect(originalCommitCount > 0, true,
+  expect(originalCommitCount, greaterThan(0),
       reason: 'must have had some original content');
 
   // new check to see if things are updated it gd1
