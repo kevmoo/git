@@ -23,11 +23,19 @@ void _throwIfProcessFailed(
     ProcessResult pr, String process, List<String> args) {
   assert(pr != null);
   if (pr.exitCode != 0) {
-    final message = '''
-stdout:
-${pr.stdout}
-stderr:
-${pr.stderr}''';
+    final values = {
+      'Standard out': pr.stdout.toString().trim(),
+      'Standard error': pr.stderr.toString().trim()
+    }..removeWhere((k, v) => v.isEmpty);
+
+    String message;
+    if (values.isEmpty) {
+      message = 'Unknown error';
+    } else if (values.length == 1) {
+      message = values.values.single;
+    } else {
+      message = values.entries.map((e) => '${e.key}\n${e.value}').join('\n');
+    }
 
     throw ProcessException(process, args, message, pr.exitCode);
   }
