@@ -287,8 +287,13 @@ Future _testPopulateBranch() async {
 }
 
 void _testPopulateBranchEmpty(GitDir gitDir, String branchName) {
-  expect(_testPopulateBranchCore(gitDir, branchName, {}, 'empty?'),
-      throwsA(predicate((error) => error.message == 'No files were added')));
+  expect(
+    _testPopulateBranchCore(gitDir, branchName, {}, 'empty?'),
+    throwsA(
+      isA<GitError>()
+          .having((ge) => ge.message, 'message', 'No files were added'),
+    ),
+  );
 }
 
 Future<Tuple<Commit, int>> _testPopulateBranchCore(
