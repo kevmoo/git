@@ -1,10 +1,3 @@
-[![Pub Package](https://img.shields.io/pub/v/git.svg)](https://pub.dartlang.org/packages/git)
-[![Build Status](https://travis-ci.org/kevmoo/git.svg?branch=master)](https://travis-ci.org/kevmoo/git)
-
-Exposes a Git directory abstraction that makes it easy to inspect and manipulate
-a local Git repository.
-
-```dart
 import 'package:git/git.dart';
 import 'package:path/path.dart' as p;
 
@@ -19,4 +12,3 @@ Future<void> main() async {
     print('Not a Git directory');
   }
 }
-```
