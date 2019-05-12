@@ -40,8 +40,15 @@ class GitDir {
     return Commit.parse(pr.stdout as String);
   }
 
-  Future<Map<String, Commit>> commits([String branchName = 'HEAD']) async {
-    final pr = await runCommand(['rev-list', '--format=raw', branchName]);
+  Future<Map<String, Commit>> commits(
+      [String branchName = 'HEAD', int maxCount = -1, int skip = -1]) async {
+    final pr = await runCommand([
+      'rev-list',
+      '--format=raw',
+      '--maxCount=$maxCount',
+      '--skip=$skip',
+      branchName
+    ]);
     return Commit.parseRawRevList(pr.stdout as String);
   }
 
