@@ -232,6 +232,17 @@ Future _testGetCommits() async {
 
   expect(commits, hasLength(commitText.length));
 
+  const prunedCommitsLength = 2;
+  final prunedCommits = await gitDir.commits('HEAD', prunedCommitsLength);
+
+  expect(prunedCommits, hasLength(prunedCommitsLength));
+
+  const offsetCommitCount = 3;
+  final offsetCommits = await gitDir.commits('HEAD', -1, offsetCommitCount);
+
+  expect(offsetCommits.values.toList()[0].treeSha,
+      commits.values.toList()[offsetCommitCount].treeSha);
+
   final commitMessages = commitText.map(msgFromText).toList();
 
   final indexMap = <int, Tuple<String, Commit>>{};
