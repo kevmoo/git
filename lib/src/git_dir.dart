@@ -45,7 +45,7 @@ class GitDir {
     final pr = await runCommand([
       'rev-list',
       '--format=raw',
-      '--maxCount=$maxCount',
+      '--max-count=$maxCount',
       '--skip=$skip',
       branchName
     ]);
