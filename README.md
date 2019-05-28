@@ -1,4 +1,4 @@
-[![Pub Package](https://img.shields.io/pub/v/git.svg)](https://pub.dartlang.org/packages/git)
+[![Pub Package](https://img.shields.io/pub/v/git.svg)](https://pub.dev/packages/git)
 [![Build Status](https://travis-ci.org/kevmoo/git.svg?branch=master)](https://travis-ci.org/kevmoo/git)
 
 Exposes a Git directory abstraction that makes it easy to inspect and manipulate
