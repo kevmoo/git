@@ -1,5 +1,5 @@
 name: git
-version: 1.0.0
+version: 1.0.1
 author: Kevin Moore <github@j832.com>
 description: >-
   Git command line wrapper. Exposes a Git directory abstraction that makes it
