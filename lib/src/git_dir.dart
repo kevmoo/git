@@ -345,8 +345,7 @@ class GitDir {
   static Future<bool> isGitDir(String path) async {
     final dir = Directory(path);
 
-    final exists = await dir.exists();
-    if (exists) {
+    if (dir.existsSync()) {
       return _isGitDir(dir);
     } else {
       return false;
