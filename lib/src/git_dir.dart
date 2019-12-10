@@ -209,8 +209,15 @@ class GitDir {
   /// and return a [Map] where the key is the input path and the value is
   /// the SHA of the newly written object.
   Future<Map<String, String>> writeObjects(List<String> paths) async {
-    final args = ['hash-object', '-t', 'blob', '-w', '--no-filters', '--']
-      ..addAll(paths);
+    final args = [
+      'hash-object',
+      '-t',
+      'blob',
+      '-w',
+      '--no-filters',
+      '--',
+      ...paths
+    ];
 
     final pr = await runCommand(args);
     final val = (pr.stdout as String).trim();
