@@ -105,7 +105,7 @@ class StringLineReader {
       return value;
     }
 
-    // to handle Windows newlines, see if the value before nextLF is a Carriage return
+    // to handle Windows newlines, see if the value before nextLF is a Carriage
     final isWinNL = nextLF > 0 && source.substring(nextLF - 1, nextLF) == '\r';
 
     final value = isWinNL
