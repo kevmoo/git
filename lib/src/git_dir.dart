@@ -21,10 +21,9 @@ class GitDir {
   final String _path;
   final String _gitWorkTree;
 
-  GitDir._raw(this._path, [this._gitWorkTree]) {
-    assert(p.isAbsolute(_path));
-    assert(_gitWorkTree == null || p.isAbsolute(_gitWorkTree));
-  }
+  GitDir._raw(this._path, [this._gitWorkTree])
+      : assert(p.isAbsolute(_path)),
+        assert(_gitWorkTree == null || p.isAbsolute(_gitWorkTree));
 
   String get path => _path;
 
@@ -266,8 +265,8 @@ class GitDir {
   /// [populater] is called with a temporary [Directory] instance that should
   /// be populated with the desired content.
   ///
-  /// If the content provided matches the content in the specificed [branchName],
-  /// then no [Commit] is created and `null` is returned.
+  /// If the content provided matches the content in the specificed
+  /// [branchName], then no [Commit] is created and `null` is returned.
   ///
   /// If no content is added to the directory, an error is thrown.
   Future<Commit> updateBranch(
