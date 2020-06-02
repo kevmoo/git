@@ -64,7 +64,7 @@ void main() {
       File(p.join(value.path, 'testfile.txt'))
           .writeAsStringSync('test content');
 
-      expect(GitDir.init(value.path, allowContent: false), throwsArgumentError);
+      expect(GitDir.init(value.path), throwsArgumentError);
     });
 
     group('existing git dir', () {
@@ -106,7 +106,7 @@ void main() {
       });
 
       test('with allowContent:false fails', () {
-        expect(GitDir.init(dir, allowContent: false), throwsArgumentError);
+        expect(GitDir.init(dir), throwsArgumentError);
       });
 
       test('with allowContent:true fails', () {
