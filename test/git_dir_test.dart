@@ -22,7 +22,10 @@ void main() {
     final gitDir = await _createTempGitDir();
 
     await _doDescriptorGitCommit(
-        gitDir, initialMasterBranchContent, 'master files');
+      gitDir,
+      initialMasterBranchContent,
+      'master files',
+    );
 
     // get the treeSha for the new lib directory
     final branch = await gitDir.currentBranch();
@@ -31,7 +34,10 @@ void main() {
 
     // sha for the new commit
     final newSha = await gitDir.createOrUpdateBranch(
-        'test', commit.treeSha, 'copy of master');
+      'test',
+      commit.treeSha,
+      'copy of master',
+    );
 
     // validate there is one commit on 'test'
     // validate that the one commit has the right treeSha
@@ -45,7 +51,10 @@ void main() {
 
     // do another update from the subtree sha
     final nextCommit = await gitDir.createOrUpdateBranch(
-        'test', libTreeEntry.sha, 'just the lib content');
+      'test',
+      libTreeEntry.sha,
+      'just the lib content',
+    );
 
     final testCommitCount = await gitDir.commitCount('test');
     expect(testCommitCount, 2);
@@ -53,26 +62,22 @@ void main() {
     treeItems = await gitDir.lsTree(nextCommit);
     expect(treeItems, hasLength(2));
 
-    expect(treeItems.map((tree) => tree.name),
-        unorderedEquals(['foo.txt', 'bar.txt']));
+    expect(
+      treeItems.map((tree) => tree.name),
+      unorderedEquals(['foo.txt', 'bar.txt']),
+    );
   });
 
   group('init', () {
     test('allowContent:false with content fails', () async {
-      final value = _createTempDir();
+      File(p.join(d.sandbox, 'testfile.txt')).writeAsStringSync('test content');
 
-      File(p.join(value.path, 'testfile.txt'))
-          .writeAsStringSync('test content');
-
-      expect(GitDir.init(value.path), throwsArgumentError);
+      expect(GitDir.init(d.sandbox), throwsArgumentError);
     });
 
     group('existing git dir', () {
-      String dir;
-
       setUp(() async {
-        final value = await _createTempGitDir();
-        dir = value.path;
+        await _createTempGitDir();
       });
 
       test('isWorkingTreeClean', () async {
@@ -87,16 +92,23 @@ void main() {
         });
 
         test('fails for sub directories', () async {
-          expect(() => GitDir.fromExisting(p.join(d.sandbox, 'sub')),
-              throwsArgumentError);
+          expect(
+            () => GitDir.fromExisting(p.join(d.sandbox, 'sub')),
+            throwsArgumentError,
+          );
         });
 
         test('succeeds for sub directories with `allowSubdirectory`', () async {
-          final gitDir = await GitDir.fromExisting(p.join(d.sandbox, 'sub'),
-              allowSubdirectory: true);
+          final gitDir = await GitDir.fromExisting(
+            p.join(d.sandbox, 'sub'),
+            allowSubdirectory: true,
+          );
 
-          expect(gitDir.path, d.sandbox,
-              reason: 'The created `GitDir` will point to the root.');
+          expect(
+            gitDir.path,
+            d.sandbox,
+            reason: 'The created `GitDir` will point to the root.',
+          );
         });
       });
 
@@ -106,11 +118,11 @@ void main() {
       });
 
       test('with allowContent:false fails', () {
-        expect(GitDir.init(dir), throwsArgumentError);
+        expect(GitDir.init(d.sandbox), throwsArgumentError);
       });
 
       test('with allowContent:true fails', () {
-        expect(GitDir.init(dir, allowContent: true), throwsArgumentError);
+        expect(GitDir.init(d.sandbox, allowContent: true), throwsArgumentError);
       });
     });
   });
@@ -137,12 +149,16 @@ void main() {
     expect(hashes.keys, unorderedEquals(paths));
 
     expect(paths[0], endsWith('file1.txt'));
-    expect(hashes,
-        containsPair(paths[0], 'dd954e7a4e1a62ff90c5a0709dce5928716535c1'));
+    expect(
+      hashes,
+      containsPair(paths[0], 'dd954e7a4e1a62ff90c5a0709dce5928716535c1'),
+    );
 
     expect(paths[1], endsWith('file2.txt'));
-    expect(hashes,
-        containsPair(paths[1], 'db00fd65b218578127ea51f3dffac701f12f486a'));
+    expect(
+      hashes,
+      containsPair(paths[1], 'db00fd65b218578127ea51f3dffac701f12f486a'),
+    );
   });
 }
 
@@ -197,8 +213,11 @@ Future _testGetCommits() async {
       }
     }
 
-    expect(commitMessageIndex, isNotNull,
-        reason: 'a matching message should be found');
+    expect(
+      commitMessageIndex,
+      isNotNull,
+      reason: 'a matching message should be found',
+    );
 
     expect(indexMap, isNot(contains(commitMessageIndex)));
     indexMap[commitMessageIndex] = Tuple(commitSha, commit);
@@ -206,8 +225,10 @@ Future _testGetCommits() async {
 
   indexMap.forEach((index, shaCommitTuple) {
     if (index > 0) {
-      expect(shaCommitTuple.item2.parents,
-          unorderedEquals([indexMap[index - 1].item1]));
+      expect(
+        shaCommitTuple.item2.parents,
+        unorderedEquals([indexMap[index - 1].item1]),
+      );
     } else {
       expect(shaCommitTuple.item2.parents, hasLength(0));
     }
@@ -215,7 +236,10 @@ Future _testGetCommits() async {
 }
 
 Future _doDescriptorGitCommit(
-    GitDir gd, Map<String, String> contents, String commitMsg) async {
+  GitDir gd,
+  Map<String, String> contents,
+  String commitMsg,
+) async {
   await _doDescriptorPopulate(gd.path, contents);
 
   // now add this new file
@@ -272,16 +296,32 @@ Future _testPopulateBranch() async {
   _testPopulateBranchEmpty(gd1, testBranchName);
 
   await _testPopulateBranchWithContent(
-      gd1, testBranchName, testContent1, 'first commit!');
+    gd1,
+    testBranchName,
+    testContent1,
+    'first commit!',
+  );
 
   await _testPopulateBranchWithContent(
-      gd1, testBranchName, testContent2, 'second commit');
+    gd1,
+    testBranchName,
+    testContent2,
+    'second commit',
+  );
 
   await _testPopulateBranchWithDupeContent(
-      gd1, testBranchName, testContent2, 'same content');
+    gd1,
+    testBranchName,
+    testContent2,
+    'same content',
+  );
 
   await _testPopulateBranchWithContent(
-      gd1, testBranchName, testContent1, '3rd commit, content 1');
+    gd1,
+    testBranchName,
+    testContent1,
+    '3rd commit, content 1',
+  );
 
   _testPopulateBranchEmpty(gd1, testBranchName);
 }
@@ -313,13 +353,17 @@ Future<Tuple<Commit, int>> _testPopulateBranchCore(
 
   Directory tempDir;
   try {
-    final commit = await gitDir.updateBranch(branchName, (td) {
-      // strictly speaking, users of this API should not hold on to the TempDir
-      // but this is for testing
-      tempDir = td;
+    final commit = await gitDir.updateBranch(
+      branchName,
+      (td) {
+        // strictly speaking, users of this API should not hold on to TempDir
+        // but this is for testing
+        tempDir = td;
 
-      return _doDescriptorPopulate(tempDir.path, contents);
-    }, commitMessage);
+        return _doDescriptorPopulate(tempDir.path, contents);
+      },
+      commitMessage,
+    );
 
     return Tuple(commit, originalCommitCount);
   } finally {
@@ -333,14 +377,21 @@ Future _testPopulateBranchWithContent(GitDir gitDir, String branchName,
     Map<String, String> contents, String commitMessage) async {
   // figure out how many commits exist for the provided branch
   final pair = await _testPopulateBranchCore(
-      gitDir, branchName, contents, commitMessage);
+    gitDir,
+    branchName,
+    contents,
+    commitMessage,
+  );
 
   final returnedCommit = pair.item1;
   final originalCommitCount = pair.item2;
 
   if (originalCommitCount == 0) {
-    expect(returnedCommit.parents, isEmpty,
-        reason: 'This should be the first commit');
+    expect(
+      returnedCommit.parents,
+      isEmpty,
+      reason: 'This should be the first commit',
+    );
   } else {
     expect(returnedCommit.parents, hasLength(1));
   }
@@ -354,8 +405,11 @@ Future _testPopulateBranchWithContent(GitDir gitDir, String branchName,
 
   final commit = await gitDir.commitFromRevision(branchRef.reference);
 
-  expect(commit.content, returnedCommit.content,
-      reason: 'content of queried commit should what was returned');
+  expect(
+    commit.content,
+    returnedCommit.content,
+    reason: 'content of queried commit should what was returned',
+  );
 
   final entries = await gitDir.lsTree(commit.treeSha);
 
@@ -369,14 +423,21 @@ Future _testPopulateBranchWithDupeContent(GitDir gitDir, String branchName,
     Map<String, String> contents, String commitMessage) async {
   // figure out how many commits exist for the provided branch
   final pair = await _testPopulateBranchCore(
-      gitDir, branchName, contents, commitMessage);
+    gitDir,
+    branchName,
+    contents,
+    commitMessage,
+  );
 
   final returnedCommit = pair.item1;
   final originalCommitCount = pair.item2;
 
   expect(returnedCommit, isNull);
-  expect(originalCommitCount, greaterThan(0),
-      reason: 'must have had some original content');
+  expect(
+    originalCommitCount,
+    greaterThan(0),
+    reason: 'must have had some original content',
+  );
 
   // new check to see if things are updated it gd1
   final br = await gitDir.branchReference(branchName);
@@ -385,13 +446,11 @@ Future _testPopulateBranchWithDupeContent(GitDir gitDir, String branchName,
 
   final newCommitCount = await gitDir.commitCount(br.reference);
 
-  expect(newCommitCount, originalCommitCount,
-      reason: 'no change in commit count');
+  expect(
+    newCommitCount,
+    originalCommitCount,
+    reason: 'no change in commit count',
+  );
 }
 
-Directory _createTempDir() => Directory(d.sandbox);
-
-Future<GitDir> _createTempGitDir() async {
-  final dir = _createTempDir();
-  return GitDir.init(dir.path);
-}
+Future<GitDir> _createTempGitDir() => GitDir.init(d.sandbox);
