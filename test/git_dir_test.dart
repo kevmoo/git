@@ -160,6 +160,39 @@ void main() {
       containsPair(paths[1], 'db00fd65b218578127ea51f3dffac701f12f486a'),
     );
   });
+
+  group('BranchReference', () {
+    test('isHead', () async {
+      const initialMasterBranchContent = {
+        'master.md': 'test file',
+        'lib/foo.txt': 'lib foo text',
+        'lib/bar.txt': 'lib bar text'
+      };
+
+      final gitDir = await _createTempGitDir();
+
+      await _doDescriptorGitCommit(
+        gitDir,
+        initialMasterBranchContent,
+        'master files',
+      );
+
+      final branch = await gitDir.currentBranch();
+      expect(branch.isHead, isFalse);
+      expect(branch.branchName, 'master');
+      expect(branch.reference, 'refs/heads/master');
+
+      await gitDir.runCommand(
+        ['checkout', '--detach'],
+      );
+
+      final detached = await gitDir.currentBranch();
+      expect(detached.isHead, isTrue);
+      expect(detached.branchName, 'HEAD');
+      expect(detached.reference, 'HEAD');
+      expect(detached.sha, branch.sha);
+    });
+  });
 }
 
 Future _testGetCommits() async {
