@@ -1,3 +1,7 @@
+## 1.1.0
+
+- Allow `BranchReference` to handle a repo in the "detached head" state.
+
 ## 1.0.1
 
 - Improve logic of parsing commits.
