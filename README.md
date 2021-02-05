@@ -1,5 +1,5 @@
 [![Pub Package](https://img.shields.io/pub/v/git.svg)](https://pub.dev/packages/git)
-[![Build Status](https://travis-ci.org/kevmoo/git.svg?branch=master)](https://travis-ci.org/kevmoo/git)
+[![CI](https://github.com/kevmoo/git/workflows/CI/badge.svg?branch=master)](https://github.com/kevmoo/git/actions?query=workflow%3ACI+branch%3Amaster)
 
 Exposes a Git directory abstraction that makes it easy to inspect and manipulate
 a local Git repository.

@@ -1,3 +1,7 @@
+## 1.2.0-dev
+
+- Require Dart 2.10.5
+
 ## 1.1.0
 
 - Allow `BranchReference` to handle a repo in the "detached head" state.
