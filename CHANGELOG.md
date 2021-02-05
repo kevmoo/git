@@ -1,6 +1,7 @@
-## 1.2.0-dev
+## 1.2.0
 
 - Require Dart 2.10.5
+- `GitDir.init` added an optional `initialBranch` parameter.
 
 ## 1.1.0
 

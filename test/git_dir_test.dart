@@ -169,7 +169,7 @@ void main() {
         'lib/bar.txt': 'lib bar text'
       };
 
-      final gitDir = await _createTempGitDir();
+      final gitDir = await _createTempGitDir(branchName: 'master');
 
       await _doDescriptorGitCommit(
         gitDir,
@@ -486,4 +486,5 @@ Future _testPopulateBranchWithDupeContent(GitDir gitDir, String branchName,
   );
 }
 
-Future<GitDir> _createTempGitDir() => GitDir.init(d.sandbox);
+Future<GitDir> _createTempGitDir({String branchName}) =>
+    GitDir.init(d.sandbox, initialBranch: branchName);
