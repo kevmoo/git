@@ -36,7 +36,7 @@ class TreeEntry {
     // TODO: should catch and re-throw a descriptive error
     final match = _lsTreeRegEx.allMatches(value).single;
 
-    return TreeEntry(match[1], match[2], match[3], match[4]);
+    return TreeEntry(match[1]!, match[2]!, match[3]!, match[4]!);
   }
 
   @override

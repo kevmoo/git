@@ -19,23 +19,23 @@ class Tag {
 
     final slr = StringLineReader(content);
 
-    var lastLine = slr.readNextLine();
+    var lastLine = slr.readNextLine()!;
 
     while (lastLine.isNotEmpty) {
       final match = headerRegExp.allMatches(lastLine).single;
       assert(match.groupCount == 2);
-      final header = match.group(1);
-      final value = match.group(2);
+      final header = match.group(1)!;
+      final value = match.group(2)!;
 
       headers.putIfAbsent(header, () => <String>[]).add(value);
 
-      lastLine = slr.readNextLine();
+      lastLine = slr.readNextLine()!;
     }
 
-    final objectSha = headers['object'].single;
-    final type = headers['type'].single;
-    final tag = headers['tag'].single;
-    final tagger = headers['tagger'].single;
+    final objectSha = headers['object']!.single;
+    final type = headers['type']!.single;
+    final tag = headers['tag']!.single;
+    final tagger = headers['tagger']!.single;
 
     return Tag._internal(objectSha, type, tag, tagger);
   }

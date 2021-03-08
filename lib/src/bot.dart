@@ -1,7 +1,7 @@
 // Code copied from
 // https://github.com/kevmoo/bot.dart/commit/6badd135a5
 
-void requireArgument(bool truth, String argName, [String message]) {
+void requireArgument(bool truth, String argName, [String? message]) {
   metaRequireArgumentNotNullOrEmpty(argName);
   if (!truth) {
     if (message == null || message.isEmpty) {
@@ -11,7 +11,7 @@ void requireArgument(bool truth, String argName, [String message]) {
   }
 }
 
-void requireArgumentNotNullOrEmpty(String argument, String argName) {
+void requireArgumentNotNullOrEmpty(String? argument, String argName) {
   metaRequireArgumentNotNullOrEmpty(argName);
   if (argument == null) {
     throw ArgumentError.notNull(argument);
@@ -22,9 +22,6 @@ void requireArgumentNotNullOrEmpty(String argument, String argName) {
 
 void requireArgumentContainsPattern(
     Pattern pattern, String argValue, String argName) {
-  if (pattern == null) {
-    throw const _InvalidOperationError("That's just sad. No null pattern");
-  }
   ArgumentError.checkNotNull(argValue, argName);
   if (!argValue.contains(pattern)) {
     throw ArgumentError.value(argValue, argName,
@@ -33,9 +30,10 @@ void requireArgumentContainsPattern(
 }
 
 void metaRequireArgumentNotNullOrEmpty(String argName) {
-  if (argName == null || argName.isEmpty) {
+  if (argName.isEmpty) {
     throw const _InvalidOperationError(
-        "That's just sad. Give me a good argName");
+      "That's just sad. Give me a good argName",
+    );
   }
 }
 
@@ -67,38 +65,38 @@ class Tuple<T1, T2> {
 class StringLineReader {
   final String source;
 
-  int _position = 0;
+  int? _position = 0;
 
   StringLineReader(this.source) {
     ArgumentError.checkNotNull(source, 'source');
   }
 
-  int get position => _position;
+  int? get position => _position;
 
   bool get eof => _position == null;
 
-  String readNextLine() => _peekOrReadNextLine(true);
+  String? readNextLine() => _peekOrReadNextLine(true);
 
-  String peekNextLine() => _peekOrReadNextLine(false);
+  String? peekNextLine() => _peekOrReadNextLine(false);
 
-  String readToEnd() {
+  String? readToEnd() {
     if (_position == null) {
       return null;
     }
-    final value = source.substring(position, source.length);
+    final value = source.substring(position!, source.length);
     _position = null;
     return value;
   }
 
-  String _peekOrReadNextLine(bool updatePosition) {
+  String? _peekOrReadNextLine(bool updatePosition) {
     if (_position == null) {
       return null;
     }
-    final nextLF = source.indexOf('\n', _position);
+    final nextLF = source.indexOf('\n', _position!);
 
     if (nextLF < 0) {
       // no more new lines, return what's left and set postion = null
-      final value = source.substring(position, source.length);
+      final value = source.substring(_position!, source.length);
       if (updatePosition) {
         _position = null;
       }
@@ -109,8 +107,8 @@ class StringLineReader {
     final isWinNL = nextLF > 0 && source.substring(nextLF - 1, nextLF) == '\r';
 
     final value = isWinNL
-        ? source.substring(_position, nextLF - 1)
-        : source.substring(_position, nextLF);
+        ? source.substring(_position!, nextLF - 1)
+        : source.substring(_position!, nextLF);
 
     if (updatePosition) {
       _position = nextLF + 1;

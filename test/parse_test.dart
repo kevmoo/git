@@ -1,14 +1,11 @@
-import 'package:test/test.dart';
 import 'package:git/git.dart';
 import 'package:git/src/util.dart';
+import 'package:test/test.dart';
 
 void main() {
   test('valid sha', () {
     const good = 'bcd1284d805951a16e765cea5b2273a464ee2d86';
     expect(isValidSha(good), true);
-
-    expect(() => isValidSha(null), throwsArgumentError);
-    expect(() => requireArgumentValidSha1(null, 'null'), throwsArgumentError);
 
     final bad = [
       '',

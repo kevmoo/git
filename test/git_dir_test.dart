@@ -43,7 +43,7 @@ void main() {
     // validate that the one commit has the right treeSha
     // validate it has the right message
 
-    var treeItems = await gitDir.lsTree(newSha);
+    var treeItems = await gitDir.lsTree(newSha!);
     expect(treeItems, hasLength(2));
 
     final libTreeEntry = treeItems.singleWhere((tree) => tree.name == 'lib');
@@ -59,7 +59,7 @@ void main() {
     final testCommitCount = await gitDir.commitCount('test');
     expect(testCommitCount, 2);
 
-    treeItems = await gitDir.lsTree(nextCommit);
+    treeItems = await gitDir.lsTree(nextCommit!);
     expect(treeItems, hasLength(2));
 
     expect(
@@ -238,7 +238,7 @@ Future _testGetCommits() async {
 
   commits.forEach((commitSha, commit) {
     // index into the text for the message of this commit
-    int commitMessageIndex;
+    late int commitMessageIndex;
     for (var i = 0; i < commitMessages.length; i++) {
       if (commitMessages[i] == commit.message) {
         commitMessageIndex = i;
@@ -260,7 +260,7 @@ Future _testGetCommits() async {
     if (index > 0) {
       expect(
         shaCommitTuple.item2.parents,
-        unorderedEquals([indexMap[index - 1].item1]),
+        unorderedEquals([indexMap[index - 1]!.item1]),
       );
     } else {
       expect(shaCommitTuple.item2.parents, hasLength(0));
@@ -295,7 +295,7 @@ Future _doDescriptorGitCommit(
 Future _doDescriptorPopulate(
     String dirPath, Map<String, String> contents) async {
   for (var name in contents.keys) {
-    final value = contents[name];
+    final value = contents[name]!;
 
     final fullPath = p.join(dirPath, name);
 
@@ -369,7 +369,7 @@ void _testPopulateBranchEmpty(GitDir gitDir, String branchName) {
   );
 }
 
-Future<Tuple<Commit, int>> _testPopulateBranchCore(
+Future<Tuple<Commit?, int>> _testPopulateBranchCore(
     GitDir gitDir,
     String branchName,
     Map<String, String> contents,
@@ -384,7 +384,7 @@ Future<Tuple<Commit, int>> _testPopulateBranchCore(
     originalCommitCount = await gitDir.commitCount(branchRef.reference);
   }
 
-  Directory tempDir;
+  Directory? tempDir;
   try {
     final commit = await gitDir.updateBranch(
       branchName,
@@ -393,7 +393,7 @@ Future<Tuple<Commit, int>> _testPopulateBranchCore(
         // but this is for testing
         tempDir = td;
 
-        return _doDescriptorPopulate(tempDir.path, contents);
+        return _doDescriptorPopulate(tempDir!.path, contents);
       },
       commitMessage,
     );
@@ -401,7 +401,7 @@ Future<Tuple<Commit, int>> _testPopulateBranchCore(
     return Tuple(commit, originalCommitCount);
   } finally {
     if (tempDir != null) {
-      expect(tempDir.existsSync(), false);
+      expect(tempDir!.existsSync(), false);
     }
   }
 }
@@ -416,7 +416,7 @@ Future _testPopulateBranchWithContent(GitDir gitDir, String branchName,
     commitMessage,
   );
 
-  final returnedCommit = pair.item1;
+  final returnedCommit = pair.item1!;
   final originalCommitCount = pair.item2;
 
   if (originalCommitCount == 0) {
@@ -433,8 +433,7 @@ Future _testPopulateBranchWithContent(GitDir gitDir, String branchName,
   expect(returnedCommit.message, commitMessage);
 
   // new check to see if things are updated it gd1
-  final branchRef = await gitDir.branchReference(branchName);
-  expect(branchRef, isNotNull);
+  final branchRef = (await gitDir.branchReference(branchName))!;
 
   final commit = await gitDir.commitFromRevision(branchRef.reference);
 
@@ -473,9 +472,7 @@ Future _testPopulateBranchWithDupeContent(GitDir gitDir, String branchName,
   );
 
   // new check to see if things are updated it gd1
-  final br = await gitDir.branchReference(branchName);
-
-  expect(br, isNotNull);
+  final br = (await gitDir.branchReference(branchName))!;
 
   final newCommitCount = await gitDir.commitCount(br.reference);
 
@@ -486,5 +483,5 @@ Future _testPopulateBranchWithDupeContent(GitDir gitDir, String branchName,
   );
 }
 
-Future<GitDir> _createTempGitDir({String branchName}) =>
+Future<GitDir> _createTempGitDir({String? branchName}) =>
     GitDir.init(d.sandbox, initialBranch: branchName);

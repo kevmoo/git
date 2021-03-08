@@ -1,12 +1,12 @@
 name: git
-version: 1.2.0
+version: 2.0.0
 description: >-
   Git command line wrapper. Exposes a Git directory abstraction that makes it
   easy to inspect and manipulate a local Git repository.
 repository: https://github.com/kevmoo/git
 
 environment:
-  sdk: '>=2.10.5 <3.0.0'
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   path: ^1.0.0
@@ -14,4 +14,4 @@ dependencies:
 dev_dependencies:
   pedantic: ^1.4.0
   test: ^1.6.0
-  test_descriptor: ^1.0.3
+  test_descriptor: ^2.0.0
