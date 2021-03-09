@@ -19,7 +19,7 @@ class GitDir {
   static final RegExp _shaRegExp = RegExp(r'^[a-f0-9]{40}$');
 
   final String _path;
-  final String _gitWorkTree;
+  final String? _gitWorkTree;
 
   GitDir._raw(this._path, [this._gitWorkTree])
       : assert(p.isAbsolute(_path)),
@@ -45,7 +45,7 @@ class GitDir {
     return Commit.parseRawRevList(pr.stdout as String);
   }
 
-  Future<BranchReference> branchReference(String branchName) async {
+  Future<BranchReference?> branchReference(String branchName) async {
     final list = await branches();
     final matches = list.where((b) => b.branchName == branchName).toList();
 
@@ -111,8 +111,7 @@ class GitDir {
   }
 
   Future<List<TreeEntry>> lsTree(String treeish,
-      {bool subTreesOnly = false, String path}) async {
-    assert(treeish != null);
+      {bool subTreesOnly = false, String? path}) async {
     final args = ['ls-tree'];
 
     if (subTreesOnly == true) {
@@ -129,16 +128,17 @@ class GitDir {
     return TreeEntry.fromLsTreeOutput(pr.stdout as String);
   }
 
-  /// Returns the SHA for the new commit if one is created. `null` if the branch
-  /// is not updated.
-  Future<String> createOrUpdateBranch(
+  /// Returns the SHA for the new commit if one is created.
+  ///
+  /// `null` if the branch is not updated.
+  Future<String?> createOrUpdateBranch(
       String branchName, String treeSha, String commitMessage) async {
     requireArgumentNotNullOrEmpty(branchName, 'branchName');
     requireArgumentValidSha1(treeSha, 'treeSha');
 
     final targetBranchRef = await branchReference(branchName);
 
-    String newCommitSha;
+    String? newCommitSha;
 
     if (targetBranchRef == null) {
       newCommitSha = await commitTree(treeSha, commitMessage);
@@ -161,9 +161,10 @@ class GitDir {
     return newCommitSha;
   }
 
-  /// Returns the SHA for the new commit if one is created. `null` if the branch
-  /// is not updated.
-  Future<String> _updateBranch(
+  /// Returns the SHA for the new commit if one is created.
+  ///
+  /// `null` if the branch is not updated.
+  Future<String?> _updateBranch(
       String targetBranchSha, String treeSha, String commitMessage) async {
     final commitObj = await commitFromRevision(targetBranchSha);
     if (commitObj.treeSha == treeSha) {
@@ -180,7 +181,7 @@ class GitDir {
   Future<String> commitTree(
     String treeSha,
     String commitMessage, {
-    List<String> parentCommitShas,
+    List<String>? parentCommitShas,
   }) async {
     requireArgumentValidSha1(treeSha, 'treeSha');
 
@@ -269,7 +270,7 @@ class GitDir {
   /// [branchName], then no [Commit] is created and `null` is returned.
   ///
   /// If no content is added to the directory, an error is thrown.
-  Future<Commit> updateBranch(
+  Future<Commit?> updateBranch(
     String branchName,
     Future Function(Directory td) populater,
     String commitMessage,
@@ -292,7 +293,7 @@ class GitDir {
     }
   }
 
-  Future<Commit> updateBranchWithDirectoryContents(
+  Future<Commit?> updateBranchWithDirectoryContents(
     String branchName,
     String sourceDirectoryPath,
     String commitMessage,
@@ -368,7 +369,7 @@ class GitDir {
   static Future<GitDir> init(
     String path, {
     bool allowContent = false,
-    String initialBranch,
+    String? initialBranch,
   }) async {
     final source = Directory(path);
     assert(source.existsSync());
@@ -391,7 +392,6 @@ class GitDir {
     String gitDirRoot, {
     bool allowSubdirectory = false,
   }) async {
-    allowSubdirectory ??= false;
     final path = p.absolute(gitDirRoot);
 
     final pr = await runGit(['rev-parse', '--git-dir'],
@@ -415,7 +415,7 @@ class GitDir {
         'the root of a git directory');
   }
 
-  static Future<GitDir> _init(Directory source, {String branchName}) async {
+  static Future<GitDir> _init(Directory source, {String? branchName}) async {
     final isGitDir = await _isGitDir(source);
     if (isGitDir) {
       throw ArgumentError('Cannot init a directory that is already a '

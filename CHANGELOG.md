@@ -1,3 +1,8 @@
+## 2.0.0
+
+- Require Dart 2.12
+- Support null-safety.
+
 ## 1.2.0
 
 - Require Dart 2.10.5

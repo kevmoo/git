@@ -35,38 +35,37 @@ class Commit {
 
     final commits = <String, Commit>{};
 
-    while (slr.position != null && slr.position < content.length) {
+    while (slr.position != null && slr.position! < content.length) {
       final tuple = _parse(slr, true);
-      commits[tuple.item1] = tuple.item2;
+      commits[tuple.item1!] = tuple.item2;
     }
 
     return commits;
   }
 
-  static Tuple<String, Commit> _parse(StringLineReader slr, bool isRevParse) {
-    assert(slr != null);
+  static Tuple<String?, Commit> _parse(StringLineReader slr, bool isRevParse) {
     assert(slr.position != null);
 
     final headers = <String, List<String>>{};
 
-    final startSpot = slr.position;
+    final startSpot = slr.position!;
     var lastLine = slr.readNextLine();
 
-    while (lastLine.isNotEmpty) {
+    while (lastLine != null && lastLine.isNotEmpty) {
       final allHeaderMatches = headerRegExp.allMatches(lastLine);
       if (allHeaderMatches.isNotEmpty) {
         final match = allHeaderMatches.single;
         assert(match.groupCount == 2);
-        final header = match.group(1);
-        final value = match.group(2);
+        final header = match.group(1)!;
+        final value = match.group(2)!;
 
         headers.putIfAbsent(header, () => <String>[]).add(value);
       }
 
-      lastLine = slr.readNextLine();
+      lastLine = slr.readNextLine()!;
     }
 
-    assert(lastLine.isEmpty);
+    assert(lastLine!.isEmpty);
 
     String message;
 
@@ -82,7 +81,7 @@ class Commit {
 
       message = msgLines.join('\n');
     } else {
-      message = slr.readToEnd();
+      message = slr.readToEnd()!;
       assert(message.endsWith('\n'));
       final originalMessageLength = message.length;
       message = message.trim();
@@ -91,11 +90,11 @@ class Commit {
       assert(message.length + 1 == originalMessageLength);
     }
 
-    final treeSha = headers['tree'].single;
-    final author = headers['author'].single;
-    final committer = headers['committer'].single;
+    final treeSha = headers['tree']!.single;
+    final author = headers['author']!.single;
+    final committer = headers['committer']!.single;
     final commitSha =
-        headers.containsKey('commit') ? headers['commit'].single : null;
+        headers.containsKey('commit') ? headers['commit']!.single : null;
 
     final parents = headers['parent'] ?? [];
 

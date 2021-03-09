@@ -13,20 +13,18 @@ class CommitReference {
   CommitReference(this.sha, this.reference) {
     requireArgumentValidSha1(sha, 'sha');
 
-    assert(reference != null);
     // TODO: probably a better way to verify...but this is fine for now
     assert(reference.startsWith(r'refs/') || reference == 'HEAD');
   }
 
   static List<CommitReference> fromShowRefOutput(String input) {
-    assert(input != null);
     final lines = const LineSplitter().convert(input);
 
     return lines.sublist(0, lines.length).map((line) {
       final match = _lsRemoteRegExp.allMatches(line).single;
       assert(match.groupCount == 2);
 
-      return CommitReference(match[1], match[2]);
+      return CommitReference(match[1]!, match[2]!);
     }).toList();
   }
 
