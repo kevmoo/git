@@ -1,6 +1,7 @@
 export 'src/branch_reference.dart';
 export 'src/commit.dart';
 export 'src/commit_reference.dart';
+export 'src/file_diff.dart';
 export 'src/git_dir.dart';
 export 'src/git_error.dart';
 export 'src/tag.dart';
