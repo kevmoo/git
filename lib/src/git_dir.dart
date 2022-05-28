@@ -305,7 +305,7 @@ index dc6009e..0000000
 -}
 """;
 
-  Future<dynamic> diff({
+  Future<Iterable<FileDiff>> diff({
     String? base,
     String? ref,
   }) async {
