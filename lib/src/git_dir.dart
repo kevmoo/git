@@ -7,6 +7,7 @@ import 'bot.dart';
 import 'branch_reference.dart';
 import 'commit.dart';
 import 'commit_reference.dart';
+import 'file_diff.dart';
 import 'git_error.dart';
 import 'tag.dart';
 import 'top_level.dart';
@@ -229,6 +230,127 @@ class GitDir {
       map[paths[i]] = shas[i];
     }
     return map;
+  }
+
+  static const testText = """diff --git a/lib/main.dart b/lib/main.dart
+index 084d253..42b3ad7 100644
+--- a/lib/main.dart
++++ b/lib/main.dart
+@@ -16,6 +16,15 @@ Widget fabUseCase(BuildContext context) {
+   );
+ }
+ 
++@WidgetbookUseCase(name: 'FAB (text)', type: FloatingActionButton)
++Widget fabTextUseCase(BuildContext context) {
++  return FloatingActionButton.extended(
++    onPressed: () {},
++    icon: const Icon(Icons.add),
++    label: const Text('Add'),
++  );
++}
++
+ @WidgetbookApp.material(name: 'Demo')
+ class App extends StatelessWidget {
+   const App({Key? key}) : super(key: key);
+diff --git a/lib/main.widgetbook.dart b/lib/main.widgetbook.dart
+index 035dc70..46a2744 100644
+--- a/lib/main.widgetbook.dart
++++ b/lib/main.widgetbook.dart
+@@ -54,6 +54,10 @@ class HotReload extends StatelessWidget {
+                       name: 'FAB',
+                       builder: (context) => fabUseCase(context),
+                     ),
++                    WidgetbookUseCase(
++                      name: 'FAB (text)',
++                      builder: (context) => fabTextUseCase(context),
++                    ),
+                   ],
+                 ),
+               ],
+diff --git a/test/widget_test.dart b/test/widget_test.dart
+deleted file mode 100644
+index dc6009e..0000000
+--- a/test/widget_test.dart
++++ /dev/null
+@@ -1,30 +0,0 @@
+-// This is a basic Flutter widget test.
+-//
+-// To perform an interaction with a widget in your test, use the WidgetTester
+-// utility in the flutter_test package. For example, you can send tap and scroll
+-// gestures. You can also use WidgetTester to find child widgets in the widget
+-// tree, read text, and verify that the values of widget properties are correct.
+-
+-import 'package:flutter/material.dart';
+-import 'package:flutter_test/flutter_test.dart';
+-
+-import 'package:widgetbook_comparison_demo/main.dart';
+-
+-void main() {
+-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+-    // Build our app and trigger a frame.
+-    await tester.pumpWidget(const MyApp());
+-
+-    // Verify that our counter starts at 0.
+-    expect(find.text('0'), findsOneWidget);
+-    expect(find.text('1'), findsNothing);
+-
+-    // Tap the '+' icon and trigger a frame.
+-    await tester.tap(find.byIcon(Icons.add));
+-    await tester.pump();
+-
+-    // Verify that our counter has incremented.
+-    expect(find.text('0'), findsNothing);
+-    expect(find.text('1'), findsOneWidget);
+-  });
+-}
+""";
+
+  Future<dynamic> diff({
+    String? base,
+    String? ref,
+  }) async {
+    final args = ['diff'];
+
+    if (base != null) {
+      args.add(base);
+    }
+
+    if (ref != null) {
+      args.add(ref);
+    }
+
+    final pr = await runCommand(args);
+    // TODO no error handling here
+
+    final diff = pr.stdout as String;
+
+    FileDiff getFileDiff(String fileDiff) {
+      final pathBase = RegExp(r'(?<=--- a).*').stringMatch(fileDiff);
+      final pathRef = RegExp(r'(?<=\+\+\+ b).*').stringMatch(fileDiff);
+      return FileDiff(
+        pathBase: pathBase,
+        pathRef: pathRef,
+        diff: fileDiff,
+      );
+    }
+
+    Iterable<FileDiff> getFiles(
+      String totalDiff,
+    ) {
+      final diffs = totalDiff
+          .split('diff --git ')
+          // TODO somehow first element is always empty. Unclear
+          .where((element) => element.isNotEmpty)
+          .toList();
+      final fileDiffs = <FileDiff>[];
+      for (final diff in diffs) {
+        fileDiffs.add(getFileDiff(diff));
+      }
+      return fileDiffs;
+    }
+
+    final files = getFiles(diff);
+    return files;
   }
 
   Future<ProcessResult> runCommand(

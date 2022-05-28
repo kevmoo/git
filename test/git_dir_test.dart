@@ -8,6 +8,11 @@ import 'package:test/test.dart';
 import 'package:test_descriptor/test_descriptor.dart' as d;
 
 void main() {
+  test('diff', () async {
+    final gitdir = await _createTempGitDir();
+    await gitdir.diff();
+  });
+
   test('populateBranch', _testPopulateBranch);
 
   test('getCommits', _testGetCommits);
