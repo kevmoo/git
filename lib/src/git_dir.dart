@@ -319,6 +319,8 @@ index dc6009e..0000000
       args.add(ref);
     }
 
+    args.add('--');
+
     final pr = await runCommand(args);
     // TODO no error handling here
 
