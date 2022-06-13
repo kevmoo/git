@@ -311,10 +311,6 @@ index dc6009e..0000000
   }) async {
     final args = ['diff'];
 
-    if (base != null || ref != null) {
-      args.add('--');
-    }
-
     if (base != null) {
       args.add(base);
     }
