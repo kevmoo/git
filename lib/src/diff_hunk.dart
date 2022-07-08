@@ -12,8 +12,10 @@ class DiffHunk {
   const DiffHunk({
     required this.baseHunk,
     required this.refHunk,
+    required this.content,
   });
 
   final DiffHunkRange baseHunk;
   final DiffHunkRange refHunk;
+  final String content;
 }

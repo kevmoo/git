@@ -379,12 +379,18 @@ index dc6009e..0000000
     DiffHunk _parseHunk({
       required RegExpMatch baseHunkMatch,
       required RegExpMatch refHunkMatch,
+      required int? nextHunkStart,
     }) {
       final baseHunk = _parseHunkRange(baseHunkMatch);
       final refHunk = _parseHunkRange(refHunkMatch);
+      final content = baseHunkMatch.input.substring(
+        baseHunkMatch.start,
+        nextHunkStart,
+      );
       return DiffHunk(
         baseHunk: baseHunk,
         refHunk: refHunk,
+        content: content,
       );
     }
 
@@ -414,9 +420,11 @@ index dc6009e..0000000
       ).allMatches(fileDiff).toList();
 
       for (var counter = 0; counter < baseMatches.length; counter++) {
+        final isLast = counter + 1 == baseMatches.length;
         yield _parseHunk(
           baseHunkMatch: baseMatches[counter],
           refHunkMatch: refMatches[counter],
+          nextHunkStart: isLast ? null : baseMatches[counter].start,
         );
       }
     }
