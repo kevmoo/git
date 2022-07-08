@@ -315,6 +315,10 @@ index dc6009e..0000000
       args.add(base);
     }
 
+    if (base != null || ref != null) {
+      args.add('...');
+    }
+
     if (ref != null) {
       args.add(ref);
     }
