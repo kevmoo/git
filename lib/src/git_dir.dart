@@ -308,6 +308,7 @@ index dc6009e..0000000
   Future<Iterable<FileDiff>> diff({
     String? base,
     String? ref,
+    List<String> paths = const <String>[],
   }) async {
     final args = ['diff'];
 
@@ -323,7 +324,9 @@ index dc6009e..0000000
       args.add(ref);
     }
 
-    args.add('--');
+    args
+      ..add('--')
+      ..addAll(paths);
 
     final pr = await runCommand(args);
     // TODO no error handling here
