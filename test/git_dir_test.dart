@@ -3,15 +3,157 @@ import 'dart:io';
 
 import 'package:git/git.dart';
 import 'package:git/src/bot.dart';
+import 'package:git/src/diff_hunk.dart';
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 import 'package:test_descriptor/test_descriptor.dart' as d;
 
 void main() {
-  test('diff', () async {
-    final gitdir = await _createTempGitDir();
-    await gitdir.diff();
+  group('diff', () {
+    test(
+      'returns []',
+      () async {
+        final gitDir = await _createTempGitDir();
+        final diffs = await gitDir.diff();
+        expect(diffs, isEmpty);
+      },
+    );
+
+    test(
+      'HEAD...HEAD returns []',
+      () async {
+        const initialMasterBranchContent = {
+          'master.md': 'test file',
+        };
+
+        final gitDir = await _createTempGitDir();
+
+        await _doDescriptorGitCommit(
+          gitDir,
+          initialMasterBranchContent,
+          'master files',
+        );
+
+        final diffs = await gitDir.diff(
+          base: 'HEAD',
+          ref: 'HEAD',
+        );
+        expect(diffs, isEmpty);
+      },
+    );
+
+    test(
+      'on new file returns [$FileDiff]',
+      () async {
+        const initialMasterBranchContent = {
+          'master.md': 'test file',
+        };
+
+        final gitDir = await _createTempGitDir();
+
+        await _doDescriptorGitCommit(
+          gitDir,
+          initialMasterBranchContent,
+          'master files',
+        );
+
+        await _doDescriptorGitCommit(
+          gitDir,
+          {
+            'test.txt': 'test',
+          },
+          'test',
+        );
+
+        final commits = await gitDir.commits();
+
+        final diffs = await gitDir.diff(
+          base: commits.keys.last,
+          ref: commits.keys.first,
+        );
+
+        expect(
+          diffs,
+          equals(
+            [
+              FileDiff(
+                pathRef: '/test.txt',
+                hunks: [
+                  const DiffHunk(
+                    baseRange: DiffHunkRange(
+                      startLine: 0,
+                      numberOfLines: 0,
+                    ),
+                    refRange: DiffHunkRange(
+                      startLine: 1,
+                      numberOfLines: 1,
+                    ),
+                    content: '@@ -0,0 +1 @@\n+test\n',
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
   });
+
+  test(
+    'on deleted file returns [$FileDiff]',
+    () async {
+      const initialMasterBranchContent = {
+        'test.txt': 'test',
+      };
+
+      final gitDir = await _createTempGitDir();
+
+      await _doDescriptorGitCommit(
+        gitDir,
+        initialMasterBranchContent,
+        'master files',
+      );
+
+      await _doDescriptorGitRemove(
+        gitDir,
+        [
+          'test.txt',
+        ],
+        'test',
+      );
+
+      final commits = await gitDir.commits();
+
+      final diffs = await gitDir.diff(
+        base: commits.keys.last,
+        ref: commits.keys.first,
+      );
+
+      expect(
+        diffs,
+        equals(
+          [
+            FileDiff(
+              pathBase: '/test.txt',
+              hunks: [
+                const DiffHunk(
+                  baseRange: DiffHunkRange(
+                    startLine: 1,
+                    numberOfLines: 1,
+                  ),
+                  refRange: DiffHunkRange(
+                    startLine: 0,
+                    numberOfLines: 0,
+                  ),
+                  content: '@@ -1 +0,0 @@\n-test\n',
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    },
+  );
 
   test('populateBranch', _testPopulateBranch);
 
@@ -273,6 +415,30 @@ Future _testGetCommits() async {
   });
 }
 
+Future _doDescriptorGitRemove(
+  GitDir gd,
+  List<String> filePaths,
+  String commitMsg,
+) async {
+  await _doDescriptorDepopulate(gd.path, filePaths);
+
+  // now add the deleted file
+  await gd.runCommand(['add', '--all']);
+
+  // now commit these silly files
+  final args = [
+    'commit',
+    '--cleanup=verbatim',
+    '--no-edit',
+    '--allow-empty-message'
+  ];
+  if (commitMsg.isNotEmpty) {
+    args.addAll(['-m', commitMsg]);
+  }
+
+  return gd.runCommand(args);
+}
+
 Future _doDescriptorGitCommit(
   GitDir gd,
   Map<String, String> contents,
@@ -295,6 +461,17 @@ Future _doDescriptorGitCommit(
   }
 
   return gd.runCommand(args);
+}
+
+Future _doDescriptorDepopulate(
+  String dirPath,
+  List<String> filePaths,
+) async {
+  for (final filePath in filePaths) {
+    final fullPath = p.join(dirPath, filePath);
+    final file = File(fullPath);
+    await file.delete(recursive: true);
+  }
 }
 
 Future _doDescriptorPopulate(

@@ -314,16 +314,12 @@ index dc6009e..0000000
   }) async {
     final args = ['diff'];
 
-    if (base != null) {
-      args.add(base);
-    }
-
-    if (base != null || ref != null) {
-      args.add('...');
-    }
-
-    if (ref != null) {
-      args.add(ref);
+    if (base != null && ref != null) {
+      args.add('$base...$ref');
+    } else if (base != null) {
+      args.add('$base...');
+    } else if (ref != null) {
+      args.add('...$ref');
     }
 
     args
@@ -333,8 +329,7 @@ index dc6009e..0000000
     final pr = await runCommand(args);
     // TODO no error handling here
 
-    var diff = pr.stdout as String;
-    diff = testText;
+    final diff = pr.stdout as String;
 
     DiffHeader _parseHeader(String fileDiff) {
       // Header might look like this:
@@ -357,13 +352,15 @@ index dc6009e..0000000
     DiffHunkRange _parseHunkRange(
       RegExpMatch match,
     ) {
+      final startLineGroup = match.group(1);
+      final numberOfLinesGroup = match.group(2);
       // Skip the sign, since otherwise the line number will be parsed to a
       // negative number for the base start line
-      final startLineString = match.group(1)!.substring(1);
+      final startLineString = startLineGroup!.substring(1);
 
       late String numberOfLinesString;
-      if (match.groupCount == 3) {
-        numberOfLinesString = match.group(2)!.substring(1);
+      if (numberOfLinesGroup != null) {
+        numberOfLinesString = numberOfLinesGroup.substring(1);
       } else {
         // This group will not exists if the number of lines are omitted
         // which happens when the number of lines is 1
@@ -383,13 +380,18 @@ index dc6009e..0000000
     }) {
       final baseHunk = _parseHunkRange(baseHunkMatch);
       final refHunk = _parseHunkRange(refHunkMatch);
-      final content = baseHunkMatch.input.substring(
-        baseHunkMatch.start,
-        nextHunkStart,
-      );
+      final content = baseHunkMatch.input
+          .substring(
+            baseHunkMatch.start,
+            nextHunkStart,
+          )
+          .replaceAll(
+            '\\ No newline at end of file\n',
+            '',
+          );
       return DiffHunk(
-        baseHunk: baseHunk,
-        refHunk: refHunk,
+        baseRange: baseHunk,
+        refRange: refHunk,
         content: content,
       );
     }
@@ -435,7 +437,6 @@ index dc6009e..0000000
       return FileDiff(
         pathBase: header.baseFile,
         pathRef: header.refFile,
-        diff: fileDiff,
         hunks: hunks,
       );
     }
