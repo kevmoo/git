@@ -77,7 +77,7 @@ void main() {
           equals(
             [
               FileDiff(
-                pathRef: '/test.txt',
+                refPath: '/test.txt',
                 hunks: [
                   const DiffHunk(
                     baseRange: DiffHunkRange(
@@ -134,7 +134,7 @@ void main() {
         equals(
           [
             FileDiff(
-              pathBase: '/test.txt',
+              basePath: '/test.txt',
               hunks: [
                 const DiffHunk(
                   baseRange: DiffHunkRange(

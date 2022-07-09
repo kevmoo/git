@@ -435,8 +435,8 @@ index dc6009e..0000000
       final header = _parseHeader(fileDiff);
       final hunks = _parseHunks(fileDiff).toList();
       return FileDiff(
-        pathBase: header.baseFile,
-        pathRef: header.refFile,
+        basePath: header.baseFile,
+        refPath: header.refFile,
         hunks: hunks,
       );
     }

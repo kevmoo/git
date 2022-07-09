@@ -3,28 +3,28 @@ import 'package:collection/collection.dart';
 import 'diff_hunk.dart';
 
 class FileDiff {
-  final String? pathBase;
-  final String? pathRef;
+  final String? basePath;
+  final String? refPath;
   final List<DiffHunk> hunks;
 
   FileDiff({
     required this.hunks,
-    this.pathBase,
-    this.pathRef,
+    this.basePath,
+    this.refPath,
   });
 
-  bool get isNew => pathBase == null && pathRef != null;
-  bool get isRemoved => pathBase != null && pathRef == null;
+  bool get isNew => basePath == null && refPath != null;
+  bool get isRemoved => basePath != null && refPath == null;
   bool get isRenamed =>
-      pathBase != pathRef && pathBase != null && pathRef != null;
+      basePath != refPath && basePath != null && refPath != null;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is FileDiff &&
           runtimeType == other.runtimeType &&
-          pathBase == other.pathBase &&
-          pathRef == other.pathRef &&
+          basePath == other.basePath &&
+          refPath == other.refPath &&
           const DeepCollectionEquality().equals(
             hunks,
             other.hunks,
@@ -32,12 +32,12 @@ class FileDiff {
 
   @override
   int get hashCode => Object.hash(
-        pathBase,
-        pathRef,
+        basePath,
+        refPath,
         const DeepCollectionEquality().hash(hunks),
       );
 
   @override
-  String toString() => '$FileDiff(pathBase: $pathBase, pathRef: $pathRef, '
+  String toString() => '$FileDiff(basePath: $basePath, refPath: $refPath, '
       'hunks: $hunks)';
 }
