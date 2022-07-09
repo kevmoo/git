@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:git/git.dart';
 import 'package:git/src/bot.dart';
-import 'package:git/src/diff_hunk.dart';
+import 'package:git/src/hunk.dart';
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 import 'package:test_descriptor/test_descriptor.dart' as d;
@@ -79,12 +79,12 @@ void main() {
               FileDiff(
                 refPath: '/test.txt',
                 hunks: [
-                  const DiffHunk(
-                    baseRange: DiffHunkRange(
+                  const Hunk(
+                    baseRange: HunkRange(
                       startLine: 0,
                       numberOfLines: 0,
                     ),
-                    refRange: DiffHunkRange(
+                    refRange: HunkRange(
                       startLine: 1,
                       numberOfLines: 1,
                     ),
@@ -135,12 +135,12 @@ void main() {
               FileDiff(
                 basePath: '/test.txt',
                 hunks: [
-                  const DiffHunk(
-                    baseRange: DiffHunkRange(
+                  const Hunk(
+                    baseRange: HunkRange(
                       startLine: 1,
                       numberOfLines: 1,
                     ),
-                    refRange: DiffHunkRange(
+                    refRange: HunkRange(
                       startLine: 0,
                       numberOfLines: 0,
                     ),
@@ -194,12 +194,12 @@ void main() {
                 refPath: '/test.md',
                 basePath: '/test.md',
                 hunks: [
-                  const DiffHunk(
-                    baseRange: DiffHunkRange(
+                  const Hunk(
+                    baseRange: HunkRange(
                       startLine: 1,
                       numberOfLines: 1,
                     ),
-                    refRange: DiffHunkRange(
+                    refRange: HunkRange(
                       startLine: 1,
                       numberOfLines: 1,
                     ),
@@ -255,12 +255,12 @@ line 2:y''',
                 refPath: '/test.md',
                 basePath: '/test.md',
                 hunks: [
-                  const DiffHunk(
-                    baseRange: DiffHunkRange(
+                  const Hunk(
+                    baseRange: HunkRange(
                       startLine: 1,
                       numberOfLines: 2,
                     ),
-                    refRange: DiffHunkRange(
+                    refRange: HunkRange(
                       startLine: 1,
                       numberOfLines: 2,
                     ),

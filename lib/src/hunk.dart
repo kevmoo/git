@@ -1,5 +1,5 @@
-class DiffHunkRange {
-  const DiffHunkRange({
+class HunkRange {
+  const HunkRange({
     required this.startLine,
     required this.numberOfLines,
   });
@@ -10,7 +10,7 @@ class DiffHunkRange {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is DiffHunkRange &&
+      other is HunkRange &&
           runtimeType == other.runtimeType &&
           startLine == other.startLine &&
           numberOfLines == other.numberOfLines;
@@ -23,24 +23,24 @@ class DiffHunkRange {
 
   @override
   String toString() =>
-      '$DiffHunkRange(startLine: $startLine, numberOfLines: $numberOfLines)';
+      '$HunkRange(startLine: $startLine, numberOfLines: $numberOfLines)';
 }
 
-class DiffHunk {
-  const DiffHunk({
+class Hunk {
+  const Hunk({
     required this.baseRange,
     required this.refRange,
     required this.content,
   });
 
-  final DiffHunkRange baseRange;
-  final DiffHunkRange refRange;
+  final HunkRange baseRange;
+  final HunkRange refRange;
   final String content;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is DiffHunk &&
+      other is Hunk &&
           runtimeType == other.runtimeType &&
           baseRange == other.baseRange &&
           refRange == other.refRange &&
@@ -54,6 +54,6 @@ class DiffHunk {
       );
 
   @override
-  String toString() => '$DiffHunk(baseRange: $baseRange, refRange: $refRange, '
+  String toString() => '$Hunk(baseRange: $baseRange, refRange: $refRange, '
       'content: $content)';
 }

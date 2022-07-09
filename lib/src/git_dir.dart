@@ -8,9 +8,9 @@ import 'branch_reference.dart';
 import 'commit.dart';
 import 'commit_reference.dart';
 import 'diff_header.dart';
-import 'diff_hunk.dart';
 import 'file_diff.dart';
 import 'git_error.dart';
+import 'hunk.dart';
 import 'tag.dart';
 import 'top_level.dart';
 import 'tree_entry.dart';
@@ -276,7 +276,7 @@ class GitDir {
       );
     }
 
-    DiffHunkRange _parseHunkRange(
+    HunkRange _parseHunkRange(
       RegExpMatch match,
     ) {
       final startLineGroup = match.group(1);
@@ -294,13 +294,13 @@ class GitDir {
         numberOfLinesString = 1.toString();
       }
 
-      return DiffHunkRange(
+      return HunkRange(
         startLine: int.parse(startLineString),
         numberOfLines: int.parse(numberOfLinesString),
       );
     }
 
-    DiffHunk _parseHunk({
+    Hunk _parseHunk({
       required RegExpMatch baseHunkMatch,
       required RegExpMatch refHunkMatch,
       required int? nextHunkStart,
@@ -316,14 +316,14 @@ class GitDir {
             '\\ No newline at end of file\n',
             '',
           );
-      return DiffHunk(
+      return Hunk(
         baseRange: baseHunk,
         refRange: refHunk,
         content: content,
       );
     }
 
-    Iterable<DiffHunk> _parseHunks(String fileDiff) sync* {
+    Iterable<Hunk> _parseHunks(String fileDiff) sync* {
       // Hunk might look like this:
       // @@ -54,6 +54,10 @@ class HotReload extends StatelessWidget {
       //                        name: 'FAB',

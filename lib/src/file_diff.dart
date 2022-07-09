@@ -1,11 +1,11 @@
 import 'package:collection/collection.dart';
 
-import 'diff_hunk.dart';
+import 'hunk.dart';
 
 class FileDiff {
   final String? basePath;
   final String? refPath;
-  final List<DiffHunk> hunks;
+  final List<Hunk> hunks;
 
   FileDiff({
     required this.hunks,
