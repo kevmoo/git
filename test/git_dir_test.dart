@@ -43,7 +43,7 @@ void main() {
     );
 
     test(
-      'on new file returns [$FileDiff]',
+      'on new file returns [@@ -0,0 +1 @@]',
       () async {
         const initialMasterBranchContent = {
           'master.md': 'test file',
@@ -97,63 +97,188 @@ void main() {
         );
       },
     );
-  });
 
-  test(
-    'on deleted file returns [$FileDiff]',
-    () async {
-      const initialMasterBranchContent = {
-        'test.txt': 'test',
-      };
+    test(
+      'on deleted file returns [@@ -1 +0,0 @@]',
+      () async {
+        const initialMasterBranchContent = {
+          'test.txt': 'test',
+        };
 
-      final gitDir = await _createTempGitDir();
+        final gitDir = await _createTempGitDir();
 
-      await _doDescriptorGitCommit(
-        gitDir,
-        initialMasterBranchContent,
-        'master files',
-      );
+        await _doDescriptorGitCommit(
+          gitDir,
+          initialMasterBranchContent,
+          'master files',
+        );
 
-      await _doDescriptorGitRemove(
-        gitDir,
-        [
-          'test.txt',
-        ],
-        'test',
-      );
-
-      final commits = await gitDir.commits();
-
-      final diffs = await gitDir.diff(
-        base: commits.keys.last,
-        ref: commits.keys.first,
-      );
-
-      expect(
-        diffs,
-        equals(
+        await _doDescriptorGitRemove(
+          gitDir,
           [
-            FileDiff(
-              basePath: '/test.txt',
-              hunks: [
-                const DiffHunk(
-                  baseRange: DiffHunkRange(
-                    startLine: 1,
-                    numberOfLines: 1,
-                  ),
-                  refRange: DiffHunkRange(
-                    startLine: 0,
-                    numberOfLines: 0,
-                  ),
-                  content: '@@ -1 +0,0 @@\n-test\n',
-                ),
-              ],
-            ),
+            'test.txt',
           ],
-        ),
-      );
-    },
-  );
+          'test',
+        );
+
+        final commits = await gitDir.commits();
+
+        final diffs = await gitDir.diff(
+          base: commits.keys.last,
+          ref: commits.keys.first,
+        );
+
+        expect(
+          diffs,
+          equals(
+            [
+              FileDiff(
+                basePath: '/test.txt',
+                hunks: [
+                  const DiffHunk(
+                    baseRange: DiffHunkRange(
+                      startLine: 1,
+                      numberOfLines: 1,
+                    ),
+                    refRange: DiffHunkRange(
+                      startLine: 0,
+                      numberOfLines: 0,
+                    ),
+                    content: '@@ -1 +0,0 @@\n-test\n',
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    test(
+      'on line change returns [@@ -1 +1 @@]',
+      () async {
+        const initialMasterBranchContent = {
+          'test.md': 'line 1',
+        };
+
+        final gitDir = await _createTempGitDir();
+
+        await _doDescriptorGitCommit(
+          gitDir,
+          initialMasterBranchContent,
+          'not important',
+        );
+
+        const updatedMasterBranchContent = {
+          'test.md': 'line 2',
+        };
+
+        await _doDescriptorGitCommit(
+          gitDir,
+          updatedMasterBranchContent,
+          'not important',
+        );
+
+        final commits = await gitDir.commits();
+
+        final diffs = await gitDir.diff(
+          base: commits.keys.last,
+          ref: commits.keys.first,
+        );
+
+        expect(
+          diffs,
+          equals(
+            [
+              FileDiff(
+                refPath: '/test.md',
+                basePath: '/test.md',
+                hunks: [
+                  const DiffHunk(
+                    baseRange: DiffHunkRange(
+                      startLine: 1,
+                      numberOfLines: 1,
+                    ),
+                    refRange: DiffHunkRange(
+                      startLine: 1,
+                      numberOfLines: 1,
+                    ),
+                    content: '@@ -1 +1 @@\n-line 1\n+line 2\n',
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    test(
+      'on multiline change returns [@@ -1,2 +1,2 @@]',
+      () async {
+        const initialMasterBranchContent = {
+          'test.md': '''line 1:a
+line 2:b''',
+        };
+
+        final gitDir = await _createTempGitDir();
+
+        await _doDescriptorGitCommit(
+          gitDir,
+          initialMasterBranchContent,
+          'not important',
+        );
+
+        const updatedMasterBranchContent = {
+          'test.md': '''line 1:z
+line 2:y''',
+        };
+
+        await _doDescriptorGitCommit(
+          gitDir,
+          updatedMasterBranchContent,
+          'not important',
+        );
+
+        final commits = await gitDir.commits();
+
+        final diffs = await gitDir.diff(
+          base: commits.keys.last,
+          ref: commits.keys.first,
+        );
+
+        expect(
+          diffs,
+          equals(
+            [
+              FileDiff(
+                refPath: '/test.md',
+                basePath: '/test.md',
+                hunks: [
+                  const DiffHunk(
+                    baseRange: DiffHunkRange(
+                      startLine: 1,
+                      numberOfLines: 2,
+                    ),
+                    refRange: DiffHunkRange(
+                      startLine: 1,
+                      numberOfLines: 2,
+                    ),
+                    content: '''@@ -1,2 +1,2 @@
+-line 1:a
+-line 2:b
++line 1:z
++line 2:y
+''',
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  });
 
   test('populateBranch', _testPopulateBranch);
 
