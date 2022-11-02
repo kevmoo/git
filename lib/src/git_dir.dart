@@ -252,8 +252,6 @@ class GitDir {
     Iterable<String> args, {
     bool throwOnError = true,
   }) {
-    ArgumentError.checkNotNull(args, 'args');
-
     final list = args.toList();
 
     for (final arg in list) {

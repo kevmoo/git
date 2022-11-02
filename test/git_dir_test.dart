@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:git/git.dart';
-import 'package:git/src/bot.dart';
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 import 'package:test_descriptor/test_descriptor.dart' as d;
@@ -10,7 +9,7 @@ import 'package:test_descriptor/test_descriptor.dart' as d;
 void main() {
   test('populateBranch', _testPopulateBranch);
 
-  test('getCommits', _testGetCommits);
+  test('getCommits', _testGetCommits, onPlatform: const {'windows': Skip()});
 
   test('createOrUpdateBranch', () async {
     const initialMasterBranchContent = {
@@ -105,8 +104,8 @@ void main() {
           );
 
           expect(
-            gitDir.path,
-            d.sandbox,
+            p.canonicalize(gitDir.path),
+            p.canonicalize(d.sandbox),
             reason: 'The created `GitDir` will point to the root.',
           );
         });
@@ -196,7 +195,7 @@ void main() {
 }
 
 Future<void> _testGetCommits() async {
-  const commitText = [
+  final commitText = [
     '',
     ' \t leading white space is okay, too',
     'first',
@@ -234,38 +233,33 @@ Future<void> _testGetCommits() async {
 
   final commitMessages = commitText.map(msgFromText).toList();
 
-  final indexMap = <int, Tuple<String, Commit>>{};
+  final indexMap = <int, MapEntry<String, Commit>>{};
 
-  commits.forEach((commitSha, commit) {
+  for (var entry in commits.entries) {
     // index into the text for the message of this commit
-    late int commitMessageIndex;
-    for (var i = 0; i < commitMessages.length; i++) {
-      if (commitMessages[i] == commit.message) {
-        commitMessageIndex = i;
-        break;
-      }
-    }
+    final commitMessageIndex =
+        commitMessages.indexWhere((element) => element == entry.value.message);
 
     expect(
       commitMessageIndex,
-      isNotNull,
+      greaterThanOrEqualTo(0),
       reason: 'a matching message should be found',
     );
 
     expect(indexMap, isNot(contains(commitMessageIndex)));
-    indexMap[commitMessageIndex] = Tuple(commitSha, commit);
-  });
+    indexMap[commitMessageIndex] = MapEntry(entry.key, entry.value);
+  }
 
-  indexMap.forEach((index, shaCommitTuple) {
-    if (index > 0) {
+  for (var entry in indexMap.entries) {
+    if (entry.key > 0) {
       expect(
-        shaCommitTuple.item2.parents,
-        unorderedEquals([indexMap[index - 1]!.item1]),
+        entry.value.value.parents,
+        unorderedEquals([indexMap[entry.key - 1]!.key]),
       );
     } else {
-      expect(shaCommitTuple.item2.parents, hasLength(0));
+      expect(entry.value.value.parents, hasLength(0));
     }
-  });
+  }
 }
 
 Future<void> _doDescriptorGitCommit(
@@ -371,7 +365,7 @@ void _testPopulateBranchEmpty(GitDir gitDir, String branchName) {
   );
 }
 
-Future<Tuple<Commit?, int>> _testPopulateBranchCore(
+Future<MapEntry<Commit?, int>> _testPopulateBranchCore(
   GitDir gitDir,
   String branchName,
   Map<String, String> contents,
@@ -401,7 +395,7 @@ Future<Tuple<Commit?, int>> _testPopulateBranchCore(
       commitMessage,
     );
 
-    return Tuple(commit, originalCommitCount);
+    return MapEntry(commit, originalCommitCount);
   } finally {
     if (tempDir != null) {
       expect(tempDir!.existsSync(), false);
@@ -423,8 +417,8 @@ Future<void> _testPopulateBranchWithContent(
     commitMessage,
   );
 
-  final returnedCommit = pair.item1!;
-  final originalCommitCount = pair.item2;
+  final returnedCommit = pair.key!;
+  final originalCommitCount = pair.value;
 
   if (originalCommitCount == 0) {
     expect(
@@ -472,8 +466,8 @@ Future<void> _testPopulateBranchWithDupeContent(
     commitMessage,
   );
 
-  final returnedCommit = pair.item1;
-  final originalCommitCount = pair.item2;
+  final returnedCommit = pair.key;
+  final originalCommitCount = pair.value;
 
   expect(returnedCommit, isNull);
   expect(

@@ -25,7 +25,6 @@ void requireArgumentContainsPattern(
   String argValue,
   String argName,
 ) {
-  ArgumentError.checkNotNull(argValue, argName);
   if (!argValue.contains(pattern)) {
     throw ArgumentError.value(
       argValue,
@@ -49,33 +48,12 @@ class _InvalidOperationError implements Exception {
   const _InvalidOperationError([this.message = '']);
 }
 
-class Tuple<T1, T2> {
-  final T1 item1;
-  final T2 item2;
-
-  const Tuple(this.item1, this.item2);
-
-  @override
-  bool operator ==(Object other) =>
-      other is Tuple && item1 == other.item1 && item2 == other.item2;
-
-  @override
-  String toString() => '{item1: $item1, item2: $item2}';
-
-  @override
-  int get hashCode => item1.hashCode ^ 37 * item2.hashCode;
-
-  dynamic toJson() => {'item1': item1, 'item2': item2};
-}
-
 class StringLineReader {
   final String source;
 
   int? _position = 0;
 
-  StringLineReader(this.source) {
-    ArgumentError.checkNotNull(source, 'source');
-  }
+  StringLineReader(this.source);
 
   int? get position => _position;
 
