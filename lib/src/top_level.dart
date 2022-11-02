@@ -6,6 +6,7 @@ import 'util.dart';
 // ignore: prefer_interpolation_to_compose_strings
 final _shaRegEx = RegExp('^' + shaRegexPattern + r'$');
 
+/// Returns `true` if [value] represents a valid SHA1 [String].
 bool isValidSha(String value) => _shaRegEx.hasMatch(value);
 
 /// Run `git` with the provided [arguments].
@@ -13,6 +14,9 @@ bool isValidSha(String value) => _shaRegEx.hasMatch(value);
 /// If [echoOutput] is `true`, the output of the `git` command will be echoed.
 /// Note: [echoOutput] `true` will also cause the returned [ProcessResult] to
 /// have `null` values for [ProcessResult.stdout] and [ProcessResult.stderr].
+///
+/// Use [processWorkingDir] to set the working directory for the created Git
+/// process. If omitted or `null`, the default ([Directory.current]) is used.
 Future<ProcessResult> runGit(
   List<String> arguments, {
   bool throwOnError = true,

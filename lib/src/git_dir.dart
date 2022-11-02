@@ -13,10 +13,10 @@ import 'top_level.dart';
 import 'tree_entry.dart';
 import 'util.dart';
 
+/// Represents a local directory
 class GitDir {
   static const _workTreeArg = '--work-tree=';
   static const _gitDirArg = '--git-dir=';
-  static final RegExp _shaRegExp = RegExp(r'^[a-f0-9]{40}$');
 
   final String _path;
   final String? _gitWorkTree;
@@ -240,7 +240,7 @@ class GitDir {
     final val = (pr.stdout as String).trim();
     final shas = val.split(RegExp(r'\s+'));
     assert(shas.length == paths.length);
-    assert(shas.every(_shaRegExp.hasMatch));
+    assert(shas.every(isValidSha));
     final map = <String, String>{};
     for (var i = 0; i < shas.length; i++) {
       map[paths[i]] = shas[i];
