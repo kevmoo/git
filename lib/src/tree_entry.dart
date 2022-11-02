@@ -4,8 +4,8 @@ import 'bot.dart';
 import 'util.dart';
 
 const _lsTreeLine =
-// ignore: prefer_interpolation_to_compose_strings
-    r'^([0-9]{6}) (blob|tree) (' + shaRegexPattern + ')\t(\\S.*\\S)\$';
+    // ignore: prefer_interpolation_to_compose_strings
+    '^([0-9]{6}) (blob|tree) (' + shaRegexPattern + ')\t(\\S.*\\S)\$';
 
 class TreeEntry {
   static final _lsTreeRegEx = RegExp(_lsTreeLine);
@@ -45,9 +45,6 @@ class TreeEntry {
   static List<TreeEntry> fromLsTreeOutput(String output) {
     final lines = const LineSplitter().convert(output);
 
-    return lines
-        .sublist(0, lines.length)
-        .map((line) => TreeEntry.fromLsTree(line))
-        .toList();
+    return lines.sublist(0, lines.length).map(TreeEntry.fromLsTree).toList();
   }
 }

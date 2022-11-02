@@ -4,14 +4,21 @@ import 'dart:io';
 import 'util.dart';
 
 // ignore: prefer_interpolation_to_compose_strings
-final _shaRegEx = RegExp(r'^' + shaRegexPattern + r'$');
+final _shaRegEx = RegExp('^' + shaRegexPattern + r'$');
 
 bool isValidSha(String value) => _shaRegEx.hasMatch(value);
 
-Future<ProcessResult> runGit(List<String> args,
-    {bool throwOnError = true, String? processWorkingDir}) async {
-  final pr = await Process.run('git', args,
-      workingDirectory: processWorkingDir, runInShell: true);
+Future<ProcessResult> runGit(
+  List<String> args, {
+  bool throwOnError = true,
+  String? processWorkingDir,
+}) async {
+  final pr = await Process.run(
+    'git',
+    args,
+    workingDirectory: processWorkingDir,
+    runInShell: true,
+  );
 
   if (throwOnError) {
     _throwIfProcessFailed(pr, 'git', args);
@@ -20,7 +27,10 @@ Future<ProcessResult> runGit(List<String> args,
 }
 
 void _throwIfProcessFailed(
-    ProcessResult pr, String process, List<String> args) {
+  ProcessResult pr,
+  String process,
+  List<String> args,
+) {
   if (pr.exitCode != 0) {
     final values = {
       'Standard out': pr.stdout.toString().trim(),

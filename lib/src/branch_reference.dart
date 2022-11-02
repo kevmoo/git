@@ -1,6 +1,6 @@
 import 'commit_reference.dart';
 
-const _localBranchPrefix = r'refs/heads/';
+const _localBranchPrefix = 'refs/heads/';
 
 class BranchReference extends CommitReference {
   /// The name of the associated branch.
@@ -22,8 +22,7 @@ class BranchReference extends CommitReference {
     return BranchReference._internal(sha, reference, branchName);
   }
 
-  BranchReference._internal(String sha, String reference, this.branchName)
-      : super(sha, reference);
+  BranchReference._internal(super.sha, super.reference, this.branchName);
 
   /// Returns `true` if the current checked out commit is in a detached head
   /// state.
