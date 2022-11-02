@@ -23,7 +23,7 @@ jobs:
         sdk: [dev, 2.18.0]
     steps:
       - uses: actions/checkout@v2
-      - uses: dart-lang/setup-dart@v1.0
+      - uses: dart-lang/setup-dart@v1.3
         with:
           sdk: ${{ matrix.sdk }}
       - id: install
@@ -50,7 +50,7 @@ jobs:
         sdk: [dev, 2.18.0]
     steps:
       - uses: actions/checkout@v2
-      - uses: dart-lang/setup-dart@v1.0
+      - uses: dart-lang/setup-dart@v1.3
         with:
           sdk: ${{ matrix.sdk }}
       - id: install
