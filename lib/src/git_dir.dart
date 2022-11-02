@@ -100,18 +100,23 @@ class GitDir {
 
   Future<BranchReference> currentBranch() async {
     var pr = await runCommand(
-        const ['rev-parse', '--verify', '--symbolic-full-name', 'HEAD']);
+      const ['rev-parse', '--verify', '--symbolic-full-name', 'HEAD'],
+    );
 
     pr = await runCommand(
-        ['show-ref', '--verify', (pr.stdout as String).trim()]);
+      ['show-ref', '--verify', (pr.stdout as String).trim()],
+    );
 
     return CommitReference.fromShowRefOutput(pr.stdout as String)
         .single
         .toBranchReference();
   }
 
-  Future<List<TreeEntry>> lsTree(String treeish,
-      {bool subTreesOnly = false, String? path}) async {
+  Future<List<TreeEntry>> lsTree(
+    String treeish, {
+    bool subTreesOnly = false,
+    String? path,
+  }) async {
     final args = ['ls-tree'];
 
     if (subTreesOnly == true) {
@@ -132,7 +137,10 @@ class GitDir {
   ///
   /// `null` if the branch is not updated.
   Future<String?> createOrUpdateBranch(
-      String branchName, String treeSha, String commitMessage) async {
+    String branchName,
+    String treeSha,
+    String commitMessage,
+  ) async {
     requireArgumentNotNullOrEmpty(branchName, 'branchName');
     requireArgumentValidSha1(treeSha, 'treeSha');
 
@@ -165,14 +173,20 @@ class GitDir {
   ///
   /// `null` if the branch is not updated.
   Future<String?> _updateBranch(
-      String targetBranchSha, String treeSha, String commitMessage) async {
+    String targetBranchSha,
+    String treeSha,
+    String commitMessage,
+  ) async {
     final commitObj = await commitFromRevision(targetBranchSha);
     if (commitObj.treeSha == treeSha) {
       return null;
     }
 
-    return commitTree(treeSha, commitMessage,
-        parentCommitShas: [targetBranchSha]);
+    return commitTree(
+      treeSha,
+      commitMessage,
+      parentCommitShas: [targetBranchSha],
+    );
   }
 
   /// Returns the `SHA1` for the new commit.
@@ -186,8 +200,11 @@ class GitDir {
     requireArgumentValidSha1(treeSha, 'treeSha');
 
     requireArgumentNotNullOrEmpty(commitMessage, 'commitMessage');
-    requireArgument(commitMessage.trim() == commitMessage, 'commitMessage',
-        'Value cannot start or end with whitespace.');
+    requireArgument(
+      commitMessage.trim() == commitMessage,
+      'commitMessage',
+      'Value cannot start or end with whitespace.',
+    );
 
     parentCommitShas ??= [];
 
@@ -242,17 +259,26 @@ class GitDir {
     for (final arg in list) {
       requireArgumentNotNullOrEmpty(arg, 'args');
       requireArgument(
-          !arg.contains(_workTreeArg), 'args', 'Cannot contain $_workTreeArg');
+        !arg.contains(_workTreeArg),
+        'args',
+        'Cannot contain $_workTreeArg',
+      );
       requireArgument(
-          !arg.contains(_gitDirArg), 'args', 'Cannot contain $_gitDirArg');
+        !arg.contains(_gitDirArg),
+        'args',
+        'Cannot contain $_gitDirArg',
+      );
     }
 
     if (_gitWorkTree != null) {
       list.insert(0, '$_workTreeArg$_gitWorkTree');
     }
 
-    return runGit(list,
-        throwOnError: throwOnError, processWorkingDir: _processWorkingDir);
+    return runGit(
+      list,
+      throwOnError: throwOnError,
+      processWorkingDir: _processWorkingDir,
+    );
   }
 
   Future<bool> isWorkingTreeClean() => runCommand(['status', '--porcelain'])
@@ -272,7 +298,7 @@ class GitDir {
   /// If no content is added to the directory, an error is thrown.
   Future<Commit?> updateBranch(
     String branchName,
-    Future Function(Directory td) populater,
+    Future<void> Function(Directory td) populater,
     String commitMessage,
   ) async {
     // TODO: ponder restricting branch names
@@ -286,7 +312,10 @@ class GitDir {
     try {
       await populater(tempContentRoot);
       final commit = await updateBranchWithDirectoryContents(
-          branchName, tempContentRoot.path, commitMessage);
+        branchName,
+        tempContentRoot.path,
+        commitMessage,
+      );
       return commit;
     } finally {
       await tempContentRoot.delete(recursive: true);
@@ -394,8 +423,10 @@ class GitDir {
   }) async {
     final path = p.absolute(gitDirRoot);
 
-    final pr = await runGit(['rev-parse', '--git-dir'],
-        processWorkingDir: path.toString());
+    final pr = await runGit(
+      ['rev-parse', '--git-dir'],
+      processWorkingDir: path.toString(),
+    );
 
     var returnedPath = (pr.stdout as String).trim();
 
@@ -438,8 +469,11 @@ class GitDir {
 
     // using rev-parse because it will fail in many scenarios
     // including if the directory provided is a bare repository
-    final pr = await runGit(['rev-parse'],
-        throwOnError: false, processWorkingDir: dir.path);
+    final pr = await runGit(
+      ['rev-parse'],
+      throwOnError: false,
+      processWorkingDir: dir.path,
+    );
 
     return pr.exitCode == 0;
   }

@@ -195,7 +195,7 @@ void main() {
   });
 }
 
-Future _testGetCommits() async {
+Future<void> _testGetCommits() async {
   const commitText = [
     '',
     ' \t leading white space is okay, too',
@@ -268,7 +268,7 @@ Future _testGetCommits() async {
   });
 }
 
-Future _doDescriptorGitCommit(
+Future<void> _doDescriptorGitCommit(
   GitDir gd,
   Map<String, String> contents,
   String commitMsg,
@@ -289,11 +289,13 @@ Future _doDescriptorGitCommit(
     args.addAll(['-m', commitMsg]);
   }
 
-  return gd.runCommand(args);
+  await gd.runCommand(args);
 }
 
-Future _doDescriptorPopulate(
-    String dirPath, Map<String, String> contents) async {
+Future<void> _doDescriptorPopulate(
+  String dirPath,
+  Map<String, String> contents,
+) async {
   for (var name in contents.keys) {
     final value = contents[name]!;
 
@@ -305,7 +307,7 @@ Future _doDescriptorPopulate(
   }
 }
 
-Future _testPopulateBranch() async {
+Future<void> _testPopulateBranch() async {
   const initialMasterBranchContent = {'master.md': 'test file'};
 
   const testContent1 = {
@@ -370,10 +372,11 @@ void _testPopulateBranchEmpty(GitDir gitDir, String branchName) {
 }
 
 Future<Tuple<Commit?, int>> _testPopulateBranchCore(
-    GitDir gitDir,
-    String branchName,
-    Map<String, String> contents,
-    String commitMessage) async {
+  GitDir gitDir,
+  String branchName,
+  Map<String, String> contents,
+  String commitMessage,
+) async {
   // figure out how many commits exist for the provided branch
   final branchRef = await gitDir.branchReference(branchName);
 
@@ -406,8 +409,12 @@ Future<Tuple<Commit?, int>> _testPopulateBranchCore(
   }
 }
 
-Future _testPopulateBranchWithContent(GitDir gitDir, String branchName,
-    Map<String, String> contents, String commitMessage) async {
+Future<void> _testPopulateBranchWithContent(
+  GitDir gitDir,
+  String branchName,
+  Map<String, String> contents,
+  String commitMessage,
+) async {
   // figure out how many commits exist for the provided branch
   final pair = await _testPopulateBranchCore(
     gitDir,
@@ -451,8 +458,12 @@ Future _testPopulateBranchWithContent(GitDir gitDir, String branchName,
   expect(newCommitCount, originalCommitCount + 1);
 }
 
-Future _testPopulateBranchWithDupeContent(GitDir gitDir, String branchName,
-    Map<String, String> contents, String commitMessage) async {
+Future<void> _testPopulateBranchWithDupeContent(
+  GitDir gitDir,
+  String branchName,
+  Map<String, String> contents,
+  String commitMessage,
+) async {
   // figure out how many commits exist for the provided branch
   final pair = await _testPopulateBranchCore(
     gitDir,
