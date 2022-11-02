@@ -1,6 +1,7 @@
 ## 2.1.0-dev
 
 - Require Dart 2.18
+- Added `echoOutput` parameter to `runGit`.
 
 ## 2.0.0
 

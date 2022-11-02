@@ -8,22 +8,42 @@ final _shaRegEx = RegExp('^' + shaRegexPattern + r'$');
 
 bool isValidSha(String value) => _shaRegEx.hasMatch(value);
 
+/// Run `git` with the provided [arguments].
+///
+/// If [echoOutput] is `true`, the output of the `git` command will be echoed.
+/// Note: [echoOutput] `true` will also cause the returned [ProcessResult] to
+/// have `null` values for [ProcessResult.stdout] and [ProcessResult.stderr].
 Future<ProcessResult> runGit(
-  List<String> args, {
+  List<String> arguments, {
   bool throwOnError = true,
+  bool echoOutput = false,
   String? processWorkingDir,
 }) async {
-  final pr = await Process.run(
+  final pr = await Process.start(
     'git',
-    args,
+    arguments,
     workingDirectory: processWorkingDir,
     runInShell: true,
+    mode: echoOutput ? ProcessStartMode.inheritStdio : ProcessStartMode.normal,
+  );
+
+  final results = await Future.wait([
+    pr.exitCode,
+    if (!echoOutput) pr.stdout.transform(const SystemEncoding().decoder).join(),
+    if (!echoOutput) pr.stderr.transform(const SystemEncoding().decoder).join(),
+  ]);
+
+  final result = ProcessResult(
+    pr.pid,
+    results[0] as int,
+    echoOutput ? null : results[1] as String,
+    echoOutput ? null : results[2] as String,
   );
 
   if (throwOnError) {
-    _throwIfProcessFailed(pr, 'git', args);
+    _throwIfProcessFailed(result, 'git', arguments);
   }
-  return pr;
+  return result;
 }
 
 void _throwIfProcessFailed(
@@ -33,8 +53,8 @@ void _throwIfProcessFailed(
 ) {
   if (pr.exitCode != 0) {
     final values = {
-      'Standard out': pr.stdout.toString().trim(),
-      'Standard error': pr.stderr.toString().trim()
+      if (pr.stdout != null) 'Standard out': pr.stdout.toString().trim(),
+      if (pr.stderr != null) 'Standard error': pr.stderr.toString().trim()
     }..removeWhere((k, v) => v.isEmpty);
 
     String message;
