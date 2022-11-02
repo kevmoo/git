@@ -18,4 +18,19 @@ void main() {
       ),
     );
   });
+
+  test('bad git command - echoOutput true', () async {
+    await expectLater(
+      runGit(['not-a-command'], echoOutput: true),
+      throwsA(
+        isA<ProcessException>()
+            .having(
+              (pe) => pe.message,
+              'message',
+              'Unknown error',
+            )
+            .having((pe) => pe.errorCode, 'errorCode', 1),
+      ),
+    );
+  });
 }
