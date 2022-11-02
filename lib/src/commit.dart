@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'bot.dart';
 import 'util.dart';
 
+/// Represents a Git commit object.
 class Commit {
   final String treeSha;
   final String author;
