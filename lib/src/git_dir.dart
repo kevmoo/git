@@ -248,9 +248,13 @@ class GitDir {
     return map;
   }
 
+  /// If [echoOutput] is `true`, the output of the `git` command will be echoed.
+  /// Note: [echoOutput] `true` will also cause the returned [ProcessResult] to
+  /// have `null` values for [ProcessResult.stdout] and [ProcessResult.stderr].
   Future<ProcessResult> runCommand(
     Iterable<String> args, {
     bool throwOnError = true,
+    bool echoOutput = false,
   }) {
     final list = args.toList();
 
@@ -276,6 +280,7 @@ class GitDir {
       list,
       throwOnError: throwOnError,
       processWorkingDir: _processWorkingDir,
+      echoOutput: echoOutput,
     );
   }
 
