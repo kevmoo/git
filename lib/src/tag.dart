@@ -14,7 +14,7 @@ class Tag {
     requireArgumentNotNullOrEmpty(tagger, 'tagger');
   }
 
-  static Tag parseCatFile(String content) {
+  static Tag parseCatFile(String content, String tagSha, String tagName) {
     final headers = <String, List<String>>{};
 
     final slr = StringLineReader(content);
@@ -32,10 +32,24 @@ class Tag {
       lastLine = slr.readNextLine()!;
     }
 
-    final objectSha = headers['object']!.single;
-    final type = headers['type']!.single;
-    final tag = headers['tag']!.single;
-    final tagger = headers['tagger']!.single;
+    String objectSha;
+    String type;
+    String tag;
+    String tagger;
+
+    if (headers['object'] != null) {
+      // Annotated Tag
+      objectSha = headers['object']!.single;
+      type = headers['type']!.single;
+      tag = headers['tag']!.single;
+      tagger = headers['tagger']!.single;
+    } else {
+      // Lightweight Tag
+      objectSha = tagSha;
+      type = 'lightweight';
+      tag = tagName;
+      tagger = headers['author']!.single;
+    }
 
     return Tag._internal(objectSha, type, tag, tagger);
   }

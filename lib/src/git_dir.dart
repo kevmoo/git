@@ -68,7 +68,11 @@ class GitDir {
 
     for (var ref in refs) {
       final pr = await runCommand(['cat-file', '-p', ref.sha]);
-      yield Tag.parseCatFile(pr.stdout as String);
+      yield Tag.parseCatFile(
+        pr.stdout as String,
+        ref.sha,
+        ref.reference.substring(10),
+      );
     }
   }
 
