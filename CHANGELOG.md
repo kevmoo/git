@@ -1,6 +1,7 @@
 ## 2.3.0-wip
 
 - Added support for lightweight tags.
+- Require Dart 3.2
 
 ## 2.2.1
 
