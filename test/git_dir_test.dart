@@ -335,7 +335,7 @@ Future<void> _testPopulateBranch() async {
     gd1,
     testBranchName,
     testContent2,
-    'second commit',
+    'second commit\n\nThis is some other content\nDoes this work?',
   );
 
   await _testPopulateBranchWithDupeContent(
@@ -349,7 +349,11 @@ Future<void> _testPopulateBranch() async {
     gd1,
     testBranchName,
     testContent1,
-    '3rd commit, content 1',
+    '''
+3rd commit, content 1
+
+With some new lines
+and more messages''',
   );
 
   _testPopulateBranchEmpty(gd1, testBranchName);

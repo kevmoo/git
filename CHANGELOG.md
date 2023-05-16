@@ -1,5 +1,6 @@
-## 2.2.1-dev
+## 2.2.1
 
+- Correctly handle multi-line commit messages on Windows.
 - Require Dart 2.19
 
 ## 2.2.0
