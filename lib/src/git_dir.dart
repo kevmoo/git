@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:path/path.dart' as p;
@@ -362,8 +363,34 @@ class GitDir {
         return null;
       }
 
-      // Time to commit.
-      await tempGitDir.runCommand(['commit', '--verbose', '-m', commitMessage]);
+      final args = [
+        'commit',
+        '--verbose',
+      ];
+
+      Directory? tmpDir;
+
+      if (LineSplitter.split(commitMessage).length > 1 && Platform.isWindows) {
+        tmpDir = Directory.systemTemp.createTempSync('pkg_git_');
+
+        final fileName = p.join(tmpDir.path, 'commit_message.txt');
+        File(fileName).writeAsStringSync(
+          commitMessage,
+          mode: FileMode.writeOnly,
+          flush: true,
+        );
+
+        args.addAll(['--file', fileName]);
+      } else {
+        args.addAll(['-m', commitMessage]);
+      }
+
+      try {
+        // Time to commit.
+        await tempGitDir.runCommand(args);
+      } finally {
+        tmpDir?.deleteSync(recursive: true);
+      }
 
       // --verbose is not strictly needed, but nice for debugging
       await tempGitDir
