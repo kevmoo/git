@@ -1,3 +1,7 @@
+## 2.2.1-dev
+
+- Require Dart 2.19
+
 ## 2.2.0
 
 - Added `echoOutput` parameter to `GitDir.runCommand`.
