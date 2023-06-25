@@ -58,7 +58,7 @@ void _throwIfProcessFailed(
   if (pr.exitCode != 0) {
     final values = {
       if (pr.stdout != null) 'Standard out': pr.stdout.toString().trim(),
-      if (pr.stderr != null) 'Standard error': pr.stderr.toString().trim()
+      if (pr.stderr != null) 'Standard error': pr.stderr.toString().trim(),
     }..removeWhere((k, v) => v.isEmpty);
 
     String message;

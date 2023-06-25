@@ -15,7 +15,7 @@ void main() {
     const initialMasterBranchContent = {
       'master.md': 'test file',
       'lib/foo.txt': 'lib foo text',
-      'lib/bar.txt': 'lib bar text'
+      'lib/bar.txt': 'lib bar text',
     };
 
     final gitDir = await _createTempGitDir();
@@ -134,7 +134,7 @@ void main() {
 
     final initialContentMap = {
       'file1.txt': 'content1',
-      'file2.txt': 'content2'
+      'file2.txt': 'content2',
     };
 
     await _doDescriptorPopulate(d.sandbox, initialContentMap);
@@ -165,7 +165,7 @@ void main() {
       const initialMasterBranchContent = {
         'master.md': 'test file',
         'lib/foo.txt': 'lib foo text',
-        'lib/bar.txt': 'lib bar text'
+        'lib/bar.txt': 'lib bar text',
       };
 
       final gitDir = await _createTempGitDir(branchName: 'master');
@@ -201,7 +201,7 @@ Future<void> _testGetCommits() async {
     'first',
     'second',
     'third',
-    'forth'
+    'forth',
   ];
 
   String msgFromText(String txt) {
@@ -277,7 +277,7 @@ Future<void> _doDescriptorGitCommit(
     'commit',
     '--cleanup=verbatim',
     '--no-edit',
-    '--allow-empty-message'
+    '--allow-empty-message',
   ];
   if (commitMsg.isNotEmpty) {
     args.addAll(['-m', commitMsg]);
@@ -307,13 +307,13 @@ Future<void> _testPopulateBranch() async {
   const testContent1 = {
     'file1.txt': 'file 1 contents',
     'file2.txt': 'file 2 contents',
-    'file3.txt': 'not around very long'
+    'file3.txt': 'not around very long',
   };
 
   const testContent2 = {
     'file1.txt': 'file 1 contents',
     'file2.txt': 'file 2 contents changed',
-    'file4.txt': 'sorry, file3'
+    'file4.txt': 'sorry, file3',
   };
 
   const testBranchName = 'the_test_branch';
