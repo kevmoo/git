@@ -234,7 +234,7 @@ class GitDir {
       '-w',
       '--no-filters',
       '--',
-      ...paths
+      ...paths,
     ];
 
     final pr = await runCommand(args);
@@ -486,7 +486,7 @@ class GitDir {
     await runGit([
       'init',
       source.path,
-      if (branchName != null) '--initial-branch=$branchName'
+      if (branchName != null) '--initial-branch=$branchName',
     ]);
 
     // does a bit more work than strictly necessary
