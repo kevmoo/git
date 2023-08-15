@@ -455,25 +455,52 @@ class GitDir {
 
     final pr = await runGit(
       ['rev-parse', '--git-dir'],
-      processWorkingDir: path.toString(),
+      processWorkingDir: path,
     );
+    final gitDirRaw = (pr.stdout as String).trim();
+    final gitDir = p.isAbsolute(gitDirRaw)
+        ? gitDirRaw
+        : p.canonicalize(p.join(path, gitDirRaw));
+    final gitRoot = p.dirname(gitDir);
 
-    var returnedPath = (pr.stdout as String).trim();
-
-    if (returnedPath == '.git') {
+    // `path` is the root of the git repo.
+    if (p.equals(path, gitRoot)) {
       return GitDir._raw(path);
     }
 
-    if (allowSubdirectory && p.basename(returnedPath) == '.git') {
-      returnedPath = p.dirname(returnedPath);
+    final commonDirOut = await runGit(
+      ['rev-parse', '--git-common-dir'],
+      processWorkingDir: path,
+    );
+    final commonDirRaw = (commonDirOut.stdout as String).trim();
+    final commonDir = p.isAbsolute(commonDirRaw)
+        ? commonDirRaw
+        : p.canonicalize(p.join(path, commonDirRaw));
+    final commonRoot = p.dirname(commonDir);
 
-      if (p.isWithin(returnedPath, path)) {
-        return GitDir._raw(returnedPath);
+    // When $GIT_DIR and $GIT_COMMON_DIR differ, we are in a worktree.
+    // https://git-scm.com/docs/git-worktree#_details
+    final isWorktree = !p.equals(gitDir, commonDir);
+
+    // `--show-prefix` returns the relative path from the git root to
+    // `path` when working in a subdirectory of a git repo or worktree.
+    // https://git-scm.com/docs/git-rev-parse#Documentation/git-rev-parse.txt---show-prefix
+    final prefixOutput = await runGit(
+      ['rev-parse', '--show-prefix'],
+      processWorkingDir: path,
+    );
+    final prefix = (prefixOutput.stdout as String).trim();
+
+    if (prefix.isNotEmpty) {
+      if (allowSubdirectory) {
+        return GitDir._raw(commonRoot, isWorktree ? path : null);
       }
+      throw ArgumentError('The provided value "$gitDirRoot" is not '
+          'the root of a git directory or worktree');
     }
 
-    throw ArgumentError('The provided value "$gitDirRoot" is not '
-        'the root of a git directory');
+    assert(isWorktree);
+    return GitDir._raw(commonRoot, path);
   }
 
   static Future<GitDir> _init(Directory source, {String? branchName}) async {

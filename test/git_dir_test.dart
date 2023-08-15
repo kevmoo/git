@@ -123,6 +123,71 @@ void main() {
       test('with allowContent:true fails', () {
         expect(GitDir.init(d.sandbox, allowContent: true), throwsArgumentError);
       });
+
+      group('worktree', () {
+        late String worktreePath;
+
+        setUp(() async {
+          // Get the main GitDir to create a commit which is needed so
+          // that there is an active `HEAD` for `git worktree`.
+          final gitDir = await GitDir.fromExisting(d.sandbox);
+          await d.file('test.txt').create();
+          await gitDir.runCommand(['add', '.']);
+          await gitDir.runCommand(['commit', '-m', 'Test']);
+
+          final worktreeName = '${p.basename(d.sandbox)}_worktree';
+          await gitDir.runCommand(['worktree', 'add', '../$worktreeName']);
+          worktreePath = p.join(d.sandbox, '..', worktreeName);
+        });
+
+        tearDown(() {
+          // Remove the worktree dir manually since it lives outside
+          // the sandbox.
+          final worktreeDir = Directory(worktreePath);
+          if (worktreeDir.existsSync()) {
+            worktreeDir.deleteSync(recursive: true);
+          }
+        });
+
+        test('succeeds for worktree', () {
+          expect(
+            GitDir.fromExisting(worktreePath),
+            completion(
+              isA<GitDir>().having(
+                (gitDir) => p.canonicalize(gitDir.path),
+                'path',
+                equals(p.canonicalize(d.sandbox)),
+              ),
+            ),
+          );
+        });
+
+        test('fails for subdir (allowSubdirectory = false)', () {
+          final subdir = Directory(
+            p.join(worktreePath, 'sub'),
+          )..createSync();
+          expect(
+            GitDir.fromExisting(subdir.path),
+            throwsArgumentError,
+          );
+        });
+
+        test('succeds for subdir (allowSubdirectory = true)', () async {
+          final subdir = Directory(
+            p.join(worktreePath, 'sub'),
+          )..createSync();
+          expect(
+            GitDir.fromExisting(subdir.path, allowSubdirectory: true),
+            completion(
+              isA<GitDir>().having(
+                (gitDir) => p.canonicalize(gitDir.path),
+                'path',
+                equals(p.canonicalize(d.sandbox)),
+              ),
+            ),
+          );
+        });
+      });
     });
   });
 
