@@ -6,6 +6,8 @@ import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 import 'package:test_descriptor/test_descriptor.dart' as d;
 
+import 'test_utils.dart';
+
 void main() {
   test('populateBranch', _testPopulateBranch);
 
@@ -18,9 +20,9 @@ void main() {
       'lib/bar.txt': 'lib bar text',
     };
 
-    final gitDir = await _createTempGitDir();
+    final gitDir = await createTempGitDir();
 
-    await _doDescriptorGitCommit(
+    await doDescriptorGitCommit(
       gitDir,
       initialMasterBranchContent,
       'master files',
@@ -76,7 +78,7 @@ void main() {
 
     group('existing git dir', () {
       setUp(() async {
-        await _createTempGitDir();
+        await createTempGitDir();
       });
 
       test('isWorkingTreeClean', () async {
@@ -127,7 +129,7 @@ void main() {
   });
 
   test('writeObjects', () async {
-    final gitDir = await _createTempGitDir();
+    final gitDir = await createTempGitDir();
 
     final branches = await gitDir.branches();
     expect(branches, isEmpty, reason: 'Should start with zero commits');
@@ -137,7 +139,7 @@ void main() {
       'file2.txt': 'content2',
     };
 
-    await _doDescriptorPopulate(d.sandbox, initialContentMap);
+    await doDescriptorPopulate(d.sandbox, initialContentMap);
 
     final paths = initialContentMap.keys
         .map((fileName) => p.join(d.sandbox, fileName))
@@ -168,9 +170,9 @@ void main() {
         'lib/bar.txt': 'lib bar text',
       };
 
-      final gitDir = await _createTempGitDir(branchName: 'master');
+      final gitDir = await createTempGitDir(branchName: 'master');
 
-      await _doDescriptorGitCommit(
+      await doDescriptorGitCommit(
         gitDir,
         initialMasterBranchContent,
         'master files',
@@ -212,7 +214,7 @@ Future<void> _testGetCommits() async {
     }
   }
 
-  final gitDir = await _createTempGitDir();
+  final gitDir = await createTempGitDir();
 
   final branches = await gitDir.branches();
   expect(branches, isEmpty);
@@ -221,7 +223,7 @@ Future<void> _testGetCommits() async {
     final fileMap = <String, String>{};
     fileMap['$commitStr.txt'] = '$commitStr content';
 
-    await _doDescriptorGitCommit(gitDir, fileMap, msgFromText(commitStr));
+    await doDescriptorGitCommit(gitDir, fileMap, msgFromText(commitStr));
   }
 
   final count = await gitDir.commitCount();
@@ -262,45 +264,6 @@ Future<void> _testGetCommits() async {
   }
 }
 
-Future<void> _doDescriptorGitCommit(
-  GitDir gd,
-  Map<String, String> contents,
-  String commitMsg,
-) async {
-  await _doDescriptorPopulate(gd.path, contents);
-
-  // now add this new file
-  await gd.runCommand(['add', '--all']);
-
-  // now commit these silly files
-  final args = [
-    'commit',
-    '--cleanup=verbatim',
-    '--no-edit',
-    '--allow-empty-message',
-  ];
-  if (commitMsg.isNotEmpty) {
-    args.addAll(['-m', commitMsg]);
-  }
-
-  await gd.runCommand(args);
-}
-
-Future<void> _doDescriptorPopulate(
-  String dirPath,
-  Map<String, String> contents,
-) async {
-  for (var name in contents.keys) {
-    final value = contents[name]!;
-
-    final fullPath = p.join(dirPath, name);
-
-    final file = File(fullPath);
-    await file.create(recursive: true);
-    await file.writeAsString(value);
-  }
-}
-
 Future<void> _testPopulateBranch() async {
   const initialMasterBranchContent = {'master.md': 'test file'};
 
@@ -318,9 +281,9 @@ Future<void> _testPopulateBranch() async {
 
   const testBranchName = 'the_test_branch';
 
-  final gd1 = await _createTempGitDir();
+  final gd1 = await createTempGitDir();
 
-  await _doDescriptorGitCommit(gd1, initialMasterBranchContent, 'master files');
+  await doDescriptorGitCommit(gd1, initialMasterBranchContent, 'master files');
 
   _testPopulateBranchEmpty(gd1, testBranchName);
 
@@ -394,7 +357,7 @@ Future<MapEntry<Commit?, int>> _testPopulateBranchCore(
         // but this is for testing
         tempDir = td;
 
-        return _doDescriptorPopulate(tempDir!.path, contents);
+        return doDescriptorPopulate(tempDir!.path, contents);
       },
       commitMessage,
     );
@@ -491,6 +454,3 @@ Future<void> _testPopulateBranchWithDupeContent(
     reason: 'no change in commit count',
   );
 }
-
-Future<GitDir> _createTempGitDir({String? branchName}) =>
-    GitDir.init(d.sandbox, initialBranch: branchName);
