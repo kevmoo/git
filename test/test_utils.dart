@@ -9,10 +9,10 @@ Future<GitDir> createTempGitDir({String? branchName}) =>
     GitDir.init(d.sandbox, initialBranch: branchName);
 
 Future<void> doDescriptorGitCommit(
-    GitDir gd,
-    Map<String, String> contents,
-    String commitMsg,
-    ) async {
+  GitDir gd,
+  Map<String, String> contents,
+  String commitMsg,
+) async {
   await doDescriptorPopulate(gd.path, contents);
 
   // now add this new file
@@ -33,9 +33,9 @@ Future<void> doDescriptorGitCommit(
 }
 
 Future<void> doDescriptorPopulate(
-    String dirPath,
-    Map<String, String> contents,
-    ) async {
+  String dirPath,
+  Map<String, String> contents,
+) async {
   for (var name in contents.keys) {
     final value = contents[name]!;
 
