@@ -1,4 +1,5 @@
 import 'bot.dart';
+import 'commit_reference.dart';
 import 'util.dart';
 
 class Tag {
@@ -14,7 +15,7 @@ class Tag {
     requireArgumentNotNullOrEmpty(tagger, 'tagger');
   }
 
-  static Tag parseCatFile(String content, String tagSha, String tagName) {
+  static Tag parseCatFile(String content, CommitReference ref) {
     final headers = <String, List<String>>{};
 
     final slr = StringLineReader(content);
@@ -45,9 +46,9 @@ class Tag {
       tagger = headers['tagger']!.single;
     } else {
       // Lightweight Tag
-      objectSha = tagSha;
+      objectSha = ref.sha;
       type = 'lightweight';
-      tag = tagName;
+      tag = ref.reference.substring(10); // Ex: refs/tags/tagName
       tagger = headers['author']!.single;
     }
 
