@@ -41,7 +41,7 @@ void main() {
         '--message',
         'First tag',
         'anotherTag',
-        branchRef.sha
+        branchRef.sha,
       ],
       processWorkingDir: testDir.path,
     );
