@@ -48,7 +48,7 @@ class Tag {
       // Lightweight Tag
       objectSha = ref.sha;
       type = 'lightweight';
-      tag = ref.reference.substring(10); // Ex: refs/tags/tagName
+      tag = ref.reference.split('/').last;
       tagger = headers['author']!.single;
     }
 
