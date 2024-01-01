@@ -17,8 +17,8 @@ void main() {
       processWorkingDir: testDir.path,
     );
 
-    final tagsFound = await testDir.tags().length;
-    expect(tagsFound, equals(1));
+    final tagsFound = await testDir.tags().toList();
+    expect(tagsFound, hasLength(1));
   });
 
   test('Parse annotated tag', () async {
@@ -46,7 +46,7 @@ void main() {
       processWorkingDir: testDir.path,
     );
 
-    final tagsFound = await testDir.tags().length;
-    expect(tagsFound, equals(2));
+    final tagsFound = await testDir.tags().toList();
+    expect(tagsFound, hasLength(2));
   });
 }

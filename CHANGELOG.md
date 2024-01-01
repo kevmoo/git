@@ -1,3 +1,7 @@
+## 2.3.0-wip
+
+- Added support for lightweight tags.
+
 ## 2.2.1
 
 - Correctly handle multi-line commit messages on Windows.
