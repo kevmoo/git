@@ -46,12 +46,16 @@ class Tag {
       tagger = headers['tagger']!.single;
     } else {
       // Lightweight Tag
+      // https://git-scm.com/book/en/v2/Git-Basics-Tagging
       objectSha = ref.sha;
       type = 'lightweight';
-      tag = ref.reference.split('/').last;
+      final match = _refsTagsRegexp.firstMatch(ref.reference);
+      tag = match!.group(1)!;
       tagger = headers['author']!.single;
     }
 
     return Tag._internal(objectSha, type, tag, tagger);
   }
 }
+
+final _refsTagsRegexp = RegExp('refs/tags/(.*)');
