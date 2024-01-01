@@ -48,6 +48,7 @@ class _InvalidOperationError implements Exception {
   const _InvalidOperationError([this.message = '']);
 }
 
+// TODO: refactor this to use string_scanner or similar
 class StringLineReader {
   final String source;
 
