@@ -17,7 +17,7 @@ void main() {
       processWorkingDir: testDir.path,
     );
 
-    final foundTag = (await testDir.tags().toList()).first;
+    final foundTag = (await testDir.tags().toList()).single;
     expect(foundTag.tag, equals(givenTagName));
   });
 
