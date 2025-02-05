@@ -32,8 +32,8 @@ class Commit {
   static Commit parse(String content) {
     final stringLineReader = StringLineReader(content);
     final tuple = _parse(stringLineReader, false);
-    assert(tuple.key == null);
-    return tuple.value;
+    assert(tuple.sha == null);
+    return tuple.commit;
   }
 
   static Map<String, Commit> parseRawRevList(String content) {
@@ -43,13 +43,13 @@ class Commit {
 
     while (slr.position != null && slr.position! < content.length) {
       final tuple = _parse(slr, true);
-      commits[tuple.key!] = tuple.value;
+      commits[tuple.sha!] = tuple.commit;
     }
 
     return commits;
   }
 
-  static MapEntry<String?, Commit> _parse(
+  static ({String? sha, Commit commit}) _parse(
     StringLineReader slr,
     bool isRevParse,
   ) {
@@ -111,9 +111,9 @@ class Commit {
 
     final content = slr.source.substring(startSpot, endSpot);
 
-    return MapEntry(
-      commitSha,
-      Commit._(treeSha, author, committer, message, content, parents),
+    return (
+      sha: commitSha,
+      commit: Commit._(treeSha, author, committer, message, content, parents),
     );
   }
 }

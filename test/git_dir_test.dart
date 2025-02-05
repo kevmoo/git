@@ -249,7 +249,7 @@ Future<void> _testGetCommits() async {
     );
 
     expect(indexMap, isNot(contains(commitMessageIndex)));
-    indexMap[commitMessageIndex] = MapEntry(entry.key, entry.value);
+    indexMap[commitMessageIndex] = entry;
   }
 
   for (var entry in indexMap.entries) {
