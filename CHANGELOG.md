@@ -1,3 +1,7 @@
+## 2.3.1
+
+* Fix `safe.bareRepository = explicit` git configuration.
+
 ## 2.3.0
 
 - Added support for lightweight tags.

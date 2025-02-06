@@ -16,17 +16,16 @@ import 'util.dart';
 
 /// Represents a local directory
 class GitDir {
-  static const _workTreeArg = '--work-tree=';
-  static const _gitDirArg = '--git-dir=';
+  static const _workTreeArg = '--work-tree';
+  static const _gitDirArg = '--git-dir';
 
-  final String _path;
+  final String path;
   final String? _gitWorkTree;
 
-  GitDir._raw(this._path, [this._gitWorkTree])
-      : assert(p.isAbsolute(_path)),
-        assert(_gitWorkTree == null || p.isAbsolute(_gitWorkTree));
-
-  String get path => _path;
+  GitDir._raw(this.path, {String? gitWorkTree})
+      : assert(p.isAbsolute(path)),
+        assert(gitWorkTree == null || p.isAbsolute(gitWorkTree)),
+        _gitWorkTree = gitWorkTree;
 
   Future<int> commitCount([String branchName = 'HEAD']) async {
     final pr = await runCommand(['rev-list', '--count', branchName]);
@@ -96,8 +95,9 @@ class GitDir {
       return [];
     }
 
-    // otherwise, it should have worked fine...
-    assert(pr.exitCode == 0);
+    if (pr.exitCode != 0) {
+      throw ProcessException('git', args, pr.stderr as String, pr.exitCode);
+    }
 
     return CommitReference.fromShowRefOutput(pr.stdout as String);
   }
@@ -276,14 +276,18 @@ class GitDir {
       );
     }
 
-    if (_gitWorkTree != null) {
-      list.insert(0, '$_workTreeArg$_gitWorkTree');
-    }
-
     return runGit(
-      list,
+      [
+        if (_gitWorkTree != null) ...[
+          _gitDirArg,
+          path,
+          _workTreeArg,
+          _gitWorkTree,
+        ],
+        ...list,
+      ],
       throwOnError: throwOnError,
-      processWorkingDir: _processWorkingDir,
+      processWorkingDir: path,
       echoOutput: echoOutput,
     );
   }
@@ -336,7 +340,8 @@ class GitDir {
   ) async {
     final tempGitRoot = await _createTempDir();
 
-    final tempGitDir = GitDir._raw(tempGitRoot.path, sourceDirectoryPath);
+    final tempGitDir =
+        GitDir._raw(tempGitRoot.path, gitWorkTree: sourceDirectoryPath);
 
     // time for crazy clone tricks
     final args = ['clone', '--shared', '--bare', path, '.'];
@@ -408,8 +413,6 @@ class GitDir {
       await tempGitRoot.delete(recursive: true);
     }
   }
-
-  String get _processWorkingDir => _path.toString();
 
   static Future<bool> isGitDir(String path) async {
     final dir = Directory(path);
