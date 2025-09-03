@@ -123,6 +123,17 @@ void main() {
       );
     });
 
+    test('succeeds for symlink to root directory', () async {
+      final linkToRepoDir =
+          await Link(p.join(d.sandbox, 'link-to-repo')).create(tempRepoPath);
+      final gitDir = await GitDir.fromExisting(linkToRepoDir.path);
+      expect(
+        p.canonicalize(gitDir.path),
+        p.canonicalize(tempRepoPath),
+        reason: 'The `GitDir` will point to the canonical resolved root.',
+      );
+    });
+
     test('fails for sub directories', () async {
       expect(
         () => GitDir.fromExisting(subDirPath),

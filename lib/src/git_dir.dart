@@ -457,25 +457,23 @@ class GitDir {
     String gitDirRoot, {
     bool allowSubdirectory = false,
   }) async {
-    final path = p.absolute(gitDirRoot);
+    final path = await Directory(gitDirRoot).absolute.resolveSymbolicLinks();
 
+    // `--show-toplevel` returns a canonicalized absolute path
+    // with all symlinks resolved.
     final pr = await runGit(
-      ['rev-parse', '--git-dir'],
+      ['rev-parse', '--show-toplevel'],
       processWorkingDir: path.toString(),
     );
 
-    var returnedPath = (pr.stdout as String).trim();
+    final returnedPath = (pr.stdout as String).trim();
 
-    if (returnedPath == '.git') {
+    if (p.equals(returnedPath, path)) {
       return GitDir._raw(path);
     }
 
-    if (allowSubdirectory && p.basename(returnedPath) == '.git') {
-      returnedPath = p.dirname(returnedPath);
-
-      if (p.isWithin(returnedPath, path)) {
-        return GitDir._raw(returnedPath);
-      }
+    if (allowSubdirectory && p.isWithin(returnedPath, path)) {
+      return GitDir._raw(returnedPath);
     }
 
     throw ArgumentError('The provided value "$gitDirRoot" is not '
