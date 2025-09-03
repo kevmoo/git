@@ -5,8 +5,12 @@ import 'package:git/git.dart';
 import 'package:path/path.dart' as p;
 import 'package:test_descriptor/test_descriptor.dart' as d;
 
-Future<GitDir> createTempGitDir({String? branchName}) =>
-    GitDir.init(d.sandbox, initialBranch: branchName);
+String get tempRepoPath => d.path('repo1');
+
+Future<GitDir> createTempGitDir({String? branchName}) async {
+  await Directory(tempRepoPath).create(recursive: true);
+  return GitDir.init(tempRepoPath, initialBranch: branchName);
+}
 
 Future<void> doDescriptorGitCommit(
   GitDir gd,
