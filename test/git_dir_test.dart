@@ -82,48 +82,131 @@ void main() {
       });
 
       test('isWorkingTreeClean', () async {
-        final gitDir = await GitDir.fromExisting(d.sandbox);
+        final gitDir = await GitDir.fromExisting(tempRepoPath);
         final isClean = await gitDir.isWorkingTreeClean();
         expect(isClean, isTrue);
       });
 
-      group('GitDir.fromExisting', () {
-        setUp(() async {
-          await d.dir('sub').create();
-        });
-
-        test('fails for sub directories', () async {
-          expect(
-            () => GitDir.fromExisting(p.join(d.sandbox, 'sub')),
-            throwsArgumentError,
-          );
-        });
-
-        test('succeeds for sub directories with `allowSubdirectory`', () async {
-          final gitDir = await GitDir.fromExisting(
-            p.join(d.sandbox, 'sub'),
-            allowSubdirectory: true,
-          );
-
-          expect(
-            p.canonicalize(gitDir.path),
-            p.canonicalize(d.sandbox),
-            reason: 'The created `GitDir` will point to the root.',
-          );
-        });
-      });
-
       test('isGitDir is true', () async {
-        final isGitDir = await GitDir.isGitDir(d.sandbox);
+        final isGitDir = await GitDir.isGitDir(tempRepoPath);
         expect(isGitDir, isTrue);
       });
 
       test('with allowContent:false fails', () {
-        expect(GitDir.init(d.sandbox), throwsArgumentError);
+        expect(GitDir.init(tempRepoPath), throwsArgumentError);
       });
 
       test('with allowContent:true fails', () {
-        expect(GitDir.init(d.sandbox, allowContent: true), throwsArgumentError);
+        expect(
+          GitDir.init(tempRepoPath, allowContent: true),
+          throwsArgumentError,
+        );
+      });
+    });
+  });
+
+  group('GitDir.fromExisting', () {
+    late String subDirPath;
+
+    setUp(() async {
+      final gitDir = await createTempGitDir();
+      subDirPath = p.join(gitDir.path, 'sub-dir');
+      await Directory(subDirPath).create();
+    });
+
+    test('succeeds for root directory', () async {
+      final gitDir = await GitDir.fromExisting(tempRepoPath);
+      expect(
+        p.canonicalize(gitDir.path),
+        p.canonicalize(tempRepoPath),
+        reason: 'The created `GitDir` will point to the root.',
+      );
+    });
+
+    test('succeeds for symlink to root directory', () async {
+      final linkToRepoDir =
+          await Link(p.join(d.sandbox, 'link-to-repo')).create(tempRepoPath);
+      final gitDir = await GitDir.fromExisting(linkToRepoDir.path);
+      expect(
+        p.canonicalize(gitDir.path),
+        p.canonicalize(tempRepoPath),
+        reason: 'The `GitDir` will point to the canonical resolved root.',
+      );
+    });
+
+    test('fails for sub directories', () async {
+      expect(
+        () => GitDir.fromExisting(subDirPath),
+        throwsArgumentError,
+      );
+    });
+
+    test('succeeds for sub directories with `allowSubdirectory`', () async {
+      final gitDir = await GitDir.fromExisting(
+        subDirPath,
+        allowSubdirectory: true,
+      );
+
+      expect(
+        p.canonicalize(gitDir.path),
+        p.canonicalize(tempRepoPath),
+        reason: 'The created `GitDir` will point to the root.',
+      );
+    });
+
+    group('with git submodule', () {
+      late String tempRepo2Path;
+      late String submoduleMountPathAbs;
+      const submoduleMountPathRel = 'third-party/repo2_sub';
+
+      setUp(() async {
+        // these have to be redefined un setUp() each time because d.sandbox
+        // changes with each test run.
+        tempRepo2Path = d.path('repo2');
+        submoduleMountPathAbs = p.join(tempRepoPath, submoduleMountPathRel);
+
+        final parent = await GitDir.fromExisting(tempRepoPath);
+
+        await Directory(tempRepo2Path).create(recursive: true);
+        final child = await GitDir.init(tempRepo2Path);
+
+        // the child repo must have something in it in order to add it
+        // as a submodule
+        await doDescriptorGitCommit(
+          child,
+          {'README.md': 'hello'},
+          'initial commit',
+        );
+
+        // normally git doesn't allow us to create a submodule with a
+        // "file://" remote. Setting "protocol.file.allow=always" allows
+        // this temporarily, so our test can run without network dependencies.
+        await parent.runCommand([
+          '-c',
+          'protocol.file.allow=always',
+          'submodule',
+          'add',
+          child.path,
+          submoduleMountPathRel,
+        ]);
+      });
+
+      test('succeeds on valid submodule dir', () async {
+        final submodule = await GitDir.fromExisting(submoduleMountPathAbs);
+        expect(
+          p.canonicalize(submodule.path),
+          p.canonicalize(submoduleMountPathAbs),
+          reason:
+              'The created `GitDir` will point to the root of the submodule.',
+        );
+        expect(
+          p.isWithin(
+            p.canonicalize(tempRepoPath),
+            p.canonicalize(submodule.path),
+          ),
+          true,
+          reason: 'the submodule should always be inside the parent worktree',
+        );
       });
     });
   });
@@ -139,10 +222,10 @@ void main() {
       'file2.txt': 'content2',
     };
 
-    await doDescriptorPopulate(d.sandbox, initialContentMap);
+    await doDescriptorPopulate(tempRepoPath, initialContentMap);
 
     final paths = initialContentMap.keys
-        .map((fileName) => p.join(d.sandbox, fileName))
+        .map((fileName) => p.join(tempRepoPath, fileName))
         .toList();
 
     final hashes = await gitDir.writeObjects(paths);
