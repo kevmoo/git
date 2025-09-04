@@ -1,3 +1,7 @@
+## 2.3.2
+
+- Fix `GitDir` constructor when in a submodule.
+
 ## 2.3.1
 
 * Fix `safe.bareRepository = explicit` git configuration.
