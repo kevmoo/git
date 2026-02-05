@@ -92,12 +92,12 @@ void main() {
         check(isGitDir).isTrue();
       });
 
-      test('with allowContent:false fails', () {
-        check(GitDir.init(tempRepoPath)).throws<ArgumentError>();
+      test('with allowContent:false fails', () async {
+        await check(GitDir.init(tempRepoPath)).throws<ArgumentError>();
       });
 
-      test('with allowContent:true fails', () {
-        check(
+      test('with allowContent:true fails', () async {
+        await check(
           GitDir.init(tempRepoPath, allowContent: true),
         ).throws<ArgumentError>();
       });
