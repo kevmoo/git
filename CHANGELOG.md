@@ -1,3 +1,7 @@
+## 2.3.3-wip
+
+- Require Dart 3.9
+
 ## 2.3.2
 
 - Fix `GitDir` constructor when in a submodule.

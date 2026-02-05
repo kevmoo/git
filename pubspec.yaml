@@ -6,7 +6,7 @@ description: >-
 repository: https://github.com/kevmoo/git
 
 environment:
-  sdk: ^3.4.0
+  sdk: ^3.9.0
 
 dependencies:
   path: ^1.8.0

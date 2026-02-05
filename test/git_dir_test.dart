@@ -167,11 +167,9 @@ void main() {
 
         // the child repo must have something in it in order to add it
         // as a submodule
-        await doDescriptorGitCommit(
-          child,
-          {'README.md': 'hello'},
-          'initial commit',
-        );
+        await doDescriptorGitCommit(child, {
+          'README.md': 'hello',
+        }, 'initial commit');
 
         // normally git doesn't allow us to create a submodule with a
         // "file://" remote. Setting "protocol.file.allow=always" allows
@@ -407,17 +405,13 @@ Future<MapEntry<Commit?, int>> _testPopulateBranchCore(
 
   Directory? tempDir;
   try {
-    final commit = await gitDir.updateBranch(
-      branchName,
-      (td) {
-        // strictly speaking, users of this API should not hold on to TempDir
-        // but this is for testing
-        tempDir = td;
+    final commit = await gitDir.updateBranch(branchName, (td) {
+      // strictly speaking, users of this API should not hold on to TempDir
+      // but this is for testing
+      tempDir = td;
 
-        return doDescriptorPopulate(tempDir!.path, contents);
-      },
-      commitMessage,
-    );
+      return doDescriptorPopulate(tempDir!.path, contents);
+    }, commitMessage);
 
     return MapEntry(commit, originalCommitCount);
   } finally {

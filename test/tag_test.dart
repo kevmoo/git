@@ -13,14 +13,11 @@ void main() {
     await doDescriptorGitCommit(testDir, contents, 'Something');
     final branchRef = await testDir.currentBranch();
 
-    await runGit(
-      [
-        'tag',
-        givenTagName,
-        branchRef.sha,
-      ],
-      processWorkingDir: testDir.path,
-    );
+    await runGit([
+      'tag',
+      givenTagName,
+      branchRef.sha,
+    ], processWorkingDir: testDir.path);
 
     final foundTag = (await testDir.tags().toList()).single;
     check(foundTag.tag).equals(givenTagName);
@@ -35,29 +32,23 @@ void main() {
     await doDescriptorGitCommit(testDir, contents, 'Something');
     final branchRef = await testDir.currentBranch();
 
-    await runGit(
-      [
-        'tag',
-        '--annotate',
-        '--message',
-        'First tag',
-        newTagName,
-        branchRef.sha,
-      ],
-      processWorkingDir: testDir.path,
-    );
+    await runGit([
+      'tag',
+      '--annotate',
+      '--message',
+      'First tag',
+      newTagName,
+      branchRef.sha,
+    ], processWorkingDir: testDir.path);
 
-    await runGit(
-      [
-        'tag',
-        '--annotate',
-        '--message',
-        'Second tag',
-        anotherTagName,
-        branchRef.sha,
-      ],
-      processWorkingDir: testDir.path,
-    );
+    await runGit([
+      'tag',
+      '--annotate',
+      '--message',
+      'Second tag',
+      anotherTagName,
+      branchRef.sha,
+    ], processWorkingDir: testDir.path);
 
     final tagsFound = await testDir.tags().toList();
     check(tagsFound).length.equals(2);
