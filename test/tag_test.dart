@@ -1,5 +1,6 @@
+import 'package:checks/checks.dart';
 import 'package:git/git.dart';
-import 'package:test/test.dart';
+import 'package:test/scaffolding.dart';
 
 import 'test_utils.dart';
 
@@ -13,12 +14,16 @@ void main() {
     final branchRef = await testDir.currentBranch();
 
     await runGit(
-      ['tag', givenTagName, branchRef.sha],
+      [
+        'tag',
+        givenTagName,
+        branchRef.sha,
+      ],
       processWorkingDir: testDir.path,
     );
 
     final foundTag = (await testDir.tags().toList()).single;
-    expect(foundTag.tag, equals(givenTagName));
+    check(foundTag.tag).equals(givenTagName);
   });
 
   test('Parse annotated tag', () async {
@@ -55,15 +60,12 @@ void main() {
     );
 
     final tagsFound = await testDir.tags().toList();
-    expect(tagsFound, hasLength(2));
+    check(tagsFound).length.equals(2);
 
     final alphabeticallyFirstTag = tagsFound.first;
-    expect(
-      alphabeticallyFirstTag,
-      isA<Tag>()
-          .having((t) => t.tag, 'tag', anotherTagName)
-          .having((t) => t.objectSha, 'objectSha', branchRef.sha)
-          .having((t) => t.type, 'type', 'commit'),
-    );
+    check(alphabeticallyFirstTag)
+      ..has((t) => t.tag, 'tag').equals(anotherTagName)
+      ..has((t) => t.objectSha, 'objectSha').equals(branchRef.sha)
+      ..has((t) => t.type, 'type').equals('commit');
   });
 }

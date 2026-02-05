@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:checks/checks.dart';
 import 'package:git/git.dart';
 import 'package:path/path.dart' as p;
-import 'package:test/test.dart';
+import 'package:test/scaffolding.dart';
 import 'package:test_descriptor/test_descriptor.dart' as d;
 
 import 'test_utils.dart';
@@ -45,10 +46,10 @@ void main() {
     // validate it has the right message
 
     var treeItems = await gitDir.lsTree(newSha!);
-    expect(treeItems, hasLength(2));
+    check(treeItems).length.equals(2);
 
     final libTreeEntry = treeItems.singleWhere((tree) => tree.name == 'lib');
-    expect(libTreeEntry.type, 'tree');
+    check(libTreeEntry.type).equals('tree');
 
     // do another update from the subtree sha
     final nextCommit = await gitDir.createOrUpdateBranch(
@@ -58,22 +59,21 @@ void main() {
     );
 
     final testCommitCount = await gitDir.commitCount('test');
-    expect(testCommitCount, 2);
+    check(testCommitCount).equals(2);
 
     treeItems = await gitDir.lsTree(nextCommit!);
-    expect(treeItems, hasLength(2));
+    check(treeItems).length.equals(2);
 
-    expect(
+    check(
       treeItems.map((tree) => tree.name),
-      unorderedEquals(['foo.txt', 'bar.txt']),
-    );
+    ).unorderedEquals(['foo.txt', 'bar.txt']);
   });
 
   group('init', () {
     test('allowContent:false with content fails', () async {
       File(p.join(d.sandbox, 'testfile.txt')).writeAsStringSync('test content');
 
-      expect(GitDir.init(d.sandbox), throwsArgumentError);
+      await check(GitDir.init(d.sandbox)).throws<ArgumentError>();
     });
 
     group('existing git dir', () {
@@ -84,23 +84,22 @@ void main() {
       test('isWorkingTreeClean', () async {
         final gitDir = await GitDir.fromExisting(tempRepoPath);
         final isClean = await gitDir.isWorkingTreeClean();
-        expect(isClean, isTrue);
+        check(isClean).isTrue();
       });
 
       test('isGitDir is true', () async {
         final isGitDir = await GitDir.isGitDir(tempRepoPath);
-        expect(isGitDir, isTrue);
+        check(isGitDir).isTrue();
       });
 
       test('with allowContent:false fails', () {
-        expect(GitDir.init(tempRepoPath), throwsArgumentError);
+        check(GitDir.init(tempRepoPath)).throws<ArgumentError>();
       });
 
       test('with allowContent:true fails', () {
-        expect(
+        check(
           GitDir.init(tempRepoPath, allowContent: true),
-          throwsArgumentError,
-        );
+        ).throws<ArgumentError>();
       });
     });
   });
@@ -116,29 +115,26 @@ void main() {
 
     test('succeeds for root directory', () async {
       final gitDir = await GitDir.fromExisting(tempRepoPath);
-      expect(
+      check(
         p.canonicalize(gitDir.path),
-        p.canonicalize(tempRepoPath),
-        reason: 'The created `GitDir` will point to the root.',
-      );
+        because: 'The created `GitDir` will point to the root.',
+      ).equals(p.canonicalize(tempRepoPath));
     });
 
     test('succeeds for symlink to root directory', () async {
-      final linkToRepoDir =
-          await Link(p.join(d.sandbox, 'link-to-repo')).create(tempRepoPath);
+      final linkToRepoDir = await Link(
+        p.join(d.sandbox, 'link-to-repo'),
+      ).create(tempRepoPath);
       final gitDir = await GitDir.fromExisting(linkToRepoDir.path);
-      expect(
+      check(
         p.canonicalize(gitDir.path),
-        p.canonicalize(tempRepoPath),
-        reason: 'The `GitDir` will point to the canonical resolved root.',
-      );
+        because:
+            'The created `GitDir` will point to the canonical resolved root.',
+      ).equals(p.canonicalize(tempRepoPath));
     });
 
     test('fails for sub directories', () async {
-      expect(
-        () => GitDir.fromExisting(subDirPath),
-        throwsArgumentError,
-      );
+      await check(GitDir.fromExisting(subDirPath)).throws<ArgumentError>();
     });
 
     test('succeeds for sub directories with `allowSubdirectory`', () async {
@@ -147,11 +143,10 @@ void main() {
         allowSubdirectory: true,
       );
 
-      expect(
+      check(
         p.canonicalize(gitDir.path),
-        p.canonicalize(tempRepoPath),
-        reason: 'The created `GitDir` will point to the root.',
-      );
+        because: 'The created `GitDir` will point to the root.',
+      ).equals(p.canonicalize(tempRepoPath));
     });
 
     group('with git submodule', () {
@@ -193,20 +188,19 @@ void main() {
 
       test('succeeds on valid submodule dir', () async {
         final submodule = await GitDir.fromExisting(submoduleMountPathAbs);
-        expect(
+        check(
           p.canonicalize(submodule.path),
-          p.canonicalize(submoduleMountPathAbs),
-          reason:
+          because:
               'The created `GitDir` will point to the root of the submodule.',
-        );
-        expect(
+        ).equals(p.canonicalize(submoduleMountPathAbs));
+
+        check(
           p.isWithin(
             p.canonicalize(tempRepoPath),
             p.canonicalize(submodule.path),
           ),
-          true,
-          reason: 'the submodule should always be inside the parent worktree',
-        );
+          because: 'the submodule should always be inside the parent worktree',
+        ).isTrue();
       });
     });
   });
@@ -215,7 +209,7 @@ void main() {
     final gitDir = await createTempGitDir();
 
     final branches = await gitDir.branches();
-    expect(branches, isEmpty, reason: 'Should start with zero commits');
+    check(branches, because: 'Should start with zero commits').isEmpty();
 
     final initialContentMap = {
       'file1.txt': 'content1',
@@ -229,7 +223,7 @@ void main() {
         .toList();
 
     final hashes = await gitDir.writeObjects(paths);
-    expect(hashes, {
+    check(hashes).deepEquals({
       paths[0]: 'dd954e7a4e1a62ff90c5a0709dce5928716535c1',
       paths[1]: 'db00fd65b218578127ea51f3dffac701f12f486a',
     });
@@ -252,19 +246,17 @@ void main() {
       );
 
       final branch = await gitDir.currentBranch();
-      expect(branch.isHead, isFalse);
-      expect(branch.branchName, 'master');
-      expect(branch.reference, 'refs/heads/master');
+      check(branch.isHead).isFalse();
+      check(branch.branchName).equals('master');
+      check(branch.reference).equals('refs/heads/master');
 
-      await gitDir.runCommand(
-        ['checkout', '--detach'],
-      );
+      await gitDir.runCommand(['checkout', '--detach']);
 
       final detached = await gitDir.currentBranch();
-      expect(detached.isHead, isTrue);
-      expect(detached.branchName, 'HEAD');
-      expect(detached.reference, 'HEAD');
-      expect(detached.sha, branch.sha);
+      check(detached.isHead).isTrue();
+      check(detached.branchName).equals('HEAD');
+      check(detached.reference).equals('HEAD');
+      check(detached.sha).equals(branch.sha);
     });
   });
 }
@@ -290,7 +282,7 @@ Future<void> _testGetCommits() async {
   final gitDir = await createTempGitDir();
 
   final branches = await gitDir.branches();
-  expect(branches, isEmpty);
+  check(branches).isEmpty();
 
   for (var commitStr in commitText) {
     final fileMap = <String, String>{};
@@ -300,11 +292,11 @@ Future<void> _testGetCommits() async {
   }
 
   final count = await gitDir.commitCount();
-  expect(count, commitText.length);
+  check(count).equals(commitText.length);
 
   final commits = await gitDir.commits();
 
-  expect(commits, hasLength(commitText.length));
+  check(commits).length.equals(commitText.length);
 
   final commitMessages = commitText.map(msgFromText).toList();
 
@@ -312,27 +304,26 @@ Future<void> _testGetCommits() async {
 
   for (var entry in commits.entries) {
     // index into the text for the message of this commit
-    final commitMessageIndex =
-        commitMessages.indexWhere((element) => element == entry.value.message);
-
-    expect(
-      commitMessageIndex,
-      greaterThanOrEqualTo(0),
-      reason: 'a matching message should be found',
+    final commitMessageIndex = commitMessages.indexWhere(
+      (element) => element == entry.value.message,
     );
 
-    expect(indexMap, isNot(contains(commitMessageIndex)));
+    check(
+      commitMessageIndex,
+      because: 'a matching message should be found',
+    ).isGreaterOrEqual(0);
+
+    check(indexMap.keys).not((it) => it.contains(commitMessageIndex));
     indexMap[commitMessageIndex] = entry;
   }
 
   for (var entry in indexMap.entries) {
     if (entry.key > 0) {
-      expect(
+      check(
         entry.value.value.parents,
-        unorderedEquals([indexMap[entry.key - 1]!.key]),
-      );
+      ).unorderedEquals([indexMap[entry.key - 1]!.key]);
     } else {
-      expect(entry.value.value.parents, hasLength(0));
+      check(entry.value.value.parents).isEmpty();
     }
   }
 }
@@ -358,7 +349,7 @@ Future<void> _testPopulateBranch() async {
 
   await doDescriptorGitCommit(gd1, initialMasterBranchContent, 'master files');
 
-  _testPopulateBranchEmpty(gd1, testBranchName);
+  await _testPopulateBranchEmpty(gd1, testBranchName);
 
   await _testPopulateBranchWithContent(
     gd1,
@@ -381,27 +372,20 @@ Future<void> _testPopulateBranch() async {
     'same content',
   );
 
-  await _testPopulateBranchWithContent(
-    gd1,
-    testBranchName,
-    testContent1,
-    '''
+  await _testPopulateBranchWithContent(gd1, testBranchName, testContent1, '''
 3rd commit, content 1
 
 With some new lines
-and more messages''',
-  );
+and more messages''');
 
-  _testPopulateBranchEmpty(gd1, testBranchName);
+  await _testPopulateBranchEmpty(gd1, testBranchName);
 }
 
-void _testPopulateBranchEmpty(GitDir gitDir, String branchName) {
-  expect(
+Future<void> _testPopulateBranchEmpty(GitDir gitDir, String branchName) async {
+  await check(
     _testPopulateBranchCore(gitDir, branchName, {}, 'empty?'),
-    throwsA(
-      isA<GitError>()
-          .having((ge) => ge.message, 'message', 'No files were added'),
-    ),
+  ).throws<GitError>(
+    (it) => it.has((e) => e.message, 'message').equals('No files were added'),
   );
 }
 
@@ -438,7 +422,7 @@ Future<MapEntry<Commit?, int>> _testPopulateBranchCore(
     return MapEntry(commit, originalCommitCount);
   } finally {
     if (tempDir != null) {
-      expect(tempDir!.existsSync(), false);
+      check(tempDir!.existsSync()).isFalse();
     }
   }
 }
@@ -461,35 +445,33 @@ Future<void> _testPopulateBranchWithContent(
   final originalCommitCount = pair.value;
 
   if (originalCommitCount == 0) {
-    expect(
+    check(
       returnedCommit.parents,
-      isEmpty,
-      reason: 'This should be the first commit',
-    );
+      because: 'This should be the first commit',
+    ).isEmpty();
   } else {
-    expect(returnedCommit.parents, hasLength(1));
+    check(returnedCommit.parents).length.equals(1);
   }
 
-  expect(returnedCommit, isNotNull, reason: 'Commit should not be null');
-  expect(returnedCommit.message, commitMessage);
+  check(returnedCommit, because: 'Commit should not be null').isNotNull();
+  check(returnedCommit.message).equals(commitMessage);
 
   // new check to see if things are updated it gd1
   final branchRef = (await gitDir.branchReference(branchName))!;
 
   final commit = await gitDir.commitFromRevision(branchRef.reference);
 
-  expect(
+  check(
     commit.content,
-    returnedCommit.content,
-    reason: 'content of queried commit should what was returned',
-  );
+    because: 'content of queried commit should what was returned',
+  ).equals(returnedCommit.content);
 
   final entries = await gitDir.lsTree(commit.treeSha);
 
-  expect(entries.map((te) => te.name), unorderedEquals(contents.keys));
+  check(entries.map((te) => te.name)).unorderedEquals(contents.keys);
 
   final newCommitCount = await gitDir.commitCount(branchRef.reference);
-  expect(newCommitCount, originalCommitCount + 1);
+  check(newCommitCount).equals(originalCommitCount + 1);
 }
 
 Future<void> _testPopulateBranchWithDupeContent(
@@ -509,21 +491,19 @@ Future<void> _testPopulateBranchWithDupeContent(
   final returnedCommit = pair.key;
   final originalCommitCount = pair.value;
 
-  expect(returnedCommit, isNull);
-  expect(
+  check(returnedCommit).isNull();
+  check(
     originalCommitCount,
-    greaterThan(0),
-    reason: 'must have had some original content',
-  );
+    because: 'must have had some original content',
+  ).isGreaterThan(0);
 
   // new check to see if things are updated it gd1
   final br = (await gitDir.branchReference(branchName))!;
 
   final newCommitCount = await gitDir.commitCount(br.reference);
 
-  expect(
+  check(
     newCommitCount,
-    originalCommitCount,
-    reason: 'no change in commit count',
-  );
+    because: 'no change in commit count',
+  ).equals(originalCommitCount);
 }
