@@ -23,9 +23,9 @@ class GitDir {
   final String? _gitWorkTree;
 
   GitDir._raw(this.path, {String? gitWorkTree})
-      : assert(p.isAbsolute(path)),
-        assert(gitWorkTree == null || p.isAbsolute(gitWorkTree)),
-        _gitWorkTree = gitWorkTree;
+    : assert(p.isAbsolute(path)),
+      assert(gitWorkTree == null || p.isAbsolute(gitWorkTree)),
+      _gitWorkTree = gitWorkTree;
 
   Future<int> commitCount([String branchName = 'HEAD']) async {
     final pr = await runCommand(['rev-list', '--count', branchName]);
@@ -68,10 +68,7 @@ class GitDir {
 
     for (var ref in refs) {
       final pr = await runCommand(['cat-file', '-p', ref.sha]);
-      yield Tag.parseCatFile(
-        pr.stdout as String,
-        ref,
-      );
+      yield Tag.parseCatFile(pr.stdout as String, ref);
     }
   }
 
@@ -103,17 +100,22 @@ class GitDir {
   }
 
   Future<BranchReference> currentBranch() async {
-    var pr = await runCommand(
-      const ['rev-parse', '--verify', '--symbolic-full-name', 'HEAD'],
-    );
+    var pr = await runCommand(const [
+      'rev-parse',
+      '--verify',
+      '--symbolic-full-name',
+      'HEAD',
+    ]);
 
-    pr = await runCommand(
-      ['show-ref', '--verify', (pr.stdout as String).trim()],
-    );
+    pr = await runCommand([
+      'show-ref',
+      '--verify',
+      (pr.stdout as String).trim(),
+    ]);
 
-    return CommitReference.fromShowRefOutput(pr.stdout as String)
-        .single
-        .toBranchReference();
+    return CommitReference.fromShowRefOutput(
+      pr.stdout as String,
+    ).single.toBranchReference();
   }
 
   Future<List<TreeEntry>> lsTree(
@@ -155,8 +157,11 @@ class GitDir {
     if (targetBranchRef == null) {
       newCommitSha = await commitTree(treeSha, commitMessage);
     } else {
-      newCommitSha =
-          await _updateBranch(targetBranchRef.sha, treeSha, commitMessage);
+      newCommitSha = await _updateBranch(
+        targetBranchRef.sha,
+        treeSha,
+        commitMessage,
+      );
     }
 
     if (newCommitSha == null) {
@@ -292,8 +297,10 @@ class GitDir {
     );
   }
 
-  Future<bool> isWorkingTreeClean() => runCommand(['status', '--porcelain'])
-      .then((pr) => (pr.stdout as String).isEmpty);
+  Future<bool> isWorkingTreeClean() => runCommand([
+    'status',
+    '--porcelain',
+  ]).then((pr) => (pr.stdout as String).isEmpty);
 
   // TODO: TEST: someone puts a git dir when populated
   // TODO: TEST: someone puts in no content at all
@@ -340,16 +347,21 @@ class GitDir {
   ) async {
     final tempGitRoot = await _createTempDir();
 
-    final tempGitDir =
-        GitDir._raw(tempGitRoot.path, gitWorkTree: sourceDirectoryPath);
+    final tempGitDir = GitDir._raw(
+      tempGitRoot.path,
+      gitWorkTree: sourceDirectoryPath,
+    );
 
     // time for crazy clone tricks
     final args = ['clone', '--shared', '--bare', path, '.'];
 
     await runGit(args, processWorkingDir: tempGitDir.path);
 
-    await tempGitDir
-        .runCommand(['symbolic-ref', 'HEAD', 'refs/heads/$branchName']);
+    await tempGitDir.runCommand([
+      'symbolic-ref',
+      'HEAD',
+      'refs/heads/$branchName',
+    ]);
 
     try {
       // make sure there is something in the working three
@@ -371,10 +383,7 @@ class GitDir {
         return null;
       }
 
-      final args = [
-        'commit',
-        '--verbose',
-      ];
+      final args = ['commit', '--verbose'];
 
       Directory? tmpDir;
 
@@ -401,8 +410,13 @@ class GitDir {
       }
 
       // --verbose is not strictly needed, but nice for debugging
-      await tempGitDir
-          .runCommand(['push', '--verbose', '--progress', path, branchName]);
+      await tempGitDir.runCommand([
+        'push',
+        '--verbose',
+        '--progress',
+        path,
+        branchName,
+      ]);
 
       // pr.stderr will have all of the info
 
@@ -461,10 +475,10 @@ class GitDir {
 
     // `--show-toplevel` returns a canonicalized absolute path
     // with all symlinks resolved.
-    final pr = await runGit(
-      ['rev-parse', '--show-toplevel'],
-      processWorkingDir: path.toString(),
-    );
+    final pr = await runGit([
+      'rev-parse',
+      '--show-toplevel',
+    ], processWorkingDir: path.toString());
 
     final returnedPath = (pr.stdout as String).trim();
 
@@ -476,15 +490,19 @@ class GitDir {
       return GitDir._raw(returnedPath);
     }
 
-    throw ArgumentError('The provided value "$gitDirRoot" is not '
-        'the root of a git directory');
+    throw ArgumentError(
+      'The provided value "$gitDirRoot" is not '
+      'the root of a git directory',
+    );
   }
 
   static Future<GitDir> _init(Directory source, {String? branchName}) async {
     final isGitDir = await _isGitDir(source);
     if (isGitDir) {
-      throw ArgumentError('Cannot init a directory that is already a '
-          'git directory');
+      throw ArgumentError(
+        'Cannot init a directory that is already a '
+        'git directory',
+      );
     }
 
     await runGit([

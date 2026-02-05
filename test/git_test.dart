@@ -1,36 +1,28 @@
 import 'dart:io';
 
+import 'package:checks/checks.dart';
 import 'package:git/git.dart';
-import 'package:test/test.dart';
+import 'package:test/scaffolding.dart';
 
 void main() {
   test('bad git command', () async {
-    await expectLater(
-      runGit(['not-a-command']),
-      throwsA(
-        isA<ProcessException>()
-            .having(
-              (pe) => pe.message,
-              'message',
-              contains("'not-a-command' is not a git command."),
-            )
-            .having((pe) => pe.errorCode, 'errorCode', 1),
-      ),
+    await check(runGit(['not-a-command'])).throws<ProcessException>(
+      (it) => it
+        ..has(
+          (pe) => pe.message,
+          'message',
+        ).contains("'not-a-command' is not a git command.")
+        ..has((pe) => pe.errorCode, 'errorCode').equals(1),
     );
   });
 
   test('bad git command - echoOutput true', () async {
-    await expectLater(
+    await check(
       runGit(['not-a-command'], echoOutput: true),
-      throwsA(
-        isA<ProcessException>()
-            .having(
-              (pe) => pe.message,
-              'message',
-              'Unknown error',
-            )
-            .having((pe) => pe.errorCode, 'errorCode', 1),
-      ),
+    ).throws<ProcessException>(
+      (it) => it
+        ..has((pe) => pe.message, 'message').contains('Unknown error')
+        ..has((pe) => pe.errorCode, 'errorCode').equals(1),
     );
   });
 }

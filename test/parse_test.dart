@@ -1,11 +1,12 @@
+import 'package:checks/checks.dart';
 import 'package:git/git.dart';
 import 'package:git/src/util.dart';
-import 'package:test/test.dart';
+import 'package:test/scaffolding.dart';
 
 void main() {
   test('valid sha', () {
     const good = 'bcd1284d805951a16e765cea5b2273a464ee2d86';
-    expect(isValidSha(good), true);
+    check(isValidSha(good)).isTrue();
 
     final bad = [
       '',
@@ -20,35 +21,34 @@ void main() {
       '''bcd1284d805951a16e765cea5b2273a464ee2d86
 ''',
 
-// newline before
+      // newline before
       '''
 
-bcd1284d805951a16e765cea5b2273a464ee2d86'''
+bcd1284d805951a16e765cea5b2273a464ee2d86''',
     ];
 
     for (var v in bad) {
-      expect(isValidSha(v), isFalse, reason: "'$v' should be bad");
-      expect(() => requireArgumentValidSha1(v, 'v'), throwsArgumentError);
+      check(isValidSha(v), because: "'$v' should be bad").isFalse();
+      check(() => requireArgumentValidSha1(v, 'v')).throws<ArgumentError>();
     }
   });
 
   test('parse show-ref output', () {
     final parsed = CommitReference.fromShowRefOutput(_showRefOutput);
 
-    expect(parsed.length, 6);
-    for (var t in parsed) {
-      expect(t.sha, hasLength(40));
-      expect(t.reference, isNot(isEmpty));
-    }
+    check(parsed).length.equals(6);
+    check(parsed).every(
+      (e) => e
+        ..has((c) => c.sha, 'sha').length.equals(40)
+        ..has((c) => c.reference, 'reference').isNotEmpty(),
+    );
   });
 
   test('TreeEntry.parse', () {
     final result = TreeEntry.fromLsTreeOutput(_lsTreeOutput);
-    expect(result, hasLength(13));
-    expect(result.first.name, '.gitignore');
-    for (var v in result) {
-      expect(v, isNotNull);
-    }
+    check(result).length.equals(13);
+    check(result.first).has((e) => e.name, 'name').equals('.gitignore');
+    check(result).every((e) => e.isNotNull());
   });
 }
 
