@@ -35,20 +35,22 @@ bcd1284d805951a16e765cea5b2273a464ee2d86'''
   test('parse show-ref output', () {
     final parsed = CommitReference.fromShowRefOutput(_showRefOutput);
 
-    expect(parsed.length, 6);
-    for (var t in parsed) {
-      expect(t.sha, hasLength(40));
-      expect(t.reference, isNot(isEmpty));
-    }
+    expect(parsed, hasLength(6));
+    expect(
+      parsed,
+      everyElement(
+        isA<CommitReference>()
+            .having((e) => e.sha, 'sha', hasLength(40))
+            .having((e) => e.reference, 'reference', isNotEmpty),
+      ),
+    );
   });
 
   test('TreeEntry.parse', () {
     final result = TreeEntry.fromLsTreeOutput(_lsTreeOutput);
     expect(result, hasLength(13));
     expect(result.first.name, '.gitignore');
-    for (var v in result) {
-      expect(v, isNotNull);
-    }
+    expect(result, everyElement(isNotNull));
   });
 }
 

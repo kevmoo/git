@@ -58,8 +58,12 @@ void main() {
     expect(tagsFound, hasLength(2));
 
     final alphabeticallyFirstTag = tagsFound.first;
-    expect(alphabeticallyFirstTag.tag, equals(anotherTagName));
-    expect(alphabeticallyFirstTag.objectSha, equals(branchRef.sha));
-    expect(alphabeticallyFirstTag.type, equals('commit'));
+    expect(
+      alphabeticallyFirstTag,
+      isA<Tag>()
+          .having((t) => t.tag, 'tag', anotherTagName)
+          .having((t) => t.objectSha, 'objectSha', branchRef.sha)
+          .having((t) => t.type, 'type', 'commit'),
+    );
   });
 }

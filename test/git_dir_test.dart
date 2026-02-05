@@ -229,20 +229,10 @@ void main() {
         .toList();
 
     final hashes = await gitDir.writeObjects(paths);
-    expect(hashes, hasLength(initialContentMap.length));
-    expect(hashes.keys, unorderedEquals(paths));
-
-    expect(paths[0], endsWith('file1.txt'));
-    expect(
-      hashes,
-      containsPair(paths[0], 'dd954e7a4e1a62ff90c5a0709dce5928716535c1'),
-    );
-
-    expect(paths[1], endsWith('file2.txt'));
-    expect(
-      hashes,
-      containsPair(paths[1], 'db00fd65b218578127ea51f3dffac701f12f486a'),
-    );
+    expect(hashes, {
+      paths[0]: 'dd954e7a4e1a62ff90c5a0709dce5928716535c1',
+      paths[1]: 'db00fd65b218578127ea51f3dffac701f12f486a',
+    });
   });
 
   group('BranchReference', () {
