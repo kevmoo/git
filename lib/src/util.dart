@@ -1,3 +1,5 @@
+import 'package:string_scanner/string_scanner.dart';
+
 import 'bot.dart';
 import 'top_level.dart';
 
@@ -14,3 +16,17 @@ void requireArgumentValidSha1(String value, String argName) {
     throw ArgumentError.value(value, argName, message);
   }
 }
+
+extension StringScannerX on StringScanner {
+  String? readNextLine() {
+    if (isDone) return null;
+    if (scan(_lineRegexp)) {
+      return lastMatch![1];
+    }
+    final restStr = rest;
+    position = string.length;
+    return restStr;
+  }
+}
+
+final _lineRegexp = RegExp(r'([^\r\n]*)\r?\n');

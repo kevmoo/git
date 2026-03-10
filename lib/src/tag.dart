@@ -1,3 +1,5 @@
+import 'package:string_scanner/string_scanner.dart';
+
 import 'bot.dart';
 import 'commit_reference.dart';
 import 'util.dart';
@@ -18,9 +20,9 @@ class Tag {
   static Tag parseCatFile(String content, CommitReference ref) {
     final headers = <String, List<String>>{};
 
-    final slr = StringLineReader(content);
+    final scanner = StringScanner(content);
 
-    var lastLine = slr.readNextLine()!;
+    var lastLine = scanner.readNextLine()!;
 
     while (lastLine.isNotEmpty) {
       final match = headerRegExp.allMatches(lastLine).single;
@@ -30,7 +32,7 @@ class Tag {
 
       headers.putIfAbsent(header, () => <String>[]).add(value);
 
-      lastLine = slr.readNextLine()!;
+      lastLine = scanner.readNextLine()!;
     }
 
     String objectSha;
