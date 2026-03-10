@@ -47,4 +47,3 @@ class _InvalidOperationError implements Exception {
 
   const _InvalidOperationError([this.message = '']);
 }
-
