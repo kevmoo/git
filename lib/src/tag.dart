@@ -22,18 +22,16 @@ class Tag {
 
     final scanner = StringScanner(content);
 
-    var lastLine = scanner.readNextLine()!;
-
-    while (lastLine.isNotEmpty) {
-      final match = headerRegExp.allMatches(lastLine).single;
-      assert(match.groupCount == 2);
+    while (scanner.scan(headerRegExp)) {
+      final match = scanner.lastMatch!;
       final header = match.group(1)!;
       final value = match.group(2)!;
 
       headers.putIfAbsent(header, () => <String>[]).add(value);
-
-      lastLine = scanner.readNextLine()!;
     }
+
+    // consume the blank line that separates headers from message
+    scanner.scan(RegExp(r'\r?\n'));
 
     String objectSha;
     String type;

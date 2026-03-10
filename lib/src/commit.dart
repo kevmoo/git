@@ -43,6 +43,9 @@ class Commit {
     final commits = <String, Commit>{};
 
     while (!scanner.isDone) {
+      if (scanner.scan(RegExp(r'\r?\n'))) {
+        continue;
+      }
       final tuple = _parse(scanner, true);
       commits[tuple.sha!] = tuple.commit;
     }
@@ -57,37 +60,34 @@ class Commit {
     final headers = <String, List<String>>{};
 
     final startSpot = scanner.position;
-    var lastLine = scanner.readNextLine();
 
-    while (lastLine != null && lastLine.isNotEmpty) {
-      final allHeaderMatches = headerRegExp.allMatches(lastLine);
-      if (allHeaderMatches.isNotEmpty) {
-        final match = allHeaderMatches.single;
-        assert(match.groupCount == 2);
-        final header = match.group(1)!;
-        final value = match.group(2)!;
+    while (scanner.scan(headerRegExp)) {
+      final match = scanner.lastMatch!;
+      final header = match.group(1)!;
+      final value = match.group(2)!;
 
-        headers.putIfAbsent(header, () => <String>[]).add(value);
-      }
-
-      lastLine = scanner.readNextLine()!;
+      headers.putIfAbsent(header, () => <String>[]).add(value);
     }
 
-    assert(lastLine!.isEmpty);
+    // consume the blank line but it might not exist if the commit has no body
+    // at all, or might be empty.
+    scanner.scan(RegExp(r'\r?\n'));
 
-    String message;
+    var message = '';
 
     if (isRevParse) {
       final msgLines = <String>[];
-      lastLine = scanner.readNextLine();
 
-      const revParseMessagePrefix = '    ';
-      while (lastLine != null && lastLine.startsWith(revParseMessagePrefix)) {
-        msgLines.add(lastLine.substring(revParseMessagePrefix.length));
-        lastLine = scanner.readNextLine();
+      while (scanner.scan(RegExp(r'    ([^\r\n]*)(?:\r?\n|$)'))) {
+        msgLines.add(scanner.lastMatch!.group(1)!);
+        if (!scanner.lastMatch!.group(0)!.endsWith('\n')) {
+          break;
+        }
       }
 
-      message = msgLines.join('\n');
+      if (msgLines.isNotEmpty) {
+        message = msgLines.join('\n');
+      }
     } else {
       message = scanner.rest;
       scanner.position = scanner.string.length;
