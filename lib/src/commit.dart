@@ -1,6 +1,7 @@
 import 'dart:collection';
 
-import 'bot.dart';
+import 'package:string_scanner/string_scanner.dart';
+
 import 'util.dart';
 
 /// Represents a Git commit object.
@@ -30,19 +31,19 @@ class Commit {
   }
 
   static Commit parse(String content) {
-    final stringLineReader = StringLineReader(content);
-    final tuple = _parse(stringLineReader, false);
+    final scanner = StringScanner(content);
+    final tuple = _parse(scanner, false);
     assert(tuple.sha == null);
     return tuple.commit;
   }
 
   static Map<String, Commit> parseRawRevList(String content) {
-    final slr = StringLineReader(content);
+    final scanner = StringScanner(content);
 
     final commits = <String, Commit>{};
 
-    while (slr.position != null && slr.position! < content.length) {
-      final tuple = _parse(slr, true);
+    while (!scanner.isDone) {
+      final tuple = _parse(scanner, true);
       commits[tuple.sha!] = tuple.commit;
     }
 
@@ -50,15 +51,13 @@ class Commit {
   }
 
   static ({String? sha, Commit commit}) _parse(
-    StringLineReader slr,
+    StringScanner scanner,
     bool isRevParse,
   ) {
-    assert(slr.position != null);
-
     final headers = <String, List<String>>{};
 
-    final startSpot = slr.position!;
-    var lastLine = slr.readNextLine();
+    final startSpot = scanner.position;
+    var lastLine = scanner.readNextLine();
 
     while (lastLine != null && lastLine.isNotEmpty) {
       final allHeaderMatches = headerRegExp.allMatches(lastLine);
@@ -71,7 +70,7 @@ class Commit {
         headers.putIfAbsent(header, () => <String>[]).add(value);
       }
 
-      lastLine = slr.readNextLine()!;
+      lastLine = scanner.readNextLine()!;
     }
 
     assert(lastLine!.isEmpty);
@@ -80,17 +79,18 @@ class Commit {
 
     if (isRevParse) {
       final msgLines = <String>[];
-      lastLine = slr.readNextLine();
+      lastLine = scanner.readNextLine();
 
       const revParseMessagePrefix = '    ';
       while (lastLine != null && lastLine.startsWith(revParseMessagePrefix)) {
         msgLines.add(lastLine.substring(revParseMessagePrefix.length));
-        lastLine = slr.readNextLine();
+        lastLine = scanner.readNextLine();
       }
 
       message = msgLines.join('\n');
     } else {
-      message = slr.readToEnd()!;
+      message = scanner.rest;
+      scanner.position = scanner.string.length;
       assert(message.endsWith('\n'));
       final originalMessageLength = message.length;
       message = message.trim();
@@ -108,9 +108,9 @@ class Commit {
 
     final parents = headers['parent'] ?? [];
 
-    final endSpot = slr.position;
+    final endSpot = scanner.position;
 
-    final content = slr.source.substring(startSpot, endSpot);
+    final content = scanner.string.substring(startSpot, endSpot);
 
     return (
       sha: commitSha,

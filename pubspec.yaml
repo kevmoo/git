@@ -10,6 +10,7 @@ environment:
 
 dependencies:
   path: ^1.8.0
+  string_scanner: ^1.4.1
 
 dev_dependencies:
   checks: ^0.3.1
