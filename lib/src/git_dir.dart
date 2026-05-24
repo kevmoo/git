@@ -422,7 +422,7 @@ class GitDir {
 
       // so we have this wonderful new commit, right?
       // need to crack out the commit and return the value
-      return commitFromRevision('refs/heads/$branchName');
+      return await commitFromRevision('refs/heads/$branchName');
     } finally {
       await tempGitRoot.delete(recursive: true);
     }
