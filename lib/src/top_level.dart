@@ -37,12 +37,13 @@ Future<ProcessResult> runGit(
       ? Future<String?>.value()
       : pr.stderr.transform(const SystemEncoding().decoder).join();
 
-  final result = ProcessResult(
-    pr.pid,
-    await pr.exitCode,
-    await stdoutFuture,
-    await stderrFuture,
-  );
+  final (exitCode, stdout, stderr) = await (
+    pr.exitCode,
+    stdoutFuture,
+    stderrFuture,
+  ).wait;
+
+  final result = ProcessResult(pr.pid, exitCode, stdout, stderr);
 
   if (throwOnError) {
     _throwIfProcessFailed(result, 'git', arguments);
