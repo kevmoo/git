@@ -3,8 +3,7 @@ import 'dart:io';
 
 import 'util.dart';
 
-// ignore: prefer_interpolation_to_compose_strings
-final _shaRegEx = RegExp('^' + shaRegexPattern + r'$');
+final _shaRegEx = RegExp('^$shaRegexPattern\$');
 
 /// Returns `true` if [value] represents a valid SHA1 [String].
 bool isValidSha(String value) => _shaRegEx.hasMatch(value);
@@ -31,18 +30,20 @@ Future<ProcessResult> runGit(
     mode: echoOutput ? ProcessStartMode.inheritStdio : ProcessStartMode.normal,
   );
 
-  final results = await Future.wait([
-    pr.exitCode,
-    if (!echoOutput) pr.stdout.transform(const SystemEncoding().decoder).join(),
-    if (!echoOutput) pr.stderr.transform(const SystemEncoding().decoder).join(),
-  ]);
+  final stdoutFuture = echoOutput
+      ? Future<String?>.value()
+      : pr.stdout.transform(const SystemEncoding().decoder).join();
+  final stderrFuture = echoOutput
+      ? Future<String?>.value()
+      : pr.stderr.transform(const SystemEncoding().decoder).join();
 
-  final result = ProcessResult(
-    pr.pid,
-    results[0] as int,
-    echoOutput ? null : results[1] as String,
-    echoOutput ? null : results[2] as String,
-  );
+  final (exitCode, stdout, stderr) = await (
+    pr.exitCode,
+    stdoutFuture,
+    stderrFuture,
+  ).wait;
+
+  final result = ProcessResult(pr.pid, exitCode, stdout, stderr);
 
   if (throwOnError) {
     _throwIfProcessFailed(result, 'git', arguments);
@@ -56,19 +57,19 @@ void _throwIfProcessFailed(
   List<String> args,
 ) {
   if (pr.exitCode != 0) {
-    final values = {
-      if (pr.stdout != null) 'Standard out': pr.stdout.toString().trim(),
-      if (pr.stderr != null) 'Standard error': pr.stderr.toString().trim(),
-    }..removeWhere((k, v) => v.isEmpty);
+    final stdout = pr.stdout?.toString().trim() ?? '';
+    final stderr = pr.stderr?.toString().trim() ?? '';
 
-    String message;
-    if (values.isEmpty) {
-      message = 'Unknown error';
-    } else if (values.length == 1) {
-      message = values.values.single;
-    } else {
-      message = values.entries.map((e) => '${e.key}\n${e.value}').join('\n');
-    }
+    final values = {
+      if (stdout.isNotEmpty) 'Standard out': stdout,
+      if (stderr.isNotEmpty) 'Standard error': stderr,
+    };
+
+    final message = switch (values.length) {
+      0 => 'Unknown error',
+      1 => values.values.single,
+      _ => values.entries.map((e) => '${e.key}\n${e.value}').join('\n'),
+    };
 
     throw ProcessException(process, args, message, pr.exitCode);
   }
