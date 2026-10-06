@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:string_scanner/string_scanner.dart';
 
+import 'top_level.dart';
 import 'util.dart';
 
 /// Represents a Git commit object.
@@ -73,9 +74,11 @@ class Commit {
     // at all, or might be empty.
     scanner.scan(RegExp(r'\r?\n'));
 
-    var message = '';
+    String? commitSha;
+    String message;
 
     if (isRevParse) {
+      commitSha = _singleHeader(headers, 'commit', scanner, requireSha: true);
       final msgLines = <String>[];
 
       while (scanner.scan(RegExp(r'    ([^\r\n]*)(?:\r?\n|$)'))) {
@@ -85,28 +88,27 @@ class Commit {
         }
       }
 
-      if (msgLines.isNotEmpty) {
-        message = msgLines.join('\n');
-      }
+      message = msgLines.join('\n');
     } else {
-      message = scanner.rest;
+      if (headers.containsKey('commit')) {
+        scanner.error('Unexpected "commit" header.');
+      }
+      final rest = scanner.rest;
       scanner.position = scanner.string.length;
-      assert(message.endsWith('\n'));
-      final originalMessageLength = message.length;
-      message = message.trim();
-      // message should be trimmed by git, so the only diff after trim
-      // should be 1 character - the removed new line
-      assert(message.length + 1 == originalMessageLength);
+      if (!rest.endsWith('\n')) {
+        scanner.error('Commit message must end with a newline.');
+      }
+      message = rest.replaceFirst(RegExp(r'\r?\n$'), '');
     }
 
-    final treeSha = headers['tree']!.single;
-    final author = headers['author']!.single;
-    final committer = headers['committer']!.single;
-    final commitSha = headers.containsKey('commit')
-        ? headers['commit']!.single
-        : null;
+    final treeSha = _singleHeader(headers, 'tree', scanner, requireSha: true);
+    final author = _singleHeader(headers, 'author', scanner);
+    final committer = _singleHeader(headers, 'committer', scanner);
 
     final parents = headers['parent'] ?? [];
+    if (!parents.every(isValidSha)) {
+      scanner.error('Invalid SHA1 value in "parent" header.');
+    }
 
     final endSpot = scanner.position;
 
@@ -116,5 +118,25 @@ class Commit {
       sha: commitSha,
       commit: Commit._(treeSha, author, committer, message, content, parents),
     );
+  }
+
+  static String _singleHeader(
+    Map<String, List<String>> headers,
+    String name,
+    StringScanner scanner, {
+    bool requireSha = false,
+  }) {
+    final values = headers[name];
+    if (values == null || values.isEmpty) {
+      scanner.error('Missing required "$name" header.');
+    }
+    if (values.length > 1) {
+      scanner.error('Duplicate "$name" header.');
+    }
+    final value = values.single;
+    if (requireSha && !isValidSha(value)) {
+      scanner.error('Invalid SHA1 value in "$name" header: "$value".');
+    }
+    return value;
   }
 }

@@ -33,8 +33,10 @@ class TreeEntry {
   }
 
   factory TreeEntry.fromLsTree(String value) {
-    // TODO: should catch and re-throw a descriptive error
-    final match = _lsTreeRegEx.allMatches(value).single;
+    final match = _lsTreeRegEx.firstMatch(value);
+    if (match == null) {
+      throw FormatException('Could not parse ls-tree line.', value);
+    }
 
     return TreeEntry(match[1]!, match[2]!, match[3]!, match[4]!);
   }
