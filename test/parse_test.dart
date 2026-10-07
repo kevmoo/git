@@ -50,6 +50,170 @@ bcd1284d805951a16e765cea5b2273a464ee2d86''',
     check(result.first).has((e) => e.name, 'name').equals('.gitignore');
     check(result).every((e) => e.isNotNull());
   });
+
+  group('TreeEntry.fromLsTree malformed input', () {
+    for (final invalid in [
+      '',
+      '\n',
+      'invalid',
+      '100644 invalid bcd1284d805951a16e765cea5b2273a464ee2d86\tfile.txt',
+      '100644 blob invalidsha\tfile.txt',
+      '100644 blob bcd1284d805951a16e765cea5b2273a464ee2d86\t',
+    ]) {
+      test('throws FormatException on "$invalid"', () {
+        check(() => TreeEntry.fromLsTree(invalid)).throws<FormatException>();
+      });
+    }
+
+    test('fromLsTreeOutput throws FormatException on blank line', () {
+      check(() => TreeEntry.fromLsTreeOutput('\n\n')).throws<FormatException>();
+    });
+  });
+
+  group('Commit.parse and Commit.parseRawRevList', () {
+    const validSha = 'bcd1284d805951a16e765cea5b2273a464ee2d86';
+
+    test('Commit.parse parses valid commit and preserves whitespace', () {
+      final commit = Commit.parse(
+        'tree $validSha\n'
+        'author Alice <alice@example.com> 1700000000 +0000\n'
+        'committer Bob <bob@example.com> 1700000000 +0000\n'
+        '\n'
+        '  leading and trailing whitespace  \n',
+      );
+      check(commit.treeSha).equals(validSha);
+      check(commit.message).equals('  leading and trailing whitespace  ');
+    });
+
+    test('Commit.parse throws FormatException on missing headers', () {
+      check(() => Commit.parse('')).throws<FormatException>();
+      check(
+        () => Commit.parse(
+          'author Alice <a@b.c>\ncommitter Bob <a@b.c>\n\nmsg\n',
+        ),
+      ).throws<FormatException>();
+      check(
+        () => Commit.parse('tree $validSha\ncommitter Bob <a@b.c>\n\nmsg\n'),
+      ).throws<FormatException>();
+      check(
+        () => Commit.parse('tree $validSha\nauthor Alice <a@b.c>\n\nmsg\n'),
+      ).throws<FormatException>();
+    });
+
+    test('Commit.parse throws FormatException on duplicate headers', () {
+      check(
+        () => Commit.parse(
+          'tree $validSha\n'
+          'tree $validSha\n'
+          'author Alice <a@b.c>\n'
+          'committer Bob <a@b.c>\n\n'
+          'msg\n',
+        ),
+      ).throws<FormatException>();
+      check(
+        () => Commit.parse(
+          'tree $validSha\n'
+          'author Alice <a@b.c>\n'
+          'author Alice <a@b.c>\n'
+          'committer Bob <a@b.c>\n\n'
+          'msg\n',
+        ),
+      ).throws<FormatException>();
+      check(
+        () => Commit.parse(
+          'tree $validSha\n'
+          'author Alice <a@b.c>\n'
+          'committer Bob <a@b.c>\n'
+          'committer Bob <a@b.c>\n\n'
+          'msg\n',
+        ),
+      ).throws<FormatException>();
+    });
+
+    test('Commit.parse throws FormatException on unexpected commit header', () {
+      check(
+        () => Commit.parse(
+          'commit $validSha\n'
+          'tree $validSha\n'
+          'author Alice <a@b.c>\n'
+          'committer Bob <a@b.c>\n\n'
+          'msg\n',
+        ),
+      ).throws<FormatException>();
+    });
+
+    test('Commit.parse throws FormatException on missing trailing newline', () {
+      check(
+        () => Commit.parse(
+          'tree $validSha\n'
+          'author Alice <a@b.c>\n'
+          'committer Bob <a@b.c>\n\n'
+          'msg without trailing newline',
+        ),
+      ).throws<FormatException>();
+    });
+
+    test(
+      'Commit.parseRawRevList throws FormatException on missing/dupe headers',
+      () {
+        check(
+          () => Commit.parseRawRevList(
+            'tree $validSha\n'
+            'author Alice <a@b.c>\n'
+            'committer Bob <a@b.c>\n\n'
+            '    msg\n',
+          ),
+        ).throws<FormatException>();
+        check(
+          () => Commit.parseRawRevList(
+            'commit $validSha\n'
+            'commit $validSha\n'
+            'tree $validSha\n'
+            'author Alice <a@b.c>\n'
+            'committer Bob <a@b.c>\n\n'
+            '    msg\n',
+          ),
+        ).throws<FormatException>();
+        check(
+          () => Commit.parseRawRevList(
+            'commit $validSha\n'
+            'author Alice <a@b.c>\n'
+            'committer Bob <a@b.c>\n\n'
+            '    msg\n',
+          ),
+        ).throws<FormatException>();
+      },
+    );
+
+    test('throws FormatException on invalid SHA-1 in headers', () {
+      check(
+        () => Commit.parse(
+          'tree not-a-sha\n'
+          'author Alice <a@b.c>\n'
+          'committer Bob <a@b.c>\n\n'
+          'msg\n',
+        ),
+      ).throws<FormatException>();
+      check(
+        () => Commit.parse(
+          'tree $validSha\n'
+          'parent not-a-sha\n'
+          'author Alice <a@b.c>\n'
+          'committer Bob <a@b.c>\n\n'
+          'msg\n',
+        ),
+      ).throws<FormatException>();
+      check(
+        () => Commit.parseRawRevList(
+          'commit not-a-sha\n'
+          'tree $validSha\n'
+          'author Alice <a@b.c>\n'
+          'committer Bob <a@b.c>\n\n'
+          '    msg\n',
+        ),
+      ).throws<FormatException>();
+    });
+  });
 }
 
 const _showRefOutput = '''ff1c31c454c4128a98dcd610d203820eeeb91923 HEAD

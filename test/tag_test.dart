@@ -15,6 +15,7 @@ void main() {
 
     await runGit([
       'tag',
+      '--no-sign',
       givenTagName,
       branchRef.sha,
     ], processWorkingDir: testDir.path);

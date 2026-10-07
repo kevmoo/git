@@ -1,0 +1,16 @@
+name: Fuzz
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: '0 6 * * 1'
+
+jobs:
+  fuzz:
+    uses: kevmoo/fuzz.dart/.github/workflows/fuzz.yaml@main
+    with:
+      target: test/fuzz/git_parser_fuzz.dart
+      instrument-packages: string_scanner,source_span
+      max-total-time: 30
