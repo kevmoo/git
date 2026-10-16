@@ -45,7 +45,6 @@ linter:
     - unnecessary_await_in_return
     - unnecessary_breaks
     - unnecessary_raw_strings
-    - use_if_null_to_convert_nulls_to_bools
     - use_raw_strings
     - use_setters_to_change_properties
     - use_string_buffers
