@@ -2,7 +2,7 @@
 
 - `Commit.parse`, `Commit.parseRawRevList`, and `TreeEntry.fromLsTree` now
   consistently throw `FormatException` on malformed input.
-- Require Dart 3.9
+- Require Dart 3.12
 
 ## 2.3.2
 
