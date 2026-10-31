@@ -473,20 +473,17 @@ class GitDir {
   }) async {
     final path = await Directory(gitDirRoot).absolute.resolveSymbolicLinks();
 
-    // `--show-toplevel` returns a canonicalized absolute path
-    // with all symlinks resolved.
     final pr = await runGit([
       'rev-parse',
       '--show-toplevel',
-    ], processWorkingDir: path.toString());
+    ], processWorkingDir: path);
 
-    final returnedPath = (pr.stdout as String).trim();
+    final returnedPath = await Directory(
+      (pr.stdout as String).trim(),
+    ).resolveSymbolicLinks();
 
-    if (p.equals(returnedPath, path)) {
-      return GitDir._raw(path);
-    }
-
-    if (allowSubdirectory && p.isWithin(returnedPath, path)) {
+    if (p.equals(returnedPath, path) ||
+        (allowSubdirectory && p.isWithin(returnedPath, path))) {
       return GitDir._raw(returnedPath);
     }
 

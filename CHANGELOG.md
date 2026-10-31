@@ -1,5 +1,9 @@
 ## 2.3.3-wip
 
+- `runGit` now sets `runInShell: Platform.isWindows` (avoiding `/bin/sh -c`
+  overhead on Linux and macOS) and `GIT_TERMINAL_PROMPT=0`.
+- `GitDir.fromExisting` now returns a consistently canonicalized `path` across
+  symlinks and `allowSubdirectory: true`.
 - `Commit.parse`, `Commit.parseRawRevList`, and `TreeEntry.fromLsTree` now
   consistently throw `FormatException` on malformed input.
 - Require Dart 3.12
