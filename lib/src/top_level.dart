@@ -26,7 +26,8 @@ Future<ProcessResult> runGit(
     'git',
     arguments,
     workingDirectory: processWorkingDir,
-    runInShell: true,
+    runInShell: Platform.isWindows,
+    environment: const {'GIT_TERMINAL_PROMPT': '0'},
     mode: echoOutput ? ProcessStartMode.inheritStdio : ProcessStartMode.normal,
   );
 

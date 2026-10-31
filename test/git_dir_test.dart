@@ -122,15 +122,16 @@ void main() {
     });
 
     test('succeeds for symlink to root directory', () async {
+      final rootGitDir = await GitDir.fromExisting(tempRepoPath);
       final linkToRepoDir = await Link(
         p.join(d.sandbox, 'link-to-repo'),
       ).create(tempRepoPath);
       final gitDir = await GitDir.fromExisting(linkToRepoDir.path);
       check(
-        p.canonicalize(gitDir.path),
+        gitDir.path,
         because:
             'The created `GitDir` will point to the canonical resolved root.',
-      ).equals(p.canonicalize(tempRepoPath));
+      ).equals(rootGitDir.path);
     });
 
     test('fails for sub directories', () async {
@@ -138,15 +139,40 @@ void main() {
     });
 
     test('succeeds for sub directories with `allowSubdirectory`', () async {
+      final rootGitDir = await GitDir.fromExisting(tempRepoPath);
       final gitDir = await GitDir.fromExisting(
         subDirPath,
         allowSubdirectory: true,
       );
 
       check(
-        p.canonicalize(gitDir.path),
-        because: 'The created `GitDir` will point to the root.',
-      ).equals(p.canonicalize(tempRepoPath));
+        gitDir.path,
+        because: 'The created `GitDir` will point to the canonical root.',
+      ).equals(rootGitDir.path);
+    });
+
+    test('handles symlink to sub directory', () async {
+      final rootGitDir = await GitDir.fromExisting(tempRepoPath);
+      final nestedSubDirPath = p.join(subDirPath, 'nested');
+      await Directory(nestedSubDirPath).create();
+
+      final linkToSubDir = await Link(
+        p.join(d.sandbox, 'link-to-sub-dir'),
+      ).create(nestedSubDirPath);
+
+      await check(
+        GitDir.fromExisting(linkToSubDir.path),
+      ).throws<ArgumentError>();
+
+      final gitDir = await GitDir.fromExisting(
+        linkToSubDir.path,
+        allowSubdirectory: true,
+      );
+      check(
+        gitDir.path,
+        because:
+            'Symlink to subdirectory resolves to canonical repository root.',
+      ).equals(rootGitDir.path);
     });
 
     group('with git submodule', () {
@@ -256,6 +282,62 @@ void main() {
       check(detached.reference).equals('HEAD');
       check(detached.sha).equals(branch.sha);
     });
+
+    test(
+      'detached HEAD on historical commit sha and linked worktrees',
+      () async {
+        final gitDir = await createTempGitDir(branchName: 'master');
+
+        await doDescriptorGitCommit(gitDir, const {
+          'first.txt': 'first',
+        }, 'first commit');
+        final firstBranch = await gitDir.currentBranch();
+
+        await doDescriptorGitCommit(gitDir, const {
+          'second.txt': 'second',
+        }, 'second commit');
+        final secondBranch = await gitDir.currentBranch();
+        check(secondBranch.sha).not((it) => it.equals(firstBranch.sha));
+
+        await gitDir.runCommand(['checkout', firstBranch.sha]);
+
+        final detached = await gitDir.currentBranch();
+        check(detached.isHead).isTrue();
+        check(detached.branchName).equals('HEAD');
+        check(detached.reference).equals('HEAD');
+        check(detached.sha).equals(firstBranch.sha);
+        check(
+          (await gitDir.branchReference('master'))!.sha,
+        ).equals(secondBranch.sha);
+
+        final detachedWorktreePath = d.path('wt-detached');
+        await gitDir.runCommand([
+          'worktree',
+          'add',
+          '--detach',
+          detachedWorktreePath,
+          secondBranch.sha,
+        ]);
+        final detachedWt = await GitDir.fromExisting(detachedWorktreePath);
+        final detachedWtRef = await detachedWt.currentBranch();
+        check(detachedWtRef.isHead).isTrue();
+        check(detachedWtRef.sha).equals(secondBranch.sha);
+
+        final branchWorktreePath = d.path('wt-branch');
+        await gitDir.runCommand([
+          'worktree',
+          'add',
+          '-b',
+          'feature',
+          branchWorktreePath,
+        ]);
+        final branchWt = await GitDir.fromExisting(branchWorktreePath);
+        final branchWtRef = await branchWt.currentBranch();
+        check(branchWtRef.isHead).isFalse();
+        check(branchWtRef.branchName).equals('feature');
+        check(branchWtRef.reference).equals('refs/heads/feature');
+      },
+    );
   });
 }
 
