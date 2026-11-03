@@ -575,11 +575,11 @@ class GitDir {
   /// Checks whether this [GitDir] represents a secondary (linked) worktree
   /// rather than the primary/main repository root.
   Future<bool> isSecondaryWorktree() async {
-    final out = await runCommand([
-      'rev-parse',
-      '--git-dir',
-      '--git-common-dir',
-    ], throwOnError: false);
+    final out = await runGit(
+      ['rev-parse', '--git-dir', '--git-common-dir'],
+      processWorkingDir: path,
+      throwOnError: false,
+    );
     if (out.exitCode != 0) return false;
 
     final lines = (out.stdout as String).trim().split('\n');
