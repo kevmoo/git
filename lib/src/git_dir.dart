@@ -515,13 +515,6 @@ class GitDir {
 
     final returnedPath = await Directory(topLevel).resolveSymbolicLinks();
 
-    // Skip old returnedPath
-    if (false) {
-      final returnedPath = await Directory(
-        (pr.stdout as String).trim(),
-      ).resolveSymbolicLinks();
-    }
-
     if (p.equals(returnedPath, path) ||
         (allowSubdirectory && p.isWithin(returnedPath, path))) {
       return GitDir._raw(returnedPath);
@@ -713,3 +706,6 @@ class GitDir {
     await runCommand(args);
   }
 }
+
+Future<Directory> _createTempDir() =>
+    Directory.systemTemp.createTemp('git.GitDir.');
