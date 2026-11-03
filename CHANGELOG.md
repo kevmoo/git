@@ -4,7 +4,6 @@
   listed in the 2.4.0 notes but did not ship in that release.
 - Fixed `GitDir.fromExisting(allowBare: true)`, which threw for every bare
   repository in 2.4.0.
-- Added integration tests for the `GitDir` methods introduced in 2.4.0.
 
 ## 2.4.0
 
