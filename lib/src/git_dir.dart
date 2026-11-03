@@ -299,10 +299,13 @@ class GitDir {
     );
   }
 
-  Future<bool> isWorkingTreeClean() => runCommand([
-    'status',
-    '--porcelain',
-  ]).then((pr) => (pr.stdout as String).isEmpty);
+  /// Returns `true` if `git status --porcelain` reports no changes.
+  ///
+  /// If [includeUntracked] is `false`, untracked files are ignored and only
+  /// modified or staged tracked files count as changes.
+  Future<bool> isWorkingTreeClean({bool includeUntracked = true}) => runCommand(
+    ['status', '--porcelain', if (!includeUntracked) '--untracked-files=no'],
+  ).then((pr) => (pr.stdout as String).isEmpty);
 
   // TODO: TEST: someone puts a git dir when populated
   // TODO: TEST: someone puts in no content at all
