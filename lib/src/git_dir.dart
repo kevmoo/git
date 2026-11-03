@@ -479,49 +479,59 @@ class GitDir {
   }) async {
     final path = await Directory(gitDirRoot).absolute.resolveSymbolicLinks();
 
-    final pr = await runGit(
-      [
-        'rev-parse',
-        '--is-inside-git-dir',
-        '--is-bare-repository',
-        '--show-toplevel',
-      ],
+    final bareCheck = await runGit(
+      ['rev-parse', '--is-bare-repository', '--absolute-git-dir'],
       processWorkingDir: path,
       throwOnError: false,
     );
-
-    if (pr.exitCode != 0) {
+    if (bareCheck.exitCode != 0) {
       throw ArgumentError(
         'The provided value "$gitDirRoot" is not a git directory',
       );
     }
 
-    final output = (pr.stdout as String).trim();
-    final lines = output.split('\n');
+    final [isBare, absoluteGitDir, ...] = (bareCheck.stdout as String)
+        .trim()
+        .split('\n')
+        .map((l) => l.trim())
+        .toList();
 
-    final isBare = lines[1] == 'true';
-
-    if (isBare) {
-      if (allowBare) {
-        return GitDir._raw(path);
+    if (isBare == 'true') {
+      if (!allowBare) {
+        throw ArgumentError(
+          'The provided value "$gitDirRoot" is a bare git directory, '
+          'which is not allowed',
+        );
       }
-      throw ArgumentError(
-        'The provided value "$gitDirRoot" is a bare git directory, '
-        'which is not allowed',
+      return _matchRoot(
+        gitDirRoot,
+        await Directory(absoluteGitDir).resolveSymbolicLinks(),
+        path,
+        allowSubdirectory,
       );
     }
 
-    if (lines.length < 3) {
-      throw ArgumentError('Failed to determine top-level directory');
-    }
+    final pr = await runGit([
+      'rev-parse',
+      '--show-toplevel',
+    ], processWorkingDir: path);
 
-    final topLevel = lines[2].trim();
+    return _matchRoot(
+      gitDirRoot,
+      await Directory((pr.stdout as String).trim()).resolveSymbolicLinks(),
+      path,
+      allowSubdirectory,
+    );
+  }
 
-    final returnedPath = await Directory(topLevel).resolveSymbolicLinks();
-
-    if (p.equals(returnedPath, path) ||
-        (allowSubdirectory && p.isWithin(returnedPath, path))) {
-      return GitDir._raw(returnedPath);
+  static GitDir _matchRoot(
+    String gitDirRoot,
+    String root,
+    String path,
+    bool allowSubdirectory,
+  ) {
+    if (p.equals(root, path) || (allowSubdirectory && p.isWithin(root, path))) {
+      return GitDir._raw(root);
     }
 
     throw ArgumentError(
