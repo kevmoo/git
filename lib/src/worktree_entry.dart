@@ -34,8 +34,7 @@ class WorktreeEntry {
 
   /// Parses the output of `git worktree list --porcelain`.
   static List<WorktreeEntry> fromPorcelain(String porcelain) => [
-    for (final block in _blocks(porcelain))
-      if (_parseBlock(block) case final entry?) entry,
+    for (final block in _blocks(porcelain)) ?_parseBlock(block),
   ];
 
   static Iterable<List<String>> _blocks(String porcelain) sync* {
