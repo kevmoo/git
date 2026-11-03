@@ -1,4 +1,4 @@
-## 2.4.0-wip
+## 2.4.0
 
 - Added `WorktreeEntry` and `GitDir.worktrees()` to list active worktrees.
 - Added `BranchTracking` and `GitDir.branchTracking()` to list tracking
@@ -9,9 +9,6 @@
 - Added `GitDir.isAncestor()`, `GitDir.fetch()`, and `GitDir.deleteBranch()`.
 - Added `allowBare` flag to `GitDir.fromExisting()`.
 - Added `includeUntracked` option to `GitDir.isWorkingTreeClean()`.
-
-## 2.3.3-wip
-
 - `runGit` now sets `runInShell: Platform.isWindows` (avoiding `/bin/sh -c`
   overhead on Linux and macOS) and `GIT_TERMINAL_PROMPT=0`.
 - `GitDir.fromExisting` now returns a consistently canonicalized `path` across
