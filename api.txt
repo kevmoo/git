@@ -50,7 +50,7 @@ package:git/git.dart:
     fetch (method: Future<void> Function({bool all, bool prune, String? remote}))
     isAncestor (method: Future<bool> Function(String, String))
     isSecondaryWorktree (method: Future<bool> Function())
-    isWorkingTreeClean (method: Future<bool> Function())
+    isWorkingTreeClean (method: Future<bool> Function({bool includeUntracked}))
     lsTree (method: Future<List<TreeEntry>> Function(String, {String? path, bool subTreesOnly}))
     remoteDefaultBranch (method: Future<String?> Function({List<String> fallbackCandidates, String remote}))
     removeWorktree (method: Future<void> Function(String, {bool force}))

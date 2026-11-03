@@ -1,3 +1,10 @@
+## 2.5.0
+
+- Added `includeUntracked` option to `GitDir.isWorkingTreeClean()`. It was
+  listed in the 2.4.0 notes but did not ship in that release.
+- Fixed `GitDir.fromExisting(allowBare: true)`, which threw for every bare
+  repository in 2.4.0.
+
 ## 2.4.0
 
 - Added `WorktreeEntry` and `GitDir.worktrees()` to list active worktrees.
@@ -8,7 +15,6 @@
   `GitDir.remoteDefaultBranch()`.
 - Added `GitDir.isAncestor()`, `GitDir.fetch()`, and `GitDir.deleteBranch()`.
 - Added `allowBare` flag to `GitDir.fromExisting()`.
-- Added `includeUntracked` option to `GitDir.isWorkingTreeClean()`.
 - `runGit` now sets `runInShell: Platform.isWindows` (avoiding `/bin/sh -c`
   overhead on Linux and macOS) and `GIT_TERMINAL_PROMPT=0`.
 - `GitDir.fromExisting` now returns a consistently canonicalized `path` across
