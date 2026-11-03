@@ -503,7 +503,8 @@ class GitDir {
         return GitDir._raw(path);
       }
       throw ArgumentError(
-        'The provided value "$gitDirRoot" is a bare git directory, which is not allowed',
+        'The provided value "$gitDirRoot" is a bare git directory, '
+        'which is not allowed',
       );
     }
 
@@ -611,12 +612,14 @@ class GitDir {
   /// Gets all local branches along with their upstream tracking status.
   Future<List<BranchTracking>> branchTracking() async {
     const format =
-        '--format=%(refname:short)\t%(upstream)\t%(upstream:track)\t%(objectname:short)';
+        '--format=%(refname:short)\t%(upstream)\t'
+        '%(upstream:track)\t%(objectname:short)';
     final result = await runCommand(['for-each-ref', format, 'refs/heads']);
     return BranchTracking.fromForEachRefOutput(result.stdout as String);
   }
 
-  /// Returns the number of commits ahead and behind [leftRef] is relative to [rightRef].
+  /// Returns the number of commits ahead and behind [leftRef] is relative to
+  /// [rightRef].
   Future<({int ahead, int behind})> commitsAheadBehind(
     String leftRef, [
     String rightRef = '@{u}',
