@@ -5,6 +5,8 @@ class WorktreeEntry {
   final String branch;
   final bool isBare;
   final bool isDetached;
+  final bool isLocked;
+  final String? lockReason;
 
   const WorktreeEntry({
     required this.path,
@@ -12,6 +14,8 @@ class WorktreeEntry {
     required this.branch,
     required this.isBare,
     required this.isDetached,
+    this.isLocked = false,
+    this.lockReason,
   });
 
   static List<WorktreeEntry> fromPorcelain(String porcelain) {
@@ -21,9 +25,12 @@ class WorktreeEntry {
     var currentBranch = '';
     var currentBare = false;
     var currentDetached = false;
+    var currentLocked = false;
+    String? currentLockReason;
 
     for (final line in porcelain.split('\n')) {
-      if (line.isEmpty) {
+      final trimmed = line.trimRight();
+      if (trimmed.isEmpty) {
         if (currentPath != null) {
           worktrees.add(
             WorktreeEntry(
@@ -32,6 +39,8 @@ class WorktreeEntry {
               branch: currentBranch,
               isBare: currentBare,
               isDetached: currentDetached,
+              isLocked: currentLocked,
+              lockReason: currentLockReason,
             ),
           );
         }
@@ -40,19 +49,31 @@ class WorktreeEntry {
         currentBranch = '';
         currentBare = false;
         currentDetached = false;
+        currentLocked = false;
+        currentLockReason = null;
         continue;
       }
 
-      if (line.startsWith('worktree ')) {
-        currentPath = line.substring(9).trim();
-      } else if (line.startsWith('HEAD ')) {
-        currentSha = line.substring(5).trim();
-      } else if (line.startsWith('branch ')) {
-        currentBranch = line.substring(7).trim();
-      } else if (line == 'bare') {
+      if (trimmed.startsWith('worktree ')) {
+        currentPath = trimmed.substring(9).trim();
+      } else if (trimmed.startsWith('HEAD ')) {
+        currentSha = trimmed.substring(5).trim();
+      } else if (trimmed.startsWith('branch ')) {
+        var branch = trimmed.substring(7).trim();
+        if (branch.startsWith('refs/heads/')) {
+          branch = branch.substring('refs/heads/'.length);
+        }
+        currentBranch = branch;
+      } else if (trimmed == 'bare') {
         currentBare = true;
-      } else if (line == 'detached') {
+      } else if (trimmed == 'detached') {
         currentDetached = true;
+      } else if (trimmed == 'locked') {
+        currentLocked = true;
+        currentLockReason = null;
+      } else if (trimmed.startsWith('locked ')) {
+        currentLocked = true;
+        currentLockReason = trimmed.substring(7).trim();
       }
     }
 
@@ -64,6 +85,8 @@ class WorktreeEntry {
           branch: currentBranch,
           isBare: currentBare,
           isDetached: currentDetached,
+          isLocked: currentLocked,
+          lockReason: currentLockReason,
         ),
       );
     }
