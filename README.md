@@ -4,7 +4,7 @@
 Exposes a Git directory abstraction that makes it easy to inspect and manipulate
 a local Git repository.
 
-```dart
+```dart @example example/example.dart
 import 'package:git/git.dart';
 import 'package:path/path.dart' as p;
 
