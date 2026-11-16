@@ -1,3 +1,8 @@
+## 2.5.1-wip
+
+- The README example is now sourced from `example/example.dart` and checked in
+  CI.
+
 ## 2.5.0
 
 - Added `includeUntracked` option to `GitDir.isWorkingTreeClean()`. It was
