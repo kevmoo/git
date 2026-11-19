@@ -20,14 +20,14 @@ void main() {
   group('isWorkingTreeClean', () {
     test('includeUntracked controls untracked-file handling', () async {
       final gitDir = await _repoWithCommit();
-      check(await gitDir.isWorkingTreeClean()).isTrue();
+      check(await gitDir.isWorkingTreeClean()).isTrue;
 
       await File(p.join(gitDir.path, 'untracked.txt')).writeAsString('u');
-      check(await gitDir.isWorkingTreeClean()).isFalse();
-      check(await gitDir.isWorkingTreeClean(includeUntracked: false)).isTrue();
+      check(await gitDir.isWorkingTreeClean()).isFalse;
+      check(await gitDir.isWorkingTreeClean(includeUntracked: false)).isTrue;
 
       await File(p.join(gitDir.path, 'a.txt')).writeAsString('changed');
-      check(await gitDir.isWorkingTreeClean(includeUntracked: false)).isFalse();
+      check(await gitDir.isWorkingTreeClean(includeUntracked: false)).isFalse;
     });
   });
 
@@ -36,8 +36,8 @@ void main() {
     await gitDir.runCommand(['checkout', '-q', '-b', 'feature']);
     await doDescriptorGitCommit(gitDir, {'b.txt': 'b'}, 'feature commit');
 
-    check(await gitDir.isAncestor('main', 'feature')).isTrue();
-    check(await gitDir.isAncestor('feature', 'main')).isFalse();
+    check(await gitDir.isAncestor('main', 'feature')).isTrue;
+    check(await gitDir.isAncestor('feature', 'main')).isFalse;
 
     final counts = await gitDir.commitsAheadBehind('feature', 'main');
     check(counts.ahead).equals(1);
@@ -45,7 +45,7 @@ void main() {
 
     await gitDir.runCommand(['checkout', '-q', 'main']);
     await gitDir.deleteBranch('feature', force: true);
-    check(await gitDir.branchReference('feature')).isNull();
+    check(await gitDir.branchReference('feature')).isNull;
   });
 
   test('upstreamBranch, branchTracking, remoteDefaultBranch, fetch', () async {
@@ -59,9 +59,9 @@ void main() {
 
     final tracking = await clone.branchTracking();
     check(tracking.single)
-      ..has((b) => b.branchName, 'branchName').equals('main')
-      ..has((b) => b.upstream, 'upstream').equals('refs/remotes/origin/main')
-      ..has((b) => b.isUpstreamGone, 'isUpstreamGone').isFalse();
+      ..has('branchName', (b) => b.branchName).equals('main')
+      ..has('upstream', (b) => b.upstream).equals('refs/remotes/origin/main')
+      ..has('isUpstreamGone', (b) => b.isUpstreamGone).isFalse;
 
     await doDescriptorGitCommit(origin, {'c.txt': 'c'}, 'second');
     await clone.fetch();
@@ -78,9 +78,9 @@ void main() {
     check(entries).length.equals(2);
     check(entries.last.branch).equals('wt');
 
-    check(await gitDir.isSecondaryWorktree()).isFalse();
+    check(await gitDir.isSecondaryWorktree()).isFalse;
     final wtGitDir = await GitDir.fromExisting(wtPath);
-    check(await wtGitDir.isSecondaryWorktree()).isTrue();
+    check(await wtGitDir.isSecondaryWorktree()).isTrue;
 
     await gitDir.removeWorktree(wtPath);
     check(await gitDir.worktrees()).length.equals(1);

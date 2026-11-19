@@ -27,24 +27,24 @@ bare
       check(entries).length.equals(4);
 
       check(entries[0])
-        ..has((e) => e.path, 'path').equals('/repo')
-        ..has((e) => e.branch, 'branch').equals('main')
-        ..has((e) => e.isLocked, 'isLocked').isFalse();
+        ..has('path', (e) => e.path).equals('/repo')
+        ..has('branch', (e) => e.branch).equals('main')
+        ..has('isLocked', (e) => e.isLocked).isFalse;
 
       check(entries[1])
-        ..has((e) => e.branch, 'branch').equals('feature/x')
-        ..has((e) => e.isLocked, 'isLocked').isTrue()
-        ..has((e) => e.lockReason, 'lockReason').equals('busy on usb drive');
+        ..has('branch', (e) => e.branch).equals('feature/x')
+        ..has('isLocked', (e) => e.isLocked).isTrue
+        ..has('lockReason', (e) => e.lockReason).equals('busy on usb drive');
 
       check(entries[2])
-        ..has((e) => e.isDetached, 'isDetached').isTrue()
-        ..has((e) => e.branch, 'branch').equals('')
-        ..has((e) => e.isLocked, 'isLocked').isTrue()
-        ..has((e) => e.lockReason, 'lockReason').isNull();
+        ..has('isDetached', (e) => e.isDetached).isTrue
+        ..has('branch', (e) => e.branch).equals('')
+        ..has('isLocked', (e) => e.isLocked).isTrue
+        ..has('lockReason', (e) => e.lockReason).isNull;
 
       check(entries[3])
-        ..has((e) => e.isBare, 'isBare').isTrue()
-        ..has((e) => e.sha, 'sha').isNull();
+        ..has('isBare', (e) => e.isBare).isTrue
+        ..has('sha', (e) => e.sha).isNull;
     });
 
     test('handles CRLF and missing trailing blank line', () {
@@ -56,7 +56,7 @@ bare
     });
 
     test('returns empty list for empty output', () {
-      check(WorktreeEntry.fromPorcelain('')).isEmpty();
+      check(WorktreeEntry.fromPorcelain('')).isEmpty;
     });
   });
 
@@ -69,9 +69,9 @@ bare
       final branches = BranchTracking.fromForEachRefOutput(output);
       check(branches).length.equals(3);
       check(branches[0])
-        ..has((b) => b.branchName, 'branchName').equals('main')
-        ..has((b) => b.isUpstreamGone, 'isUpstreamGone').isFalse();
-      check(branches[1].isUpstreamGone).isTrue();
+        ..has('branchName', (b) => b.branchName).equals('main')
+        ..has('isUpstreamGone', (b) => b.isUpstreamGone).isFalse;
+      check(branches[1].isUpstreamGone).isTrue;
       check(branches[2].upstream).equals('');
     });
   });
