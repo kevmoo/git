@@ -56,8 +56,8 @@ void main() {
 
     final alphabeticallyFirstTag = tagsFound.first;
     check(alphabeticallyFirstTag)
-      ..has((t) => t.tag, 'tag').equals(anotherTagName)
-      ..has((t) => t.objectSha, 'objectSha').equals(branchRef.sha)
-      ..has((t) => t.type, 'type').equals('commit');
+      ..has('tag', (t) => t.tag).equals(anotherTagName)
+      ..has('objectSha', (t) => t.objectSha).equals(branchRef.sha)
+      ..has('type', (t) => t.type).equals('commit');
   });
 }

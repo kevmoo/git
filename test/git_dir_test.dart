@@ -84,12 +84,12 @@ void main() {
       test('isWorkingTreeClean', () async {
         final gitDir = await GitDir.fromExisting(tempRepoPath);
         final isClean = await gitDir.isWorkingTreeClean();
-        check(isClean).isTrue();
+        check(isClean).isTrue;
       });
 
       test('isGitDir is true', () async {
         final isGitDir = await GitDir.isGitDir(tempRepoPath);
-        check(isGitDir).isTrue();
+        check(isGitDir).isTrue;
       });
 
       test('with allowContent:false fails', () async {
@@ -224,7 +224,7 @@ void main() {
             p.canonicalize(submodule.path),
           ),
           because: 'the submodule should always be inside the parent worktree',
-        ).isTrue();
+        ).isTrue;
       });
     });
   });
@@ -233,7 +233,7 @@ void main() {
     final gitDir = await createTempGitDir();
 
     final branches = await gitDir.branches();
-    check(branches, because: 'Should start with zero commits').isEmpty();
+    check(branches, because: 'Should start with zero commits').isEmpty;
 
     final initialContentMap = {
       'file1.txt': 'content1',
@@ -270,14 +270,14 @@ void main() {
       );
 
       final branch = await gitDir.currentBranch();
-      check(branch.isHead).isFalse();
+      check(branch.isHead).isFalse;
       check(branch.branchName).equals('master');
       check(branch.reference).equals('refs/heads/master');
 
       await gitDir.runCommand(['checkout', '--detach']);
 
       final detached = await gitDir.currentBranch();
-      check(detached.isHead).isTrue();
+      check(detached.isHead).isTrue;
       check(detached.branchName).equals('HEAD');
       check(detached.reference).equals('HEAD');
       check(detached.sha).equals(branch.sha);
@@ -297,12 +297,12 @@ void main() {
           'second.txt': 'second',
         }, 'second commit');
         final secondBranch = await gitDir.currentBranch();
-        check(secondBranch.sha).not((it) => it.equals(firstBranch.sha));
+        check(secondBranch.sha).not(.it()..equals(firstBranch.sha));
 
         await gitDir.runCommand(['checkout', firstBranch.sha]);
 
         final detached = await gitDir.currentBranch();
-        check(detached.isHead).isTrue();
+        check(detached.isHead).isTrue;
         check(detached.branchName).equals('HEAD');
         check(detached.reference).equals('HEAD');
         check(detached.sha).equals(firstBranch.sha);
@@ -320,7 +320,7 @@ void main() {
         ]);
         final detachedWt = await GitDir.fromExisting(detachedWorktreePath);
         final detachedWtRef = await detachedWt.currentBranch();
-        check(detachedWtRef.isHead).isTrue();
+        check(detachedWtRef.isHead).isTrue;
         check(detachedWtRef.sha).equals(secondBranch.sha);
 
         final branchWorktreePath = d.path('wt-branch');
@@ -333,7 +333,7 @@ void main() {
         ]);
         final branchWt = await GitDir.fromExisting(branchWorktreePath);
         final branchWtRef = await branchWt.currentBranch();
-        check(branchWtRef.isHead).isFalse();
+        check(branchWtRef.isHead).isFalse;
         check(branchWtRef.branchName).equals('feature');
         check(branchWtRef.reference).equals('refs/heads/feature');
       },
@@ -362,7 +362,7 @@ Future<void> _testGetCommits() async {
   final gitDir = await createTempGitDir();
 
   final branches = await gitDir.branches();
-  check(branches).isEmpty();
+  check(branches).isEmpty;
 
   for (var commitStr in commitText) {
     final fileMap = <String, String>{};
@@ -393,7 +393,7 @@ Future<void> _testGetCommits() async {
       because: 'a matching message should be found',
     ).isGreaterOrEqual(0);
 
-    check(indexMap.keys).not((it) => it.contains(commitMessageIndex));
+    check(indexMap.keys).not(.it()..contains(commitMessageIndex));
     indexMap[commitMessageIndex] = entry;
   }
 
@@ -403,7 +403,7 @@ Future<void> _testGetCommits() async {
         entry.value.value.parents,
       ).unorderedEquals([indexMap[entry.key - 1]!.key]);
     } else {
-      check(entry.value.value.parents).isEmpty();
+      check(entry.value.value.parents).isEmpty;
     }
   }
 }
@@ -465,7 +465,7 @@ Future<void> _testPopulateBranchEmpty(GitDir gitDir, String branchName) async {
   await check(
     _testPopulateBranchCore(gitDir, branchName, {}, 'empty?'),
   ).throws<GitError>(
-    (it) => it.has((e) => e.message, 'message').equals('No files were added'),
+    .it()..has('message', (e) => e.message).equals('No files were added'),
   );
 }
 
@@ -498,7 +498,7 @@ Future<MapEntry<Commit?, int>> _testPopulateBranchCore(
     return MapEntry(commit, originalCommitCount);
   } finally {
     if (tempDir != null) {
-      check(tempDir!.existsSync()).isFalse();
+      check(tempDir!.existsSync()).isFalse;
     }
   }
 }
@@ -524,7 +524,7 @@ Future<void> _testPopulateBranchWithContent(
     check(
       returnedCommit.parents,
       because: 'This should be the first commit',
-    ).isEmpty();
+    ).isEmpty;
   } else {
     check(returnedCommit.parents).length.equals(1);
   }
@@ -567,7 +567,7 @@ Future<void> _testPopulateBranchWithDupeContent(
   final returnedCommit = pair.key;
   final originalCommitCount = pair.value;
 
-  check(returnedCommit).isNull();
+  check(returnedCommit).isNull;
   check(
     originalCommitCount,
     because: 'must have had some original content',

@@ -6,7 +6,7 @@ import 'package:test/scaffolding.dart';
 void main() {
   test('valid sha', () {
     const good = 'bcd1284d805951a16e765cea5b2273a464ee2d86';
-    check(isValidSha(good)).isTrue();
+    check(isValidSha(good)).isTrue;
 
     final bad = [
       '',
@@ -28,7 +28,7 @@ bcd1284d805951a16e765cea5b2273a464ee2d86''',
     ];
 
     for (var v in bad) {
-      check(isValidSha(v), because: "'$v' should be bad").isFalse();
+      check(isValidSha(v), because: "'$v' should be bad").isFalse;
       check(() => requireArgumentValidSha1(v, 'v')).throws<ArgumentError>();
     }
   });
@@ -38,17 +38,17 @@ bcd1284d805951a16e765cea5b2273a464ee2d86''',
 
     check(parsed).length.equals(6);
     check(parsed).every(
-      (e) => e
-        ..has((c) => c.sha, 'sha').length.equals(40)
-        ..has((c) => c.reference, 'reference').isNotEmpty(),
+      .it()
+        ..has('sha', (c) => c.sha).length.equals(40)
+        ..has('reference', (c) => c.reference).isNotEmpty,
     );
   });
 
   test('TreeEntry.parse', () {
     final result = TreeEntry.fromLsTreeOutput(_lsTreeOutput);
     check(result).length.equals(13);
-    check(result.first).has((e) => e.name, 'name').equals('.gitignore');
-    check(result).every((e) => e.isNotNull());
+    check(result.first).has('name', (e) => e.name).equals('.gitignore');
+    check(result).every(.it()..isNotNull());
   });
 
   group('TreeEntry.fromLsTree malformed input', () {
